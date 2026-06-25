@@ -14,7 +14,7 @@ export function Header() {
         <div className="flex items-center justify-between h-16">
           <Link href="/" className="flex items-center gap-2">
             <span className="text-2xl font-serif font-bold bg-gradient-hero bg-clip-text text-transparent">
-              Heaven on Clouds
+              A9 Global Travels
             </span>
           </Link>
 

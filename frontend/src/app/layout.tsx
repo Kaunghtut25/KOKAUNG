@@ -8,8 +8,8 @@ const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 const playfair = Playfair_Display({ subsets: ['latin'], variable: '--font-playfair' });
 
 export const metadata: Metadata = {
-  title: 'Heaven on the Clouds | Luxury Travels & Tours',
-  description: 'Experience future-built luxury travel across Myanmar and beyond.',
+  title: 'A9 Global Travels & Tours | Luxury Travel',
+  description: 'Experience future-built luxury travel across Myanmar and beyond with A9 Global Travels & Tours.',
 };
 
 export default function RootLayout({

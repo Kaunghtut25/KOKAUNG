@@ -1,14 +1,14 @@
 services:
   mongodb:
     image: mongo:7
-    container_name: hoc-mongodb
+    container_name: a9global-mongodb
     restart: unless-stopped
     ports:
       - "27017:27017"
     volumes:
       - mongodb_data:/data/db
     environment:
-      MONGO_INITDB_DATABASE: heaven-on-clouds
+      MONGO_INITDB_DATABASE: a9-global-travels
 
 volumes:
   mongodb_data:

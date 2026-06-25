@@ -1,8 +1,8 @@
 {
-  "name": "heaven-on-clouds-travel",
+  "name": "a9-global-travels",
   "version": "1.0.0",
   "private": true,
-  "description": "Luxury Travels & Tours — Heaven on the Clouds",
+  "description": "A9 Global Travels & Tours — Heaven on the Clouds",
   "workspaces": [
     "packages/*",
     "frontend",

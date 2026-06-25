@@ -12,7 +12,7 @@ const bot = new Telegraf(token);
 
 bot.start((ctx) => {
   ctx.reply(
-    'Welcome to Heaven on the Clouds! 🌤️\n\n' +
+    'Welcome to A9 Global Travels & Tours! 🌤️\n\n' +
     'I can help you with:\n' +
     '/tours - Browse tour packages\n' +
     '/booking - Check booking status\n' +

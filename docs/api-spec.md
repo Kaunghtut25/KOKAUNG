@@ -1,4 +1,4 @@
-# Heaven on Clouds — API Specification
+# A9 Global Travels & Tours — API Specification
 
 Base URL: `http://localhost:5000/api`
 

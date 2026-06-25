@@ -23,7 +23,7 @@ export function HeroSection() {
           transition={{ duration: 0.6 }}
           className="text-gold-400 font-medium tracking-widest uppercase text-sm mb-4"
         >
-          Luxury Travels & Tours
+          Heaven on the Clouds
         </motion.p>
 
         <motion.h1
@@ -32,8 +32,8 @@ export function HeroSection() {
           transition={{ duration: 0.8, delay: 0.2 }}
           className="text-5xl md:text-7xl font-serif font-bold mb-6 leading-tight"
         >
-          Heaven on the{' '}
-          <span className="neon-glow text-neon-cyan">Clouds</span>
+          A9 Global{' '}
+          <span className="neon-glow text-neon-cyan">Travels & Tours</span>
         </motion.h1>
 
         <motion.p

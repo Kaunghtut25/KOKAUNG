@@ -1,5 +1,5 @@
 {
-  "name": "@hoc/frontend",
+  "name": "@a9global/frontend",
   "version": "1.0.0",
   "private": true,
   "scripts": {
@@ -9,7 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@hoc/shared": "*",
+    "@a9global/shared": "*",
     "clsx": "^2.1.1",
     "framer-motion": "^11.15.0",
     "lucide-react": "^0.469.0",

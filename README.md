@@ -1,4 +1,4 @@
-# Heaven on the Clouds — Luxury Travels & Tours
+# A9 Global Travels & Tours
 
 A full-stack luxury travel booking platform with Next.js frontend, Express API, and MongoDB.
 
@@ -40,7 +40,7 @@ npm run dev
 ## Project Structure
 
 ```
-heaven-on-clouds-travel/
+a9-global-travels/
 ├── frontend/          # Next.js app
 ├── backend/           # Express API
 ├── packages/shared/   # Shared types & validators

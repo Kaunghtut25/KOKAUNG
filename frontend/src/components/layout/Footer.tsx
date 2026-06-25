@@ -7,7 +7,7 @@ export function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div className="col-span-1 md:col-span-2">
             <h3 className="text-2xl font-serif font-bold text-gold-400 mb-4">
-              Heaven on the Clouds
+              A9 Global Travels & Tours
             </h3>
             <p className="text-sky-100 max-w-md">
               Future-built luxury travel experiences across Myanmar. Discover paradise above the clouds.
@@ -29,13 +29,13 @@ export function Footer() {
             <ul className="space-y-2 text-sky-100 text-sm">
               <li>Yangon, Myanmar</li>
               <li>+95 9 XXX XXX XXX</li>
-              <li>hello@heavenonclouds.com</li>
+              <li>hello@a9globaltravels.com</li>
             </ul>
           </div>
         </div>
 
         <div className="border-t border-sky-700 mt-8 pt-8 text-center text-sky-200 text-sm">
-          © {new Date().getFullYear()} Heaven on the Clouds. All rights reserved.
+          © {new Date().getFullYear()} A9 Global Travels & Tours. All rights reserved.
         </div>
       </div>
     </footer>
