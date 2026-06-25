@@ -1,0 +1,26 @@
+{
+  "name": "heaven-on-clouds-travel",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Luxury Travels & Tours — Heaven on the Clouds",
+  "workspaces": [
+    "packages/*",
+    "frontend",
+    "backend",
+    "telegram-bot"
+  ],
+  "scripts": {
+    "dev": "concurrently \"npm run dev -w backend\" \"npm run dev -w frontend\"",
+    "dev:frontend": "npm run dev -w frontend",
+    "dev:backend": "npm run dev -w backend",
+    "dev:bot": "npm run dev -w telegram-bot",
+    "build": "npm run build -w packages/shared && npm run build -w backend && npm run build -w frontend",
+    "lint": "npm run lint -w frontend && npm run lint -w backend"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
