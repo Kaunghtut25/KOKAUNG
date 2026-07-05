@@ -45,12 +45,12 @@ export default function CarsPage() {
     } catch (err) {
       console.error('Failed to fetch cars:', err);
       const fallbackCars: Car[] = [
-        { _id: 'fc1', slug: 'fbc1', carType: 'Toyota Alphard', capacity: 6, images: ['https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?w=600&h=400&fit=crop'], features: ['AC', 'Leather', 'WiFi'], pricingWithDriver: [{ duration: 'Full Day', priceMMK: 100000, priceUSD: 48 }], description: '' },
-        { _id: 'fc2', slug: 'fbc2', carType: 'Toyota Vios', capacity: 4, images: ['https://images.unsplash.com/photo-1550355291-bbee04a92027?w=600&h=400&fit=crop'], features: ['AC', 'GPS', 'Fuel'], pricingWithDriver: [{ duration: 'Full Day', priceMMK: 60000, priceUSD: 29 }], description: '' },
-        { _id: 'fc3', slug: 'fbc3', carType: 'Toyota Hiace', capacity: 12, images: ['https://images.unsplash.com/photo-1555215695-3004980ad54e?w=600&h=400&fit=crop'], features: ['AC', 'Luggage'], pricingWithDriver: [{ duration: 'Full Day', priceMMK: 140000, priceUSD: 67 }], description: '' },
-        { _id: 'fc4', slug: 'fbc4', carType: 'Honda CR-V', capacity: 5, images: ['https://images.unsplash.com/photo-1533106418989-88406c7cc4c1?w=600&h=400&fit=crop'], features: ['AC', 'Sunroof'], pricingWithDriver: [{ duration: 'Full Day', priceMMK: 85000, priceUSD: 40 }], description: '' },
-        { _id: 'fc5', slug: 'fbc5', carType: 'Mercedes S-Class', capacity: 3, images: ['https://images.unsplash.com/photo-1563720223672-4b07e3a5ccef?w=600&h=400&fit=crop'], features: ['AC', 'WiFi', 'Massage'], pricingWithDriver: [{ duration: 'Full Day', priceMMK: 250000, priceUSD: 119 }], description: '' },
-        { _id: 'fc6', slug: 'fbc6', carType: 'Toyota Land Cruiser Prado', capacity: 7, images: ['https://images.unsplash.com/photo-1503376780448-af8f91ef7b9f?w=600&h=400&fit=crop'], features: ['AC', '4WD', 'Sunroof'], pricingWithDriver: [{ duration: 'Full Day', priceMMK: 180000, priceUSD: 86 }], description: '' },
+        { _id: 'fc1', slug: 'fbc1', carType: 'Toyota Alphard', capacity: 6, images: ['https://picsum.photos/seed/a9car1/600/400'], features: ['AC', 'Leather', 'WiFi'], pricingWithDriver: [{ duration: 'Full Day', priceMMK: 100000, priceUSD: 48 }], description: '' },
+        { _id: 'fc2', slug: 'fbc2', carType: 'Toyota Vios', capacity: 4, images: ['https://picsum.photos/seed/a9car2/600/400'], features: ['AC', 'GPS', 'Fuel'], pricingWithDriver: [{ duration: 'Full Day', priceMMK: 60000, priceUSD: 29 }], description: '' },
+        { _id: 'fc3', slug: 'fbc3', carType: 'Toyota Hiace', capacity: 12, images: ['https://picsum.photos/seed/a9car3/600/400'], features: ['AC', 'Luggage'], pricingWithDriver: [{ duration: 'Full Day', priceMMK: 140000, priceUSD: 67 }], description: '' },
+        { _id: 'fc4', slug: 'fbc4', carType: 'Honda CR-V', capacity: 5, images: ['https://picsum.photos/seed/a9car4/600/400'], features: ['AC', 'Sunroof'], pricingWithDriver: [{ duration: 'Full Day', priceMMK: 85000, priceUSD: 40 }], description: '' },
+        { _id: 'fc5', slug: 'fbc5', carType: 'Mercedes S-Class', capacity: 3, images: ['https://picsum.photos/seed/a9car5/600/400'], features: ['AC', 'WiFi', 'Massage'], pricingWithDriver: [{ duration: 'Full Day', priceMMK: 250000, priceUSD: 119 }], description: '' },
+        { _id: 'fc6', slug: 'fbc6', carType: 'Toyota Land Cruiser Prado', capacity: 7, images: ['https://picsum.photos/seed/a9car6/600/400'], features: ['AC', '4WD', 'Sunroof'], pricingWithDriver: [{ duration: 'Full Day', priceMMK: 180000, priceUSD: 86 }], description: '' },
       ];
       setAllCars(fallbackCars);
     } finally {

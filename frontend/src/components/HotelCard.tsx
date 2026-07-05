@@ -9,7 +9,7 @@ interface HotelCardProps {
   currency?: 'MMK' | 'USD';
 }
 
-const FALLBACK_IMAGE = 'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=600&h=400&fit=crop';
+const FALLBACK_IMAGE = 'https://picsum.photos/seed/a9hotel-fallback/600/400';
 
 function getImages(images: string | string[] | undefined): string[] {
   if (!images) return [];

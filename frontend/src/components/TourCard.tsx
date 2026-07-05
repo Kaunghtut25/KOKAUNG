@@ -9,7 +9,7 @@ interface TourCardProps {
   currency?: 'MMK' | 'USD';
 }
 
-const FALLBACK_IMAGE = 'https://images.unsplash.com/photo-1488085061387-422e29b40080?w=600&h=400&fit=crop';
+const FALLBACK_IMAGE = 'https://picsum.photos/seed/a9tour-fallback/600/400';
 
 function getImages(images: string | string[] | undefined): string[] {
   if (!images) return [];
