@@ -139,7 +139,7 @@ function BookNowContent() {
           : formData.specialRequests,
         contactPreference: formData.contactPreference,
       };
-      const res = await fetch(`${API_BASE}/api/booking-receiver`, {
+      const res = await fetch(`/api/booking-receiver`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
