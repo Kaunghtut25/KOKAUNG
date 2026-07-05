@@ -4,6 +4,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { api, Car } from '@/lib/api';
 import CarCard from '@/components/CarCard';
+import ScrollingRow from '@/components/ScrollingRow';
 import CurrencyToggle from '@/components/CurrencyToggle';
 
 function SkeletonCard() {
@@ -102,6 +103,22 @@ export default function CarsPage() {
           </div>
         </div>
       </section>
+
+      {/* Featured Scrolling Row */}
+      {!loading && allCars.length > 0 && (
+        <section className="max-w-7xl mx-auto px-4 pt-8">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-xl font-bold text-gray-900" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>🚗 Popular Cars</h2>
+          </div>
+          <ScrollingRow>
+            {allCars.slice(0, 6).map((car) => (
+              <div key={car._id} className="w-[300px] flex-shrink-0 snap-start">
+                <CarCard car={car} currency={currency} />
+              </div>
+            ))}
+          </ScrollingRow>
+        </section>
+      )}
 
       <section className="max-w-7xl mx-auto px-4 py-10 pb-20">
         {loading && (

@@ -4,6 +4,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { api, Tour, ApiResponse } from '@/lib/api';
 import TourCard from '@/components/TourCard';
+import ScrollingRow from '@/components/ScrollingRow';
 import CurrencyToggle from '@/components/CurrencyToggle';
 import SearchBar from '@/components/SearchBar';
 
@@ -177,6 +178,22 @@ export default function ToursPage() {
           </div>
         </div>
       </section>
+
+      {/* Featured Scrolling Row */}
+      {!loading && tours.length > 0 && (
+        <section className="max-w-7xl mx-auto px-4 pt-8">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-xl font-bold text-gray-900" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>✨ Featured Tours</h2>
+          </div>
+          <ScrollingRow>
+            {tours.filter(t => t.featured).map((tour) => (
+              <div key={tour._id} className="w-[300px] flex-shrink-0 snap-start">
+                <TourCard tour={tour} currency={currency} />
+              </div>
+            ))}
+          </ScrollingRow>
+        </section>
+      )}
 
       {/* Results Grid */}
       <section className="max-w-7xl mx-auto px-4 py-10 pb-20">

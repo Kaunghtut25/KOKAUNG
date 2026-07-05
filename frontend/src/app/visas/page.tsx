@@ -46,7 +46,7 @@ const COUNTRY_IMAGES: Record<string, string> = {
   'Sri Lanka': 'https://images.unsplash.com/photo-1544651489-fb68c8b04488?w=400&h=300&fit=crop',
   Nepal: 'https://images.unsplash.com/photo-1605649181962-51db716c0671?w=400&h=300&fit=crop',
   Maldives: 'https://images.unsplash.com/photo-1514282401047-d79a71a590e8?w=400&h=300&fit=crop',
-  Laos: 'https://images.unsplash.com/photo-1559128010-7c1ad6e1b6a5?w=400&h=300&fit=crop',
+  Laos: 'https://images.unsplash.com/photo-1552465011-b4e3e9f42e65?w=400&h=300&fit=crop',
   Brunei: 'https://images.unsplash.com/photo-1528127269322-539801943592?w=400&h=300&fit=crop',
   Myanmar: 'https://images.unsplash.com/photo-1570167574777-7e5c2c5e60b5?w=400&h=300&fit=crop',
 };
