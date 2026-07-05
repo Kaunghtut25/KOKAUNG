@@ -1,4 +1,19 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { getInquiries, create as storeCreate } from '@/lib/adminStore';
+
+export async function GET(request: NextRequest) {
+  try {
+    const { searchParams } = new URL(request.url);
+    const page = parseInt(searchParams.get('page') || '1', 10);
+    const limit = parseInt(searchParams.get('limit') || '50', 10);
+    const status = searchParams.get('status') || undefined;
+
+    const result = getInquiries(page, limit, status);
+    return NextResponse.json(result);
+  } catch (err: any) {
+    return NextResponse.json({ success: false, message: err.message || 'Server error' }, { status: 500 });
+  }
+}
 
 export async function POST(request: NextRequest) {
   try {
@@ -22,8 +37,24 @@ export async function POST(request: NextRequest) {
     // Generate reference number
     const ref = 'A9-' + Date.now().toString(36).toUpperCase() + '-' + Math.random().toString(36).substring(2, 6).toUpperCase();
 
-    // Log booking for now (in production, save to DB / send email)
-    console.log('[Booking]', JSON.stringify({ referenceNumber: ref, fullName, email, phone, travelType, fromAirport, toAirport, departDate, returnDate, passengers, travelClass, specialRequests, contactPreference, createdAt: new Date().toISOString() }));
+    const inquiryData = {
+      fullName, email, phone, travelType, fromAirport: fromAirport || '', toAirport: toAirport || '',
+      departDate: departDate || '', returnDate: returnDate || '',
+      passengers: passengers || 1, travelClass: travelClass || 'Economy',
+      specialRequests: specialRequests || '', contactPreference: contactPreference || 'email',
+      status: 'New', referenceNumber: ref,
+      createdAt: new Date().toISOString(),
+    };
+
+    // Store in admin store (in-memory / Vercel-compatible)
+    try {
+      storeCreate('inquiries', inquiryData);
+    } catch (storeErr) {
+      console.error('[Booking] Failed to store inquiry:', storeErr);
+    }
+
+    // Log booking for debugging
+    console.log('[Booking]', JSON.stringify({ referenceNumber: ref, ...inquiryData }));
 
     return NextResponse.json({
       success: true,

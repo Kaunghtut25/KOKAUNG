@@ -1,0 +1,11 @@
+import { NextRequest, NextResponse } from "next/server";
+import { getDashboardStats } from "@/lib/adminStore";
+
+export async function GET() {
+  try {
+    const stats = getDashboardStats();
+    return NextResponse.json(stats);
+  } catch (err: any) {
+    return NextResponse.json({ message: err.message || "Server error" }, { status: 500 });
+  }
+}
