@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { seed, getCollection } from '@/lib/adminStore';
+import { seed, getAll, create } from '@/lib/adminStore';
 
 seed();
 
@@ -11,21 +11,12 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ success: false, message: 'Name, email, and password required' }, { status: 400 });
     }
 
-    const users = getCollection('users');
+    const users: any[] = getAll('users');
     if (users.find((u: any) => u.email === email)) {
       return NextResponse.json({ success: false, message: 'Email already registered' }, { status: 409 });
     }
 
-    const user = {
-      _id: 'user-' + Date.now().toString(36),
-      id: 'user-' + Date.now().toString(36),
-      name,
-      email,
-      role: 'user',
-      createdAt: new Date().toISOString(),
-    };
-    users.push(user);
-    getCollection('_meta').users = users;
+    const user = create('users', { name, email, role: 'user' }) as any;
 
     const token = Buffer.from(JSON.stringify({ id: user._id, email: user.email, role: user.role })).toString('base64');
 

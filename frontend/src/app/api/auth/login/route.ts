@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { seed, getCollection } from '@/lib/adminStore';
+import { seed, getAll, create } from '@/lib/adminStore';
 
 // Simple admin credentials (in production, use proper auth)
 const ADMIN_EMAIL = 'admin@a9global.com';
@@ -16,22 +16,16 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ success: false, message: 'Email and password required' }, { status: 400 });
     }
 
-    const users = getCollection('users');
+    const users: any[] = getAll('users');
     let user = users.find((u: any) => u.email === email);
 
     if (!user) {
-      // Auto-create user for first login (demo mode)
       if (email === ADMIN_EMAIL && password === ADMIN_PASSWORD) {
-        user = {
-          _id: 'admin-001',
-          id: 'admin-001',
+        user = create('users', {
           name: 'Admin',
           email: ADMIN_EMAIL,
           role: 'admin',
-          createdAt: new Date().toISOString(),
-        };
-        users.push(user);
-        getCollection('_meta').users = users;
+        }) as any;
       } else {
         return NextResponse.json({ success: false, message: 'Invalid credentials' }, { status: 401 });
       }
