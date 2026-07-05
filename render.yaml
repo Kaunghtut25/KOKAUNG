@@ -1,12 +1,12 @@
 services:
   - type: web
     name: a9global-api
-    runtime: node
+    env: node
     region: singapore
     plan: free
-    rootDir: backend
     buildCommand: npm install
     startCommand: node server.js
+    rootDir: backend
     envVars:
       - key: JWT_SECRET
         value: a9global_jwt_secret_2026
