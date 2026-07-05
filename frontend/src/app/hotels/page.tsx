@@ -85,7 +85,11 @@ export default function HotelsPage() {
 
   return (
     <main className="min-h-screen bg-white">
-      <section className="relative pt-24 pb-12 px-4 overflow-hidden bg-gradient-to-b from-[#FFFDF5] to-white">
+      <section className="relative pt-24 pb-12 px-4 overflow-hidden">
+        <div className="absolute inset-0">
+          <img src="https://picsum.photos/seed/a9hotel-hero/1920/600" alt="" className="w-full h-full object-cover" />
+          <div className="absolute inset-0 bg-white/75" />
+        </div>
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(212,175,55,0.08),transparent_70%)]" />
         <div className="relative max-w-7xl mx-auto text-center">
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4 text-[#0A1628]" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>

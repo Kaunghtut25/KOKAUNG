@@ -2,7 +2,7 @@ import axios, { AxiosInstance, AxiosResponse, InternalAxiosRequestConfig } from 
 
 // Create axios instance
 const apiClient: AxiosInstance = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api',
+  baseURL: typeof window !== 'undefined' ? '/api' : (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api'),
   timeout: 15000,
   headers: {
     'Content-Type': 'application/json',
@@ -30,8 +30,11 @@ apiClient.interceptors.response.use(
   (response: AxiosResponse) => response,
   (error) => {
     if (error.response?.status === 401 && typeof window !== 'undefined') {
-      localStorage.removeItem('a9token');
-      window.location.href = '/auth/login';
+      // Only redirect if NOT already on login page
+      if (!window.location.pathname.includes('/auth/login') && !window.location.pathname.includes('/auth/register')) {
+        localStorage.removeItem('a9token');
+        window.location.href = '/auth/login';
+      }
     }
     return Promise.reject(error);
   }
