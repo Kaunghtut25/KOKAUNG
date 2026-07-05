@@ -7,7 +7,7 @@ import CurrencyToggle from '@/components/CurrencyToggle';
 import TourCard from '@/components/TourCard';
 import HotelCard from '@/components/HotelCard';
 import CarCard from '@/components/CarCard';
-import { SearchResults, Tour, Hotel, Car } from '@/lib/api';
+import { SearchResults, Tour, Hotel, Car, searchAll, SearchParams } from '@/lib/api';
 
 type TabType = 'all' | 'tours' | 'hotels' | 'cars';
 
