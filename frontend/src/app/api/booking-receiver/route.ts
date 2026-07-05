@@ -54,7 +54,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Log booking for debugging
-    console.log('[Booking]', JSON.stringify({ referenceNumber: ref, ...inquiryData }));
+    console.log('[Booking]', JSON.stringify(inquiryData));
 
     return NextResponse.json({
       success: true,
