@@ -54,7 +54,7 @@ const FALLBACK_PLANS: InsurancePlan[] = [
 ];
 
 const PLAN_IMAGES: Record<string, string> = {
-  'Basic Travel Shield': 'https://images.unsplash.com/photo-1487452066049-a6d1fa0a075c?w=600&h=200&fit=crop',
+  'Basic Travel Shield': 'https://images.unsplash.com/photo-1436491865332-7a61a109bb05?w=600&h=200&fit=crop',
   'Gold Explorer Plan': 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&h=200&fit=crop',
   'Family Vacation Plus': 'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=600&h=200&fit=crop',
   'Premium Elite Guard': 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=600&h=200&fit=crop',
@@ -107,7 +107,7 @@ export default function InsurancePage() {
         <div
           className="absolute inset-0 bg-cover bg-center"
           style={{
-            backgroundImage: 'url(https://images.unsplash.com/photo-1487452066049-a6d1fa0a075c?w=1600&q=80)',
+            backgroundImage: 'url(https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=1600&q=80)',
           }}
         />
         <div className="absolute inset-0 bg-white/70 backdrop-blur-sm" />
@@ -215,11 +215,11 @@ export default function InsurancePage() {
                   {/* Card Image */}
                   <div className="relative h-36 overflow-hidden">
                     <img
-                      src={PLAN_IMAGES[plan.planName] || 'https://images.unsplash.com/photo-1487452066049-a6d1fa0a075c?w=600&h=200&fit=crop&auto=format&q=80'}
+                      src={PLAN_IMAGES[plan.planName] || 'https://images.unsplash.com/photo-1565372919097-abdae1f3e4c6?w=600&h=200&fit=crop&auto=format&q=80'}
                       alt={`Travel Insurance - ${plan.planName}`}
                       className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                       loading="lazy"
-                      onError={(e) => { const t = e.target as HTMLImageElement; if (t.src !== 'https://images.unsplash.com/photo-1487452066049-a6d1fa0a075c?w=600&h=200&fit=crop&auto=format&q=80') t.src = 'https://images.unsplash.com/photo-1487452066049-a6d1fa0a075c?w=600&h=200&fit=crop&auto=format&q=80'; }}
+                      onError={(e) => { const t = e.target as HTMLImageElement; if (t.src !== 'https://images.unsplash.com/photo-1565372919097-abdae1f3e4c6?w=600&h=200&fit=crop&auto=format&q=80') t.src = 'https://images.unsplash.com/photo-1565372919097-abdae1f3e4c6?w=600&h=200&fit=crop&auto=format&q=80'; }}
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-[#0A1628] via-transparent to-transparent" />
                   </div>

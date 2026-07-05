@@ -9,7 +9,7 @@ interface CarCardProps {
   currency?: 'MMK' | 'USD';
 }
 
-const FALLBACK_IMAGE = 'https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?w=600&h=400&fit=crop';
+const FALLBACK_IMAGE = 'https://images.unsplash.com/photo-1494976388531-d1058494cdd8?w=600&h=400&fit=crop';
 
 function getImages(images: string | string[] | undefined): string[] {
   if (!images) return [];
