@@ -91,7 +91,7 @@ function RowLabel({ emoji, text }: { emoji: string; text: string }) {
 
 export default function PopularDestinations() {
   return (
-    <section className="w-full bg-white py-16 md:py-24 overflow-hidden">
+    <section className="w-full bg-white pt-4 pb-16 md:pt-6 md:pb-24 overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 md:px-6">
         {/* Section heading */}
         <div className="text-center mb-12">
