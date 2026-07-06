@@ -282,7 +282,7 @@ export default function HomePage() {
           <div className="bg-transparent backdrop-blur-2xl rounded-2xl border border-white/20 shadow-2xl p-5 md:p-7 [&_input]:bg-white/10 [&_input]:border-white/20 [&_input]:text-white [&_input]:placeholder:text-white/40 [&_select]:bg-white/10 [&_select]:border-white/20 [&_select]:text-white [&_label]:text-white/70">
             <div className="flex gap-1 mb-5 bg-white/10 backdrop-blur-md rounded-lg p-1 w-fit">
               {(["oneway", "roundtrip", "multicity"] as TabType[]).map((tab) => (
-                <button key={tab} onClick={() => { setActiveTab(tab); if (tab !== "roundtrip") setReturnDate(""); }}
+                <button key={tab} onClick={() => { setActiveTab(tab); if (tab !== "roundtrip") setReturnDate(""); if (tab === "multicity") setMultiCityLegs([{ from: "", to: "", date: "" }, { from: "", to: "", date: "" }]); }}
                   className={"px-4 py-2 rounded-md text-sm font-medium transition-all duration-300 cursor-pointer " +
                     (activeTab === tab ? "bg-[#D4AF37] text-white shadow-md" : "text-white/60 hover:text-white hover:bg-white/10")}>
                   {tab === "oneway" ? "✈ One Way" : tab === "roundtrip" ? "🔄 Round Trip" : "🌐 Multi-City"}
