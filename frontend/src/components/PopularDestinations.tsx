@@ -6,41 +6,27 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 // ── Destination data ────────────────────────────────────────────────────────
 
 interface Destination {
-  city: string;
-  country: string;
-  imageId: string;
+  name: string;
+  imageUrl: string;
 }
 
-const ROW_1: Destination[] = [
-  { city: "Bangkok", country: "Thailand", imageId: "photo-1508009603885-50cf7c579365" },
-  { city: "Singapore", country: "Singapore", imageId: "photo-1525625293386-3f8f99389edd" },
-  { city: "Tokyo", country: "Japan", imageId: "photo-1503899036084-c55cdd92da26" },
-  { city: "Paris", country: "France", imageId: "photo-1511739005466-8b40bb5925bd" },
-  { city: "Dubai", country: "UAE", imageId: "photo-1549877452365-83ae770a5c3d" },
-  { city: "Bali", country: "Indonesia", imageId: "photo-1555400038-63f5ba517a47" },
-  { city: "London", country: "UK", imageId: "photo-1513026705753-bc3fffca8bf4" },
-  { city: "Kuala Lumpur", country: "Malaysia", imageId: "photo-1536053392961-5736fc69a246" },
-  { city: "Seoul", country: "Korea", imageId: "photo-1546872869-f0c7f4f2f0b2" },
-  { city: "Hanoi", country: "Vietnam", imageId: "photo-1504214208698-10e1f9c5e5cf" },
+const DESTINATIONS: Destination[] = [
+  { name: "Paris", imageUrl: "https://picsum.photos/seed/a9dest-paris/400/300" },
+  { name: "Dubai", imageUrl: "https://picsum.photos/seed/a9dest-dubai/400/300" },
+  { name: "Malaysia", imageUrl: "https://picsum.photos/seed/a9dest-malaysia/400/300" },
+  { name: "Korea", imageUrl: "https://picsum.photos/seed/a9dest-korea/400/300" },
+  { name: "Vietnam", imageUrl: "https://picsum.photos/seed/a9dest-vietnam/400/300" },
+  { name: "Myanmar", imageUrl: "https://picsum.photos/seed/a9dest-myanmar/400/300" },
+  { name: "Australia", imageUrl: "https://picsum.photos/seed/a9dest-australia/400/300" },
+  { name: "Turkey", imageUrl: "https://picsum.photos/seed/a9dest-turkey/400/300" },
+  { name: "Netherlands", imageUrl: "https://picsum.photos/seed/a9dest-netherlands/400/300" },
+  { name: "Thailand", imageUrl: "https://picsum.photos/seed/a9dest-thailand/400/300" },
+  { name: "Nepal", imageUrl: "https://picsum.photos/seed/a9dest-nepal/400/300" },
 ];
 
-const ROW_2: Destination[] = [
-  { city: "Bagan", country: "Myanmar", imageId: "photo-1570167574777-7e5c2c5e60b5" },
-  { city: "Maldives", country: "Maldives", imageId: "photo-1573843981267-be1999ff37cd" },
-  { city: "Rome", country: "Italy", imageId: "photo-1525874684015-58379d421a52" },
-  { city: "Hong Kong", country: "Hong Kong", imageId: "photo-1565967511849-76a60a516170" },
-  { city: "Sydney", country: "Australia", imageId: "photo-1515886651714-6f8bc0de6011" },
-  { city: "Istanbul", country: "Turkey", imageId: "photo-1524221757912-89f4d75c4a28" },
-  { city: "Amsterdam", country: "Netherlands", imageId: "photo-1512470876300-832aa0e9b011" },
-  { city: "Phuket", country: "Thailand", imageId: "photo-1537956160437-43e09e55e666" },
-  { city: "Kathmandu", country: "Nepal", imageId: "photo-1605649181962-51db716c0671" },
-  { city: "Siem Reap", country: "Cambodia", imageId: "photo-1559128010-7c1ad6e1b6a5" },
-];
+const FALLBACK_IMG = `https://picsum.photos/seed/a9dest-fallback/400/300`;
 
-const FALLBACK_IMG = `https://images.unsplash.com/photo-1500835556837-99d25a2f248b?w=400&h=500&fit=crop&auto=format&q=80`;
-
-const imgUrl = (imageId: string) =>
-  `https://images.unsplash.com/${imageId}?w=400&h=500&fit=crop`;
+const imgUrl = (imageUrl: string) => imageUrl;
 
 // ── Constants ────────────────────────────────────────────────────────────────
 
@@ -65,8 +51,8 @@ function DestinationCard({ dest }: { dest: Destination }) {
 
       {/* Background image */}
       <img
-        src={imgError ? fallbackImg : imgUrl(dest.imageId)}
-        alt={`${dest.city}, ${dest.country}`}
+        src={imgError ? fallbackImg : imgUrl(dest.imageUrl)}
+        alt={dest.name}
         className={`absolute inset-0 w-full h-full object-cover transition-all duration-700 group-hover:scale-110 ${imgLoaded ? 'opacity-100' : 'opacity-0'}`}
         loading="lazy"
         onLoad={() => setImgLoaded(true)}
@@ -82,11 +68,8 @@ function DestinationCard({ dest }: { dest: Destination }) {
           className="text-white text-xl leading-tight"
           style={{ fontFamily: "'Playfair Display', serif" }}
         >
-          {dest.city}
+          {dest.name}
         </h3>
-        <p className="mt-1 text-sm tracking-wider uppercase" style={{ color: "#D4AF37" }}>
-          {dest.country}
-        </p>
       </div>
     </div>
   );
@@ -172,7 +155,7 @@ function ScrollRow({ destinations, rowIndex }: ScrollRowProps) {
         style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
       >
         {destinations.map((dest) => (
-          <DestinationCard key={`${rowIndex}-${dest.city}`} dest={dest} />
+          <DestinationCard key={`${rowIndex}-${dest.name}`} dest={dest} />
         ))}
       </div>
 
@@ -216,14 +199,9 @@ export default function PopularDestinations() {
           <div className="mt-4 mx-auto w-20 h-0.5 rounded" style={{ backgroundColor: "#D4AF37" }} />
         </div>
 
-        {/* Row 1 */}
-        <div className="mb-8">
-          <ScrollRow destinations={ROW_1} rowIndex={0} />
-        </div>
-
-        {/* Row 2 */}
+        {/* Single scrollable row with all 11 destinations */}
         <div>
-          <ScrollRow destinations={ROW_2} rowIndex={1} />
+          <ScrollRow destinations={DESTINATIONS} rowIndex={0} />
         </div>
       </div>
 

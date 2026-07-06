@@ -199,6 +199,82 @@ export default function ToursPage() {
         </section>
       )}
 
+      {/* Scrolling Row 1 — Discover Myanmar */}
+      <section className="max-w-7xl mx-auto px-4 pt-10">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-xl font-bold text-gray-900" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>🌟 Discover Myanmar</h2>
+        </div>
+        <ScrollingRow>
+          {[
+            { title: 'Bagan Sunrise Tour', destination: 'Bagan', priceMMK: 950000, priceUSD: 452, image: 'https://picsum.photos/seed/a9tour-scroll1/600/400' },
+            { title: 'Inle Lake Discovery', destination: 'Inle Lake', priceMMK: 1100000, priceUSD: 524, image: 'https://picsum.photos/seed/a9tour-scroll2/600/400' },
+            { title: 'Mandalay Heritage', destination: 'Mandalay', priceMMK: 750000, priceUSD: 357, image: 'https://picsum.photos/seed/a9tour-scroll3/600/400' },
+            { title: 'Yangon City Walk', destination: 'Yangon', priceMMK: 450000, priceUSD: 214, image: 'https://picsum.photos/seed/a9tour-scroll4/600/400' },
+            { title: 'Ngapali Beach Bliss', destination: 'Ngapali Beach', priceMMK: 1350000, priceUSD: 643, image: 'https://picsum.photos/seed/a9tour-scroll5/600/400' },
+            { title: 'Golden Rock Trek', destination: 'Kyaiktiyo', priceMMK: 520000, priceUSD: 248, image: 'https://picsum.photos/seed/a9tour-scroll6/600/400' },
+            { title: 'Putao Adventure', destination: 'Putao', priceMMK: 2100000, priceUSD: 1000, image: 'https://picsum.photos/seed/a9tour-scroll7/600/400' },
+            { title: 'Mrauk U Ancient City', destination: 'Mrauk U', priceMMK: 1800000, priceUSD: 857, image: 'https://picsum.photos/seed/a9tour-scroll8/600/400' },
+            { title: 'Hpa-an Caves', destination: 'Hpa-an', priceMMK: 650000, priceUSD: 310, image: 'https://picsum.photos/seed/a9tour-scroll9/600/400' },
+            { title: 'Pyin Oo Lwin Escape', destination: 'Pyin Oo Lwin', priceMMK: 580000, priceUSD: 276, image: 'https://picsum.photos/seed/a9tour-scroll10/600/400' },
+          ].map((item, i) => (
+            <div key={`row1-${i}`} className="w-[300px] flex-shrink-0 snap-start">
+              <div className="group relative rounded-2xl overflow-hidden cursor-pointer border border-gray-200 hover:border-[#D4AF37]/60 hover:shadow-xl hover:shadow-[#D4AF37]/10 hover:scale-[1.02] transition-all duration-300">
+                <div className="relative h-[300px] w-full overflow-hidden bg-gray-200">
+                  <img src={item.image} alt={item.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" loading="lazy" style={{ position: 'absolute', inset: 0 }} />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent" />
+                  <span className="absolute top-4 left-4 px-3 py-1 rounded-full bg-[#D4AF37]/90 text-gray-900 text-xs font-semibold backdrop-blur-sm">{item.destination}</span>
+                  <div className="absolute bottom-0 left-0 right-0 p-5">
+                    <h3 className="text-white text-xl font-bold mb-2 line-clamp-1" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>{item.title}</h3>
+                    <div className="text-right">
+                      <span className="text-[#D4AF37] text-lg font-bold">{currency === 'MMK' ? `Ks ${item.priceMMK.toLocaleString()}` : `$ ${item.priceUSD.toLocaleString()}`}</span>
+                      <span className="text-gray-400 text-xs ml-1">/person</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </ScrollingRow>
+      </section>
+
+      {/* Scrolling Row 2 — Beyond Myanmar */}
+      <section className="max-w-7xl mx-auto px-4 pt-8">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-xl font-bold text-gray-900" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>🌏 Beyond Myanmar</h2>
+        </div>
+        <ScrollingRow>
+          {[
+            { title: 'Bangkok Explorer', destination: 'Thailand', priceMMK: 1200000, priceUSD: 571, image: 'https://picsum.photos/seed/a9tour-scroll11/600/400' },
+            { title: 'Singapore City Life', destination: 'Singapore', priceMMK: 2500000, priceUSD: 1190, image: 'https://picsum.photos/seed/a9tour-scroll12/600/400' },
+            { title: 'Bali Paradise', destination: 'Indonesia', priceMMK: 1800000, priceUSD: 857, image: 'https://picsum.photos/seed/a9tour-scroll13/600/400' },
+            { title: 'Dubai Luxury', destination: 'UAE', priceMMK: 3500000, priceUSD: 1667, image: 'https://picsum.photos/seed/a9tour-scroll14/600/400' },
+            { title: 'Tokyo Highlights', destination: 'Japan', priceMMK: 4200000, priceUSD: 2000, image: 'https://picsum.photos/seed/a9tour-scroll15/600/400' },
+            { title: 'Seoul Discovery', destination: 'South Korea', priceMMK: 2800000, priceUSD: 1333, image: 'https://picsum.photos/seed/a9tour-scroll16/600/400' },
+            { title: 'Kuala Lumpur Getaway', destination: 'Malaysia', priceMMK: 1500000, priceUSD: 714, image: 'https://picsum.photos/seed/a9tour-scroll17/600/400' },
+            { title: 'Hanoi Heritage', destination: 'Vietnam', priceMMK: 900000, priceUSD: 429, image: 'https://picsum.photos/seed/a9tour-scroll18/600/400' },
+            { title: 'Phnom Penh Culture', destination: 'Cambodia', priceMMK: 850000, priceUSD: 405, image: 'https://picsum.photos/seed/a9tour-scroll19/600/400' },
+            { title: 'Maldives Dream', destination: 'Maldives', priceMMK: 5500000, priceUSD: 2619, image: 'https://picsum.photos/seed/a9tour-scroll20/600/400' },
+          ].map((item, i) => (
+            <div key={`row2-${i}`} className="w-[300px] flex-shrink-0 snap-start">
+              <div className="group relative rounded-2xl overflow-hidden cursor-pointer border border-gray-200 hover:border-[#D4AF37]/60 hover:shadow-xl hover:shadow-[#D4AF37]/10 hover:scale-[1.02] transition-all duration-300">
+                <div className="relative h-[300px] w-full overflow-hidden bg-gray-200">
+                  <img src={item.image} alt={item.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" loading="lazy" style={{ position: 'absolute', inset: 0 }} />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent" />
+                  <span className="absolute top-4 left-4 px-3 py-1 rounded-full bg-[#D4AF37]/90 text-gray-900 text-xs font-semibold backdrop-blur-sm">{item.destination}</span>
+                  <div className="absolute bottom-0 left-0 right-0 p-5">
+                    <h3 className="text-white text-xl font-bold mb-2 line-clamp-1" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>{item.title}</h3>
+                    <div className="text-right">
+                      <span className="text-[#D4AF37] text-lg font-bold">{currency === 'MMK' ? `Ks ${item.priceMMK.toLocaleString()}` : `$ ${item.priceUSD.toLocaleString()}`}</span>
+                      <span className="text-gray-400 text-xs ml-1">/person</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </ScrollingRow>
+      </section>
+
       {/* Results Grid */}
       <section className="max-w-7xl mx-auto px-4 py-10 pb-20">
         {loading && (

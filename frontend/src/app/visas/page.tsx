@@ -40,7 +40,12 @@ const COUNTRY_IMAGES: Record<string, string> = {
   'South Korea': 'https://picsum.photos/seed/a9visa-southkorea/400/300',
   'United Arab Emirates': 'https://picsum.photos/seed/a9visa-uae/400/300',
   Cambodia: 'https://picsum.photos/seed/a9visa-cambodia/400/300',
+  Malaysia: 'https://picsum.photos/seed/a9visa-malaysia/400/300',
+  Indonesia: 'https://picsum.photos/seed/a9visa-indonesia/400/300',
+  Philippines: 'https://picsum.photos/seed/a9visa-philippines/400/300',
+  Taiwan: 'https://picsum.photos/seed/a9visa-taiwan/400/300',
   Australia: 'https://picsum.photos/seed/a9visa-australia/400/300',
+  'United Kingdom': 'https://picsum.photos/seed/a9visa-uk/400/300',
   'Hong Kong': 'https://picsum.photos/seed/a9visa-hongkong/400/300',
   Macau: 'https://picsum.photos/seed/a9visa-macau/400/300',
   'Sri Lanka': 'https://picsum.photos/seed/a9visa-srilanka/400/300',
@@ -91,7 +96,7 @@ function VisaSliderCard({ visa, currency, onClick }: { visa: VisaService; curren
           <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
           <div className="absolute bottom-2 left-3 flex items-center gap-2">
             <span className="text-2xl">{flag}</span>
-            <h3 className="text-gray-900 font-semibold text-base" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>{visa.country}</h3>
+            <h3 className="text-white font-semibold text-base drop-shadow-md" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>{visa.country}</h3>
           </div>
         </div>
       ) : (

@@ -4,6 +4,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { api, Hotel } from '@/lib/api';
 import HotelCard from '@/components/HotelCard';
+import ScrollingRow from '@/components/ScrollingRow';
 import CurrencyToggle from '@/components/CurrencyToggle';
 
 function SkeletonCard() {
@@ -146,6 +147,100 @@ export default function HotelsPage() {
             <div className="ml-auto"><CurrencyToggle activeCurrency={currency} onToggle={setCurrency} /></div>
           </div>
         </div>
+      </section>
+
+      {/* Scrolling Row 1 — Luxury Stays */}
+      <section className="max-w-7xl mx-auto px-4 pt-10">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-xl font-bold text-gray-900" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>👑 Luxury Stays</h2>
+        </div>
+        <ScrollingRow>
+          {[
+            { name: 'Sule Shangri-La', location: 'Yangon', rating: 4.7, priceMMK: 180000, priceUSD: 86, image: 'https://picsum.photos/seed/a9hotel-scroll1/600/400' },
+            { name: 'The Strand Yangon', location: 'Yangon', rating: 4.9, priceMMK: 350000, priceUSD: 167, image: 'https://picsum.photos/seed/a9hotel-scroll2/600/400' },
+            { name: 'Aureum Palace Bagan', location: 'Bagan', rating: 4.8, priceMMK: 220000, priceUSD: 105, image: 'https://picsum.photos/seed/a9hotel-scroll3/600/400' },
+            { name: 'Inle Princess Resort', location: 'Inle Lake', rating: 4.6, priceMMK: 160000, priceUSD: 76, image: 'https://picsum.photos/seed/a9hotel-scroll4/600/400' },
+            { name: 'Ngapali Bay Hotel', location: 'Ngapali Beach', rating: 4.7, priceMMK: 250000, priceUSD: 119, image: 'https://picsum.photos/seed/a9hotel-scroll5/600/400' },
+            { name: 'Mandalay Hill Resort', location: 'Mandalay', rating: 4.3, priceMMK: 120000, priceUSD: 57, image: 'https://picsum.photos/seed/a9hotel-scroll6/600/400' },
+            { name: 'Kempinski Nay Pyi Taw', location: 'Nay Pyi Taw', rating: 4.8, priceMMK: 300000, priceUSD: 143, image: 'https://picsum.photos/seed/a9hotel-scroll7/600/400' },
+            { name: 'Sedona Hotel Yangon', location: 'Yangon', rating: 4.5, priceMMK: 155000, priceUSD: 74, image: 'https://picsum.photos/seed/a9hotel-scroll8/600/400' },
+            { name: 'Bagan Lodge', location: 'Bagan', rating: 4.6, priceMMK: 190000, priceUSD: 90, image: 'https://picsum.photos/seed/a9hotel-scroll9/600/400' },
+            { name: 'Novotel Inle Lake', location: 'Inle Lake', rating: 4.4, priceMMK: 140000, priceUSD: 67, image: 'https://picsum.photos/seed/a9hotel-scroll10/600/400' },
+          ].map((item, i) => (
+            <div key={`hrow1-${i}`} className="w-[300px] flex-shrink-0 snap-start">
+              <div className="group relative rounded-2xl overflow-hidden cursor-pointer border border-gray-200 hover:border-[#D4AF37]/60 hover:shadow-xl hover:shadow-[#D4AF37]/10 hover:scale-[1.02] transition-all duration-300">
+                <div className="relative h-[300px] w-full overflow-hidden bg-gray-200">
+                  <img src={item.image} alt={item.name} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" loading="lazy" style={{ position: 'absolute', inset: 0 }} />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent" />
+                  <span className="absolute top-4 left-4 px-3 py-1 rounded-full bg-[#D4AF37]/90 text-gray-900 text-xs font-semibold backdrop-blur-sm">📍 {item.location}</span>
+                  <div className="absolute bottom-0 left-0 right-0 p-5">
+                    <h3 className="text-white text-xl font-bold mb-1 line-clamp-1" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>{item.name}</h3>
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-0.5">
+                        {Array.from({ length: 5 }, (_, si) => (
+                          <svg key={si} className={`w-4 h-4 ${si < Math.round(item.rating) ? 'text-[#D4AF37]' : 'text-gray-600'}`} fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                          </svg>
+                        ))}
+                      </div>
+                      <div className="text-right">
+                        <span className="text-[#D4AF37] text-lg font-bold">{currency === 'MMK' ? `Ks ${item.priceMMK.toLocaleString()}` : `$ ${item.priceUSD.toLocaleString()}`}</span>
+                        <span className="text-gray-400 text-xs ml-1">/night</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </ScrollingRow>
+      </section>
+
+      {/* Scrolling Row 2 — Budget Friendly */}
+      <section className="max-w-7xl mx-auto px-4 pt-8">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-xl font-bold text-gray-900" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>💎 Budget Friendly</h2>
+        </div>
+        <ScrollingRow>
+          {[
+            { name: 'Clover Hotel Yangon', location: 'Yangon', rating: 4.1, priceMMK: 45000, priceUSD: 21, image: 'https://picsum.photos/seed/a9hotel-scroll11/600/400' },
+            { name: 'Ostello Bello Bagan', location: 'Bagan', rating: 4.4, priceMMK: 35000, priceUSD: 17, image: 'https://picsum.photos/seed/a9hotel-scroll12/600/400' },
+            { name: 'Royal Inlay Hotel', location: 'Inle Lake', rating: 4.0, priceMMK: 50000, priceUSD: 24, image: 'https://picsum.photos/seed/a9hotel-scroll13/600/400' },
+            { name: 'Silver Oaks Mandalay', location: 'Mandalay', rating: 3.9, priceMMK: 38000, priceUSD: 18, image: 'https://picsum.photos/seed/a9hotel-scroll14/600/400' },
+            { name: 'Beachfront Inn Ngapali', location: 'Ngapali Beach', rating: 4.2, priceMMK: 65000, priceUSD: 31, image: 'https://picsum.photos/seed/a9hotel-scroll15/600/400' },
+            { name: 'Golden Guest House', location: 'Yangon', rating: 4.0, priceMMK: 25000, priceUSD: 12, image: 'https://picsum.photos/seed/a9hotel-scroll16/600/400' },
+            { name: 'Shwe Yee Win Bagan', location: 'Bagan', rating: 4.3, priceMMK: 42000, priceUSD: 20, image: 'https://picsum.photos/seed/a9hotel-scroll17/600/400' },
+            { name: 'Nyaung Shwe Haven', location: 'Inle Lake', rating: 4.1, priceMMK: 48000, priceUSD: 23, image: 'https://picsum.photos/seed/a9hotel-scroll18/600/400' },
+            { name: 'Taunggyi Comfort Inn', location: 'Taunggyi', rating: 3.8, priceMMK: 32000, priceUSD: 15, image: 'https://picsum.photos/seed/a9hotel-scroll19/600/400' },
+            { name: 'Pyay Riverside', location: 'Pyay', rating: 3.7, priceMMK: 28000, priceUSD: 13, image: 'https://picsum.photos/seed/a9hotel-scroll20/600/400' },
+          ].map((item, i) => (
+            <div key={`hrow2-${i}`} className="w-[300px] flex-shrink-0 snap-start">
+              <div className="group relative rounded-2xl overflow-hidden cursor-pointer border border-gray-200 hover:border-[#D4AF37]/60 hover:shadow-xl hover:shadow-[#D4AF37]/10 hover:scale-[1.02] transition-all duration-300">
+                <div className="relative h-[300px] w-full overflow-hidden bg-gray-200">
+                  <img src={item.image} alt={item.name} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" loading="lazy" style={{ position: 'absolute', inset: 0 }} />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent" />
+                  <span className="absolute top-4 left-4 px-3 py-1 rounded-full bg-[#D4AF37]/90 text-gray-900 text-xs font-semibold backdrop-blur-sm">📍 {item.location}</span>
+                  <div className="absolute bottom-0 left-0 right-0 p-5">
+                    <h3 className="text-white text-xl font-bold mb-1 line-clamp-1" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>{item.name}</h3>
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-0.5">
+                        {Array.from({ length: 5 }, (_, si) => (
+                          <svg key={si} className={`w-4 h-4 ${si < Math.round(item.rating) ? 'text-[#D4AF37]' : 'text-gray-600'}`} fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                          </svg>
+                        ))}
+                      </div>
+                      <div className="text-right">
+                        <span className="text-[#D4AF37] text-lg font-bold">{currency === 'MMK' ? `Ks ${item.priceMMK.toLocaleString()}` : `$ ${item.priceUSD.toLocaleString()}`}</span>
+                        <span className="text-gray-400 text-xs ml-1">/night</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </ScrollingRow>
       </section>
 
       <section className="max-w-7xl mx-auto px-4 py-10 pb-20">

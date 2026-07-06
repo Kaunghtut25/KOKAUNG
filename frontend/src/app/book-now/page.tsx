@@ -2,16 +2,7 @@
 
 import { useState, useEffect, Suspense, useRef } from "react";
 import { useSearchParams } from "next/navigation";
-import { FaPlane, FaHotel, FaCar, FaPassport, FaShieldAlt, FaMapMarkedAlt, FaCheckCircle, FaCalendarAlt, FaUser, FaEnvelope, FaPhone, FaChair, FaPaperPlane } from "react-icons/fa";
-
-const travelTypes = [
-  { value: "flight", label: "Flight", icon: FaPlane },
-  { value: "hotel", label: "Hotel", icon: FaHotel },
-  { value: "tour", label: "Tour Package", icon: FaMapMarkedAlt },
-  { value: "car", label: "Car Rental", icon: FaCar },
-  { value: "visa", label: "Visa Service", icon: FaPassport },
-  { value: "insurance", label: "Travel Insurance", icon: FaShieldAlt },
-];
+import { FaPaperPlane, FaCheckCircle, FaUser, FaEnvelope, FaPhone } from "react-icons/fa";
 
 interface FormData {
   fullName: string; email: string; phone: string; travelType: string;
@@ -164,16 +155,23 @@ function BookNowContent() {
 
   return (
     <main className="min-h-screen bg-gray-50 pt-24 pb-16">
-      <div className="max-w-4xl mx-auto px-4">
-        {/* Header */}
-        <div className="text-center mb-10">
-          <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-3" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
+      {/* Hero Banner */}
+      <div
+        className="relative w-full h-48 md:h-64 mb-8 bg-cover bg-center rounded-b-3xl overflow-hidden"
+        style={{ backgroundImage: 'url(https://picsum.photos/seed/a9book-hero/1920/600)' }}
+      >
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
+        <div className="absolute bottom-0 left-0 right-0 p-6 md:p-8">
+          <h1 className="text-2xl md:text-4xl font-bold text-white mb-1" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
             Book Your Journey
           </h1>
-          <p className="text-gray-500 text-sm max-w-lg mx-auto">
-            Fill in your details below and our travel experts will get back to you within 24 hours.
+          <p className="text-white/70 text-xs md:text-sm">
+            Fill in your details and our travel experts will get back to you within 24 hours.
           </p>
         </div>
+      </div>
+
+      <div className="max-w-4xl mx-auto px-4">
 
         {/* Search Summary Message Box */}
         {searchSummary && (
@@ -242,94 +240,9 @@ function BookNowContent() {
             </div>
           </div>
 
-          {/* Travel Type */}
+          {/* Message / Note */}
           <div>
-            <label className={labelClass}>Travel Type</label>
-            <div className="grid grid-cols-2 md:grid-cols-6 gap-2">
-              {travelTypes.map((t) => {
-                const Icon = t.icon;
-                return (
-                  <button key={t.value} type="button" onClick={() => setFormData((prev) => ({ ...prev, travelType: t.value }))}
-                    className={`flex items-center justify-center gap-2 px-3 py-3 rounded-lg border text-sm font-medium transition-all ${
-                      formData.travelType === t.value
-                        ? "bg-[#D4AF37] text-[#0A1628] border-[#D4AF37] shadow-md"
-                        : "bg-white text-gray-600 border-gray-200 hover:border-[#D4AF37]/50 hover:text-gray-900"
-                    }`}>
-                    <Icon className="text-xs" /> {t.label}
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-
-          {/* Flight details */}
-          {formData.travelType === "flight" && (
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-              <div>
-                <label className={labelClass}><FaPlane className="inline mr-1 text-[#D4AF37]" /> From</label>
-                <input type="text" name="fromAirport" value={formData.fromAirport} onChange={handleChange} placeholder="Departure city" className={inputClass} />
-              </div>
-              <div>
-                <label className={labelClass}><FaPlane className="inline mr-1 text-[#D4AF37] rotate-90" /> To</label>
-                <input type="text" name="toAirport" value={formData.toAirport} onChange={handleChange} placeholder="Arrival city" className={inputClass} />
-              </div>
-              <div>
-                <label className={labelClass}><FaCalendarAlt className="inline mr-1 text-[#D4AF37]" /> Departure *</label>
-                <input type="date" name="departDate" value={formData.departDate} onChange={handleChange} className={inputClass} />
-              </div>
-              <div>
-                <label className={labelClass}><FaCalendarAlt className="inline mr-1 text-[#D4AF37]" /> Return</label>
-                <input type="date" name="returnDate" value={formData.returnDate} onChange={handleChange} className={inputClass} />
-              </div>
-            </div>
-          )}
-
-          {/* Hotel fields */}
-          {formData.travelType === "hotel" && (
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div>
-                <label className={labelClass}>Destination</label>
-                <input type="text" name="fromAirport" value={formData.fromAirport} onChange={handleChange} placeholder="City or area" className={inputClass} />
-              </div>
-              <div>
-                <label className={labelClass}>Check-in</label>
-                <input type="date" name="departDate" value={formData.departDate} onChange={handleChange} className={inputClass} />
-              </div>
-              <div>
-                <label className={labelClass}>Check-out</label>
-                <input type="date" name="returnDate" value={formData.returnDate} onChange={handleChange} className={inputClass} />
-              </div>
-            </div>
-          )}
-
-          {/* Passengers & Class */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div>
-              <label className={labelClass}><FaChair className="inline mr-1 text-[#D4AF37]" /> Passengers</label>
-              <input type="number" name="passengers" value={formData.passengers} onChange={handleChange} min={1} max={20} className={inputClass} />
-            </div>
-            <div>
-              <label className={labelClass}>Class</label>
-              <select name="travelClass" value={formData.travelClass} onChange={handleChange} className={inputClass + " appearance-none cursor-pointer"}>
-                <option>Economy</option>
-                <option>Premium Economy</option>
-                <option>Business</option>
-                <option>First Class</option>
-              </select>
-            </div>
-            <div>
-              <label className={labelClass}>Contact via</label>
-              <select name="contactPreference" value={formData.contactPreference} onChange={handleChange} className={inputClass + " appearance-none cursor-pointer"}>
-                <option value="email">Email</option>
-                <option value="phone">Phone</option>
-                <option value="whatsapp">WhatsApp</option>
-              </select>
-            </div>
-          </div>
-
-          {/* Special Requests */}
-          <div>
-            <label className={labelClass}>Special Requests / Notes</label>
+            <label className={labelClass}>Message / Note</label>
             <textarea name="specialRequests" value={formData.specialRequests} onChange={handleChange} rows={4}
               placeholder="Any specific requirements, dietary needs, accessibility requests, etc."
               className={inputClass + " resize-none"} />
