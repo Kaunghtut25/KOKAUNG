@@ -3,7 +3,19 @@
 import React, { useState, FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { login as loginApi } from '@/lib/api';
+
+async function loginApi(data: { email: string; password: string }) {
+  const res = await fetch('/api/auth/login', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data),
+  });
+  const json = await res.json();
+  if (!res.ok || !json.success) {
+    throw new Error(json.message || 'Login failed');
+  }
+  return json;
+}
 
 export default function LoginPage() {
   const router = useRouter();
@@ -11,6 +23,7 @@ export default function LoginPage() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [debug, setDebug] = useState('');
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -26,18 +39,17 @@ export default function LoginPage() {
     }
 
     setLoading(true);
+    setDebug('');
     try {
       const response = await loginApi({ email, password });
-      if (response.success && response.data.token) {
-        localStorage.setItem('a9token', response.data.token);
-        localStorage.setItem('a9user', JSON.stringify(response.data.user));
-        router.push('/');
-      } else {
-        setError(response.message || 'Login failed. Please try again.');
-      }
+      localStorage.setItem('a9token', response.token);
+      localStorage.setItem('a9user', JSON.stringify(response.user));
+      router.push('/');
     } catch (err: unknown) {
-      const axiosErr = err as { response?: { data?: { message?: string } } };
-      setError(axiosErr?.response?.data?.message || 'Invalid email or password.');
+      const msg = err instanceof Error ? err.message : 'Unknown error';
+      setError(msg);
+      setDebug(`API URL: /api/auth/login | Error: ${msg}`);
+      console.error('Login error:', err);
     } finally {
       setLoading(false);
     }
@@ -68,12 +80,19 @@ export default function LoginPage() {
           </h2>
 
           {error && (
+            <>
             <div className="mb-4 p-3 rounded-lg bg-red-500/10 border border-red-500/30 text-red-400 text-sm flex items-start gap-2">
               <svg className="w-4 h-4 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
               {error}
             </div>
+            {debug && (
+              <div className="mb-4 p-2 rounded-lg bg-gray-800/50 border border-gray-700 text-gray-400 text-xs font-mono break-all">
+                {debug}
+              </div>
+            )}
+            </>
           )}
 
           <form onSubmit={handleSubmit} className="space-y-5">
