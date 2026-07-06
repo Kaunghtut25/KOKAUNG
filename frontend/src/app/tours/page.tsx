@@ -206,21 +206,21 @@ export default function ToursPage() {
         </div>
         <ScrollingRow>
           {[
-            { title: 'Bagan Sunrise Tour', destination: 'Bagan', priceMMK: 950000, priceUSD: 452, image: 'https://picsum.photos/seed/a9tour-scroll1/600/400' },
-            { title: 'Inle Lake Discovery', destination: 'Inle Lake', priceMMK: 1100000, priceUSD: 524, image: 'https://picsum.photos/seed/a9tour-scroll2/600/400' },
-            { title: 'Mandalay Heritage', destination: 'Mandalay', priceMMK: 750000, priceUSD: 357, image: 'https://picsum.photos/seed/a9tour-scroll3/600/400' },
-            { title: 'Yangon City Walk', destination: 'Yangon', priceMMK: 450000, priceUSD: 214, image: 'https://picsum.photos/seed/a9tour-scroll4/600/400' },
-            { title: 'Ngapali Beach Bliss', destination: 'Ngapali Beach', priceMMK: 1350000, priceUSD: 643, image: 'https://picsum.photos/seed/a9tour-scroll5/600/400' },
-            { title: 'Golden Rock Trek', destination: 'Kyaiktiyo', priceMMK: 520000, priceUSD: 248, image: 'https://picsum.photos/seed/a9tour-scroll6/600/400' },
-            { title: 'Putao Adventure', destination: 'Putao', priceMMK: 2100000, priceUSD: 1000, image: 'https://picsum.photos/seed/a9tour-scroll7/600/400' },
-            { title: 'Mrauk U Ancient City', destination: 'Mrauk U', priceMMK: 1800000, priceUSD: 857, image: 'https://picsum.photos/seed/a9tour-scroll8/600/400' },
-            { title: 'Hpa-an Caves', destination: 'Hpa-an', priceMMK: 650000, priceUSD: 310, image: 'https://picsum.photos/seed/a9tour-scroll9/600/400' },
-            { title: 'Pyin Oo Lwin Escape', destination: 'Pyin Oo Lwin', priceMMK: 580000, priceUSD: 276, image: 'https://picsum.photos/seed/a9tour-scroll10/600/400' },
+            { title: 'Bagan Sunrise Tour', destination: 'Bagan', priceMMK: 950000, priceUSD: 452, image: 'https://images.unsplash.com/photo-1598952148479-4b3458a0a03c?w=600&h=400&fit=crop' },
+            { title: 'Inle Lake Discovery', destination: 'Inle Lake', priceMMK: 1100000, priceUSD: 524, image: 'https://images.unsplash.com/photo-1590496543835-1e5e3e1ff42f?w=600&h=400&fit=crop' },
+            { title: 'Mandalay Heritage', destination: 'Mandalay', priceMMK: 750000, priceUSD: 357, image: 'https://images.unsplash.com/photo-1559564426-0122f7e8e256?w=600&h=400&fit=crop' },
+            { title: 'Yangon City Walk', destination: 'Yangon', priceMMK: 450000, priceUSD: 214, image: 'https://images.unsplash.com/photo-1570696519879-00dc96be3587?w=600&h=400&fit=crop' },
+            { title: 'Ngapali Beach Bliss', destination: 'Ngapali Beach', priceMMK: 1350000, priceUSD: 643, image: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=600&h=400&fit=crop' },
+            { title: 'Golden Rock Trek', destination: 'Kyaiktiyo', priceMMK: 520000, priceUSD: 248, image: 'https://images.unsplash.com/photo-1559564426-0122f7e8e256?w=600&h=400&fit=crop' },
+            { title: 'Putao Adventure', destination: 'Putao', priceMMK: 2100000, priceUSD: 1000, image: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&h=400&fit=crop' },
+            { title: 'Mrauk U Ancient City', destination: 'Mrauk U', priceMMK: 1800000, priceUSD: 857, image: 'https://images.unsplash.com/photo-1598952148479-4b3458a0a03c?w=600&h=400&fit=crop' },
+            { title: 'Hpa-an Caves', destination: 'Hpa-an', priceMMK: 650000, priceUSD: 310, image: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&h=400&fit=crop' },
+            { title: 'Pyin Oo Lwin Escape', destination: 'Pyin Oo Lwin', priceMMK: 580000, priceUSD: 276, image: 'https://images.unsplash.com/photo-1416339306562-f3d12fefd36f?w=600&h=400&fit=crop' },
           ].map((item, i) => (
             <div key={`row1-${i}`} className="w-[300px] flex-shrink-0 snap-start">
               <div className="group relative rounded-2xl overflow-hidden cursor-pointer border border-gray-200 hover:border-[#D4AF37]/60 hover:shadow-xl hover:shadow-[#D4AF37]/10 hover:scale-[1.02] transition-all duration-300">
                 <div className="relative h-[300px] w-full overflow-hidden bg-gray-200">
-                  <img src={item.image} alt={item.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" loading="lazy" style={{ position: 'absolute', inset: 0 }} />
+                  <img src={item.image} alt={item.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" loading="lazy" style={{ position: 'absolute', inset: 0 }} onError={(e) => { (e.target as HTMLImageElement).src = 'https://picsum.photos/seed/a9tour-fallback/600/400'; }} />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent" />
                   <span className="absolute top-4 left-4 px-3 py-1 rounded-full bg-[#D4AF37]/90 text-gray-900 text-xs font-semibold backdrop-blur-sm">{item.destination}</span>
                   <div className="absolute bottom-0 left-0 right-0 p-5">
@@ -244,21 +244,21 @@ export default function ToursPage() {
         </div>
         <ScrollingRow>
           {[
-            { title: 'Bangkok Explorer', destination: 'Thailand', priceMMK: 1200000, priceUSD: 571, image: 'https://picsum.photos/seed/a9tour-scroll11/600/400' },
-            { title: 'Singapore City Life', destination: 'Singapore', priceMMK: 2500000, priceUSD: 1190, image: 'https://picsum.photos/seed/a9tour-scroll12/600/400' },
-            { title: 'Bali Paradise', destination: 'Indonesia', priceMMK: 1800000, priceUSD: 857, image: 'https://picsum.photos/seed/a9tour-scroll13/600/400' },
-            { title: 'Dubai Luxury', destination: 'UAE', priceMMK: 3500000, priceUSD: 1667, image: 'https://picsum.photos/seed/a9tour-scroll14/600/400' },
-            { title: 'Tokyo Highlights', destination: 'Japan', priceMMK: 4200000, priceUSD: 2000, image: 'https://picsum.photos/seed/a9tour-scroll15/600/400' },
-            { title: 'Seoul Discovery', destination: 'South Korea', priceMMK: 2800000, priceUSD: 1333, image: 'https://picsum.photos/seed/a9tour-scroll16/600/400' },
-            { title: 'Kuala Lumpur Getaway', destination: 'Malaysia', priceMMK: 1500000, priceUSD: 714, image: 'https://picsum.photos/seed/a9tour-scroll17/600/400' },
-            { title: 'Hanoi Heritage', destination: 'Vietnam', priceMMK: 900000, priceUSD: 429, image: 'https://picsum.photos/seed/a9tour-scroll18/600/400' },
-            { title: 'Phnom Penh Culture', destination: 'Cambodia', priceMMK: 850000, priceUSD: 405, image: 'https://picsum.photos/seed/a9tour-scroll19/600/400' },
-            { title: 'Maldives Dream', destination: 'Maldives', priceMMK: 5500000, priceUSD: 2619, image: 'https://picsum.photos/seed/a9tour-scroll20/600/400' },
+            { title: 'Bangkok Explorer', destination: 'Thailand', priceMMK: 1200000, priceUSD: 571, image: 'https://images.unsplash.com/photo-1508009603885-50cf7c579365?w=600&h=400&fit=crop' },
+            { title: 'Singapore City Life', destination: 'Singapore', priceMMK: 2500000, priceUSD: 1190, image: 'https://images.unsplash.com/photo-1525625293386-3f8f993c89da?w=600&h=400&fit=crop' },
+            { title: 'Bali Paradise', destination: 'Indonesia', priceMMK: 1800000, priceUSD: 857, image: 'https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=600&h=400&fit=crop' },
+            { title: 'Dubai Luxury', destination: 'UAE', priceMMK: 3500000, priceUSD: 1667, image: 'https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=600&h=400&fit=crop' },
+            { title: 'Tokyo Highlights', destination: 'Japan', priceMMK: 4200000, priceUSD: 2000, image: 'https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=600&h=400&fit=crop' },
+            { title: 'Seoul Discovery', destination: 'South Korea', priceMMK: 2800000, priceUSD: 1333, image: 'https://images.unsplash.com/photo-1534274988757-a28bf1a57c17?w=600&h=400&fit=crop' },
+            { title: 'Kuala Lumpur Getaway', destination: 'Malaysia', priceMMK: 1500000, priceUSD: 714, image: 'https://images.unsplash.com/photo-1596422846543-75c6fc197f07?w=600&h=400&fit=crop' },
+            { title: 'Hanoi Heritage', destination: 'Vietnam', priceMMK: 900000, priceUSD: 429, image: 'https://images.unsplash.com/photo-1583417319070-4a69db38a482?w=600&h=400&fit=crop' },
+            { title: 'Phnom Penh Culture', destination: 'Cambodia', priceMMK: 850000, priceUSD: 405, image: 'https://images.unsplash.com/photo-1570788647887-afb2e8a3d40b?w=600&h=400&fit=crop' },
+            { title: 'Maldives Dream', destination: 'Maldives', priceMMK: 5500000, priceUSD: 2619, image: 'https://images.unsplash.com/photo-1514282401047-d79a71a590e8?w=600&h=400&fit=crop' },
           ].map((item, i) => (
             <div key={`row2-${i}`} className="w-[300px] flex-shrink-0 snap-start">
               <div className="group relative rounded-2xl overflow-hidden cursor-pointer border border-gray-200 hover:border-[#D4AF37]/60 hover:shadow-xl hover:shadow-[#D4AF37]/10 hover:scale-[1.02] transition-all duration-300">
                 <div className="relative h-[300px] w-full overflow-hidden bg-gray-200">
-                  <img src={item.image} alt={item.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" loading="lazy" style={{ position: 'absolute', inset: 0 }} />
+                  <img src={item.image} alt={item.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" loading="lazy" style={{ position: 'absolute', inset: 0 }} onError={(e) => { (e.target as HTMLImageElement).src = 'https://picsum.photos/seed/a9tour-fallback/600/400'; }} />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent" />
                   <span className="absolute top-4 left-4 px-3 py-1 rounded-full bg-[#D4AF37]/90 text-gray-900 text-xs font-semibold backdrop-blur-sm">{item.destination}</span>
                   <div className="absolute bottom-0 left-0 right-0 p-5">
