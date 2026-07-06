@@ -183,22 +183,6 @@ export default function ToursPage() {
         </div>
       </section>
 
-      {/* Featured Scrolling Row */}
-      {!loading && tours.length > 0 && (
-        <section className="max-w-7xl mx-auto px-4 pt-8">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-bold text-gray-900" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>✨ Featured Tours</h2>
-          </div>
-          <ScrollingRow>
-            {tours.filter(t => t.featured).map((tour) => (
-              <div key={tour._id} className="w-[300px] flex-shrink-0 snap-start">
-                <TourCard tour={tour} currency={currency} />
-              </div>
-            ))}
-          </ScrollingRow>
-        </section>
-      )}
-
       {/* Scrolling Row 1 — Discover Myanmar */}
       <section className="max-w-7xl mx-auto px-4 pt-10">
         <div className="flex items-center justify-between mb-4">
@@ -206,16 +190,16 @@ export default function ToursPage() {
         </div>
         <ScrollingRow>
           {[
-            { title: 'Bagan Sunrise Tour', destination: 'Bagan', priceMMK: 950000, priceUSD: 452, image: 'https://images.unsplash.com/photo-1598952148479-4b3458a0a03c?w=600&h=400&fit=crop' },
-            { title: 'Inle Lake Discovery', destination: 'Inle Lake', priceMMK: 1100000, priceUSD: 524, image: 'https://images.unsplash.com/photo-1590496543835-1e5e3e1ff42f?w=600&h=400&fit=crop' },
-            { title: 'Mandalay Heritage', destination: 'Mandalay', priceMMK: 750000, priceUSD: 357, image: 'https://images.unsplash.com/photo-1559564426-0122f7e8e256?w=600&h=400&fit=crop' },
-            { title: 'Yangon City Walk', destination: 'Yangon', priceMMK: 450000, priceUSD: 214, image: 'https://images.unsplash.com/photo-1570696519879-00dc96be3587?w=600&h=400&fit=crop' },
-            { title: 'Ngapali Beach Bliss', destination: 'Ngapali Beach', priceMMK: 1350000, priceUSD: 643, image: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=600&h=400&fit=crop' },
-            { title: 'Golden Rock Trek', destination: 'Kyaiktiyo', priceMMK: 520000, priceUSD: 248, image: 'https://images.unsplash.com/photo-1559564426-0122f7e8e256?w=600&h=400&fit=crop' },
-            { title: 'Putao Adventure', destination: 'Putao', priceMMK: 2100000, priceUSD: 1000, image: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&h=400&fit=crop' },
-            { title: 'Mrauk U Ancient City', destination: 'Mrauk U', priceMMK: 1800000, priceUSD: 857, image: 'https://images.unsplash.com/photo-1598952148479-4b3458a0a03c?w=600&h=400&fit=crop' },
-            { title: 'Hpa-an Caves', destination: 'Hpa-an', priceMMK: 650000, priceUSD: 310, image: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&h=400&fit=crop' },
-            { title: 'Pyin Oo Lwin Escape', destination: 'Pyin Oo Lwin', priceMMK: 580000, priceUSD: 276, image: 'https://images.unsplash.com/photo-1416339306562-f3d12fefd36f?w=600&h=400&fit=crop' },
+            { title: 'Bagan Sunrise Tour', destination: 'Bagan', priceMMK: 950000, priceUSD: 452, image: 'https://picsum.photos/seed/a9tour-bagan/600/400' },
+            { title: 'Inle Lake Discovery', destination: 'Inle Lake', priceMMK: 1100000, priceUSD: 524, image: 'https://picsum.photos/seed/a9tour-inlelake/600/400' },
+            { title: 'Mandalay Heritage', destination: 'Mandalay', priceMMK: 750000, priceUSD: 357, image: 'https://picsum.photos/seed/a9tour-mandalay/600/400' },
+            { title: 'Yangon City Walk', destination: 'Yangon', priceMMK: 450000, priceUSD: 214, image: 'https://picsum.photos/seed/a9tour-yangon/600/400' },
+            { title: 'Ngapali Beach Bliss', destination: 'Ngapali Beach', priceMMK: 1350000, priceUSD: 643, image: 'https://picsum.photos/seed/a9tour-ngapali/600/400' },
+            { title: 'Golden Rock Trek', destination: 'Kyaiktiyo', priceMMK: 520000, priceUSD: 248, image: 'https://picsum.photos/seed/a9tour-goldenrock/600/400' },
+            { title: 'Putao Adventure', destination: 'Putao', priceMMK: 2100000, priceUSD: 1000, image: 'https://picsum.photos/seed/a9tour-putao/600/400' },
+            { title: 'Mrauk U Ancient City', destination: 'Mrauk U', priceMMK: 1800000, priceUSD: 857, image: 'https://picsum.photos/seed/a9tour-mrauku/600/400' },
+            { title: 'Hpa-an Caves', destination: 'Hpa-an', priceMMK: 650000, priceUSD: 310, image: 'https://picsum.photos/seed/a9tour-hpaan/600/400' },
+            { title: 'Pyin Oo Lwin Escape', destination: 'Pyin Oo Lwin', priceMMK: 580000, priceUSD: 276, image: 'https://picsum.photos/seed/a9tour-pyinoolwin/600/400' },
           ].map((item, i) => (
             <div key={`row1-${i}`} className="w-[300px] flex-shrink-0 snap-start">
               <div className="group relative rounded-2xl overflow-hidden cursor-pointer border border-gray-200 hover:border-[#D4AF37]/60 hover:shadow-xl hover:shadow-[#D4AF37]/10 hover:scale-[1.02] transition-all duration-300">
@@ -244,16 +228,16 @@ export default function ToursPage() {
         </div>
         <ScrollingRow>
           {[
-            { title: 'Bangkok Explorer', destination: 'Thailand', priceMMK: 1200000, priceUSD: 571, image: 'https://images.unsplash.com/photo-1508009603885-50cf7c579365?w=600&h=400&fit=crop' },
-            { title: 'Singapore City Life', destination: 'Singapore', priceMMK: 2500000, priceUSD: 1190, image: 'https://images.unsplash.com/photo-1525625293386-3f8f993c89da?w=600&h=400&fit=crop' },
-            { title: 'Bali Paradise', destination: 'Indonesia', priceMMK: 1800000, priceUSD: 857, image: 'https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=600&h=400&fit=crop' },
-            { title: 'Dubai Luxury', destination: 'UAE', priceMMK: 3500000, priceUSD: 1667, image: 'https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=600&h=400&fit=crop' },
-            { title: 'Tokyo Highlights', destination: 'Japan', priceMMK: 4200000, priceUSD: 2000, image: 'https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=600&h=400&fit=crop' },
-            { title: 'Seoul Discovery', destination: 'South Korea', priceMMK: 2800000, priceUSD: 1333, image: 'https://images.unsplash.com/photo-1534274988757-a28bf1a57c17?w=600&h=400&fit=crop' },
-            { title: 'Kuala Lumpur Getaway', destination: 'Malaysia', priceMMK: 1500000, priceUSD: 714, image: 'https://images.unsplash.com/photo-1596422846543-75c6fc197f07?w=600&h=400&fit=crop' },
-            { title: 'Hanoi Heritage', destination: 'Vietnam', priceMMK: 900000, priceUSD: 429, image: 'https://images.unsplash.com/photo-1583417319070-4a69db38a482?w=600&h=400&fit=crop' },
-            { title: 'Phnom Penh Culture', destination: 'Cambodia', priceMMK: 850000, priceUSD: 405, image: 'https://images.unsplash.com/photo-1570788647887-afb2e8a3d40b?w=600&h=400&fit=crop' },
-            { title: 'Maldives Dream', destination: 'Maldives', priceMMK: 5500000, priceUSD: 2619, image: 'https://images.unsplash.com/photo-1514282401047-d79a71a590e8?w=600&h=400&fit=crop' },
+            { title: 'Bangkok Explorer', destination: 'Thailand', priceMMK: 1200000, priceUSD: 571, image: 'https://picsum.photos/seed/a9tour-bangkok/600/400' },
+            { title: 'Singapore City Life', destination: 'Singapore', priceMMK: 2500000, priceUSD: 1190, image: 'https://picsum.photos/seed/a9tour-singapore/600/400' },
+            { title: 'Bali Paradise', destination: 'Indonesia', priceMMK: 1800000, priceUSD: 857, image: 'https://picsum.photos/seed/a9tour-bali/600/400' },
+            { title: 'Dubai Luxury', destination: 'UAE', priceMMK: 3500000, priceUSD: 1667, image: 'https://picsum.photos/seed/a9tour-dubai/600/400' },
+            { title: 'Tokyo Highlights', destination: 'Japan', priceMMK: 4200000, priceUSD: 2000, image: 'https://picsum.photos/seed/a9tour-tokyo/600/400' },
+            { title: 'Seoul Discovery', destination: 'South Korea', priceMMK: 2800000, priceUSD: 1333, image: 'https://picsum.photos/seed/a9tour-seoul/600/400' },
+            { title: 'Kuala Lumpur Getaway', destination: 'Malaysia', priceMMK: 1500000, priceUSD: 714, image: 'https://picsum.photos/seed/a9tour-kualalumpur/600/400' },
+            { title: 'Hanoi Heritage', destination: 'Vietnam', priceMMK: 900000, priceUSD: 429, image: 'https://picsum.photos/seed/a9tour-hanoi/600/400' },
+            { title: 'Phnom Penh Culture', destination: 'Cambodia', priceMMK: 850000, priceUSD: 405, image: 'https://picsum.photos/seed/a9tour-phnompenh/600/400' },
+            { title: 'Maldives Dream', destination: 'Maldives', priceMMK: 5500000, priceUSD: 2619, image: 'https://picsum.photos/seed/a9tour-maldives/600/400' },
           ].map((item, i) => (
             <div key={`row2-${i}`} className="w-[300px] flex-shrink-0 snap-start">
               <div className="group relative rounded-2xl overflow-hidden cursor-pointer border border-gray-200 hover:border-[#D4AF37]/60 hover:shadow-xl hover:shadow-[#D4AF37]/10 hover:scale-[1.02] transition-all duration-300">
@@ -275,73 +259,7 @@ export default function ToursPage() {
         </ScrollingRow>
       </section>
 
-      {/* Results Grid */}
-      <section className="max-w-7xl mx-auto px-4 py-10 pb-20">
-        {loading && (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {Array.from({ length: 6 }).map((_, i) => <SkeletonCard key={i} />)}
-          </div>
-        )}
 
-        {!loading && tours.length === 0 && (
-          <div className="text-center py-20 space-y-4">
-            <svg className="w-20 h-20 mx-auto text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-            </svg>
-            <h3 className="text-xl font-semibold text-gray-900" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
-              No tours found matching your criteria
-            </h3>
-            <p className="text-gray-500 max-w-md mx-auto">
-              Try adjusting your filters or exploring a different destination.
-            </p>
-            <button onClick={() => { setDestination(''); setMinPrice(''); setMaxPrice(''); setDuration(''); setSort(''); setPage(1); }}
-              className="px-6 py-2 rounded-xl bg-gradient-to-r from-[#D4AF37] to-[#C5A028] text-gray-900 font-semibold hover:shadow-lg transition-all">
-              Clear Filters
-            </button>
-          </div>
-        )}
-
-        {!loading && tours.length > 0 && (
-          <>
-            <div className="flex items-center justify-between mb-6">
-              <p className="text-gray-500 text-sm">
-                Showing <span className="text-gray-900 font-medium">{tours.length}</span> of{' '}
-                <span className="text-gray-900 font-medium">{total}</span> tours
-              </p>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {tours.map((tour) => <TourCard key={tour._id} tour={tour} currency={currency} />)}
-            </div>
-
-            {totalPages > 1 && (
-              <div className="flex items-center justify-center gap-2 mt-12">
-                <button onClick={() => setPage((prev) => Math.max(1, prev - 1))} disabled={page === 1}
-                  className="px-4 py-2 rounded-lg border border-gray-200 text-gray-500 hover:text-gray-900 hover:border-[#D4AF37] disabled:opacity-30 disabled:cursor-not-allowed transition-colors">
-                  ← Prev
-                </button>
-                {Array.from({ length: totalPages }, (_, i) => i + 1)
-                  .filter((p) => { if (totalPages <= 7) return true; if (p === 1 || p === totalPages) return true; if (Math.abs(p - page) <= 2) return true; return false; })
-                  .map((p, idx, arr) => {
-                    const showEllipsis = idx > 0 && arr[idx - 1] !== p - 1;
-                    return (
-                      <React.Fragment key={p}>
-                        {showEllipsis && <span className="px-2 text-gray-400">...</span>}
-                        <button onClick={() => setPage(p)}
-                          className={`w-10 h-10 rounded-lg text-sm font-medium transition-all ${page === p ? 'bg-gradient-to-r from-[#D4AF37] to-[#C5A028] text-white shadow-sm' : 'border border-gray-200 text-gray-500 hover:text-gray-900 hover:border-[#D4AF37]'}`}>
-                          {p}
-                        </button>
-                      </React.Fragment>
-                    );
-                  })}
-                <button onClick={() => setPage((prev) => Math.min(totalPages, prev + 1))} disabled={page === totalPages}
-                  className="px-4 py-2 rounded-lg border border-gray-200 text-gray-500 hover:text-gray-900 hover:border-[#D4AF37] disabled:opacity-30 disabled:cursor-not-allowed transition-colors">
-                  Next →
-                </button>
-              </div>
-            )}
-          </>
-        )}
-      </section>
     </main>
   );
 }
