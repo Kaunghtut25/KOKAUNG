@@ -279,7 +279,7 @@ export default function HomePage() {
       {/* ========== Search Engine (Expedia-style, overlapping hero & body) ========== */}
       <section className="relative z-30 -mt-56 md:-mt-72">
         <div className="max-w-5xl mx-auto px-4">
-          <div className="bg-white rounded-2xl border-2 border-[#0A1628] p-5 md:p-7">
+          <div className="bg-white/15 backdrop-blur-xl rounded-2xl border border-white/30 shadow-2xl p-5 md:p-7">
             <div className="flex gap-1 mb-5 bg-gray-100 rounded-lg p-1 w-fit">
               {(["oneway", "roundtrip", "multicity"] as TabType[]).map((tab) => (
                 <button key={tab} onClick={() => { setActiveTab(tab); if (tab !== "roundtrip") setReturnDate(""); }}
