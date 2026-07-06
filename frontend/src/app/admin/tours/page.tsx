@@ -17,6 +17,7 @@ interface Tour {
   excluded: string;
   maxGroupSize: number;
   status: string;
+  featured: boolean;
   createdAt?: string;
 }
 
@@ -36,6 +37,7 @@ const emptyTour: Tour = {
   excluded: "",
   maxGroupSize: 0,
   status: "active",
+  featured: false,
 };
 
 export default function AdminToursPage() {
@@ -48,6 +50,7 @@ export default function AdminToursPage() {
   const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
   const [imageUrlInput, setImageUrlInput] = useState("");
   const [imagePreviewUrl, setImagePreviewUrl] = useState("");
+  const [imageList, setImageList] = useState<string[]>([]);
 
   const token =
     typeof window !== "undefined" ? localStorage.getItem("admin_token") : "";
@@ -72,34 +75,61 @@ export default function AdminToursPage() {
     fetchTours();
   }, [fetchTours]);
 
-  const getFirstImage = (imagesStr: string): string => {
-    if (!imagesStr) return "";
+  const parseImageList = (imagesStr: string): string[] => {
+    if (!imagesStr) return [];
     try {
       const parsed = JSON.parse(imagesStr);
-      if (Array.isArray(parsed) && parsed.length > 0) return parsed[0];
-    } catch {
-      const parts = imagesStr.split(",");
-      const first = parts[0]?.trim();
-      if (first && (first.startsWith("http") || first.startsWith("/"))) return first;
-    }
-    return "";
+      if (Array.isArray(parsed)) return parsed.filter((u: unknown) => typeof u === "string" && u);
+    } catch { /* not JSON */ }
+    return imagesStr.split(",").map((s) => s.trim()).filter((s) => s && (s.startsWith("http") || s.startsWith("/")));
+  };
+
+  const getFirstImage = (imagesStr: string): string => {
+    const list = parseImageList(imagesStr);
+    return list[0] || "";
   };
 
   const openCreateModal = () => {
     setEditingTour(emptyTour);
     setImageUrlInput("");
     setImagePreviewUrl("");
+    setImageList([]);
     setIsNew(true);
     setModalOpen(true);
   };
 
   const openEditModal = (tour: Tour) => {
     setEditingTour({ ...tour });
-    const firstImg = getFirstImage(tour.images);
-    setImageUrlInput(firstImg);
-    setImagePreviewUrl(firstImg);
+    const imgs = parseImageList(tour.images);
+    setImageList(imgs);
+    setImageUrlInput(imgs[0] || "");
+    setImagePreviewUrl(imgs[0] || "");
     setIsNew(false);
     setModalOpen(true);
+  };
+
+  const addImage = () => {
+    if (!imageUrlInput.trim()) return;
+    const newList = [...imageList, imageUrlInput.trim()];
+    setImageList(newList);
+    setImageUrlInput("");
+    setImagePreviewUrl("");
+    setEditingTour((prev) => ({ ...prev, images: JSON.stringify(newList) }));
+  };
+
+  const removeImage = (index: number) => {
+    const newList = imageList.filter((_, i) => i !== index);
+    setImageList(newList);
+    setEditingTour((prev) => ({ ...prev, images: JSON.stringify(newList) }));
+  };
+
+  const moveImage = (fromIndex: number, direction: "up" | "down") => {
+    const toIndex = direction === "up" ? fromIndex - 1 : fromIndex + 1;
+    if (toIndex < 0 || toIndex >= imageList.length) return;
+    const newList = [...imageList];
+    [newList[fromIndex], newList[toIndex]] = [newList[toIndex], newList[fromIndex]];
+    setImageList(newList);
+    setEditingTour((prev) => ({ ...prev, images: JSON.stringify(newList) }));
   };
 
   const handleFieldChange = (field: keyof Tour, value: string | number) => {
@@ -276,49 +306,87 @@ export default function AdminToursPage() {
         </div>
       </div>
 
-      {/* ─── Image URL with Preview ─── */}
+      {/* ─── Multi-Image Management ─── */}
       <div>
         <label className="block text-white/70 text-sm mb-1">
-          Images (comma-separated URLs)
+          Images (add by URL, then click Add)
         </label>
-        <div className="flex gap-4">
-          <div className="flex-1">
-            <input
-              type="text"
-              value={imageUrlInput}
-              onChange={(e) => {
-                handleImageUrlChange(e.target.value);
-                handleFieldChange("images", e.target.value);
-              }}
-              placeholder="https://..."
-              className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-gold/50 transition-colors"
-            />
-          </div>
-          <div
-            className="w-[200px] h-[150px] rounded-lg border border-white/10 bg-white/5 flex-shrink-0 overflow-hidden flex items-center justify-center"
+        <div className="flex gap-2 mb-3">
+          <input
+            type="text"
+            value={imageUrlInput}
+            onChange={(e) => {
+              handleImageUrlChange(e.target.value);
+            }}
+            placeholder="https://..."
+            className="flex-1 bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-gold/50 transition-colors"
+            onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); addImage(); } }}
+          />
+          <button
+            type="button"
+            onClick={addImage}
+            disabled={!imageUrlInput.trim()}
+            className="px-4 py-2 rounded-lg bg-gold/10 text-gold text-sm font-medium hover:bg-gold/20 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
           >
-            {imagePreviewUrl ? (
-              <img
-                src={imagePreviewUrl}
-                alt="Preview"
-                className="w-full h-full object-cover"
-                onError={(e) => {
-                  (e.target as HTMLImageElement).style.display = "none";
-                  const parent = (e.target as HTMLImageElement).parentElement;
-                  if (parent) {
-                    const fallback = parent.querySelector(".img-fallback");
-                    if (fallback) (fallback as HTMLElement).style.display = "flex";
-                  }
-                }}
-              />
-            ) : null}
-            <span
-              className={`img-fallback text-white/20 text-xs text-center px-2 ${imagePreviewUrl ? "hidden" : "flex"} items-center justify-center w-full h-full`}
-            >
-              Image Preview
-            </span>
-          </div>
+            + Add
+          </button>
         </div>
+
+        {/* Image Preview & List */}
+        {imageList.length > 0 ? (
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+            {imageList.map((url, index) => (
+              <div key={`${url}-${index}`} className="relative group">
+                <div className="w-full aspect-[4/3] rounded-lg border border-white/10 bg-white/5 overflow-hidden">
+                  <img
+                    src={url}
+                    alt={`Image ${index + 1}`}
+                    className="w-full h-full object-cover"
+                    onError={(e) => {
+                      (e.target as HTMLImageElement).src = "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='75'><rect fill='%231a1a2e' width='100' height='75'/><text x='50' y='42' text-anchor='middle' fill='%23555' font-size='12'>Invalid</text></svg>";
+                    }}
+                  />
+                </div>
+                <div className="absolute inset-0 bg-black/60 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-1">
+                  <button
+                    type="button"
+                    onClick={() => moveImage(index, "up")}
+                    disabled={index === 0}
+                    className="p-1.5 rounded bg-white/20 text-white hover:bg-white/40 disabled:opacity-30 disabled:cursor-not-allowed text-xs"
+                    title="Move up"
+                  >
+                    ↑
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => removeImage(index)}
+                    className="p-1.5 rounded bg-red-500/80 text-white hover:bg-red-600 text-xs"
+                    title="Remove"
+                  >
+                    ✕
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => moveImage(index, "down")}
+                    disabled={index === imageList.length - 1}
+                    className="p-1.5 rounded bg-white/20 text-white hover:bg-white/40 disabled:opacity-30 disabled:cursor-not-allowed text-xs"
+                    title="Move down"
+                  >
+                    ↓
+                  </button>
+                </div>
+                <span className="absolute top-1 left-1 bg-black/70 text-white text-[10px] px-1.5 py-0.5 rounded font-mono">
+                  {index + 1}
+                </span>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="rounded-lg border border-dashed border-white/10 bg-white/[0.02] p-6 text-center">
+            <span className="text-white/20 text-2xl block mb-1">🖼️</span>
+            <p className="text-white/30 text-sm">No images added yet</p>
+          </div>
+        )}
       </div>
 
       <div>
@@ -366,19 +434,36 @@ export default function AdminToursPage() {
         />
       </div>
 
-      <div>
-        <label className="block text-white/70 text-sm mb-1">Status</label>
-        <select
-          value={editingTour.status}
-          onChange={(e) =>
-            handleFieldChange("status", e.target.value)
-          }
-          className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-gold/50 transition-colors"
-        >
-          <option value="active">Active</option>
-          <option value="inactive">Inactive</option>
-          <option value="featured">Featured</option>
-        </select>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label className="block text-white/70 text-sm mb-1">Status</label>
+          <select
+            value={editingTour.status}
+            onChange={(e) =>
+              handleFieldChange("status", e.target.value)
+            }
+            className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-gold/50 transition-colors"
+          >
+            <option value="active">Active</option>
+            <option value="inactive">Inactive</option>
+            <option value="featured">Featured</option>
+          </select>
+        </div>
+        <div className="flex items-end pb-0.5">
+          <label className="flex items-center gap-3 cursor-pointer">
+            <input
+              type="checkbox"
+              checked={editingTour.featured}
+              onChange={(e) =>
+                handleFieldChange("featured", e.target.checked ? 1 : 0)
+              }
+              className="w-5 h-5 rounded border-white/20 bg-white/5 checked:bg-gold checked:border-gold focus:ring-gold/30 cursor-pointer"
+            />
+            <span className="text-white/70 text-sm">
+              ⭐ Featured — Show on homepage
+            </span>
+          </label>
+        </div>
       </div>
     </div>
   );
@@ -499,9 +584,14 @@ export default function AdminToursPage() {
                       </td>
                       <td className="p-4 text-white/70">{tour.duration}</td>
                       <td className="p-4">
-                        <span className={getStatusBadge(tour.status)}>
-                          {tour.status}
-                        </span>
+                        <div className="flex items-center gap-1.5">
+                          <span className={getStatusBadge(tour.status)}>
+                            {tour.status}
+                          </span>
+                          {tour.featured && (
+                            <span className="text-xs" title="Featured">⭐</span>
+                          )}
+                        </div>
                       </td>
                       <td className="p-4">
                         <div className="flex items-center gap-2">

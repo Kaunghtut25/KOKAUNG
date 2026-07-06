@@ -1,13 +1,15 @@
 "use client";
 
 import React, { useEffect, useState, useCallback } from "react";
-import { Booking } from "@/lib/api";
 
 interface DashboardStats {
   totalTours: number;
   totalHotels: number;
   totalCars: number;
+  totalVisas: number;
+  totalInsurances: number;
   totalBookings: number;
+  totalInquiries: number;
   revenueMMK: number;
   pendingPayments: number;
 }
@@ -28,7 +30,10 @@ const statCards = [
   { key: "totalTours", label: "Total Tours", icon: "✈️" },
   { key: "totalHotels", label: "Total Hotels", icon: "🏨" },
   { key: "totalCars", label: "Total Cars", icon: "🚗" },
+  { key: "totalVisas", label: "Visa Services", icon: "🛂" },
+  { key: "totalInsurances", label: "Insurance Plans", icon: "🛡️" },
   { key: "totalBookings", label: "Total Bookings", icon: "📋" },
+  { key: "totalInquiries", label: "Inquiries", icon: "💬" },
   { key: "revenueMMK", label: "Revenue (MMK)", icon: "💰", format: true },
   { key: "pendingPayments", label: "Pending Payments", icon: "⏳", format: true },
 ];
@@ -38,7 +43,10 @@ export default function AdminDashboardPage() {
     totalTours: 0,
     totalHotels: 0,
     totalCars: 0,
+    totalVisas: 0,
+    totalInsurances: 0,
     totalBookings: 0,
+    totalInquiries: 0,
     revenueMMK: 0,
     pendingPayments: 0,
   });
@@ -129,6 +137,15 @@ export default function AdminDashboardPage() {
     return map[type?.toLowerCase()] || "📋";
   };
 
+  const quickActions = [
+    { label: "Add Tour", icon: "✈️", href: "/admin/tours" },
+    { label: "Add Hotel", icon: "🏨", href: "/admin/hotels" },
+    { label: "Add Car", icon: "🚗", href: "/admin/cars" },
+    { label: "Add Visa", icon: "🛂", href: "/admin/visas" },
+    { label: "Add Insurance", icon: "🛡️", href: "/admin/insurance" },
+    { label: "View Settings", icon: "⚙️", href: "/admin/settings" },
+  ];
+
   if (loading) {
     return (
       <div className="flex items-center justify-center h-96">
@@ -176,6 +193,27 @@ export default function AdminDashboardPage() {
             </div>
           );
         })}
+      </div>
+
+      {/* ─── Quick Actions ─── */}
+      <div>
+        <h2 className="text-xl font-bold text-white mb-4">Quick Actions</h2>
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3">
+          {quickActions.map((action) => (
+            <a
+              key={action.label}
+              href={action.href}
+              className="flex flex-col items-center justify-center gap-2 p-4 rounded-xl bg-white/5 border border-white/10 hover:border-gold/40 hover:bg-white/[0.07] transition-all duration-300 group text-center"
+            >
+              <span className="text-2xl group-hover:scale-110 transition-transform">
+                {action.icon}
+              </span>
+              <span className="text-white/70 text-xs font-medium group-hover:text-gold transition-colors">
+                {action.label}
+              </span>
+            </a>
+          ))}
+        </div>
       </div>
 
       {/* ─── Recent Bookings ─── */}

@@ -26,6 +26,7 @@ interface Hotel {
   images: string;
   roomTypes: RoomType[];
   status: string;
+  featured: boolean;
 }
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || "/api";
@@ -53,6 +54,7 @@ const emptyHotel: Hotel = {
   images: "",
   roomTypes: [],
   status: "active",
+  featured: false,
 };
 
 export default function AdminHotelsPage() {
@@ -554,19 +556,36 @@ export default function AdminHotelsPage() {
         </div>
       </div>
 
-      <div>
-        <label className="block text-white/70 text-sm mb-1">Status</label>
-        <select
-          value={editingHotel.status}
-          onChange={(e) =>
-            handleFieldChange("status", e.target.value)
-          }
-          className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-gold/50 transition-colors"
-        >
-          <option value="active">Active</option>
-          <option value="inactive">Inactive</option>
-          <option value="featured">Featured</option>
-        </select>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label className="block text-white/70 text-sm mb-1">Status</label>
+          <select
+            value={editingHotel.status}
+            onChange={(e) =>
+              handleFieldChange("status", e.target.value)
+            }
+            className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-gold/50 transition-colors"
+          >
+            <option value="active">Active</option>
+            <option value="inactive">Inactive</option>
+            <option value="featured">Featured</option>
+          </select>
+        </div>
+        <div className="flex items-end pb-0.5">
+          <label className="flex items-center gap-3 cursor-pointer">
+            <input
+              type="checkbox"
+              checked={editingHotel.featured}
+              onChange={(e) =>
+                handleFieldChange("featured", e.target.checked ? 1 : 0)
+              }
+              className="w-5 h-5 rounded border-white/20 bg-white/5 checked:bg-gold checked:border-gold focus:ring-gold/30 cursor-pointer"
+            />
+            <span className="text-white/70 text-sm">
+              ⭐ Featured — Show on homepage
+            </span>
+          </label>
+        </div>
       </div>
     </div>
   );
@@ -692,11 +711,16 @@ export default function AdminHotelsPage() {
                         {hotel.availableRooms}/{hotel.totalRooms}
                       </td>
                       <td className="p-4">
-                        <span
-                          className={getStatusBadge(hotel.status)}
-                        >
-                          {hotel.status}
-                        </span>
+                        <div className="flex items-center gap-1.5">
+                          <span
+                            className={getStatusBadge(hotel.status)}
+                          >
+                            {hotel.status}
+                          </span>
+                          {hotel.featured && (
+                            <span className="text-xs" title="Featured">⭐</span>
+                          )}
+                        </div>
                       </td>
                       <td className="p-4">
                         <div className="flex items-center gap-2">

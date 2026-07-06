@@ -17,6 +17,8 @@ interface Car {
   features: string;
   images: string;
   pricing: Pricing[];
+  transmission: string;
+  seats: number;
   status: string;
 }
 
@@ -32,6 +34,8 @@ const emptyCar: Car = {
   features: "",
   images: "",
   pricing: [],
+  transmission: "Automatic",
+  seats: 4,
   status: "active",
 };
 
@@ -207,10 +211,10 @@ export default function AdminCarsPage() {
 
   const renderFormFields = () => (
     <div className="space-y-4">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div>
           <label className="block text-white/70 text-sm mb-1">
-            Car Type
+            Car Name / Model
           </label>
           <input
             type="text"
@@ -218,14 +222,46 @@ export default function AdminCarsPage() {
             onChange={(e) =>
               handleFieldChange("carType", e.target.value)
             }
-            placeholder="e.g. Sedan, SUV, Luxury"
+            placeholder="e.g. Toyota Alphard"
             className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-gold/50 transition-colors"
             required
           />
         </div>
         <div>
           <label className="block text-white/70 text-sm mb-1">
-            Capacity
+            Seats
+          </label>
+          <input
+            type="number"
+            value={editingCar.seats}
+            onChange={(e) =>
+              handleFieldChange("seats", Number(e.target.value))
+            }
+            className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-gold/50 transition-colors"
+          />
+        </div>
+        <div>
+          <label className="block text-white/70 text-sm mb-1">
+            Transmission
+          </label>
+          <select
+            value={editingCar.transmission}
+            onChange={(e) =>
+              handleFieldChange("transmission", e.target.value)
+            }
+            className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-gold/50 transition-colors"
+          >
+            <option value="Automatic">Automatic</option>
+            <option value="Manual">Manual</option>
+            <option value="CVT">CVT</option>
+          </select>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+        <div>
+          <label className="block text-white/70 text-sm mb-1">
+            Capacity (luggage/people)
           </label>
           <input
             type="number"
@@ -471,7 +507,10 @@ export default function AdminCarsPage() {
                   Vehicle
                 </th>
                 <th className="text-left p-4 text-white/40 font-semibold uppercase tracking-wider text-[11px]">
-                  Capacity
+                  Seats
+                </th>
+                <th className="text-left p-4 text-white/40 font-semibold uppercase tracking-wider text-[11px]">
+                  Transmission
                 </th>
                 <th className="text-left p-4 text-white/40 font-semibold uppercase tracking-wider text-[11px]">
                   Pricing
@@ -488,7 +527,7 @@ export default function AdminCarsPage() {
               {cars.length === 0 ? (
                 <tr>
                   <td
-                    colSpan={5}
+                    colSpan={7}
                     className="p-10 text-center text-white/30"
                   >
                     <span className="text-3xl block mb-2">🚗</span>
@@ -531,7 +570,10 @@ export default function AdminCarsPage() {
                         </div>
                       </td>
                       <td className="p-4 text-white/70">
-                        {car.capacity} seats
+                        {car.seats || car.capacity} seats
+                      </td>
+                      <td className="p-4 text-white/70">
+                        {car.transmission || "—"}
                       </td>
                       <td className="p-4 text-white/70">
                         {car.pricing && car.pricing.length > 0

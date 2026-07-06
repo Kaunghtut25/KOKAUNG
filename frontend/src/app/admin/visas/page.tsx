@@ -242,12 +242,22 @@ export default function AdminVisasPage() {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between flex-wrap gap-4">
-        <h1 className="text-3xl font-bold text-white">Manage Visas</h1>
+        <div>
+          <h1
+            className="text-3xl md:text-4xl font-bold text-[#D4AF37]"
+            style={{ fontFamily: "'Playfair Display', Georgia, serif" }}
+          >
+            Manage Visas
+          </h1>
+          <p className="text-white/40 text-sm mt-1">
+            Manage visa services by country
+          </p>
+        </div>
         <button
           onClick={openCreateModal}
-          className="px-5 py-2.5 rounded-lg bg-gold text-deepblue-dark font-semibold text-sm hover:bg-gold/90 transition-all"
+          className="px-5 py-2.5 rounded-lg bg-gold text-deepblue-dark font-semibold text-sm hover:bg-gold/90 transition-all flex items-center gap-2"
         >
-          🛂 Add New Visa
+          <span>🛂</span> Add New Visa
         </button>
       </div>
 
@@ -255,12 +265,12 @@ export default function AdminVisasPage() {
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-white/10">
-                <th className="text-left p-4 text-white/50 font-medium">Country</th>
-                <th className="text-left p-4 text-white/50 font-medium">Processing Time</th>
-                <th className="text-left p-4 text-white/50 font-medium">Fee</th>
-                <th className="text-left p-4 text-white/50 font-medium">Status</th>
-                <th className="text-left p-4 text-white/50 font-medium">Actions</th>
+              <tr className="border-b border-white/10 bg-white/[0.02]">
+                <th className="text-left p-4 text-white/40 font-semibold uppercase tracking-wider text-[11px]">Country</th>
+                <th className="text-left p-4 text-white/40 font-semibold uppercase tracking-wider text-[11px]">Processing Time</th>
+                <th className="text-left p-4 text-white/40 font-semibold uppercase tracking-wider text-[11px]">Fee</th>
+                <th className="text-left p-4 text-white/40 font-semibold uppercase tracking-wider text-[11px]">Status</th>
+                <th className="text-left p-4 text-white/40 font-semibold uppercase tracking-wider text-[11px]">Actions</th>
               </tr>
             </thead>
             <tbody>

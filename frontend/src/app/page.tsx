@@ -420,10 +420,8 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ========== Body Sections ========== */}
-      <div className="pt-28 md:pt-40">
+      {/* ========== Popular Destinations ========== */}
       <PopularDestinations />
-      </div>
 
       <section className="py-16 bg-[#FFFDF5]">
         <div className="max-w-6xl mx-auto px-4 grid grid-cols-2 md:grid-cols-4 gap-6">

@@ -253,12 +253,22 @@ export default function AdminInsurancePage() {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between flex-wrap gap-4">
-        <h1 className="text-3xl font-bold text-white">Manage Insurance</h1>
+        <div>
+          <h1
+            className="text-3xl md:text-4xl font-bold text-[#D4AF37]"
+            style={{ fontFamily: "'Playfair Display', Georgia, serif" }}
+          >
+            Manage Insurance
+          </h1>
+          <p className="text-white/40 text-sm mt-1">
+            Manage travel insurance plans
+          </p>
+        </div>
         <button
           onClick={openCreateModal}
-          className="px-5 py-2.5 rounded-lg bg-gold text-deepblue-dark font-semibold text-sm hover:bg-gold/90 transition-all"
+          className="px-5 py-2.5 rounded-lg bg-gold text-deepblue-dark font-semibold text-sm hover:bg-gold/90 transition-all flex items-center gap-2"
         >
-          🛡️ Add New Plan
+          <span>🛡️</span> Add New Plan
         </button>
       </div>
 
@@ -266,12 +276,12 @@ export default function AdminInsurancePage() {
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-white/10">
-                <th className="text-left p-4 text-white/50 font-medium">Plan Name</th>
-                <th className="text-left p-4 text-white/50 font-medium">Coverage</th>
-                <th className="text-left p-4 text-white/50 font-medium">Premium</th>
-                <th className="text-left p-4 text-white/50 font-medium">Status</th>
-                <th className="text-left p-4 text-white/50 font-medium">Actions</th>
+              <tr className="border-b border-white/10 bg-white/[0.02]">
+                <th className="text-left p-4 text-white/40 font-semibold uppercase tracking-wider text-[11px]">Plan Name</th>
+                <th className="text-left p-4 text-white/40 font-semibold uppercase tracking-wider text-[11px]">Coverage</th>
+                <th className="text-left p-4 text-white/40 font-semibold uppercase tracking-wider text-[11px]">Premium</th>
+                <th className="text-left p-4 text-white/40 font-semibold uppercase tracking-wider text-[11px]">Status</th>
+                <th className="text-left p-4 text-white/40 font-semibold uppercase tracking-wider text-[11px]">Actions</th>
               </tr>
             </thead>
             <tbody>

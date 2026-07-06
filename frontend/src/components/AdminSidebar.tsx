@@ -17,7 +17,8 @@ const navItems: NavItem[] = [
   { label: "Manage Cars", icon: "🚗", path: "/admin/cars" },
   { label: "Manage Visas", icon: "🛂", path: "/admin/visas" },
   { label: "Manage Insurance", icon: "🛡️", path: "/admin/insurance" },
-  { label: "Bookings", icon: "📋", path: "/admin/bookings" },
+  { label: "Bookings & Inquiries", icon: "📋", path: "/admin/bookings" },
+  { label: "Site Settings", icon: "⚙️", path: "/admin/settings" },
 ];
 
 export default function AdminSidebar() {
@@ -25,6 +26,19 @@ export default function AdminSidebar() {
   const pathname = usePathname();
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [adminUser, setAdminUser] = useState<string>("");
+
+  useEffect(() => {
+    const user = localStorage.getItem("admin_user");
+    if (user) {
+      try {
+        const parsed = JSON.parse(user);
+        setAdminUser(parsed.username || parsed.email || "Admin");
+      } catch {
+        setAdminUser(user);
+      }
+    }
+  }, []);
 
   useEffect(() => {
     const handleResize = () => {
@@ -88,6 +102,18 @@ export default function AdminSidebar() {
 
       {/* Bottom */}
       <div className="px-3 py-4 border-t border-white/10 space-y-2">
+        {/* Admin User */}
+        {adminUser && (
+          <div className="px-4 py-2 flex items-center gap-2">
+            <span className="w-8 h-8 rounded-full bg-gold/20 border border-gold/30 flex items-center justify-center text-gold text-xs font-bold flex-shrink-0">
+              {adminUser.charAt(0).toUpperCase()}
+            </span>
+            <div className={`${collapsed && !mobileOpen ? "hidden" : "block"} overflow-hidden`}>
+              <p className="text-white/80 text-sm font-medium truncate">{adminUser}</p>
+              <p className="text-white/30 text-[10px]">Administrator</p>
+            </div>
+          </div>
+        )}
         <Link
           href="/"
           className="flex items-center gap-2 px-4 py-2 rounded-md text-white/50 hover:text-white hover:bg-white/5 transition-all text-sm"
