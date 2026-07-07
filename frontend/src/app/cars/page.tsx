@@ -45,12 +45,12 @@ export default function CarsPage() {
     } catch (err) {
       console.error('Failed to fetch cars:', err);
       const fallbackCars: Car[] = [
-        { _id: 'fc1', slug: 'fbc1', carType: 'Toyota Alphard', capacity: 6, images: ['https://picsum.photos/seed/a9car-alphard/600/400'], features: ['AC', 'Leather', 'WiFi'], pricingWithDriver: [{ duration: 'Full Day', priceMMK: 100000, priceUSD: 48 }], description: '' },
-        { _id: 'fc2', slug: 'fbc2', carType: 'Toyota Vios', capacity: 4, images: ['https://picsum.photos/seed/a9car-vios/600/400'], features: ['AC', 'GPS', 'Fuel'], pricingWithDriver: [{ duration: 'Full Day', priceMMK: 60000, priceUSD: 29 }], description: '' },
-        { _id: 'fc3', slug: 'fbc3', carType: 'Toyota Hiace', capacity: 12, images: ['https://picsum.photos/seed/a9car-hiace/600/400'], features: ['AC', 'Luggage'], pricingWithDriver: [{ duration: 'Full Day', priceMMK: 140000, priceUSD: 67 }], description: '' },
-        { _id: 'fc4', slug: 'fbc4', carType: 'Honda CR-V', capacity: 5, images: ['https://picsum.photos/seed/a9car-crv/600/400'], features: ['AC', 'Sunroof'], pricingWithDriver: [{ duration: 'Full Day', priceMMK: 85000, priceUSD: 40 }], description: '' },
-        { _id: 'fc5', slug: 'fbc5', carType: 'Mercedes S-Class', capacity: 3, images: ['https://picsum.photos/seed/a9car-mercedes/600/400'], features: ['AC', 'WiFi', 'Massage'], pricingWithDriver: [{ duration: 'Full Day', priceMMK: 250000, priceUSD: 119 }], description: '' },
-        { _id: 'fc6', slug: 'fbc6', carType: 'Toyota Land Cruiser Prado', capacity: 7, images: ['https://picsum.photos/seed/a9car-prado/600/400'], features: ['AC', '4WD', 'Sunroof'], pricingWithDriver: [{ duration: 'Full Day', priceMMK: 180000, priceUSD: 86 }], description: '' },
+        { _id: 'fc1', slug: 'fbc1', carType: 'Toyota Alphard', capacity: 6, images: ['https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?w=800&q=80'], features: ['AC', 'Leather', 'WiFi'], pricingWithDriver: [{ duration: 'Full Day', priceMMK: 100000, priceUSD: 48 }], description: '' },
+        { _id: 'fc2', slug: 'fbc2', carType: 'Toyota Vios', capacity: 4, images: ['https://images.unsplash.com/photo-1621007947382-bb3c3994e3fb?w=800&q=80'], features: ['AC', 'GPS', 'Fuel'], pricingWithDriver: [{ duration: 'Full Day', priceMMK: 60000, priceUSD: 29 }], description: '' },
+        { _id: 'fc3', slug: 'fbc3', carType: 'Toyota Hiace', capacity: 12, images: ['https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=800&q=80'], features: ['AC', 'Luggage'], pricingWithDriver: [{ duration: 'Full Day', priceMMK: 140000, priceUSD: 67 }], description: '' },
+        { _id: 'fc4', slug: 'fbc4', carType: 'Honda CR-V', capacity: 5, images: ['https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?w=800&q=80'], features: ['AC', 'Sunroof'], pricingWithDriver: [{ duration: 'Full Day', priceMMK: 85000, priceUSD: 40 }], description: '' },
+        { _id: 'fc5', slug: 'fbc5', carType: 'Mercedes S-Class', capacity: 3, images: ['https://images.unsplash.com/photo-1623006899038-2f68e38bb38f?w=800&q=80'], features: ['AC', 'WiFi', 'Massage'], pricingWithDriver: [{ duration: 'Full Day', priceMMK: 250000, priceUSD: 119 }], description: '' },
+        { _id: 'fc6', slug: 'fbc6', carType: 'Toyota Land Cruiser Prado', capacity: 7, images: ['https://images.unsplash.com/photo-1559416523-140ddc3d238c?w=800&q=80'], features: ['AC', '4WD', 'Sunroof'], pricingWithDriver: [{ duration: 'Full Day', priceMMK: 180000, priceUSD: 86 }], description: '' },
       ];
       setAllCars(fallbackCars);
     } finally {
@@ -133,8 +133,8 @@ export default function CarsPage() {
 
         {!loading && cars.length === 0 && (
           <div className="text-center py-20 space-y-4">
-            <h3 className="text-xl font-semibold text-gray-900" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>No cars found</h3>
-            <p className="text-gray-500">Try a different vehicle type.</p>
+            <h3 className="text-xl font-semibold text-gray-900" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>No Cars Available</h3>
+            <p className="text-gray-500 max-w-md mx-auto">We couldn't find any vehicles matching your criteria. Please try a different car type or contact us for custom arrangements.</p>
             <button onClick={() => { setCarType('All'); setPage(1); }}
               className="px-6 py-2 rounded-xl bg-gradient-to-r from-[#D4AF37] to-[#C5A028] text-gray-900 font-semibold hover:shadow-lg transition-all">Show All Cars</button>
           </div>

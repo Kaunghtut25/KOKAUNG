@@ -285,6 +285,27 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* ========== Service Navigation Icons ========== */}
+      <section className="max-w-6xl mx-auto px-4 mt-6 mb-2">
+        <div className="grid grid-cols-4 md:grid-cols-7 gap-3">
+          {[
+            { label: 'Tours', icon: '🏔️', href: '/tours' },
+            { label: 'Hotels', icon: '🏨', href: '/hotels' },
+            { label: 'Cars', icon: '🚗', href: '/cars' },
+            { label: 'Visas', icon: '🛂', href: '/visas' },
+            { label: 'Insurance', icon: '🛡️', href: '/insurance' },
+            { label: 'Cruises', icon: '🚢', href: '/cruises' },
+            { label: 'Sky Lounge', icon: '✨', href: '/mingalar' },
+          ].map((item) => (
+            <Link key={item.href} href={item.href}
+              className="flex flex-col items-center gap-1.5 p-3 rounded-xl bg-white/90 backdrop-blur border border-gray-200 hover:border-[#D4AF37]/60 hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 group cursor-pointer text-center">
+              <span className="text-2xl group-hover:scale-110 transition-transform">{item.icon}</span>
+              <span className="text-xs font-medium text-gray-600 group-hover:text-[#D4AF37] transition-colors">{item.label}</span>
+            </Link>
+          ))}
+        </div>
+      </section>
+
       {/* ========== Search Engine (Expedia-style, overlapping hero & body) ========== */}
       <section className="relative z-30 -mt-56 md:-mt-72">
         <div className="max-w-5xl mx-auto px-4">
@@ -426,27 +447,6 @@ export default function HomePage() {
               )}
             </form>
           </div>
-        </div>
-      </section>
-
-      {/* ========== Service Icons ========== */}
-      <section className="max-w-6xl mx-auto px-4 -mt-8 mb-8">
-        <div className="grid grid-cols-4 md:grid-cols-7 gap-3">
-          {[
-            { label: 'Tours', icon: '🏔️', href: '/tours' },
-            { label: 'Hotels', icon: '🏨', href: '/hotels' },
-            { label: 'Cars', icon: '🚗', href: '/cars' },
-            { label: 'Visas', icon: '🛂', href: '/visas' },
-            { label: 'Insurance', icon: '🛡️', href: '/insurance' },
-            { label: 'Cruises', icon: '🚢', href: '/cruises' },
-            { label: 'Sky Lounge', icon: '✨', href: '/mingalar' },
-          ].map((item) => (
-            <Link key={item.href} href={item.href}
-              className="flex flex-col items-center gap-1.5 p-3 rounded-xl bg-white border border-gray-200 hover:border-[#D4AF37]/60 hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 group cursor-pointer text-center">
-              <span className="text-2xl group-hover:scale-110 transition-transform">{item.icon}</span>
-              <span className="text-xs font-medium text-gray-600 group-hover:text-[#D4AF37] transition-colors">{item.label}</span>
-            </Link>
-          ))}
         </div>
       </section>
 

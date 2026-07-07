@@ -7,11 +7,6 @@ import { usePathname } from "next/navigation";
 import { HiMenuAlt3, HiX } from "react-icons/hi";
 
 const navLinks = [
-  { label: "Tours", href: "/tours" },
-  { label: "Hotels", href: "/hotels" },
-  { label: "Cars", href: "/cars" },
-  { label: "Visas", href: "/visas" },
-  { label: "Insurance", href: "/insurance" },
   { label: "Blog", href: "/blog" },
 ];
 

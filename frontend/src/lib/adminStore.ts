@@ -122,32 +122,32 @@ export function seed() {
   const carData = [
     {
       id: "fc1", carType: "Toyota Alphard", description: "Premium luxury MPV with seating for 6 passengers. Perfect for family trips and executive travel.",
-      capacity: 6, features: "AC, Leather Seats, WiFi, Refreshments", images: "https://picsum.photos/seed/a9adm-car1/600/400",
+      capacity: 6, features: "AC, Leather Seats, WiFi, Refreshments", images: "https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?w=800\u0026q=80",
       pricing: [{ duration: "Full Day", priceMMK: 100000, priceUSD: 48 }], status: "active",
     },
     {
       id: "fc2", carType: "Toyota Vios", description: "Reliable sedan with comfortable seating for 4 passengers. Ideal for city transfers and short trips.",
-      capacity: 4, features: "AC, GPS, Fuel Included", images: "https://picsum.photos/seed/a9adm-car2/600/400",
+      capacity: 4, features: "AC, GPS, Fuel Included", images: "https://images.unsplash.com/photo-1621007947382-bb3c3994e3fb?w=800\u0026q=80",
       pricing: [{ duration: "Full Day", priceMMK: 60000, priceUSD: 29 }], status: "active",
     },
     {
       id: "fc3", carType: "Toyota Hiace", description: "Spacious van for up to 12 passengers. Perfect for group tours and airport transfers.",
-      capacity: 12, features: "AC, Luggage Space, Comfortable Seats", images: "https://picsum.photos/seed/a9adm-car3/600/400",
+      capacity: 12, features: "AC, Luggage Space, Comfortable Seats", images: "https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=800\u0026q=80",
       pricing: [{ duration: "Full Day", priceMMK: 140000, priceUSD: 67 }], status: "active",
     },
     {
       id: "fc4", carType: "Honda CR-V", description: "Modern SUV with seating for 5. Great for countryside exploration and rough terrain.",
-      capacity: 5, features: "AC, Sunroof, 4WD", images: "https://picsum.photos/seed/a9adm-car4/600/400",
+      capacity: 5, features: "AC, Sunroof, 4WD", images: "https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?w=800\u0026q=80",
       pricing: [{ duration: "Full Day", priceMMK: 85000, priceUSD: 40 }], status: "active",
     },
     {
       id: "fc5", carType: "Mercedes S-Class", description: "Ultimate luxury sedan for VIPs. Premium comfort with massage seats and privacy partition.",
-      capacity: 3, features: "AC, WiFi, Massage Seats, Privacy", images: "https://picsum.photos/seed/a9adm-car5/600/400",
+      capacity: 3, features: "AC, WiFi, Massage Seats, Privacy", images: "https://images.unsplash.com/photo-1623006899038-2f68e38bb38f?w=800\u0026q=80",
       pricing: [{ duration: "Full Day", priceMMK: 250000, priceUSD: 119 }], status: "active",
     },
     {
       id: "fc6", carType: "Toyota Land Cruiser Prado", description: "Powerful 7-seater SUV with 4WD capability. Ideal for adventure tours and off-road journeys.",
-      capacity: 7, features: "AC, 4WD, Sunroof, Premium Audio", images: "https://picsum.photos/seed/a9adm-car6/600/400",
+      capacity: 7, features: "AC, 4WD, Sunroof, Premium Audio", images: "https://images.unsplash.com/photo-1559416523-140ddc3d238c?w=800\u0026q=80",
       pricing: [{ duration: "Full Day", priceMMK: 180000, priceUSD: 86 }], status: "active",
     },
   ];

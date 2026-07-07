@@ -252,10 +252,10 @@ export default function HotelsPage() {
 
         {!loading && hotels.length === 0 && (
           <div className="text-center py-20 space-y-4">
-            <h3 className="text-xl font-semibold text-gray-900" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>No hotels found</h3>
-            <p className="text-gray-500">Try adjusting your filters.</p>
+            <h3 className="text-xl font-semibold text-gray-900" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>No Hotels Available</h3>
+            <p className="text-gray-500 max-w-md mx-auto">We couldn't find any hotels matching your search. Please try a different location or adjust your price range.</p>
             <button onClick={() => { setLocation(''); setRating(''); setMinPrice(''); setMaxPrice(''); setSort(''); setPage(1); }}
-              className="px-6 py-2 rounded-xl bg-gradient-to-r from-[#D4AF37] to-[#C5A028] text-gray-900 font-semibold hover:shadow-lg transition-all">Clear Filters</button>
+              className="px-6 py-2 rounded-xl bg-gradient-to-r from-[#D4AF37] to-[#C5A028] text-gray-900 font-semibold hover:shadow-lg transition-all">Show All Hotels</button>
           </div>
         )}
 

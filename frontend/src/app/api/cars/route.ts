@@ -3,6 +3,24 @@ import { getAll } from "@/lib/adminStore";
 
 export const dynamic = 'force-dynamic';
 
+function transformCar(c: Record<string, unknown>) {
+  const pricingArr = Array.isArray(c.pricing) ? c.pricing as Record<string, unknown>[] : [];
+  return {
+    _id: c.id || c._id,
+    slug: ((c.carType as string) || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, ''),
+    carType: c.carType as string || '',
+    capacity: Number(c.capacity) || 4,
+    images: typeof c.images === 'string' ? [c.images] : (Array.isArray(c.images) ? c.images as string[] : []),
+    features: typeof c.features === 'string' ? (c.features as string).split(',').map(s => s.trim()).filter(Boolean) : (Array.isArray(c.features) ? c.features as string[] : []),
+    pricingWithDriver: pricingArr.map((p: Record<string, unknown>) => ({
+      duration: (p.duration as string) || 'Full Day',
+      priceMMK: Number(p.priceMMK) || 0,
+      priceUSD: Number(p.priceUSD) || 0,
+    })),
+    description: (c.description as string) || '',
+  };
+}
+
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
@@ -14,45 +32,38 @@ export async function GET(request: NextRequest) {
     const currency = searchParams.get('currency') || 'MMK';
     const sort = searchParams.get('sort') || '';
 
-    let cars = getAll("cars") as Record<string, unknown>[];
+    let rawCars = getAll("cars") as Record<string, unknown>[];
 
-    // Filter by car type
+    // Filter on raw data before transforming
     if (carType.trim() && carType !== 'All') {
       const ct = carType.trim().toLowerCase();
-      cars = cars.filter(c => 
-        (c.carType as string || '').toLowerCase().includes(ct)
-      );
+      rawCars = rawCars.filter(c => (c.carType as string || '').toLowerCase().includes(ct));
     }
 
-    // Filter by price (using first pricing entry)
     if (minPrice || maxPrice) {
       const min = minPrice ? Number(minPrice) : 0;
       const max = maxPrice ? Number(maxPrice) : Infinity;
       const priceKey = currency === 'USD' ? 'priceUSD' : 'priceMMK';
-      cars = cars.filter(c => {
-        const pricingArr = Array.isArray(c.pricing) ? c.pricing : [];
-        if (!pricingArr || pricingArr.length === 0) return false;
+      rawCars = rawCars.filter(c => {
+        const pricingArr = Array.isArray(c.pricing) ? c.pricing as Record<string, unknown>[] : [];
+        if (!pricingArr.length) return false;
         const p = (pricingArr[0] as Record<string, unknown>)[priceKey] as number || 0;
         return p >= min && p <= max;
       });
     }
 
-    // Sort
-    if (sort === 'price_asc') {
+    // Sort on raw data
+    if (sort === 'price_asc' || sort === 'price_desc') {
       const priceKey = currency === 'USD' ? 'priceUSD' : 'priceMMK';
-      cars.sort((a, b) => {
-        const pa = Array.isArray(a.pricing) && a.pricing.length > 0 ? ((a.pricing[0] as Record<string, unknown>)[priceKey] as number) || 0 : 0;
-        const pb = Array.isArray(b.pricing) && b.pricing.length > 0 ? ((b.pricing[0] as Record<string, unknown>)[priceKey] as number) || 0 : 0;
-        return pa - pb;
-      });
-    } else if (sort === 'price_desc') {
-      const priceKey = currency === 'USD' ? 'priceUSD' : 'priceMMK';
-      cars.sort((a, b) => {
-        const pa = Array.isArray(a.pricing) && a.pricing.length > 0 ? ((a.pricing[0] as Record<string, unknown>)[priceKey] as number) || 0 : 0;
-        const pb = Array.isArray(b.pricing) && b.pricing.length > 0 ? ((b.pricing[0] as Record<string, unknown>)[priceKey] as number) || 0 : 0;
-        return pb - pa;
+      rawCars.sort((a, b) => {
+        const pa = (Array.isArray(a.pricing) && a.pricing.length > 0 ? ((a.pricing as Record<string, unknown>[])[0] as Record<string, unknown>)[priceKey] as number : 0) || 0;
+        const pb = (Array.isArray(b.pricing) && b.pricing.length > 0 ? ((b.pricing as Record<string, unknown>[])[0] as Record<string, unknown>)[priceKey] as number : 0) || 0;
+        return sort === 'price_asc' ? pa - pb : pb - pa;
       });
     }
+
+    // Transform
+    const cars = rawCars.map(transformCar);
 
     const total = cars.length;
     const totalPages = Math.max(1, Math.ceil(total / limit));
@@ -64,7 +75,8 @@ export async function GET(request: NextRequest) {
       data,
       pagination: { page, limit, total, totalPages },
     });
-  } catch (err: any) {
-    return NextResponse.json({ success: false, message: err.message || "Server error" }, { status: 500 });
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "Server error";
+    return NextResponse.json({ success: false, message }, { status: 500 });
   }
 }

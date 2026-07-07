@@ -3,6 +3,23 @@ import { getAll } from "@/lib/adminStore";
 
 export const dynamic = 'force-dynamic';
 
+function transformHotel(h: Record<string, unknown>) {
+  return {
+    _id: h.id || h._id,
+    slug: ((h.name as string) || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, ''),
+    name: h.name as string || '',
+    location: h.location as string || '',
+    rating: Number(h.rating) || 4.0,
+    reviewCount: Number(h.reviewCount) || Math.floor(Math.random() * 30) + 5,
+    pricePerNightMMK: Number(h.pricePerNightMMK) || 0,
+    pricePerNightUSD: Number(h.pricePerNightUSD) || 0,
+    images: typeof h.images === 'string' ? [h.images] : (Array.isArray(h.images) ? h.images as string[] : []),
+    amenities: typeof h.amenities === 'string' ? (h.amenities as string).split(',').map(s => s.trim()).filter(Boolean) : (Array.isArray(h.amenities) ? h.amenities as string[] : []),
+    availableRooms: Number(h.availableRooms) || 5,
+    description: (h.description as string) || '',
+  };
+}
+
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
@@ -53,10 +70,12 @@ export async function GET(request: NextRequest) {
       hotels.sort((a, b) => ((b.rating as number) || 0) - ((a.rating as number) || 0));
     }
 
-    const total = hotels.length;
+    const transformed = hotels.map(transformHotel);
+
+    const total = transformed.length;
     const totalPages = Math.max(1, Math.ceil(total / limit));
     const start = (page - 1) * limit;
-    const data = hotels.slice(start, start + limit);
+    const data = transformed.slice(start, start + limit);
 
     return NextResponse.json({
       success: true,
