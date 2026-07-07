@@ -6,10 +6,6 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { HiMenuAlt3, HiX } from "react-icons/hi";
 
-const navLinks = [
-  { label: "Blog", href: "/blog" },
-];
-
 export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -50,22 +46,13 @@ export default function Navbar() {
               </div>
             </Link>
 
-            <div className="hidden lg:flex items-center space-x-1">
-              {navLinks.map((link) => {
-                const active = isActive(link.href);
-                return (
-                  <Link key={link.href} href={link.href}
-                    className={`px-4 py-2 text-sm font-semibold transition-all duration-200 rounded-lg [text-shadow:0_1px_3px_rgba(0,0,0,0.5)] ${
-                      active ? "bg-[#D4AF37] text-[#0A1628] [text-shadow:none] shadow-sm"
-                             : "text-white hover:text-[#D4AF37] hover:bg-white/10"
-                    }`}>
-                    {link.label}
-                  </Link>
-                );
-              })}
-            </div>
-
             <div className="hidden lg:flex items-center space-x-3">
+              {/* Blog */}
+              <Link href="/blog"
+                className={`px-4 py-2 text-sm font-semibold transition-all duration-200 rounded-lg [text-shadow:0_1px_3px_rgba(0,0,0,0.5)] ${
+                  isActive('/blog') ? 'bg-[#D4AF37] text-[#0A1628] [text-shadow:none] shadow-sm' : 'text-white hover:text-[#D4AF37] hover:bg-white/10'
+                }`}>Blog</Link>
+
               <div className="relative group">
                 <button className="flex items-center gap-1 text-sm font-medium text-white hover:text-[#D4AF37] transition-colors px-3 py-2 rounded-lg hover:bg-white/10">
                   <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>
@@ -124,17 +111,10 @@ export default function Navbar() {
           </div>
 
           <div className="flex-1 px-6 py-6 space-y-1 overflow-y-auto">
-            {navLinks.map((link, i) => {
-              const active = isActive(link.href);
-              return (
-                <Link key={link.href} href={link.href} onClick={() => setMobileOpen(false)}
-                  className={`block py-3 px-4 text-base font-medium rounded-lg transition-all duration-200 ${
-                    active ? "bg-[#D4AF37] text-[#0A1628]" : "text-white hover:text-[#D4AF37] hover:bg-white/10"
-                  }`} style={{ animationDelay: `${i * 50}ms` }}>
-                  {link.label}
-                </Link>
-              );
-            })}
+            <Link href="/blog" onClick={() => setMobileOpen(false)}
+              className={`block py-3 px-4 text-base font-medium rounded-lg transition-all duration-200 ${
+                isActive('/blog') ? "bg-[#D4AF37] text-[#0A1628]" : "text-white hover:text-[#D4AF37] hover:bg-white/10"
+              }`}>Blog</Link>
           </div>
 
           <div className="px-6 py-6 border-t border-[#D4AF37]/20 space-y-3">
