@@ -284,9 +284,9 @@ export default function HomePage() {
           ))}
         </div>
 
-        {/* ========== Service Navigation Icons (hero middle) ========== */}
-        <div className="absolute bottom-20 left-0 right-0 z-20 px-4">
-          <div className="max-w-3xl mx-auto flex flex-wrap justify-center gap-2 md:gap-3">
+        {/* ========== Service Navigation Icons (hero true center) ========== */}
+        <div className="absolute left-0 right-0 top-[44%] md:top-[40%] z-20 px-2">
+          <div className="max-w-4xl mx-auto flex flex-wrap justify-center gap-1.5 md:gap-2.5">
             {[
               { label: 'Tours', icon: '🏔️', href: '/tours' },
               { label: 'Hotels', icon: '🏨', href: '/hotels' },
@@ -297,10 +297,10 @@ export default function HomePage() {
               { label: 'Sky Lounge', icon: '✨', href: '/mingalar' },
             ].map((item) => (
               <Link key={item.href} href={item.href}
-                className="flex flex-col items-center gap-1 py-2 px-3 rounded-xl bg-white/95 backdrop-blur-sm border border-white/40 hover:border-[#D4AF37] hover:bg-white hover:shadow-lg hover:-translate-y-1 transition-all duration-300 group cursor-pointer text-center"
+                className="flex flex-col items-center gap-0.5 py-1.5 px-2.5 rounded-lg bg-white/90 backdrop-blur-sm border border-white/30 hover:border-[#D4AF37] hover:bg-white hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 group cursor-pointer text-center"
               >
-                <span className="text-base group-hover:scale-115 transition-transform">{item.icon}</span>
-                <span className="text-[11px] font-semibold text-gray-700 group-hover:text-[#D4AF37] transition-colors">{item.label}</span>
+                <span className="text-sm group-hover:scale-110 transition-transform">{item.icon}</span>
+                <span className="text-[10px] font-semibold text-gray-800 group-hover:text-[#D4AF37] transition-colors">{item.label}</span>
               </Link>
             ))}
           </div>
