@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { api } from '@/lib/api';
 
 interface BlogPost {
@@ -66,13 +67,21 @@ export default function BlogPage() {
 
   return (
     <main className="min-h-screen bg-white">
-      {/* Hero */}
-      <section className="relative pt-24 pb-12 px-4 bg-[#0A1628]">
-        <div className="max-w-4xl mx-auto text-center">
+      {/* Hero with Image */}
+      <section className="relative h-[300px] md:h-[380px] w-full overflow-hidden">
+        <Image
+          src="https://images.unsplash.com/photo-1504711434969-e33886168d6c?w=1600&q=85"
+          alt="A9 Global Blog"
+          fill
+          className="object-cover"
+          priority
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#0A1628]/90 via-[#0A1628]/40 to-[#0A1628]/30" />
+        <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4">
           <h1 className="text-4xl md:text-5xl font-bold text-white mb-4" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
             A9 Global Blog
           </h1>
-          <p className="text-gray-400 text-lg">
+          <p className="text-gray-300 text-lg max-w-xl">
             Travel tips, destination guides, and the latest news from around the world
           </p>
         </div>

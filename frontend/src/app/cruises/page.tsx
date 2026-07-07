@@ -30,11 +30,11 @@ export default function CruisesPage() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
           {[
             { icon: '🛳️', img: 'https://images.unsplash.com/photo-1548574505-5e239809ee19?w=600&q=80', title: 'Luxury Liners', desc: 'World-class cruise ships with premium amenities' },
-            { icon: '🏝️', img: 'https://images.unsplash.com/photo-1559131625-ad5a17a4db5e?w=600&q=80', title: 'Exotic Routes', desc: 'Mediterranean, Caribbean, Alaska & more' },
+            { icon: '🏝️', img: 'https://images.unsplash.com/photo-1540202404-a2f29016b523?w=600&q=80', title: 'Exotic Routes', desc: 'Mediterranean, Caribbean, Alaska & more' },
             { icon: '🍽️', img: 'https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=600&q=80', title: 'All-Inclusive', desc: 'Fine dining, drinks, entertainment included' },
             { icon: '🎭', img: 'https://images.unsplash.com/photo-1516496636080-14fb876e029d?w=600&q=80', title: 'Entertainment', desc: 'Live shows, casinos, pools & theatre' },
             { icon: '👨‍👩‍👧‍👦', img: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=600&q=80', title: 'Family Friendly', desc: 'Kids clubs, family suites & activities' },
-            { icon: '🌊', img: 'https://images.unsplash.com/photo-1569263979104-715ab7cd79d0?w=600&q=80', title: 'Shore Excursions', desc: 'Curated tours at every port of call' },
+            { icon: '🌊', img: 'https://images.unsplash.com/photo-1559030623-0226b1241edd?w=600&q=80', title: 'Shore Excursions', desc: 'Curated tours at every port of call' },
           ].map((item, i) => (
             <div key={i} className="bg-white rounded-xl border border-gray-200 overflow-hidden hover:shadow-md hover:border-[#D4AF37]/40 transition-all group">
               <div className="relative h-40 overflow-hidden">

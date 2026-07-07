@@ -288,6 +288,7 @@ export default function HomePage() {
         <div className="absolute left-0 right-0 top-[46%] md:top-[48%] z-20 px-1">
           <div className="max-w-5xl mx-auto flex flex-wrap justify-center gap-1 md:gap-2">
             {[
+              { label: 'Flights', icon: '✈️', href: '/search' },
               { label: 'Tours', icon: '🏔️', href: '/tours' },
               { label: 'Hotels', icon: '🏨', href: '/hotels' },
               { label: 'Cars', icon: '🚗', href: '/cars' },

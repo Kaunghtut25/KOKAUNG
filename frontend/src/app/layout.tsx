@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import LiveChatButton from "@/components/LiveChatButton";
 import { Toaster } from "react-hot-toast";
 
 const inter = Inter({
@@ -48,6 +49,7 @@ export default function RootLayout({
         <Navbar />
         <main>{children}</main>
         <Footer />
+        <LiveChatButton />
         <Toaster
           position="top-center"
           toastOptions={{
