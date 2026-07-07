@@ -283,28 +283,29 @@ export default function HomePage() {
               aria-label={"Go to slide " + (index + 1)} />
           ))}
         </div>
-      </section>
 
-      {/* ========== Service Navigation Icons (compact, above search engine) ========== */}
-      <div className="max-w-6xl mx-auto px-4 mt-4 mb-2">
-        <div className="grid grid-cols-4 md:grid-cols-7 gap-2">
-          {[
-            { label: 'Tours', icon: '🏔️', href: '/tours' },
-            { label: 'Hotels', icon: '🏨', href: '/hotels' },
-            { label: 'Cars', icon: '🚗', href: '/cars' },
-            { label: 'Visas', icon: '🛂', href: '/visas' },
-            { label: 'Insurance', icon: '🛡️', href: '/insurance' },
-            { label: 'Cruises', icon: '🚢', href: '/cruises' },
-            { label: 'Sky Lounge', icon: '✨', href: '/mingalar' },
-          ].map((item) => (
-            <Link key={item.href} href={item.href}
-              className="flex flex-col items-center gap-0.5 py-2 px-1 rounded-lg bg-white/90 backdrop-blur border border-gray-200 hover:border-[#D4AF37]/60 hover:shadow-sm hover:-translate-y-0.5 transition-all duration-200 group cursor-pointer text-center">
-              <span className="text-base group-hover:scale-110 transition-transform">{item.icon}</span>
-              <span className="text-[11px] font-medium text-gray-600 group-hover:text-[#D4AF37] transition-colors">{item.label}</span>
-            </Link>
-          ))}
+        {/* ========== Service Navigation Icons (hero middle) ========== */}
+        <div className="absolute bottom-20 left-0 right-0 z-20 px-4">
+          <div className="max-w-3xl mx-auto flex flex-wrap justify-center gap-2 md:gap-3">
+            {[
+              { label: 'Tours', icon: '🏔️', href: '/tours' },
+              { label: 'Hotels', icon: '🏨', href: '/hotels' },
+              { label: 'Cars', icon: '🚗', href: '/cars' },
+              { label: 'Visas', icon: '🛂', href: '/visas' },
+              { label: 'Insurance', icon: '🛡️', href: '/insurance' },
+              { label: 'Cruises', icon: '🚢', href: '/cruises' },
+              { label: 'Sky Lounge', icon: '✨', href: '/mingalar' },
+            ].map((item) => (
+              <Link key={item.href} href={item.href}
+                className="flex flex-col items-center gap-1 py-2 px-3 rounded-xl bg-white/95 backdrop-blur-sm border border-white/40 hover:border-[#D4AF37] hover:bg-white hover:shadow-lg hover:-translate-y-1 transition-all duration-300 group cursor-pointer text-center"
+              >
+                <span className="text-base group-hover:scale-115 transition-transform">{item.icon}</span>
+                <span className="text-[11px] font-semibold text-gray-700 group-hover:text-[#D4AF37] transition-colors">{item.label}</span>
+              </Link>
+            ))}
+          </div>
         </div>
-      </div>
+      </section>
 
       {/* ========== Search Engine (Expedia-style, overlapping hero & body) ========== */}
       <section className="relative z-30 -mt-56 md:-mt-72">
