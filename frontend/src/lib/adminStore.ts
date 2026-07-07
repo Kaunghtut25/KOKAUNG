@@ -297,6 +297,15 @@ export function seed() {
   collections.set("bookings", bookings);
   collections.set("inquiries", inquiries);
 }
+  // ── Blog ──
+  const blogCol = new Map<string, unknown>();
+  const blogPosts = [
+    { id: "b1", title: "Top 10 Must-Visit Destinations in Myanmar", content: "Myanmar is a land of golden pagodas, ancient temples, and breathtaking landscapes. From the plains of Bagan to the serene waters of Inle Lake, here are the top 10 destinations you must visit on your next trip.", image: "https://images.unsplash.com/photo-1482938289607-e9573fc25ebb?w=800&q=80", author: "A9 Global Team", tags: ["Myanmar", "Travel Tips", "Destinations"], createdAt: new Date().toISOString() },
+    { id: "b2", title: "Travel Tips: How to Get the Best Flight Deals", content: "Booking flights can be expensive, but with these insider tips you can save hundreds on your next trip. Learn when to book, which days to fly, and how to use price alerts effectively.", image: "https://images.unsplash.com/photo-1436491865332-7a61a109bb05?w=800&q=80", author: "A9 Global Team", tags: ["Flights", "Travel Tips", "Budget"], createdAt: new Date(Date.now() - 86400000).toISOString() },
+    { id: "b3", title: "Visa Guide: Everything You Need to Know for 2026", content: "Planning an international trip? Our comprehensive visa guide covers requirements for popular destinations including Thailand, Singapore, Japan, South Korea, and more.", image: "https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=800&q=80", author: "A9 Global Team", tags: ["Visa", "Guide", "International"], createdAt: new Date(Date.now() - 172800000).toISOString() },
+  ];
+  blogPosts.forEach(b => blogCol.set(b.id, b));
+  collections.set("blog", blogCol);
 
 // Ensure seeded on first import
 seed();

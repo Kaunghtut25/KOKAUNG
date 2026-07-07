@@ -129,6 +129,16 @@ export default function HotelCard({ hotel, currency = 'MMK' }: HotelCardProps) {
           )}
         </div>
       )}
+
+      {/* Book Now button — opens Expedia search */}
+      <div className="px-4 pb-4">
+        <button
+          onClick={(e) => { e.stopPropagation(); window.open(`https://www.expedia.com/Hotel-Search?destination=${encodeURIComponent(hotel.location || hotel.name)}`, '_blank'); }}
+          className="w-full py-2.5 rounded-xl bg-gradient-to-r from-[#D4AF37] to-[#C5A028] hover:from-[#E5C048] hover:to-[#D4AF37] text-gray-900 font-semibold text-sm transition-all duration-300 hover:shadow-lg hover:shadow-[#D4AF37]/20"
+        >
+          Book Now on Expedia
+        </button>
+      </div>
     </div>
   );
 }
