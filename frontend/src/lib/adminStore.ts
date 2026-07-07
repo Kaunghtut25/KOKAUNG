@@ -289,14 +289,6 @@ export function seed() {
   ];
   inquiryData.forEach((inq) => inquiries.set(inq._id, inq));
 
-  collections.set("tours", tours);
-  collections.set("hotels", hotels);
-  collections.set("cars", cars);
-  collections.set("visas", visas);
-  collections.set("insurances", insurances);
-  collections.set("bookings", bookings);
-  collections.set("inquiries", inquiries);
-}
   // ── Blog ──
   const blogCol = new Map<string, unknown>();
   const blogPosts = [
@@ -306,6 +298,15 @@ export function seed() {
   ];
   blogPosts.forEach(b => blogCol.set(b.id, b));
   collections.set("blog", blogCol);
+
+  collections.set("tours", tours);
+  collections.set("hotels", hotels);
+  collections.set("cars", cars);
+  collections.set("visas", visas);
+  collections.set("insurances", insurances);
+  collections.set("bookings", bookings);
+  collections.set("inquiries", inquiries);
+}
 
 // Ensure seeded on first import
 seed();
