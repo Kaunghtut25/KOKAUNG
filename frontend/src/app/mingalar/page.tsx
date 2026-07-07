@@ -19,7 +19,7 @@ const loungeCards = [
     desc: 'High-speed WiFi & work stations'
   },
   {
-    img: 'https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=600&q=80',
+    img: 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?w=600&q=80',
     icon: '🚿', title: 'Shower Suites',
     desc: 'Refresh before your flight'
   },
@@ -38,12 +38,20 @@ const loungeCards = [
 export default function MingalarPage() {
   return (
     <main className="min-h-screen bg-white">
-      <section className="relative pt-24 pb-12 px-4 bg-[#0A1628]">
-        <div className="max-w-4xl mx-auto text-center">
-          <h1 className="text-4xl md:text-5xl font-bold text-white mb-4" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
+      <section className="relative h-[400px] md:h-[500px] w-full overflow-hidden">
+        <Image
+          src="https://images.unsplash.com/photo-1436491865332-7a61a109bb05?w=1600&q=85"
+          alt="Airport Lounge"
+          fill
+          className="object-cover"
+          priority
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#0A1628]/90 via-[#0A1628]/40 to-[#0A1628]/30" />
+        <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4">
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
             ✨ Mingalar Sky Lounge
           </h1>
-          <p className="text-gray-400 text-lg">
+          <p className="text-gray-300 text-lg max-w-2xl">
             Premium airport lounge experience at Yangon International
           </p>
         </div>

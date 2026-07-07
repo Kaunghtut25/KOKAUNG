@@ -60,7 +60,7 @@ export default function ScrollingRow({ children, visible = true }: ScrollingRowP
         onClick={() => scroll('left')}
         aria-label="Scroll left"
         className={`absolute left-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full bg-[#D4AF37]/90 shadow-lg flex items-center justify-center transition-all duration-300 ${
-          canScrollLeft ? 'opacity-0 group-hover/row:opacity-100 hover:bg-[#D4AF37] hover:scale-110' : 'opacity-0 pointer-events-none'
+          canScrollLeft ? 'opacity-100 hover:bg-[#D4AF37] hover:scale-110' : 'opacity-0 pointer-events-none'
         }`}
         style={{ marginLeft: -16 }}
       >
@@ -81,7 +81,7 @@ export default function ScrollingRow({ children, visible = true }: ScrollingRowP
         onClick={() => scroll('right')}
         aria-label="Scroll right"
         className={`absolute right-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full bg-[#D4AF37]/90 shadow-lg flex items-center justify-center transition-all duration-300 ${
-          canScrollRight ? 'opacity-0 group-hover/row:opacity-100 hover:bg-[#D4AF37] hover:scale-110' : 'opacity-0 pointer-events-none'
+          canScrollRight ? 'opacity-100 hover:bg-[#D4AF37] hover:scale-110' : 'opacity-0 pointer-events-none'
         }`}
         style={{ marginRight: -16 }}
       >
