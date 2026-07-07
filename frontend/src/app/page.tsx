@@ -284,9 +284,9 @@ export default function HomePage() {
           ))}
         </div>
 
-        {/* ========== Service Navigation Icons (hero true center) ========== */}
-        <div className="absolute left-0 right-0 top-[44%] md:top-[40%] z-20 px-2">
-          <div className="max-w-4xl mx-auto flex flex-wrap justify-center gap-1.5 md:gap-2.5">
+        {/* ========== Service Navigation Icons (hero middle, below slide text) ========== */}
+        <div className="absolute left-0 right-0 top-[30%] md:top-[32%] z-20 px-1">
+          <div className="max-w-5xl mx-auto flex flex-wrap justify-center gap-1 md:gap-2">
             {[
               { label: 'Tours', icon: '🏔️', href: '/tours' },
               { label: 'Hotels', icon: '🏨', href: '/hotels' },
@@ -297,10 +297,10 @@ export default function HomePage() {
               { label: 'Sky Lounge', icon: '✨', href: '/mingalar' },
             ].map((item) => (
               <Link key={item.href} href={item.href}
-                className="flex flex-col items-center gap-0.5 py-1.5 px-2.5 rounded-lg bg-white/90 backdrop-blur-sm border border-white/30 hover:border-[#D4AF37] hover:bg-white hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 group cursor-pointer text-center"
+                className="flex flex-col items-center py-1 px-1.5 rounded-md bg-white/85 backdrop-blur-sm border border-white/20 hover:border-[#D4AF37] hover:bg-white hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 group cursor-pointer text-center min-w-[52px]"
               >
-                <span className="text-sm group-hover:scale-110 transition-transform">{item.icon}</span>
-                <span className="text-[10px] font-semibold text-gray-800 group-hover:text-[#D4AF37] transition-colors">{item.label}</span>
+                <span className="text-sm md:text-base group-hover:scale-110 transition-transform">{item.icon}</span>
+                <span className="text-[9px] md:text-[10px] font-semibold text-gray-800 group-hover:text-[#D4AF37] transition-colors mt-0.5">{item.label}</span>
               </Link>
             ))}
           </div>
