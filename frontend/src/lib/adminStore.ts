@@ -156,7 +156,7 @@ export function seed() {
   // ── Visas ──
   const visas = new Map<string, unknown>();
   const visaData = [
-    { id: "v1", country: "Thailand", countryCode: "TH", processingTime: "3-5 Business Days", visaFeeMMK: 85000, visaFeeUSD: 40, requirements: "Passport (6 months validity), 2 Passport Photos, Flight Booking", additionalInfo: "", status: "active" },
+    { id: "v1", country: "Thailand", countryCode: "TH", processingTime: "3-5 Business Days", visaFeeMMK: 85000, visaFeeUSD: 40, requirements: ["Passport (6 months validity)", "2 Passport Photos", "Flight Booking"], additionalInfo: "", status: "active" },
     { id: "v2", country: "Singapore", countryCode: "SG", processingTime: "5-7 Business Days", visaFeeMMK: 120000, visaFeeUSD: 57, requirements: "Passport (6 months), 2 Passport Photos, Application Form, Bank Statement", additionalInfo: "", status: "active" },
     { id: "v3", country: "Vietnam", countryCode: "VN", processingTime: "3-5 Business Days", visaFeeMMK: 95000, visaFeeUSD: 45, requirements: "Passport (6 months), 2 Passport Photos, Flight Booking", additionalInfo: "", status: "active" },
     { id: "v4", country: "China", countryCode: "CN", processingTime: "5-7 Business Days", visaFeeMMK: 150000, visaFeeUSD: 71, requirements: "Passport (6 months), 2 Passport Photos, Hotel Reservation", additionalInfo: "", status: "active" },
@@ -187,25 +187,25 @@ export function seed() {
   const insuranceData = [
     {
       id: "ins1", planName: "Basic Travel Shield", coverageAmountMMK: 5000000, coverageAmountUSD: 2381,
-      premiumPriceMMK: 25000, premiumPriceUSD: 12, duration: "1-30 Days",
+      premiumMMK: 25000, premiumUSD: 12, duration: "1-30 Days", provider: "A9 Global Insurance",
       benefits: "Medical Emergency Cover, Trip Cancellation, Lost Baggage, Personal Accident",
       exclusions: "Pre-existing conditions, Extreme sports", status: "active",
     },
     {
       id: "ins2", planName: "Gold Explorer Plan", coverageAmountMMK: 15000000, coverageAmountUSD: 7143,
-      premiumPriceMMK: 55000, premiumPriceUSD: 26, duration: "1-90 Days",
+      premiumMMK: 55000, premiumUSD: 26, duration: "1-90 Days", provider: "A9 Global Insurance",
       benefits: "Comprehensive Medical, Trip Delay Compensation, Lost Passport Assistance, Emergency Evacuation, Personal Liability",
       exclusions: "Pre-existing conditions, Hazardous activities", status: "active",
     },
     {
       id: "ins3", planName: "Family Vacation Plus", coverageAmountMMK: 25000000, coverageAmountUSD: 11905,
-      premiumPriceMMK: 85000, premiumPriceUSD: 40, duration: "1-60 Days",
+      premiumMMK: 85000, premiumUSD: 40, duration: "1-60 Days", provider: "A9 Global Insurance",
       benefits: "Full Family Cover, Child Medical Assistance, Trip Cancellation, Delayed Baggage, 24/7 Helpline, COVID-19 Cover",
       exclusions: "Pre-existing conditions, War zones", status: "active",
     },
     {
       id: "ins4", planName: "Premium Elite Guard", coverageAmountMMK: 50000000, coverageAmountUSD: 23810,
-      premiumPriceMMK: 150000, premiumPriceUSD: 71, duration: "Up to 365 Days",
+      premiumMMK: 150000, premiumUSD: 71, duration: "Up to 365 Days", provider: "A9 Global Insurance",
       benefits: "Unlimited Medical, Pre-existing Conditions, Business Equipment Cover, Concierge Service, Air Ambulance, Trip Curtailment, Personal Accident 24/7",
       exclusions: "War zones, Intentional self-harm", status: "featured",
     },

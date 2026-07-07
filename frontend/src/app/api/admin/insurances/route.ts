@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getAll, create } from "@/lib/adminStore";
 
+export const dynamic = 'force-dynamic';
+
 export async function GET() {
   try {
     const insurances = getAll("insurances");

@@ -3,6 +3,7 @@
 import React, { useState, FormEvent, useCallback } from 'react';
 import CurrencyToggle from './CurrencyToggle';
 import { searchAll, SearchParams, SearchResults } from '@/lib/api';
+import { searchFallbackData } from '@/data/fallback';
 
 interface SearchBarProps {
   onSearch: (results: SearchResults | null, loading: boolean) => void;
@@ -46,9 +47,21 @@ export default function SearchBar({ onSearch, initialParams }: SearchBarProps) {
 
         const response = await searchAll(params);
         onSearch(response.data, false);
-      } catch (err) {
+      } catch (err: any) {
         console.error('Search failed:', err);
-        onSearch(null, false);
+        // Fallback to static data when API is unavailable
+        const fallbackResults = searchFallbackData(query.trim() || destination.trim());
+        onSearch(fallbackResults, false);
+        const msg = err?.response?.status === 404
+          ? 'Using offline search data'
+          : err?.response?.data?.message || err?.message || 'Search failed. Please try again.';
+        if (typeof window !== 'undefined') import('react-hot-toast').then(m => {
+          if (err?.response?.status === 404) {
+            m.default('Searching offline...', { icon: '🔍' });
+          } else {
+            m.default.error(msg);
+          }
+        });
       } finally {
         setLoading(false);
       }

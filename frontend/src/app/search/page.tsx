@@ -52,10 +52,12 @@ function SearchPageContent() {
   const [loading, setLoading] = useState(false);
   const [activeTab, setActiveTab] = useState<TabType>('all');
   const [currency, setCurrency] = useState<'MMK' | 'USD'>('MMK');
+  const [hasSearched, setHasSearched] = useState(false);
 
   const handleSearch = useCallback((data: SearchResults | null, isLoading: boolean) => {
     setResults(data);
     setLoading(isLoading);
+    if (!isLoading) setHasSearched(true);
   }, []);
 
   // Auto-search when arriving with URL params
@@ -162,7 +164,22 @@ function SearchPageContent() {
         )}
 
         {/* Empty state */}
-        {!loading && results && totalItems === 0 && <EmptyState />}
+        {!loading && hasSearched && results && totalItems === 0 && <EmptyState />}
+
+        {/* Error state - search triggered but API returned null/error */}
+        {!loading && hasSearched && !results && (
+          <div className="text-center py-16 space-y-4">
+            <svg className="w-20 h-20 mx-auto text-red-400/50" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z" />
+            </svg>
+            <h3 className="text-xl font-semibold text-white" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
+              Search error
+            </h3>
+            <p className="text-gray-400 max-w-md mx-auto">
+              Something went wrong with the search. Please try again or contact support.
+            </p>
+          </div>
+        )}
 
         {/* Results grid */}
         {!loading && totalItems > 0 && (
@@ -187,7 +204,7 @@ function SearchPageContent() {
         )}
 
         {/* Initial state - no search performed yet */}
-        {!loading && !results && (
+        {!loading && !hasSearched && (
           <div className="text-center py-20">
             <svg className="w-24 h-24 mx-auto text-gold/20 mb-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={0.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />

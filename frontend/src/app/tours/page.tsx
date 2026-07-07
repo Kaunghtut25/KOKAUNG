@@ -259,7 +259,50 @@ export default function ToursPage() {
         </ScrollingRow>
       </section>
 
+      {/* Results Grid */}
+      <section className="max-w-7xl mx-auto px-4 py-10 pb-20">
+        {loading && (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {Array.from({ length: 6 }).map((_, i) => (
+              <SkeletonCard key={i} />
+            ))}
+          </div>
+        )}
 
+        {!loading && tours.length === 0 && (
+          <div className="text-center py-20 space-y-4">
+            <h3 className="text-xl font-semibold text-gray-900" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>No tours found</h3>
+            <p className="text-gray-500">Try adjusting your filters.</p>
+            <button onClick={() => { setDestination(''); setMinPrice(''); setMaxPrice(''); setDuration(''); setSort(''); setPage(1); }}
+              className="px-6 py-2 rounded-xl bg-gradient-to-r from-[#D4AF37] to-[#C5A028] text-gray-900 font-semibold hover:shadow-lg transition-all">Clear Filters</button>
+          </div>
+        )}
+
+        {!loading && tours.length > 0 && (
+          <>
+            <div className="flex items-center justify-between mb-6">
+              <p className="text-gray-500 text-sm">Showing <span className="text-gray-900 font-medium">{tours.length}</span> of <span className="text-gray-900 font-medium">{total}</span> tours</p>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {tours.map((tour) => <TourCard key={tour._id} tour={tour} currency={currency} />)}
+            </div>
+            {totalPages > 1 && (
+              <div className="flex items-center justify-center gap-2 mt-12">
+                <button onClick={() => setPage((prev) => Math.max(1, prev - 1))} disabled={page === 1}
+                  className="px-4 py-2 rounded-lg border border-gray-200 text-gray-500 hover:text-gray-900 hover:border-[#D4AF37] disabled:opacity-30 disabled:cursor-not-allowed transition-colors">← Prev</button>
+                {Array.from({ length: totalPages }, (_, i) => i + 1)
+                  .filter((p) => { if (totalPages <= 7) return true; if (p === 1 || p === totalPages) return true; if (Math.abs(p - page) <= 2) return true; return false; })
+                  .map((p, idx, arr) => {
+                    const showEllipsis = idx > 0 && arr[idx - 1] !== p - 1;
+                    return (<React.Fragment key={p}>{showEllipsis && <span className="px-2 text-gray-400">...</span>}<button onClick={() => setPage(p)} className={`w-10 h-10 rounded-lg text-sm font-medium transition-all ${page === p ? 'bg-gradient-to-r from-[#D4AF37] to-[#C5A028] text-white shadow-sm' : 'border border-gray-200 text-gray-500 hover:text-gray-900 hover:border-[#D4AF37]'}`}>{p}</button></React.Fragment>);
+                  })}
+                <button onClick={() => setPage((prev) => Math.min(totalPages, prev + 1))} disabled={page === totalPages}
+                  className="px-4 py-2 rounded-lg border border-gray-200 text-gray-500 hover:text-gray-900 hover:border-[#D4AF37] disabled:opacity-30 disabled:cursor-not-allowed transition-colors">Next →</button>
+              </div>
+            )}
+          </>
+        )}
+      </section>
     </main>
   );
 }

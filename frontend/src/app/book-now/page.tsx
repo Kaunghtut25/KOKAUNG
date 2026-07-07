@@ -104,7 +104,7 @@ function BookNowContent() {
     if (!formData.email.trim()) errs.push("Email is required");
     else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) errs.push("Enter a valid email address");
     if (!formData.phone.trim()) errs.push("Phone number is required");
-    if (!formData.departDate && formData.travelType === "flight") errs.push("Travel date is required");
+    if (!formData.departDate && formData.travelType === "flight" && searchSummary) errs.push("Travel date is required");
     setErrors(errs);
     return errs.length === 0;
   };
