@@ -263,7 +263,7 @@ export default function HomePage() {
             <div className="absolute inset-0 bg-cover bg-center"
               style={{ backgroundImage: `url(${slide.image})` }} />
             <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-black/30" />
-            <div className="absolute top-24 md:top-28 left-0 right-0 text-center px-4">
+            <div className="absolute top-14 md:top-18 left-0 right-0 text-center px-4">
               <span className="text-[#D4AF37] text-xs md:text-sm uppercase tracking-[0.3em] font-semibold">{slide.label}</span>
               <h2 className="text-3xl md:text-5xl lg:text-6xl font-bold text-white mt-2 mb-3" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>{slide.title}</h2>
               <p className="text-white/70 text-base md:text-lg max-w-xl mx-auto">{slide.subtitle}</p>
@@ -285,7 +285,7 @@ export default function HomePage() {
         </div>
 
         {/* ========== Service Navigation Icons (hero middle, below slide text) ========== */}
-        <div className="absolute left-0 right-0 top-[30%] md:top-[32%] z-20 px-1">
+        <div className="absolute left-0 right-0 top-[38%] md:top-[42%] z-20 px-1">
           <div className="max-w-5xl mx-auto flex flex-wrap justify-center gap-1 md:gap-2">
             {[
               { label: 'Tours', icon: '🏔️', href: '/tours' },
@@ -308,7 +308,7 @@ export default function HomePage() {
       </section>
 
       {/* ========== Search Engine (Expedia-style, overlapping hero & body) ========== */}
-      <section className="relative z-30 -mt-56 md:-mt-72">
+      <section className="relative z-30 -mt-32 md:-mt-44">
         <div className="max-w-5xl mx-auto px-4">
           <div className="bg-white rounded-2xl border-2 border-[#2563EB] shadow-xl p-5 md:p-7">
             <div className="flex gap-1 mb-5 bg-gray-100 rounded-lg p-1 w-fit">

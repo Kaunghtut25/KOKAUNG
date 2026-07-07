@@ -1,5 +1,39 @@
 import React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
+
+const loungeCards = [
+  {
+    img: 'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=600&q=80',
+    icon: '🍽️', title: 'Fine Dining',
+    desc: 'Premium buffet & a la carte menu'
+  },
+  {
+    img: 'https://images.unsplash.com/photo-1470337458703-46ad1756a187?w=600&q=80',
+    icon: '🍸', title: 'Open Bar',
+    desc: 'Complimentary drinks & cocktails'
+  },
+  {
+    img: 'https://images.unsplash.com/photo-1497366754270-8e6f6a0affa1?w=600&q=80',
+    icon: '💻', title: 'Workspace',
+    desc: 'High-speed WiFi & work stations'
+  },
+  {
+    img: 'https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=600&q=80',
+    icon: '🚿', title: 'Shower Suites',
+    desc: 'Refresh before your flight'
+  },
+  {
+    img: 'https://images.unsplash.com/photo-1618773928121-c32242e63f39?w=600&q=80',
+    icon: '😴', title: 'Nap Pods',
+    desc: 'Rest in private sleeping pods'
+  },
+  {
+    img: 'https://images.unsplash.com/photo-1564501049412-61c2a3083791?w=600&q=80',
+    icon: '🛎️', title: 'Concierge',
+    desc: 'Priority check-in & boarding'
+  },
+];
 
 export default function MingalarPage() {
   return (
@@ -14,20 +48,21 @@ export default function MingalarPage() {
           </p>
         </div>
       </section>
+
+      {/* Lounge Cards with Images */}
       <section className="max-w-6xl mx-auto px-4 py-12">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
-          {[
-            { icon: '🍽️', title: 'Fine Dining', desc: 'Premium buffet & a la carte menu' },
-            { icon: '🍸', title: 'Open Bar', desc: 'Complimentary drinks & cocktails' },
-            { icon: '💻', title: 'Workspace', desc: 'High-speed WiFi & work stations' },
-            { icon: '🚿', title: 'Shower Suites', desc: 'Refresh before your flight' },
-            { icon: '😴', title: 'Nap Pods', desc: 'Rest in private sleeping pods' },
-            { icon: '🛎️', title: 'Concierge', desc: 'Priority check-in & boarding' },
-          ].map((item, i) => (
-            <div key={i} className="bg-white rounded-xl p-6 border border-gray-200 text-center hover:shadow-md hover:border-[#D4AF37]/40 transition-all">
-              <div className="text-4xl mb-3">{item.icon}</div>
-              <h3 className="font-semibold text-[#0A1628] mb-1">{item.title}</h3>
-              <p className="text-gray-500 text-sm">{item.desc}</p>
+          {loungeCards.map((item, i) => (
+            <div key={i} className="bg-white rounded-xl border border-gray-200 overflow-hidden hover:shadow-lg hover:border-[#D4AF37]/40 transition-all group">
+              <div className="relative h-48 w-full overflow-hidden">
+                <Image src={item.img} alt={item.title} fill className="object-cover group-hover:scale-105 transition-transform duration-500" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
+                <div className="absolute bottom-3 left-4 text-3xl drop-shadow-lg">{item.icon}</div>
+              </div>
+              <div className="p-5 text-center">
+                <h3 className="font-semibold text-[#0A1628] mb-1">{item.title}</h3>
+                <p className="text-gray-500 text-sm">{item.desc}</p>
+              </div>
             </div>
           ))}
         </div>

@@ -13,7 +13,7 @@ function generateId(): string {
 }
 
 export function seed() {
-  if (collections.size > 0) return; // already seeded
+  if (collections.size >= 6) return; // already seeded (tours,hotels,cars,visas,insurances,blog)
 
   // ── Tours ──
   const tours = new Map<string, unknown>();
@@ -324,11 +324,13 @@ export function getCollection(name: string): Map<string, unknown> {
 }
 
 export function getAll(name: string): unknown[] {
+  seed(); // ensure seeded on every call (critical for serverless)
   const col = getCollection(name);
   return Array.from(col.values());
 }
 
 export function getById(name: string, id: string): unknown | undefined {
+  seed();
   const col = getCollection(name);
   return col.get(id);
 }
