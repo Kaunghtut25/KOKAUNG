@@ -14,7 +14,7 @@ const loungeCards = [
     desc: 'Complimentary drinks & cocktails'
   },
   {
-    img: 'https://images.unsplash.com/photo-1497366754270-8e6f6a0affa1?w=600&q=80',
+    img: 'https://images.unsplash.com/photo-1497215842964-222b430dc094?w=600&q=80',
     icon: '💻', title: 'Workspace',
     desc: 'High-speed WiFi & work stations'
   },

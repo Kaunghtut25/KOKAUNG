@@ -132,7 +132,7 @@ export function seed() {
     },
     {
       id: "fc3", carType: "Toyota Hiace", description: "Spacious van for up to 12 passengers. Perfect for group tours and airport transfers.",
-      capacity: 12, features: "AC, Luggage Space, Comfortable Seats", images: "https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=800\u0026q=80",
+      capacity: 12, features: "AC, Luggage Space, Comfortable Seats", images: "https://images.unsplash.com/photo-1559416523-140ddc3d238c?w=800\u0026q=80",
       pricing: [{ duration: "Full Day", priceMMK: 140000, priceUSD: 67 }], status: "active",
     },
     {

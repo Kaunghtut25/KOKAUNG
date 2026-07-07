@@ -11,131 +11,85 @@ interface Destination {
 }
 
 const TOP_PICKS: Destination[] = [
-  { name: "Paris", imageUrl: "https://picsum.photos/seed/a9dest-paris/400/300" },
-  { name: "Dubai", imageUrl: "https://picsum.photos/seed/a9dest-dubai/400/300" },
-  { name: "Malaysia", imageUrl: "https://picsum.photos/seed/a9dest-malaysia/400/300" },
-  { name: "Korea", imageUrl: "https://picsum.photos/seed/a9dest-korea/400/300" },
-  { name: "Vietnam", imageUrl: "https://picsum.photos/seed/a9dest-vietnam/400/300" },
-  { name: "Myanmar", imageUrl: "https://picsum.photos/seed/a9dest-myanmar/400/300" },
-  { name: "Australia", imageUrl: "https://picsum.photos/seed/a9dest-australia/400/300" },
-  { name: "Turkey", imageUrl: "https://picsum.photos/seed/a9dest-turkey/400/300" },
-  { name: "Netherlands", imageUrl: "https://picsum.photos/seed/a9dest-netherlands/400/300" },
-  { name: "Thailand", imageUrl: "https://picsum.photos/seed/a9dest-thailand/400/300" },
+  { name: "Paris", imageUrl: "https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=400&q=80" },
+  { name: "Dubai", imageUrl: "https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=400&q=80" },
+  { name: "Malaysia", imageUrl: "https://images.unsplash.com/photo-1596422846543-75c6fc197f07?w=400&q=80" },
+  { name: "Korea", imageUrl: "https://images.unsplash.com/photo-1534274988757-a28bf1a57c17?w=400&q=80" },
+  { name: "Vietnam", imageUrl: "https://images.unsplash.com/photo-1528127269322-539801943592?w=400&q=80" },
+  { name: "Myanmar", imageUrl: "https://images.unsplash.com/photo-1570168001899-b7d3b500a1c7?w=400&q=80" },
+  { name: "Australia", imageUrl: "https://images.unsplash.com/photo-1528072164453-f4e8ef0d475a?w=400&q=80" },
+  { name: "Turkey", imageUrl: "https://images.unsplash.com/photo-1524231757912-21f4fe3a7200?w=400&q=80" },
+  { name: "Netherlands", imageUrl: "https://images.unsplash.com/photo-1534351590666-13e3e96b5017?w=400&q=80" },
+  { name: "Thailand", imageUrl: "https://images.unsplash.com/photo-1552465011-b4e21bf6e79a?w=400&q=80" },
 ];
 
 const EXPLORE_MORE: Destination[] = [
-  { name: "Nepal", imageUrl: "https://picsum.photos/seed/a9dest-nepal/400/300" },
-  { name: "Singapore", imageUrl: "https://picsum.photos/seed/a9dest-singapore/400/300" },
-  { name: "Japan", imageUrl: "https://picsum.photos/seed/a9dest-japan/400/300" },
-  { name: "Egypt", imageUrl: "https://picsum.photos/seed/a9dest-egypt/400/300" },
-  { name: "Italy", imageUrl: "https://picsum.photos/seed/a9dest-italy/400/300" },
-  { name: "Spain", imageUrl: "https://picsum.photos/seed/a9dest-spain/400/300" },
-  { name: "Maldives", imageUrl: "https://picsum.photos/seed/a9dest-maldives/400/300" },
-  { name: "India", imageUrl: "https://picsum.photos/seed/a9dest-india/400/300" },
-  { name: "USA", imageUrl: "https://picsum.photos/seed/a9dest-usa/400/300" },
-  { name: "UK", imageUrl: "https://picsum.photos/seed/a9dest-uk/400/300" },
+  { name: "Nepal", imageUrl: "https://images.unsplash.com/photo-1544735716-392fe2489ffa?w=400&q=80" },
+  { name: "Singapore", imageUrl: "https://images.unsplash.com/photo-1525625293386-3f8f99389edd?w=400&q=80" },
+  { name: "Japan", imageUrl: "https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=400&q=80" },
+  { name: "Egypt", imageUrl: "https://images.unsplash.com/photo-1539768942893-d1a84abb6882?w=400&q=80" },
+  { name: "Italy", imageUrl: "https://images.unsplash.com/photo-1523906834658-6e24ef2386f9?w=400&q=80" },
+  { name: "Spain", imageUrl: "https://images.unsplash.com/photo-1543783207-ec64e4d95325?w=400&q=80" },
+  { name: "Maldives", imageUrl: "https://images.unsplash.com/photo-1514282401047-d79a71a590e8?w=400&q=80" },
+  { name: "India", imageUrl: "https://images.unsplash.com/photo-1524492412937-b28074a5d7da?w=400&q=80" },
+  { name: "USA", imageUrl: "https://images.unsplash.com/photo-1485738422979-f5c462d49f74?w=400&q=80" },
+  { name: "UK", imageUrl: "https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?w=400&q=80" },
 ];
 
-const FALLBACK_IMG = "https://picsum.photos/seed/a9dest-fallback/400/300";
+const FALLBACK_IMG = "https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=400&q=80";
 
 // ── Destination Card ────────────────────────────────────────────────────────
 
 function DestinationCard({ dest }: { dest: Destination }) {
   const [imgError, setImgError] = useState(false);
-  const [imgLoaded, setImgLoaded] = useState(false);
 
   return (
-    <div className="relative w-[220px] h-[280px] rounded-2xl overflow-hidden flex-shrink-0 snap-start group cursor-pointer select-none">
-      {/* Loading skeleton */}
-      {!imgLoaded && !imgError && (
-        <div className="absolute inset-0 bg-white/10 animate-pulse rounded-2xl" />
-      )}
-
+    <div className="flex-shrink-0 w-[160px] rounded-xl overflow-hidden border border-gray-200 shadow-sm hover:shadow-md hover:border-[#D4AF37]/40 transition-all group cursor-pointer">
       {/* Background image */}
       <img
         src={imgError ? FALLBACK_IMG : dest.imageUrl}
         alt={dest.name}
-        className={`absolute inset-0 w-full h-full object-cover transition-all duration-700 group-hover:scale-110 ${imgLoaded ? "opacity-100" : "opacity-0"}`}
+        className="w-full h-28 object-cover group-hover:scale-105 transition-transform duration-500"
+        onError={() => setImgError(true)}
         loading="lazy"
-        onLoad={() => setImgLoaded(true)}
-        onError={() => { setImgError(true); setImgLoaded(true); }}
       />
-
-      {/* Gradient overlay */}
-      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
-
-      {/* Country name */}
-      <div className="absolute bottom-0 left-0 right-0 p-5">
-        <h3
-          className="text-white text-xl leading-tight"
-          style={{ fontFamily: "'Playfair Display', serif" }}
-        >
-          {dest.name}
-        </h3>
+      <div className="p-3 text-center bg-white">
+        <p className="text-sm font-semibold text-[#0A1628] group-hover:text-[#D4AF37] transition-colors">{dest.name}</p>
       </div>
     </div>
   );
 }
 
-// ── Row label ───────────────────────────────────────────────────────────────
+// ── Section Component ───────────────────────────────────────────────────────
 
-function RowLabel({ emoji, text }: { emoji: string; text: string }) {
+function DestinationSection({ title, destinations }: { title: string; destinations: Destination[] }) {
   return (
-    <h3 className="text-xl font-semibold text-[#0A1628] mb-4 flex items-center gap-2">
-      <span>{emoji}</span> {text}
-    </h3>
+    <div className="mb-8">
+      <h3 className="text-lg font-semibold text-gray-900 mb-4 px-1" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
+        {title}
+      </h3>
+      <ScrollingRow>
+        {destinations.map((dest, i) => (
+          <DestinationCard key={i} dest={dest} />
+        ))}
+      </ScrollingRow>
+    </div>
   );
 }
 
-// ── Main component ──────────────────────────────────────────────────────────
+// ── Main Export ─────────────────────────────────────────────────────────────
 
 export default function PopularDestinations() {
   return (
-    <section className="w-full bg-white pt-4 pb-16 md:pt-6 md:pb-24 overflow-hidden">
-      <div className="max-w-7xl mx-auto px-4 md:px-6">
-        {/* Section heading */}
-        <div className="text-center mb-12">
-          <span
-            className="inline-block text-sm uppercase tracking-[0.25em] font-semibold mb-3"
-            style={{ color: "#D4AF37" }}
-          >
-            Explore The World
-          </span>
-          <h2
-            className="text-4xl md:text-5xl font-bold"
-            style={{ color: "#0A1628", fontFamily: "'Playfair Display', serif" }}
-          >
-            Popular Destinations
-          </h2>
-          <div className="mt-4 mx-auto w-20 h-0.5 rounded" style={{ backgroundColor: "#D4AF37" }} />
-        </div>
-
-        {/* Row 1: Top Picks */}
-        <div className="mb-10">
-          <RowLabel emoji="🌟" text="Top Picks" />
-          <ScrollingRow>
-            {TOP_PICKS.map((dest) => (
-              <DestinationCard key={dest.name} dest={dest} />
-            ))}
-          </ScrollingRow>
-        </div>
-
-        {/* Row 2: Explore More */}
-        <div>
-          <RowLabel emoji="🌏" text="Explore More" />
-          <ScrollingRow>
-            {EXPLORE_MORE.map((dest) => (
-              <DestinationCard key={dest.name} dest={dest} />
-            ))}
-          </ScrollingRow>
-        </div>
+    <section className="max-w-7xl mx-auto px-4 py-12">
+      <div className="text-center mb-10">
+        <h2 className="text-3xl md:text-4xl font-bold text-[#0A1628] mb-2" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
+          Explore The World
+        </h2>
+        <p className="text-gray-500">Popular Destinations</p>
       </div>
-
-      <style jsx>{`
-        .scrollbar-hide::-webkit-scrollbar {
-          display: none;
-        }
-      `}</style>
+      <DestinationSection title="🌟 Top Picks" destinations={TOP_PICKS} />
+      <DestinationSection title="🌏 Explore More" destinations={EXPLORE_MORE} />
     </section>
   );
 }
