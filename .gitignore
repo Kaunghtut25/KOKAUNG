@@ -1,6 +1,6 @@
 ﻿node_modules/
 .next/
-data/
+/backend/data/
 .env
 *.log
 .DS_Store
