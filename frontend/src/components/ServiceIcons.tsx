@@ -2,7 +2,6 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useState, useEffect } from 'react';
 
 const services = [
   { label: 'Flights', icon: '✈️', href: '/' },
@@ -17,26 +16,9 @@ const services = [
 
 export default function ServiceIcons() {
   const pathname = usePathname();
-  const [visible, setVisible] = useState(false);
-
-  useEffect(() => {
-    const onScroll = () => {
-      setVisible(window.scrollY > 300);
-    };
-    window.addEventListener('scroll', onScroll, { passive: true });
-    onScroll();
-    return () => window.removeEventListener('scroll', onScroll);
-  }, []);
 
   return (
-    <div
-      className={
-        'fixed top-20 left-0 right-0 z-40 w-full bg-[#0A1628] border-b border-[#D4AF37]/20 shadow-lg shadow-black/30 transition-all duration-300 ' +
-        (visible
-          ? 'opacity-100 translate-y-0'
-          : 'opacity-0 -translate-y-2 pointer-events-none')
-      }
-    >
+    <div className="w-full bg-[#0A1628] border-b border-[#D4AF37]/20">
       <div className="max-w-6xl mx-auto flex flex-wrap justify-center gap-1 md:gap-2 py-2.5 px-2">
         {services.map((item) => {
           const isActive = pathname === item.href || (item.href !== '/' && pathname.startsWith(item.href));
