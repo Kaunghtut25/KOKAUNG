@@ -158,7 +158,7 @@ function BookNowContent() {
       {/* Hero Banner */}
       <div
         className="relative w-full h-48 md:h-64 mb-8 bg-cover bg-center rounded-b-3xl overflow-hidden"
-        style={{ backgroundImage: 'url(https://picsum.photos/seed/a9book-hero/1920/600)' }}
+        style={{ backgroundImage: 'url(/images/hero-book-now.jpg)' }}
       >
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
         <div className="absolute bottom-0 left-0 right-0 p-6 md:p-8">
