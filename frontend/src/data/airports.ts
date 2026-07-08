@@ -54,6 +54,6 @@ export const airports: Airport[] = [
   { code: "ATH", city: "Athens", country: "Greece", name: "Athens International Airport" },
   { code: "BCN", city: "Barcelona", country: "Spain", name: "Barcelona-El Prat Airport" },
   { code: "FCO", city: "Rome", country: "Italy", name: "Leonardo da Vinci-Fiumicino Airport" },
-  { code: "MAD", city: "Madrid", country: "Spain", name: "Adolfo Suarez Madrid-Barajas Airport" },
+  { code: "MAD", city: "Madrid", country: "Spain", name: "Adolfo Suárez Madrid-Barajas Airport" },
   { code: "MUC", city: "Munich", country: "Germany", name: "Munich Airport" },
 ];
