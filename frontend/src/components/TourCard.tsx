@@ -9,7 +9,7 @@ interface TourCardProps {
   currency?: 'MMK' | 'USD';
 }
 
-const FALLBACK_IMAGE = 'https://picsum.photos/seed/a9tour-fallback/600/400';
+const FALLBACK_IMAGE = 'https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=600&h=400&fit=crop';
 
 function getImages(images: string | string[] | undefined): string[] {
   if (!images) return [];
@@ -116,13 +116,13 @@ export default function TourCard({ tour, currency = 'MMK' }: TourCardProps) {
         </div>
       )}
 
-      {/* Book Now button */}
+      {/* View Details button */}
       <div className="px-4 pb-4">
         <button
-          onClick={(e) => { e.stopPropagation(); router.push('/contact'); }}
+          onClick={(e) => { e.stopPropagation(); router.push(`/tours/${tour.slug}`); }}
           className="w-full py-2.5 rounded-xl bg-gradient-to-r from-[#D4AF37] to-[#C5A028] hover:from-[#E5C048] hover:to-[#D4AF37] text-gray-900 font-semibold text-sm transition-all duration-300 hover:shadow-lg hover:shadow-[#D4AF37]/20"
         >
-          Book Now
+          View Details
         </button>
       </div>
     </div>
