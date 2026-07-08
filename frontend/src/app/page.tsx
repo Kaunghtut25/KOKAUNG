@@ -322,7 +322,7 @@ export default function HomePage() {
               ))}
             </div>
 
-            <form onSubmit={handleSearch} className="space-y-3">
+            <form onSubmit={handleSearch} className="space-y-3 overflow-x-hidden">
               {activeTab === "multicity" ? (
                 <div className="space-y-4">
                   {multiCityLegs.map((leg, index) => (
@@ -356,7 +356,7 @@ export default function HomePage() {
                       </div>
                     </div>
                   )}
-                  <div className="flex flex-col md:flex-row gap-3 items-end pl-12">
+                  <div className="flex flex-col md:flex-row gap-3 items-end flex-wrap">
                     <PassengerSelector passengers={passengers} onChange={setPassengers} />
                     <div className="w-full md:w-[180px]">
                       <label className="block text-gray-500 text-xs uppercase tracking-wider mb-1"><span className="text-[#D4AF37]">💺</span> Class</label>
@@ -388,8 +388,7 @@ export default function HomePage() {
                   </div>
                 </div>
               ) : (
-                <>
-                  <div className="flex flex-col md:flex-row gap-3">
+                  <div className="flex flex-col md:flex-row gap-3 flex-wrap">
                     <AirportInput label="From" value={from} onChange={setFrom} placeholder="Departure city"
                       icon={<svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" /></svg>} />
                     <button type="button" onClick={swapAirports}
@@ -416,7 +415,7 @@ export default function HomePage() {
               )}
 
               {activeTab !== "multicity" && (
-              <div className="flex flex-col md:flex-row gap-3 items-end">
+              <div className="flex flex-col md:flex-row gap-3 items-end flex-wrap">
                 <PassengerSelector passengers={passengers} onChange={setPassengers} />
                 <div className="w-full md:w-[180px]">
                   <label className="block text-gray-500 text-xs uppercase tracking-wider mb-1"><span className="text-[#D4AF37]">💺</span> Class</label>
