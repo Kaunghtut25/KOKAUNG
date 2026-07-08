@@ -256,7 +256,7 @@ export default function HomePage() {
   return (
     <main className="min-h-screen bg-[#FFFDF5]">
       {/* ========== Hero (slides only) ========== */}
-      <section className="relative min-h-[600px] md:min-h-[700px] w-full overflow-hidden">
+      <section className="relative min-h-[700px] md:min-h-[800px] w-full overflow-visible">
         {slides.map((slide, index) => (
           <div key={index}
             className={"absolute inset-0 transition-all duration-700 ease-in-out " + (index === currentSlide ? "opacity-100 z-10" : index === prevSlide ? "opacity-0 z-0" : "opacity-0 z-0")}>
@@ -306,11 +306,10 @@ export default function HomePage() {
             ))}
           </div>
         </div>
-      </section>
 
-      {/* ========== Search Engine (sits directly below hero, no overlap) ========== */}
-      <section id="flight-search" className="relative z-30">
-        <div className="max-w-5xl mx-auto px-4">
+        {/* ========== Search Engine (inside hero, below icons) ========== */}
+        <div className="absolute left-0 right-0 top-[57%] z-30 px-4">
+          <div className="max-w-5xl mx-auto">
           <div className="bg-white rounded-2xl border-2 border-[#2563EB] shadow-xl p-5 md:p-7">
             <div className="flex gap-1 mb-5 bg-gray-100 rounded-lg p-1 w-fit">
               {(["oneway", "roundtrip", "multicity"] as TabType[]).map((tab) => (
@@ -449,6 +448,7 @@ export default function HomePage() {
               )}
             </form>
           </div>
+        </div>
         </div>
       </section>
 
