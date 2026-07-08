@@ -388,6 +388,7 @@ export default function HomePage() {
                   </div>
                 </div>
               ) : (
+                <>
                   <div className="flex flex-col md:flex-row gap-3 flex-wrap">
                     <AirportInput label="From" value={from} onChange={setFrom} placeholder="Departure city"
                       icon={<svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" /></svg>} />
