@@ -309,7 +309,7 @@ export default function HomePage() {
       </section>
 
       {/* ========== Search Engine (Expedia-style, overlapping hero & body) ========== */}
-      <section id="flight-search" className="relative z-30 -mt-36 md:-mt-44">
+      <section id="flight-search" className="relative z-30 -mt-16 md:-mt-20">
         <div className="max-w-5xl mx-auto px-4">
           <div className="bg-white rounded-2xl border-2 border-[#2563EB] shadow-xl p-5 md:p-7">
             <div className="flex gap-1 mb-5 bg-gray-100 rounded-lg p-1 w-fit">

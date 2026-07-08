@@ -15,7 +15,7 @@ export default function LiveChatButton() {
   const [open, setOpen] = useState(false);
 
   return (
-    <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-3">
+    <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-3 max-w-[calc(100vw-3rem)]">
       {/* Social links popup */}
       <div className={`flex flex-col gap-2 transition-all duration-300 ${
         open ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-4 scale-95 pointer-events-none'
@@ -26,7 +26,7 @@ export default function LiveChatButton() {
             href={item.url}
             target="_blank"
             rel="noopener noreferrer"
-            className={`flex items-center gap-2 px-4 py-2.5 rounded-full text-white text-sm font-medium shadow-lg transition-all duration-200 hover:shadow-xl ${item.color}`}
+            className={`flex items-center gap-2 px-4 py-2.5 rounded-full text-white text-sm font-medium shadow-lg transition-all duration-200 hover:shadow-xl max-w-full ${item.color}`}
             style={{ animationDelay: `${i * 50}ms` }}
           >
             <span className="text-lg">{item.icon}</span>
