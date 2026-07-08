@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
+import ServiceIcons from "@/components/ServiceIcons";
 import Footer from "@/components/Footer";
 import LiveChatButton from "@/components/LiveChatButton";
 import { Toaster } from "react-hot-toast";
@@ -47,6 +48,7 @@ export default function RootLayout({
     <html lang="en" className={inter.variable}>
       <body className={`${inter.className} min-h-screen bg-white text-gray-900`}>
         <Navbar />
+        <ServiceIcons />
         <main>{children}</main>
         <Footer />
         <LiveChatButton />
