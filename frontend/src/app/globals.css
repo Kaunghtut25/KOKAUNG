@@ -11,6 +11,7 @@
   }
 
   html {
+    font-size: clamp(10px, calc(100vw / 80), 16px);
     scroll-behavior: smooth;
   }
 
@@ -200,12 +201,3 @@ input:-webkit-autofill:active {
 .animate-delay-300 { animation-delay: 300ms; }
 .animate-delay-400 { animation-delay: 400ms; }
 .animate-delay-500 { animation-delay: 500ms; }
-
-/* ═══════ Zoom-safe containers ═══════
-   At 100% zoom: min(original, 100vw) = original → zero visual change
-   At 150%+: 100vw < original → container fits viewport → no overflow */
-.max-w-7xl  { max-width: min(80rem, 100vw) !important; }
-.max-w-6xl  { max-width: min(72rem, 100vw) !important; }
-.max-w-5xl  { max-width: min(64rem, 100vw) !important; }
-.max-w-4xl  { max-width: min(56rem, 100vw) !important; }
-.max-w-3xl  { max-width: min(48rem, 100vw) !important; }

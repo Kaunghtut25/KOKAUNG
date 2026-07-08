@@ -322,7 +322,7 @@ export default function HomePage() {
               ))}
             </div>
 
-            <form onSubmit={handleSearch} className="space-y-3 overflow-x-hidden">
+            <form onSubmit={handleSearch} className="space-y-3">
               {activeTab === "multicity" ? (
                 <div className="space-y-4">
                   {multiCityLegs.map((leg, index) => (
