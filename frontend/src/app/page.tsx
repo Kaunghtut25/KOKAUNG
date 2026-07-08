@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import PopularDestinations from "@/components/PopularDestinations";
 import { Airport, airports } from '@/data/airports';
+import { useNearestAirport } from '@/hooks/useNearestAirport';
 
 type TabType = "oneway" | "roundtrip" | "multicity";
 
@@ -195,6 +196,17 @@ export default function HomePage() {
   const [travelClass, setTravelClass] = useState("Economy");
   const [multiCityLegs, setMultiCityLegs] = useState<FlightLeg[]>([{ from: "", to: "", date: "" }, { from: "", to: "", date: "" }]);
   const [clientType, setClientType] = useState<'local' | 'foreigner'>('local');
+
+  // Auto-detect nearest airport for departure
+  const { nearest } = useNearestAirport(airports);
+  const [fromAutoSet, setFromAutoSet] = useState(false);
+
+  useEffect(() => {
+    if (nearest && !fromAutoSet) {
+      setFrom(`${nearest.code} - ${nearest.city}, ${nearest.country}`);
+      setFromAutoSet(true);
+    }
+  }, [nearest, fromAutoSet]);
 
   const goToSlide = useCallback((index: number) => {
     if (isTransitioning || index === currentSlide) return;
@@ -389,7 +401,7 @@ export default function HomePage() {
               ) : (
                 <>
                   <div className="flex flex-col md:flex-row gap-3 flex-wrap">
-                    <AirportInput label="From" value={from} onChange={setFrom} placeholder="Departure city"
+                    <AirportInput label={nearest ? `📍 From ${fromAutoSet ? '· Auto-detected' : ''}` : 'From'} value={from} onChange={setFrom} placeholder="Departure city"
                       icon={<svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" /></svg>} />
                     <button type="button" onClick={swapAirports}
                       className="hidden md:flex items-center justify-center w-10 h-10 mt-6 rounded-full bg-gray-100 border border-gray-200 text-gray-400 hover:text-gray-600 hover:border-[#D4AF37]/50 transition-all duration-200 cursor-pointer flex-shrink-0"
