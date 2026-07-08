@@ -70,7 +70,7 @@ export default function BlogPage() {
       {/* Hero with Image */}
       <section className="relative h-[300px] md:h-[380px] w-full overflow-hidden">
         <Image
-          src="https://images.unsplash.com/photo-1504711434969-e33886168d6c?w=1600&q=85"
+          src="/images/hero-blog.jpg"
           alt="A9 Global Blog"
           fill
           className="object-cover"
