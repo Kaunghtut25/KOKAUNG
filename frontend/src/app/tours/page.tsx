@@ -1,58 +1,51 @@
 'use client';
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { useRouter } from 'next/navigation';
-import Link from 'next/link';
 import { api, Tour } from '@/lib/api';
 import TourCard from '@/components/TourCard';
 import ScrollingRow from '@/components/ScrollingRow';
 import CurrencyToggle from '@/components/CurrencyToggle';
-import SearchBar from '@/components/SearchBar';
 
 type CategoryKey = 'all' | 'myanmar' | 'international' | 'adventure';
 
 // ─── Data ────────────────────────────────────────────────────
 
-const MYANMAR_TOURS = [
-  { slug: 'golden-land-explorer', title: 'Golden Land Explorer', destination: 'Yangon-Bagan-Mandalay-Inle', priceMMK: 1850000, priceUSD: 881, duration: '8D/7N', rating: 4.8, image: 'https://images.unsplash.com/photo-1570167574777-7e5c2c5e60b5?w=600&h=400&fit=crop', amenities: ['Hotel', 'Breakfast', 'Guide', 'Transport'], featured: true },
-  { slug: 'bagan-sunrise-discovery', title: 'Bagan Sunrise Discovery', destination: 'Bagan', priceMMK: 950000, priceUSD: 452, duration: '5D/4N', rating: 4.9, image: 'https://images.unsplash.com/photo-1558704475-1428913b4c6b?w=600&h=400&fit=crop', amenities: ['Hotel', 'Breakfast', 'E-Bike', 'Boat Cruise'], featured: true },
-  { slug: 'mandalay-royal-heritage', title: 'Mandalay Royal Heritage', destination: 'Mandalay', priceMMK: 750000, priceUSD: 357, duration: '4D/3N', rating: 4.6, image: 'https://images.unsplash.com/photo-1590474251443-ea19bb0f4e89?w=600&h=400&fit=crop', amenities: ['Hotel', 'Breakfast', 'Boat Trip', 'Guide'] },
-  { slug: 'inle-lake-serenity', title: 'Inle Lake Serenity', destination: 'Inle Lake', priceMMK: 1100000, priceUSD: 524, duration: '5D/4N', rating: 4.7, image: 'https://images.unsplash.com/photo-1583431815168-55a35bfefbd3?w=600&h=400&fit=crop', amenities: ['Hotel', 'Breakfast', 'Boat Tour', 'Canoe'], featured: true },
-  { slug: 'ngapali-beach-escape', title: 'Ngapali Beach Escape', destination: 'Ngapali Beach', priceMMK: 1350000, priceUSD: 643, duration: '4D/3N', rating: 4.5, image: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=600&h=400&fit=crop', amenities: ['Resort', 'Breakfast', 'Snorkeling', 'Beach'] },
-  { slug: 'yangon-cultural-tour', title: 'Yangon Cultural Tour', destination: 'Yangon', priceMMK: 450000, priceUSD: 214, duration: '3D/2N', rating: 4.4, image: 'https://images.unsplash.com/photo-1570167574777-7e5c2c5e60b5?w=600&h=400&fit=crop', amenities: ['Hotel', 'Breakfast', 'Train Ride', 'Tea Shop'] },
-  { slug: 'myeik-archipelago-adventure', title: 'Myeik Archipelago Adventure', destination: 'Myeik', priceMMK: 2200000, priceUSD: 1048, duration: '6D/5N', rating: 4.9, image: 'https://images.unsplash.com/photo-1559128010-7c1ad6e1b6a5?w=600&h=400&fit=crop', amenities: ['Boat Cabin', 'All Meals', 'Snorkeling', 'Kayak'], featured: true },
-  { slug: 'yangon-mandalay-express', title: 'Yangon-Mandalay Express', destination: 'Yangon-Mandalay', priceMMK: 550000, priceUSD: 262, duration: '3D/2N', rating: 4.3, image: 'https://images.unsplash.com/photo-1570167574777-7e5c2c5e60b5?w=600&h=400&fit=crop', amenities: ['Hotel', 'Breakfast', 'Flight', 'Guide'] },
-  { slug: 'shan-highland-trek', title: 'Shan Highland Trek', destination: 'Kalaw-Inle', priceMMK: 850000, priceUSD: 405, duration: '5D/4N', rating: 4.8, image: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&h=400&fit=crop', amenities: ['Homestay', 'All Meals', 'Guide', 'Porter'], featured: true },
-  { slug: 'mrauk-u-ancient-kingdoms', title: 'Mrauk U Ancient Kingdoms', destination: 'Mrauk U', priceMMK: 950000, priceUSD: 452, duration: '4D/3N', rating: 4.7, image: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=600&h=400&fit=crop', amenities: ['Hotel', 'Breakfast', 'Boat', 'Guide'] },
-  { slug: 'hpa-an-cave-explorer', title: 'Hpa-An Cave Explorer', destination: 'Hpa-An', priceMMK: 420000, priceUSD: 200, duration: '3D/2N', rating: 4.5, image: 'https://images.unsplash.com/photo-1570167574777-7e5c2c5e60b5?w=600&h=400&fit=crop', amenities: ['Hotel', 'Breakfast', 'Boat', 'Guide'] },
-  { slug: 'pyin-oo-lwin-flower-festival', title: 'Pyin Oo Lwin Flower Festival', destination: 'Pyin Oo Lwin', priceMMK: 550000, priceUSD: 262, duration: '4D/3N', rating: 4.4, image: 'https://images.unsplash.com/photo-1585320806297-9794b3e4c2ab?w=600&h=400&fit=crop', amenities: ['Hotel', 'Breakfast', 'Gardens', 'Coffee Tour'] },
+const MYANMAR_TOURS: (Tour & { image: string })[] = [
+  { _id: 'm1', slug: 'golden-land-explorer', title: 'Golden Land Explorer', destination: 'Yangon-Bagan-Mandalay-Inle', priceMMK: 1850000, priceUSD: 881, duration: '8D/7N', durationUnit: 'Days', rating: 4.8, reviewCount: 142, image: 'https://images.unsplash.com/photo-1570167574777-7e5c2c5e60b5?w=600&h=400&fit=crop', images: ['https://images.unsplash.com/photo-1570167574777-7e5c2c5e60b5?w=600&h=400&fit=crop'], amenities: ['Hotel', 'Breakfast', 'Guide', 'Transport'], featured: true, description: '', groupSize: 20, itinerary: [], included: [], excluded: [], createdAt: '' },
+  { _id: 'm2', slug: 'bagan-sunrise-discovery', title: 'Bagan Sunrise Discovery', destination: 'Bagan', priceMMK: 950000, priceUSD: 452, duration: '5D/4N', durationUnit: 'Days', rating: 4.9, reviewCount: 98, image: 'https://images.unsplash.com/photo-1558704475-1428913b4c6b?w=600&h=400&fit=crop', images: ['https://images.unsplash.com/photo-1558704475-1428913b4c6b?w=600&h=400&fit=crop'], amenities: ['Hotel', 'Breakfast', 'E-Bike', 'Boat Cruise'], featured: true, description: '', groupSize: 15, itinerary: [], included: [], excluded: [], createdAt: '' },
+  { _id: 'm3', slug: 'mandalay-royal-heritage', title: 'Mandalay Royal Heritage', destination: 'Mandalay', priceMMK: 750000, priceUSD: 357, duration: '4D/3N', durationUnit: 'Days', rating: 4.6, reviewCount: 67, image: 'https://images.unsplash.com/photo-1590474251443-ea19bb0f4e89?w=600&h=400&fit=crop', images: ['https://images.unsplash.com/photo-1590474251443-ea19bb0f4e89?w=600&h=400&fit=crop'], amenities: ['Hotel', 'Breakfast', 'Boat Trip', 'Guide'], featured: false, description: '', groupSize: 20, itinerary: [], included: [], excluded: [], createdAt: '' },
+  { _id: 'm4', slug: 'inle-lake-serenity', title: 'Inle Lake Serenity', destination: 'Inle Lake', priceMMK: 1100000, priceUSD: 524, duration: '5D/4N', durationUnit: 'Days', rating: 4.7, reviewCount: 85, image: 'https://images.unsplash.com/photo-1583431815168-55a35bfefbd3?w=600&h=400&fit=crop', images: ['https://images.unsplash.com/photo-1583431815168-55a35bfefbd3?w=600&h=400&fit=crop'], amenities: ['Hotel', 'Breakfast', 'Boat Tour', 'Canoe'], featured: true, description: '', groupSize: 16, itinerary: [], included: [], excluded: [], createdAt: '' },
+  { _id: 'm5', slug: 'ngapali-beach-escape', title: 'Ngapali Beach Escape', destination: 'Ngapali Beach', priceMMK: 1350000, priceUSD: 643, duration: '4D/3N', durationUnit: 'Days', rating: 4.5, reviewCount: 52, image: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=600&h=400&fit=crop', images: ['https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=600&h=400&fit=crop'], amenities: ['Resort', 'Breakfast', 'Snorkeling', 'Beach'], featured: false, description: '', groupSize: 18, itinerary: [], included: [], excluded: [], createdAt: '' },
+  { _id: 'm6', slug: 'yangon-cultural-tour', title: 'Yangon Cultural Tour', destination: 'Yangon', priceMMK: 450000, priceUSD: 214, duration: '3D/2N', durationUnit: 'Days', rating: 4.4, reviewCount: 43, image: 'https://images.unsplash.com/photo-1570167574777-7e5c2c5e60b5?w=600&h=400&fit=crop', images: ['https://images.unsplash.com/photo-1570167574777-7e5c2c5e60b5?w=600&h=400&fit=crop'], amenities: ['Hotel', 'Breakfast', 'Train Ride', 'Tea Shop'], featured: false, description: '', groupSize: 25, itinerary: [], included: [], excluded: [], createdAt: '' },
+  { _id: 'm7', slug: 'myeik-archipelago-adventure', title: 'Myeik Archipelago Adventure', destination: 'Myeik', priceMMK: 2200000, priceUSD: 1048, duration: '6D/5N', durationUnit: 'Days', rating: 4.9, reviewCount: 37, image: 'https://images.unsplash.com/photo-1559128010-7c1ad6e1b6a5?w=600&h=400&fit=crop', images: ['https://images.unsplash.com/photo-1559128010-7c1ad6e1b6a5?w=600&h=400&fit=crop'], amenities: ['Boat Cabin', 'All Meals', 'Snorkeling', 'Kayak'], featured: true, description: '', groupSize: 12, itinerary: [], included: [], excluded: [], createdAt: '' },
+  { _id: 'm8', slug: 'yangon-mandalay-express', title: 'Yangon-Mandalay Express', destination: 'Yangon-Mandalay', priceMMK: 550000, priceUSD: 262, duration: '3D/2N', durationUnit: 'Days', rating: 4.3, reviewCount: 38, image: 'https://images.unsplash.com/photo-1570167574777-7e5c2c5e60b5?w=600&h=400&fit=crop', images: ['https://images.unsplash.com/photo-1570167574777-7e5c2c5e60b5?w=600&h=400&fit=crop'], amenities: ['Hotel', 'Breakfast', 'Flight', 'Guide'], featured: false, description: '', groupSize: 22, itinerary: [], included: [], excluded: [], createdAt: '' },
+  { _id: 'm9', slug: 'shan-highland-trek', title: 'Shan Highland Trek', destination: 'Kalaw-Inle', priceMMK: 850000, priceUSD: 405, duration: '5D/4N', durationUnit: 'Days', rating: 4.8, reviewCount: 45, image: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&h=400&fit=crop', images: ['https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&h=400&fit=crop'], amenities: ['Homestay', 'All Meals', 'Guide', 'Porter'], featured: true, description: '', groupSize: 12, itinerary: [], included: [], excluded: [], createdAt: '' },
+  { _id: 'm10', slug: 'mrauk-u-ancient-kingdoms', title: 'Mrauk U Ancient Kingdoms', destination: 'Mrauk U', priceMMK: 950000, priceUSD: 452, duration: '4D/3N', durationUnit: 'Days', rating: 4.7, reviewCount: 24, image: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=600&h=400&fit=crop', images: ['https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=600&h=400&fit=crop'], amenities: ['Hotel', 'Breakfast', 'Boat', 'Guide'], featured: false, description: '', groupSize: 12, itinerary: [], included: [], excluded: [], createdAt: '' },
+  { _id: 'm11', slug: 'hpa-an-cave-explorer', title: 'Hpa-An Cave Explorer', destination: 'Hpa-An', priceMMK: 420000, priceUSD: 200, duration: '3D/2N', durationUnit: 'Days', rating: 4.5, reviewCount: 31, image: 'https://images.unsplash.com/photo-1570167574777-7e5c2c5e60b5?w=600&h=400&fit=crop', images: ['https://images.unsplash.com/photo-1570167574777-7e5c2c5e60b5?w=600&h=400&fit=crop'], amenities: ['Hotel', 'Breakfast', 'Boat', 'Guide'], featured: false, description: '', groupSize: 18, itinerary: [], included: [], excluded: [], createdAt: '' },
+  { _id: 'm12', slug: 'pyin-oo-lwin-flower-festival', title: 'Pyin Oo Lwin Flower Festival', destination: 'Pyin Oo Lwin', priceMMK: 550000, priceUSD: 262, duration: '4D/3N', durationUnit: 'Days', rating: 4.4, reviewCount: 27, image: 'https://images.unsplash.com/photo-1585320806297-9794b3e4c2ab?w=600&h=400&fit=crop', images: ['https://images.unsplash.com/photo-1585320806297-9794b3e4c2ab?w=600&h=400&fit=crop'], amenities: ['Hotel', 'Breakfast', 'Gardens', 'Coffee Tour'], featured: false, description: '', groupSize: 18, itinerary: [], included: [], excluded: [], createdAt: '' },
 ];
 
-const INTERNATIONAL_TOURS = [
-  { slug: 'bangkok-pattaya-luxury', title: 'Bangkok-Pattaya Luxury', destination: 'Thailand', priceMMK: 1650000, priceUSD: 786, duration: '5D/4N', rating: 4.5, image: 'https://images.unsplash.com/photo-1508009603885-50cf7c579365?w=600&h=400&fit=crop', amenities: ['Hotel', 'Breakfast', 'Island Tour', 'Guide'] },
-  { slug: 'singapore-city-lights', title: 'Singapore City Lights', destination: 'Singapore', priceMMK: 2100000, priceUSD: 1000, duration: '4D/3N', rating: 4.7, image: 'https://images.unsplash.com/photo-1525625293386-3f8f99389edd?w=600&h=400&fit=crop', amenities: ['Hotel', 'Breakfast', 'Gardens', 'Sentosa'] },
-  { slug: 'angkor-wat-discovery', title: 'Angkor Wat Discovery', destination: 'Cambodia', priceMMK: 1450000, priceUSD: 690, duration: '4D/3N', rating: 4.5, image: 'https://images.unsplash.com/photo-1559128010-7c1ad6e1b6a5?w=600&h=400&fit=crop', amenities: ['Hotel', 'Breakfast', 'Tuk-Tuk', 'Boat'] },
-  { slug: 'vietnam-heritage-trail', title: 'Vietnam Heritage Trail', destination: 'Vietnam', priceMMK: 2400000, priceUSD: 1143, duration: '7D/6N', rating: 4.8, image: 'https://images.unsplash.com/photo-1557750255-c76072a7aad1?w=600&h=400&fit=crop', amenities: ['Hotel', 'Breakfast', 'Cruise', 'Guide'], featured: true },
-  { slug: 'bali-paradise-escape', title: 'Bali Paradise Escape', destination: 'Indonesia', priceMMK: 1950000, priceUSD: 929, duration: '5D/4N', rating: 4.7, image: 'https://images.unsplash.com/photo-1537996194471-e657f9e13f57?w=600&h=400&fit=crop', amenities: ['Resort', 'Breakfast', 'Temples', 'Spa'], featured: true },
-  { slug: 'japan-cherry-blossom-tour', title: 'Japan Cherry Blossom Tour', destination: 'Japan', priceMMK: 3850000, priceUSD: 1833, duration: '7D/6N', rating: 4.9, image: 'https://images.unsplash.com/photo-1524413840807-0c3cb6fa808d?w=600&h=400&fit=crop', amenities: ['Hotel', 'Breakfast', 'JR Pass', 'Tea Ceremony'], featured: true },
-  { slug: 'golden-triangle-explorer', title: 'Golden Triangle Explorer', destination: 'Myanmar-Thailand-Laos', priceMMK: 3500000, priceUSD: 1667, duration: '10D/9N', rating: 4.6, image: 'https://images.unsplash.com/photo-1559128010-7c1ad6e1b6a5?w=600&h=400&fit=crop', amenities: ['Hotel', 'Breakfast', 'Cruise', 'Guide'] },
-  { slug: 'maldives-honeymoon-special', title: 'Maldives Honeymoon Special', destination: 'Maldives', priceMMK: 3200000, priceUSD: 1524, duration: '4D/3N', rating: 4.9, image: 'https://images.unsplash.com/photo-1514282401047-d79a71a590e8?w=600&h=400&fit=crop', amenities: ['Overwater Villa', 'Full Board', 'Spa', 'Cruise'], featured: true },
-  { slug: 'south-korea-discovery', title: 'South Korea Discovery', destination: 'South Korea', priceMMK: 2950000, priceUSD: 1405, duration: '6D/5N', rating: 4.6, image: 'https://images.unsplash.com/photo-1534274988757-a0bf53023472?w=600&h=400&fit=crop', amenities: ['Hotel', 'Breakfast', 'KORAIL', 'Jeju'] },
-  { slug: 'dubai-luxury-experience', title: 'Dubai Luxury Experience', destination: 'UAE', priceMMK: 2750000, priceUSD: 1310, duration: '5D/4N', rating: 4.7, image: 'https://images.unsplash.com/photo-1512453979796-25f96bf5c20fe?w=600&h=400&fit=crop', amenities: ['Hotel', 'Breakfast', 'Burj Khalifa', 'Desert Safari'] },
+const INTERNATIONAL_TOURS: (Tour & { image: string })[] = [
+  { _id: 'i1', slug: 'bangkok-pattaya-luxury', title: 'Bangkok-Pattaya Luxury', destination: 'Thailand', priceMMK: 1650000, priceUSD: 786, duration: '5D/4N', durationUnit: 'Days', rating: 4.5, reviewCount: 76, image: 'https://images.unsplash.com/photo-1508009603885-50cf7c579365?w=600&h=400&fit=crop', images: ['https://images.unsplash.com/photo-1508009603885-50cf7c579365?w=600&h=400&fit=crop'], amenities: ['Hotel', 'Breakfast', 'Island Tour', 'Guide'], featured: false, description: '', groupSize: 22, itinerary: [], included: [], excluded: [], createdAt: '' },
+  { _id: 'i2', slug: 'singapore-city-lights', title: 'Singapore City Lights', destination: 'Singapore', priceMMK: 2100000, priceUSD: 1000, duration: '4D/3N', durationUnit: 'Days', rating: 4.7, reviewCount: 63, image: 'https://images.unsplash.com/photo-1525625293386-3f8f99389edd?w=600&h=400&fit=crop', images: ['https://images.unsplash.com/photo-1525625293386-3f8f99389edd?w=600&h=400&fit=crop'], amenities: ['Hotel', 'Breakfast', 'Gardens', 'Sentosa'], featured: false, description: '', groupSize: 18, itinerary: [], included: [], excluded: [], createdAt: '' },
+  { _id: 'i3', slug: 'angkor-wat-discovery', title: 'Angkor Wat Discovery', destination: 'Cambodia', priceMMK: 1450000, priceUSD: 690, duration: '4D/3N', durationUnit: 'Days', rating: 4.5, reviewCount: 54, image: 'https://images.unsplash.com/photo-1559128010-7c1ad6e1b6a5?w=600&h=400&fit=crop', images: ['https://images.unsplash.com/photo-1559128010-7c1ad6e1b6a5?w=600&h=400&fit=crop'], amenities: ['Hotel', 'Breakfast', 'Tuk-Tuk', 'Boat'], featured: false, description: '', groupSize: 20, itinerary: [], included: [], excluded: [], createdAt: '' },
+  { _id: 'i4', slug: 'vietnam-heritage-trail', title: 'Vietnam Heritage Trail', destination: 'Vietnam', priceMMK: 2400000, priceUSD: 1143, duration: '7D/6N', durationUnit: 'Days', rating: 4.8, reviewCount: 82, image: 'https://images.unsplash.com/photo-1557750255-c76072a7aad1?w=600&h=400&fit=crop', images: ['https://images.unsplash.com/photo-1557750255-c76072a7aad1?w=600&h=400&fit=crop'], amenities: ['Hotel', 'Breakfast', 'Cruise', 'Guide'], featured: true, description: '', groupSize: 18, itinerary: [], included: [], excluded: [], createdAt: '' },
+  { _id: 'i5', slug: 'bali-paradise-escape', title: 'Bali Paradise Escape', destination: 'Indonesia', priceMMK: 1950000, priceUSD: 929, duration: '5D/4N', durationUnit: 'Days', rating: 4.7, reviewCount: 59, image: 'https://images.unsplash.com/photo-1537996194471-e657f9e13f57?w=600&h=400&fit=crop', images: ['https://images.unsplash.com/photo-1537996194471-e657f9e13f57?w=600&h=400&fit=crop'], amenities: ['Resort', 'Breakfast', 'Temples', 'Spa'], featured: true, description: '', groupSize: 16, itinerary: [], included: [], excluded: [], createdAt: '' },
+  { _id: 'i6', slug: 'japan-cherry-blossom-tour', title: 'Japan Cherry Blossom Tour', destination: 'Japan', priceMMK: 3850000, priceUSD: 1833, duration: '7D/6N', durationUnit: 'Days', rating: 4.9, reviewCount: 72, image: 'https://images.unsplash.com/photo-1524413840807-0c3cb6fa808d?w=600&h=400&fit=crop', images: ['https://images.unsplash.com/photo-1524413840807-0c3cb6fa808d?w=600&h=400&fit=crop'], amenities: ['Hotel', 'Breakfast', 'JR Pass', 'Tea Ceremony'], featured: true, description: '', groupSize: 14, itinerary: [], included: [], excluded: [], createdAt: '' },
+  { _id: 'i7', slug: 'golden-triangle-explorer', title: 'Golden Triangle Explorer', destination: 'Myanmar-Thailand-Laos', priceMMK: 3500000, priceUSD: 1667, duration: '10D/9N', durationUnit: 'Days', rating: 4.6, reviewCount: 29, image: 'https://images.unsplash.com/photo-1559128010-7c1ad6e1b6a5?w=600&h=400&fit=crop', images: ['https://images.unsplash.com/photo-1559128010-7c1ad6e1b6a5?w=600&h=400&fit=crop'], amenities: ['Hotel', 'Breakfast', 'Cruise', 'Guide'], featured: false, description: '', groupSize: 15, itinerary: [], included: [], excluded: [], createdAt: '' },
+  { _id: 'i8', slug: 'maldives-honeymoon-special', title: 'Maldives Honeymoon Special', destination: 'Maldives', priceMMK: 3200000, priceUSD: 1524, duration: '4D/3N', durationUnit: 'Days', rating: 4.9, reviewCount: 44, image: 'https://images.unsplash.com/photo-1514282401047-d79a71a590e8?w=600&h=400&fit=crop', images: ['https://images.unsplash.com/photo-1514282401047-d79a71a590e8?w=600&h=400&fit=crop'], amenities: ['Overwater Villa', 'Full Board', 'Spa', 'Cruise'], featured: true, description: '', groupSize: 2, itinerary: [], included: [], excluded: [], createdAt: '' },
+  { _id: 'i9', slug: 'south-korea-discovery', title: 'South Korea Discovery', destination: 'South Korea', priceMMK: 2950000, priceUSD: 1405, duration: '6D/5N', durationUnit: 'Days', rating: 4.6, reviewCount: 41, image: 'https://images.unsplash.com/photo-1534274988757-a0bf53023472?w=600&h=400&fit=crop', images: ['https://images.unsplash.com/photo-1534274988757-a0bf53023472?w=600&h=400&fit=crop'], amenities: ['Hotel', 'Breakfast', 'KORAIL', 'Jeju'], featured: false, description: '', groupSize: 16, itinerary: [], included: [], excluded: [], createdAt: '' },
+  { _id: 'i10', slug: 'dubai-luxury-experience', title: 'Dubai Luxury Experience', destination: 'UAE', priceMMK: 2750000, priceUSD: 1310, duration: '5D/4N', durationUnit: 'Days', rating: 4.7, reviewCount: 88, image: 'https://images.unsplash.com/photo-1512453979796-25f96bf5c20fe?w=600&h=400&fit=crop', images: ['https://images.unsplash.com/photo-1512453979796-25f96bf5c20fe?w=600&h=400&fit=crop'], amenities: ['Hotel', 'Breakfast', 'Burj Khalifa', 'Desert Safari'], featured: false, description: '', groupSize: 20, itinerary: [], included: [], excluded: [], createdAt: '' },
 ];
 
-const ADVENTURE_TOURS = [
-  { slug: 'myeik-archipelago-adventure', title: 'Myeik Archipelago Adventure', destination: 'Myeik', priceMMK: 2200000, priceUSD: 1048, duration: '6D/5N', rating: 4.9, image: 'https://images.unsplash.com/photo-1559128010-7c1ad6e1b6a5?w=600&h=400&fit=crop', amenities: ['Boat Cabin', 'All Meals', 'Snorkeling', 'Kayak'] },
-  { slug: 'shan-highland-trek', title: 'Shan Highland Trek', destination: 'Kalaw-Inle', priceMMK: 850000, priceUSD: 405, duration: '5D/4N', rating: 4.8, image: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&h=400&fit=crop', amenities: ['Homestay', 'All Meals', 'Guide', 'Porter'] },
-  { slug: 'golden-triangle-explorer', title: 'Golden Triangle Explorer', destination: 'Myanmar-Thailand-Laos', priceMMK: 3500000, priceUSD: 1667, duration: '10D/9N', rating: 4.6, image: 'https://images.unsplash.com/photo-1559128010-7c1ad6e1b6a5?w=600&h=400&fit=crop', amenities: ['Hotel', 'Breakfast', 'Cruise', 'Guide'] },
-  { slug: 'bagan-sunrise-discovery', title: 'Bagan Sunrise Discovery', destination: 'Bagan', priceMMK: 950000, priceUSD: 452, duration: '5D/4N', rating: 4.9, image: 'https://images.unsplash.com/photo-1558704475-1428913b4c6b?w=600&h=400&fit=crop', amenities: ['Hotel', 'Breakfast', 'E-Bike', 'Boat Cruise'] },
-  { slug: 'vietnam-heritage-trail', title: 'Vietnam Heritage Trail', destination: 'Vietnam', priceMMK: 2400000, priceUSD: 1143, duration: '7D/6N', rating: 4.8, image: 'https://images.unsplash.com/photo-1557750255-c76072a7aad1?w=600&h=400&fit=crop', amenities: ['Hotel', 'Breakfast', 'Cruise', 'Guide'] },
-  { slug: 'hpa-an-cave-explorer', title: 'Hpa-An Cave Explorer', destination: 'Hpa-An', priceMMK: 420000, priceUSD: 200, duration: '3D/2N', rating: 4.5, image: 'https://images.unsplash.com/photo-1570167574777-7e5c2c5e60b5?w=600&h=400&fit=crop', amenities: ['Hotel', 'Breakfast', 'Boat', 'Guide'] },
+const ADVENTURE_TOURS: (Tour & { image: string })[] = [
+  MYANMAR_TOURS[6], MYANMAR_TOURS[8], INTERNATIONAL_TOURS[6],
+  MYANMAR_TOURS[1], INTERNATIONAL_TOURS[3], MYANMAR_TOURS[10],
 ];
 
 const ALL_TOURS_DATA = [...MYANMAR_TOURS, ...INTERNATIONAL_TOURS];
 
-function getCategoryTours(cat: CategoryKey) {
+function getCategoryTours(cat: CategoryKey): (Tour & { image: string })[] {
   switch (cat) {
     case 'myanmar': return MYANMAR_TOURS;
     case 'international': return INTERNATIONAL_TOURS;
@@ -70,88 +63,9 @@ const CATEGORY_TABS: { key: CategoryKey; label: string; emoji: string }[] = [
   { key: 'adventure', label: 'Adventure', emoji: '🏔️' },
 ];
 
-function TourScrollingCard({ item, currency }: { item: typeof ALL_TOURS_DATA[0]; currency: 'MMK' | 'USD' }) {
-  const displayPrice = currency === 'MMK' ? item.priceMMK : item.priceUSD;
-  const symbol = currency === 'MMK' ? 'Ks' : '$';
-
-  return (
-    <Link
-      href={`/tours/${item.slug}`}
-      className="w-[300px] flex-shrink-0 snap-start block"
-    >
-      <div className="group relative rounded-2xl overflow-hidden cursor-pointer border border-gray-200 hover:border-[#D4AF37]/60 hover:shadow-xl hover:shadow-[#D4AF37]/10 hover:scale-[1.02] transition-all duration-300">
-        <div className="relative h-[300px] w-full overflow-hidden bg-gray-200">
-          <img
-            src={item.image}
-            alt={item.title}
-            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-            loading="lazy"
-            style={{ position: 'absolute', inset: 0 }}
-            onError={(e) => { (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=600&h=400&fit=crop'; }}
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent" />
-          <span className="absolute top-4 left-4 px-3 py-1 rounded-full bg-[#D4AF37]/90 text-gray-900 text-xs font-semibold backdrop-blur-sm">
-            {item.destination}
-          </span>
-          <span className="absolute top-4 right-4 px-3 py-1 rounded-full bg-black/60 text-white text-xs font-medium backdrop-blur-sm border border-white/10">
-            {item.duration}
-          </span>
-          <div className="absolute bottom-0 left-0 right-0 p-5">
-            <h3
-              className="text-white text-xl font-bold mb-2 line-clamp-1"
-              style={{ fontFamily: "'Playfair Display', Georgia, serif" }}
-            >
-              {item.title}
-            </h3>
-            <div className="flex items-center justify-between">
-              {/* Rating stars */}
-              <div className="flex items-center gap-0.5">
-                {Array.from({ length: 5 }, (_, i) => (
-                  <svg
-                    key={i}
-                    className={`w-4 h-4 ${i < Math.round(item.rating) ? 'text-[#D4AF37]' : 'text-gray-500'}`}
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                  </svg>
-                ))}
-              </div>
-              <div className="text-right">
-                <span className="text-[#D4AF37] text-lg font-bold">
-                  {symbol} {displayPrice.toLocaleString()}
-                </span>
-                <span className="text-gray-400 text-xs ml-1">/person</span>
-              </div>
-            </div>
-          </div>
-        </div>
-        {/* Amenities chips */}
-        <div className="px-4 pt-3 flex flex-wrap gap-1.5">
-          {item.amenities.slice(0, 3).map((a, i) => (
-            <span
-              key={i}
-              className="px-2 py-0.5 rounded-full bg-[#D4AF37]/10 text-[#D4AF37] text-xs border border-[#D4AF37]/20"
-            >
-              {a}
-            </span>
-          ))}
-        </div>
-        {/* View Details button */}
-        <div className="px-4 pb-3 pt-2">
-          <span className="block w-full text-center py-3 rounded-full bg-gradient-to-r from-[#D4AF37] to-[#F5A623] hover:from-[#E5C048] hover:to-[#D4AF37] text-[#0A1628] font-bold text-sm transition-all duration-300 hover:shadow-lg hover:shadow-[#D4AF37]/30">
-            View Details
-          </span>
-        </div>
-      </div>
-    </Link>
-  );
-}
-
 // ─── Page Component ──────────────────────────────────────────
 
 export default function ToursPage() {
-  const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [currency, setCurrency] = useState<'MMK' | 'USD'>('MMK');
   const [activeTab, setActiveTab] = useState<CategoryKey>('all');
@@ -259,8 +173,10 @@ export default function ToursPage() {
           </h2>
         </div>
         <ScrollingRow>
-          {categoryTours.slice(0, 10).map((item, i) => (
-            <TourScrollingCard key={`cat-${activeTab}-${i}`} item={item} currency={currency} />
+          {categoryTours.slice(0, 10).map((item) => (
+            <div key={item._id} className="w-[320px] flex-shrink-0 snap-start">
+              <TourCard tour={item} currency={currency} />
+            </div>
           ))}
         </ScrollingRow>
       </section>
@@ -364,61 +280,8 @@ export default function ToursPage() {
               </span>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {displayTours.map((item, idx) => (
-                <div key={idx} className="group relative rounded-2xl overflow-hidden cursor-pointer border border-gray-200 hover:border-[#D4AF37]/60 hover:shadow-xl hover:shadow-[#D4AF37]/10 hover:scale-[1.02] transition-all duration-300">
-                  <Link href={`/tours/${item.slug}`}>
-                    <div className="relative h-[260px] w-full overflow-hidden bg-gray-200">
-                      <img
-                        src={item.image}
-                        alt={item.title}
-                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                        loading="lazy"
-                        style={{ position: 'absolute', inset: 0 }}
-                        onError={(e) => { (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=600&h=400&fit=crop'; }}
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent" />
-                      <span className="absolute top-4 left-4 px-3 py-1 rounded-full bg-[#D4AF37]/90 text-gray-900 text-xs font-semibold backdrop-blur-sm">
-                        {item.destination}
-                      </span>
-                      <span className="absolute top-4 right-4 px-3 py-1 rounded-full bg-black/60 text-white text-xs font-medium backdrop-blur-sm border border-white/10">
-                        {item.duration}
-                      </span>
-                      <div className="absolute bottom-0 left-0 right-0 p-5">
-                        <h3 className="text-white text-xl font-bold mb-2 line-clamp-1" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
-                          {item.title}
-                        </h3>
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-0.5">
-                            {Array.from({ length: 5 }, (_, i) => (
-                              <svg key={i} className={`w-4 h-4 ${i < Math.round(item.rating) ? 'text-[#D4AF37]' : 'text-gray-500'}`} fill="currentColor" viewBox="0 0 20 20">
-                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                              </svg>
-                            ))}
-                          </div>
-                          <div className="text-right">
-                            <span className="text-[#D4AF37] text-lg font-bold">
-                              {currency === 'MMK' ? `Ks ${item.priceMMK.toLocaleString()}` : `$ ${item.priceUSD.toLocaleString()}`}
-                            </span>
-                            <span className="text-gray-400 text-xs ml-1">/person</span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="px-4 pt-3 flex flex-wrap gap-1.5">
-                      {item.amenities.map((a, i) => (
-                        <span key={i} className="px-2 py-0.5 rounded-full bg-[#D4AF37]/10 text-[#D4AF37] text-xs border border-[#D4AF37]/20">{a}</span>
-                      ))}
-                    </div>
-                  </Link>
-                  <div className="px-4 pb-4 pt-2">
-                    <Link
-                      href={`/tours/${item.slug}`}
-                      className="block w-full text-center py-3 rounded-full bg-gradient-to-r from-[#D4AF37] to-[#F5A623] hover:from-[#E5C048] hover:to-[#D4AF37] text-[#0A1628] font-bold text-sm transition-all duration-300 hover:shadow-lg hover:shadow-[#D4AF37]/30"
-                    >
-                      View Details
-                    </Link>
-                  </div>
-                </div>
+              {displayTours.map((item) => (
+                <TourCard key={item._id} tour={item} currency={currency} />
               ))}
             </div>
 
