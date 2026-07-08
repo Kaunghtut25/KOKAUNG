@@ -37,7 +37,7 @@ export default function ServiceIcons() {
   // On homepage: fixed, appears below navbar on scroll
   const containerClass = isHome
     ? 'fixed top-20 left-0 right-0 z-40 w-full bg-[#0A1628] border-b border-[#D4AF37]/20 shadow-lg shadow-black/30 transition-all duration-300'
-    : 'w-full bg-[#0A1628] border-b border-[#D4AF37]/20';
+    : 'pt-20 w-full bg-[#0A1628] border-b border-[#D4AF37]/20';
 
   const visibilityClass = isHome
     ? (visible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-2 pointer-events-none')
