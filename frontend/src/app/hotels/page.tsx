@@ -88,7 +88,7 @@ export default function HotelsPage() {
     <main className="min-h-screen bg-white">
       <section className="relative pt-24 pb-12 px-4 overflow-hidden">
         <div className="absolute inset-0">
-          <img src="https://picsum.photos/seed/a9hotel-hero/1920/600" alt="" className="w-full h-full object-cover" />
+          <img src="/images/hero-hotels.jpg" alt="A9 Global Hotels" className="w-full h-full object-cover" />
           <div className="absolute inset-0 bg-white/75" />
         </div>
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(212,175,55,0.08),transparent_70%)]" />

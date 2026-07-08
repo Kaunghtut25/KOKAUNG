@@ -40,7 +40,7 @@ export default function MingalarPage() {
     <main className="min-h-screen bg-white">
       <section className="relative h-[400px] md:h-[500px] w-full overflow-hidden">
         <Image
-          src="https://images.unsplash.com/photo-1436491865332-7a61a109bb05?w=1600&q=85"
+          src="/images/hero-mingalar.jpg"
           alt="Airport Lounge"
           fill
           className="object-cover"
