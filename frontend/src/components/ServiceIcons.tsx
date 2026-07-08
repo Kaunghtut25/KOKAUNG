@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { useState, useEffect } from 'react';
 
 const services = [
   { label: 'Flights', icon: '✈️', href: '/' },
@@ -16,9 +17,34 @@ const services = [
 
 export default function ServiceIcons() {
   const pathname = usePathname();
+  const isHome = pathname === '/';
+  const [visible, setVisible] = useState(!isHome);
+
+  useEffect(() => {
+    if (!isHome) {
+      setVisible(true);
+      return;
+    }
+    const onScroll = () => {
+      setVisible(window.scrollY > 300);
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+    return () => window.removeEventListener('scroll', onScroll);
+  }, [isHome]);
+
+  // On other pages: always visible, static position (not fixed)
+  // On homepage: fixed, appears below navbar on scroll
+  const containerClass = isHome
+    ? 'fixed top-20 left-0 right-0 z-40 w-full bg-[#0A1628] border-b border-[#D4AF37]/20 shadow-lg shadow-black/30 transition-all duration-300'
+    : 'w-full bg-[#0A1628] border-b border-[#D4AF37]/20';
+
+  const visibilityClass = isHome
+    ? (visible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-2 pointer-events-none')
+    : '';
 
   return (
-    <div className="w-full bg-[#0A1628] border-b border-[#D4AF37]/20">
+    <div className={containerClass + ' ' + visibilityClass}>
       <div className="max-w-6xl mx-auto flex flex-wrap justify-center gap-1 md:gap-2 py-2.5 px-2">
         {services.map((item) => {
           const isActive = pathname === item.href || (item.href !== '/' && pathname.startsWith(item.href));
