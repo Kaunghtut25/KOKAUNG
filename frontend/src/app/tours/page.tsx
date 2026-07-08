@@ -215,7 +215,7 @@ export default function ToursPage() {
       {/* Hero Banner */}
       <section className="relative pt-24 pb-12 px-4 overflow-hidden">
         <div className="absolute inset-0">
-          <img src="https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=1920&h=600&fit=crop" alt="" className="w-full h-full object-cover" />
+          <img src="/images/hero-tours.jpg" alt="A9 Global Tours — Myanmar & International Travel Packages" className="w-full h-full object-cover" />
           <div className="absolute inset-0 bg-white/75" />
         </div>
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(212,175,55,0.08),transparent_70%)]" />
