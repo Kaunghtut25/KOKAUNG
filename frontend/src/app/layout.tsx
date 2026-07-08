@@ -45,7 +45,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={inter.variable}>
+    <html lang="en" className={`${inter.variable} overflow-x-hidden`}>
       <body className={`${inter.className} min-h-screen bg-white text-gray-900`}>
         <Navbar />
         <ServiceIcons />

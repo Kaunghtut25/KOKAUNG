@@ -15,8 +15,13 @@
   }
 
   body {
-    @apply bg-white text-gray-900 antialiased;
+    @apply bg-white text-gray-900 antialiased overflow-x-hidden;
     font-family: 'Inter', system-ui, sans-serif;
+  }
+
+  img {
+    max-width: 100%;
+    height: auto;
   }
 
 
