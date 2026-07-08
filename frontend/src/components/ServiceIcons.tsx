@@ -5,7 +5,7 @@ import { usePathname } from 'next/navigation';
 import { useState, useEffect } from 'react';
 
 const services = [
-  { label: 'Flights', icon: '✈️', href: '/#flight-search' },
+  { label: 'Flights', icon: '✈️', href: '/' },
   { label: 'Tours', icon: '🏔️', href: '/tours' },
   { label: 'Hotels', icon: '🏨', href: '/hotels' },
   { label: 'Cars', icon: '🚗', href: '/cars' },
@@ -39,7 +39,7 @@ export default function ServiceIcons() {
     >
       <div className="max-w-6xl mx-auto flex flex-wrap justify-center gap-1 md:gap-2 py-2.5 px-2">
         {services.map((item) => {
-          const isActive = pathname === item.href || (item.href !== '/#flight-search' && pathname.startsWith(item.href));
+          const isActive = pathname === item.href || (item.href !== '/' && pathname.startsWith(item.href));
           return (
             <Link
               key={item.href}
