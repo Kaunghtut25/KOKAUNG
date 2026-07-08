@@ -204,8 +204,8 @@ input:-webkit-autofill:active {
 /* ═══════ Zoom-safe containers ═══════
    At 100% zoom: min(original, 100vw) = original → zero visual change
    At 150%+: 100vw < original → container fits viewport → no overflow */
-.max-w-7xl  { max-width: min(80rem, calc(100vw - 2rem)) !important; }
-.max-w-6xl  { max-width: min(72rem, calc(100vw - 2rem)) !important; }
-.max-w-5xl  { max-width: min(64rem, calc(100vw - 2rem)) !important; }
-.max-w-4xl  { max-width: min(56rem, calc(100vw - 2rem)) !important; }
-.max-w-3xl  { max-width: min(48rem, calc(100vw - 2rem)) !important; }
+.max-w-7xl  { max-width: min(80rem, 100vw) !important; }
+.max-w-6xl  { max-width: min(72rem, 100vw) !important; }
+.max-w-5xl  { max-width: min(64rem, 100vw) !important; }
+.max-w-4xl  { max-width: min(56rem, 100vw) !important; }
+.max-w-3xl  { max-width: min(48rem, 100vw) !important; }
