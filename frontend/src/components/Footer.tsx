@@ -113,7 +113,7 @@ export default function Footer() {
                     href="tel:+959781617333"
                     className="block hover:text-gold transition-colors"
                   >
-                    +95 9 781 617333
+                    09 781 617333
                   </a>
                   <a
                     href="tel:+959694320111"
@@ -132,10 +132,10 @@ export default function Footer() {
               <div className="flex items-start space-x-3">
                 <span className="text-gold mt-0.5 flex-shrink-0">✉️</span>
                 <a
-                  href="mailto:a9globaltravel@gmail.com"
+                  href="mailto:a9ticketing@a9globalravel.com.mm"
                   className="text-sm text-white/60 hover:text-gold transition-colors"
                 >
-                  a9globaltravel@gmail.com
+                  a9ticketing@a9globalravel.com.mm
                 </a>
               </div>
             </div>
