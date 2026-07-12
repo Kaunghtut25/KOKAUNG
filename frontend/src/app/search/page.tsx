@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { useState, useEffect, useCallback, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
@@ -13,7 +13,7 @@ import { SearchResults, Tour, Hotel, Car, searchAll, SearchParams } from '@/lib/
 type TabType = 'all' | 'tours' | 'hotels' | 'cars';
 
 const serviceLinks = [
-  { label: 'Flights', icon: '✈️', href: '/search' },
+  { label: 'Flights', icon: '✈️', href: '/' },
   { label: 'Tours', icon: '🏔️', href: '/tours' },
   { label: 'Hotels', icon: '🏨', href: '/hotels' },
   { label: 'Cars', icon: '🚗', href: '/cars' },

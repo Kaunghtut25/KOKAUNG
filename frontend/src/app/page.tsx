@@ -335,7 +335,7 @@ export default function HomePage() {
           {/* Service Icons — above flight search */}
           <div className="flex flex-wrap justify-center gap-1.5 mb-4">
             {[
-              { label: 'Flights', icon: '✈️', href: '/search' },
+              { label: 'Flights', icon: '✈️', href: '/' },
               { label: 'Tours', icon: '🏔️', href: '/tours' },
               { label: 'Hotels', icon: '🏨', href: '/hotels' },
               { label: 'Cars', icon: '🚗', href: '/cars' },
