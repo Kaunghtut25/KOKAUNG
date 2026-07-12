@@ -330,7 +330,7 @@ export default function HomePage() {
         </div>
 
         {/* Search Engine */}
-        <div className="relative z-30 px-4 -mt-20 md:-mt-16 pb-8">
+        <div className="relative z-30 px-4 -mt-48 md:-mt-56 pb-8">
           <div className="max-w-5xl mx-auto">
           {/* Service Icons — above flight search */}
           <div className="flex flex-wrap justify-center gap-1.5 mb-4">
