@@ -268,10 +268,10 @@ export default function HomePage() {
   return (
     <main className="min-h-screen bg-[#FFFDF5]">
       {/* ========== Hero (slides only) ========== */}
-      <section className="relative min-h-[700px] md:min-h-[800px] w-full overflow-visible">
+      <section className="relative w-full overflow-visible" style={{ minHeight: "500px" }}>
         {slides.map((slide, index) => (
           <div key={index}
-            className={"absolute inset-0 transition-all duration-700 ease-in-out " + (index === currentSlide ? "opacity-100 z-10" : index === prevSlide ? "opacity-0 z-0" : "opacity-0 z-0")}>
+            className={"absolute inset-0 min-h-[500px] md:min-h-[600px] transition-all duration-700 ease-in-out " + (index === currentSlide ? "opacity-100 z-10" : index === prevSlide ? "opacity-0 z-0" : "opacity-0 z-0")}>
             <div className="absolute inset-0 bg-cover bg-center"
               style={{ backgroundImage: `url(${slide.image})` }} />
             <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-black/30" />
@@ -297,7 +297,7 @@ export default function HomePage() {
         </div>
 
         {/* ========== Service Navigation Icons (hero middle, below slide text) ========== */}
-        <div className="absolute left-0 right-0 top-[46%] md:top-[48%] z-20 px-1">
+        <div className="absolute left-0 right-0 top-[44%] md:top-[46%] z-20 px-1">
           <div className="max-w-5xl mx-auto flex flex-wrap justify-center gap-1 md:gap-2">
             {[
               { label: 'Flights', icon: '✈️', href: '/' },
@@ -320,7 +320,7 @@ export default function HomePage() {
         </div>
 
         {/* ========== Search Engine (inside hero, below icons) ========== */}
-        <div className="absolute left-0 right-0 top-[57%] z-30 px-4">
+        <div className="relative z-30 px-4 -mt-28 md:-mt-36">
           <div className="max-w-5xl mx-auto">
           <div className="bg-white rounded-2xl border-2 border-[#2563EB] shadow-xl p-5 md:p-7">
             <div className="flex gap-1 mb-5 bg-gray-100 rounded-lg p-1 w-fit">
