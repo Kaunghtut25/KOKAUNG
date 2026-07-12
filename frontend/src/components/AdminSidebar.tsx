@@ -12,12 +12,15 @@ interface NavItem {
 
 const navItems: NavItem[] = [
   { label: "Dashboard", icon: "📊", path: "/admin/dashboard" },
-  { label: "Manage Tours", icon: "✈️", path: "/admin/tours" },
+  { label: "Manage Flights", icon: "✈️", path: "/admin/bookings" },
+  { label: "Manage Tours", icon: "🏔️", path: "/admin/tours" },
   { label: "Manage Hotels", icon: "🏨", path: "/admin/hotels" },
   { label: "Manage Cars", icon: "🚗", path: "/admin/cars" },
   { label: "Manage Visas", icon: "🛂", path: "/admin/visas" },
   { label: "Manage Insurance", icon: "🛡️", path: "/admin/insurance" },
-  { label: "Bookings & Inquiries", icon: "📋", path: "/admin/bookings" },
+  { label: "Manage Cruises", icon: "🚢", path: "/admin/cruises" },
+  { label: "Manage Blog", icon: "📝", path: "/admin/blog" },
+  { label: "Bookings", icon: "📋", path: "/admin/bookings" },
   { label: "Site Settings", icon: "⚙️", path: "/admin/settings" },
 ];
 

@@ -8,6 +8,8 @@ interface DashboardStats {
   totalCars: number;
   totalVisas: number;
   totalInsurances: number;
+  totalCruises: number;
+  totalBlogPosts: number;
   totalBookings: number;
   totalInquiries: number;
   revenueMMK: number;
@@ -27,11 +29,13 @@ interface RecentBooking {
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || "/api";
 
 const statCards = [
-  { key: "totalTours", label: "Total Tours", icon: "✈️" },
+  { key: "totalTours", label: "Total Tours", icon: "🏔️" },
   { key: "totalHotels", label: "Total Hotels", icon: "🏨" },
   { key: "totalCars", label: "Total Cars", icon: "🚗" },
   { key: "totalVisas", label: "Visa Services", icon: "🛂" },
   { key: "totalInsurances", label: "Insurance Plans", icon: "🛡️" },
+  { key: "totalCruises", label: "Cruise Packages", icon: "🚢" },
+  { key: "totalBlogPosts", label: "Blog Posts", icon: "📝" },
   { key: "totalBookings", label: "Total Bookings", icon: "📋" },
   { key: "totalInquiries", label: "Inquiries", icon: "💬" },
   { key: "revenueMMK", label: "Revenue (MMK)", icon: "💰", format: true },
@@ -45,6 +49,8 @@ export default function AdminDashboardPage() {
     totalCars: 0,
     totalVisas: 0,
     totalInsurances: 0,
+    totalCruises: 0,
+    totalBlogPosts: 0,
     totalBookings: 0,
     totalInquiries: 0,
     revenueMMK: 0,
@@ -128,21 +134,24 @@ export default function AdminDashboardPage() {
 
   const getTypeIcon = (type: string) => {
     const map: Record<string, string> = {
-      tour: "✈️",
+      tour: "🏔️",
       hotel: "🏨",
       car: "🚗",
       visa: "🛂",
       insurance: "🛡️",
+      cruise: "🚢",
     };
     return map[type?.toLowerCase()] || "📋";
   };
 
   const quickActions = [
-    { label: "Add Tour", icon: "✈️", href: "/admin/tours" },
+    { label: "Add Tour", icon: "🏔️", href: "/admin/tours" },
     { label: "Add Hotel", icon: "🏨", href: "/admin/hotels" },
     { label: "Add Car", icon: "🚗", href: "/admin/cars" },
     { label: "Add Visa", icon: "🛂", href: "/admin/visas" },
     { label: "Add Insurance", icon: "🛡️", href: "/admin/insurance" },
+    { label: "Add Cruise", icon: "🚢", href: "/admin/cruises" },
+    { label: "New Blog Post", icon: "📝", href: "/admin/blog" },
     { label: "View Settings", icon: "⚙️", href: "/admin/settings" },
   ];
 
@@ -171,7 +180,7 @@ export default function AdminDashboardPage() {
       </div>
 
       {/* ─── Stats Grid ─── */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
         {statCards.map((card) => {
           const value = stats[card.key as keyof DashboardStats];
           return (

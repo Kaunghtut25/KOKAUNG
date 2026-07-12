@@ -1,8 +1,10 @@
-"use client";
+﻿"use client";
 
 import React, { useEffect, useState, useCallback, useRef } from "react";
 
 interface HeroImages {
+  flights: string;
+  cruises: string;
   home: string;
   tours: string;
   hotels: string;
