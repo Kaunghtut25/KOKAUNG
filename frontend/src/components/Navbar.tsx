@@ -91,7 +91,7 @@ export default function Navbar() {
                   <Link href="/book-now" className="block px-4 py-3 text-sm font-semibold text-gray-700 hover:bg-gray-50 hover:text-[#D4AF37] rounded-t-xl transition-colors">📋 Book Now</Link>
                   <Link href="/contact" className="block px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 hover:text-[#D4AF37] rounded-b-xl border-t border-gray-100 transition-colors">📞 Contact Us</Link>
                 </div>
-              
+              </div>
             {/* Service Navigation Icons — desktop */}
             <div className="hidden lg:flex items-center gap-0.5 border-l border-[#D4AF37]/20 pl-3 ml-2">
               {serviceLinks.map((item) => (
