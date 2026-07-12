@@ -327,6 +327,7 @@ export default function HomePage() {
               aria-label={"Go to slide " + (index + 1)} />
           ))}
         </div>
+        </div>
 
         {/* Search Engine */}
         <div className="relative z-30 px-4 -mt-10 md:-mt-8 pb-8">
