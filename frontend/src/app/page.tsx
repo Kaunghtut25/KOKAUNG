@@ -268,10 +268,10 @@ export default function HomePage() {
   return (
     <main className="min-h-screen bg-[#FFFDF5]">
       {/* ========== Hero (slides only) ========== */}
-      <section className="relative w-full overflow-visible" style={{ minHeight: "500px" }}>
+      <section className="relative min-h-[580px] md:min-h-[680px] w-full overflow-visible">
         {slides.map((slide, index) => (
           <div key={index}
-            className={"absolute inset-0 min-h-[500px] md:min-h-[600px] transition-all duration-700 ease-in-out " + (index === currentSlide ? "opacity-100 z-10" : index === prevSlide ? "opacity-0 z-0" : "opacity-0 z-0")}>
+            className={"absolute inset-0 transition-all duration-700 ease-in-out " + (index === currentSlide ? "opacity-100 z-10" : index === prevSlide ? "opacity-0 z-0" : "opacity-0 z-0")}>
             <div className="absolute inset-0 bg-cover bg-center"
               style={{ backgroundImage: `url(${slide.image})` }} />
             <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-black/30" />
@@ -297,7 +297,7 @@ export default function HomePage() {
         </div>
 
         {/* ========== Service Navigation Icons (hero middle, below slide text) ========== */}
-        <div className="absolute left-0 right-0 top-[44%] md:top-[46%] z-20 px-1">
+        <div className="absolute left-0 right-0 top-[46%] md:top-[48%] z-20 px-1">
           <div className="max-w-5xl mx-auto flex flex-wrap justify-center gap-1 md:gap-2">
             {[
               { label: 'Flights', icon: '✈️', href: '/' },
@@ -320,7 +320,7 @@ export default function HomePage() {
         </div>
 
         {/* ========== Search Engine (inside hero, below icons) ========== */}
-        <div className="relative z-30 px-4 -mt-28 md:-mt-36">
+        <div className="absolute left-0 right-0 top-[52%] z-30 px-4">
           <div className="max-w-5xl mx-auto">
           <div className="bg-white rounded-2xl border-2 border-[#2563EB] shadow-xl p-5 md:p-7">
             <div className="flex gap-1 mb-5 bg-gray-100 rounded-lg p-1 w-fit">
@@ -335,7 +335,7 @@ export default function HomePage() {
 
             <form onSubmit={handleSearch} className="space-y-3">
               {activeTab === "multicity" ? (<>
-                <div className="space-y-4 max-h-[320px] overflow-y-auto pr-1">
+                <div className="space-y-4 max-h-[280px] overflow-y-auto pr-1">
                   {multiCityLegs.map((leg, index) => (
                     <div key={index} className="flex items-start gap-2">
                       <AirportInput label="" value={leg.from} onChange={(val) => updateMultiCityLeg(index, "from", val)} placeholder="From city"
@@ -463,8 +463,8 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ========== Popular Destinations ========== */}
-      <PopularDestinations />
+      <div className="mt-12 md:mt-16">{/* ========== Popular Destinations ========== */}
+      <PopularDestinations /></div>
 
       <section className="py-16 bg-[#FFFDF5]">
         <div className="max-w-6xl mx-auto px-4 grid grid-cols-2 md:grid-cols-4 gap-6">
