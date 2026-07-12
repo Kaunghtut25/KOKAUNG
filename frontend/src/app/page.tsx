@@ -9,16 +9,16 @@ import { useNearestAirport } from '@/hooks/useNearestAirport';
 
 type TabType = "oneway" | "roundtrip" | "multicity";
 
-interface FlightLeg { id: string; from: string; to: string; date: string; }
+interface FlightLeg { from: string; to: string; date: string; }
 interface PassengerCounts { adults: number; children: number; infants: number; }
 
 const slides = [
-  { image: "/images/hero-home-01.jpg", label: "Luxury Escape", title: "Maldives Overwater Paradise", subtitle: "Crystal waters and private villas await your arrival" },
-  { image: "/images/hero-home-02.jpg", label: "Nature Retreat", title: "Swiss Alps Adventure", subtitle: "Breathtaking peaks and serene mountain lakes" },
-  { image: "/images/hero-home-03.jpg", label: "Urban Explorer", title: "Discover Tokyo", subtitle: "Where ancient tradition meets futuristic innovation" },
-  { image: "/images/hero-home-04.jpg", label: "Romantic Getaway", title: "Paris, City of Lights", subtitle: "Iconic landmarks and world-class cuisine at every corner" },
-  { image: "/images/hero-home-05.jpg", label: "Tropical Bliss", title: "Maldives Beach Escape", subtitle: "Turquoise lagoons and powder-white sand beaches" },
-  { image: "/images/hero-home-06.jpg", label: "Cultural Journey", title: "Bagan, Land of Temples", subtitle: "Thousands of ancient pagodas across a mystical landscape" },
+  { image: "https://images.unsplash.com/photo-1500835556837-99ac94a94552?w=1920&q=80", label: "Luxury Escape", title: "Maldives Overwater Paradise", subtitle: "Crystal waters and private villas await your arrival" },
+  { image: "https://images.unsplash.com/photo-1476514525535-3be9f01f19e4?w=1920&q=80", label: "Nature Retreat", title: "Swiss Alps Adventure", subtitle: "Breathtaking peaks and serene mountain lakes" },
+  { image: "https://images.unsplash.com/photo-1503221383503-4a7621a78ad3?w=1920&q=80", label: "Urban Explorer", title: "Discover Tokyo", subtitle: "Where ancient tradition meets futuristic innovation" },
+  { image: "https://images.unsplash.com/photo-1548013146-724b4e8f0c4f?w=1920&q=80", label: "Romantic Getaway", title: "Paris, City of Lights", subtitle: "Iconic landmarks and world-class cuisine at every corner" },
+  { image: "https://images.unsplash.com/photo-1514282401047-d79a71a590e8?w=1920&q=80", label: "Tropical Bliss", title: "Maldives Beach Escape", subtitle: "Turquoise lagoons and powder-white sand beaches" },
+  { image: "https://images.unsplash.com/photo-1537996194471-e657f9e13fba?w=1920&q=80", label: "Cultural Journey", title: "Bagan, Land of Temples", subtitle: "Thousands of ancient pagodas across a mystical landscape" },
 ];
 
 function StatsCard({ icon, title, description }: { icon: string; title: string; description: string }) {
@@ -45,42 +45,15 @@ function AirportInput({ label, value, onChange, placeholder, icon }: { label: st
   const [isOpen, setIsOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [highlightIndex, setHighlightIndex] = useState(-1);
-  const [amadeusResults, setAmadeusResults] = useState<Airport[]>([]);
-  const [loadingAmadeus, setLoadingAmadeus] = useState(false);
   const wrapperRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
 
-  // Static search
-  const staticFiltered = airports.filter((a) => {
+  const filtered = airports.filter((a) => {
     const q = query.toLowerCase().trim();
     if (!q) return airports.slice(0, 8);
     return a.code.toLowerCase().includes(q) || a.city.toLowerCase().includes(q) || a.country.toLowerCase().includes(q);
   });
-
-  // Merge static + Amadeus, dedupe by code
-  const staticCodes = new Set(staticFiltered.map((a) => a.code));
-  const merged: Airport[] = [
-    ...staticFiltered,
-    ...amadeusResults.filter((a) => !staticCodes.has(a.code)),
-  ];
-  const filtered = merged.slice(0, 50);
-
-  // Debounced Amadeus API call
-  useEffect(() => {
-    const q = query.trim();
-    if (q.length < 2) { setAmadeusResults([]); return; }
-    const timer = setTimeout(async () => {
-      setLoadingAmadeus(true);
-      try {
-        const res = await fetch(`/api/amadeus?action=airports&keyword=${encodeURIComponent(q)}`);
-        const data = await res.json();
-        if (data.airports) setAmadeusResults(data.airports);
-      } catch { /* ignore */ }
-      setLoadingAmadeus(false);
-    }, 400);
-    return () => clearTimeout(timer);
-  }, [query]);
 
   useEffect(() => {
     function handleClick(e: MouseEvent) { if (wrapperRef.current && !wrapperRef.current.contains(e.target as Node)) setIsOpen(false); }
@@ -115,7 +88,7 @@ function AirportInput({ label, value, onChange, placeholder, icon }: { label: st
 
   return (
     <div ref={wrapperRef} className="relative flex-1 min-w-[140px]">
-      {icon && (
+      {label && (
       <label className="block text-gray-500 text-xs uppercase tracking-wider mb-1 flex items-center gap-1">
         <span className="text-[#D4AF37]">{icon}</span>{label}
       </label>
@@ -136,7 +109,7 @@ function AirportInput({ label, value, onChange, placeholder, icon }: { label: st
           ))}
         </div>
       )}
-      {isOpen && query.trim() && filtered.length === 0 && !loadingAmadeus && (
+      {isOpen && query.trim() && filtered.length === 0 && (
         <div className="absolute top-full mt-1 left-0 right-0 bg-white border border-gray-200 rounded-xl z-[100] shadow-xl">
           <div className="px-4 py-6 text-center text-gray-400 text-sm">No airports found for &ldquo;{query}&rdquo;</div>
         </div>
@@ -221,9 +194,7 @@ export default function HomePage() {
   const [returnDate, setReturnDate] = useState("");
   const [passengers, setPassengers] = useState<PassengerCounts>({ adults: 1, children: 0, infants: 0 });
   const [travelClass, setTravelClass] = useState("Economy");
-  const [multiCityLegs, setMultiCityLegs] = useState<FlightLeg[]>([
-    { id: 'leg1', from: "", to: "", date: "" }, { id: 'leg2', from: "", to: "", date: "" }
-  ]);
+  const [multiCityLegs, setMultiCityLegs] = useState<FlightLeg[]>([{ from: "", to: "", date: "" }, { from: "", to: "", date: "" }]);
   const [clientType, setClientType] = useState<'local' | 'foreigner'>('local');
 
   // Auto-detect nearest airport for departure
@@ -257,11 +228,10 @@ export default function HomePage() {
     }
   }, [clientType]);
 
-  let nextLegId = 3;
-  const handleAddLeg = () => { if (multiCityLegs.length < 6) setMultiCityLegs([...multiCityLegs, { id: 'leg' + (nextLegId++), from: "", to: "", date: "" }]); };
-  const handleRemoveLeg = (id: string) => { if (multiCityLegs.length > 2) setMultiCityLegs(multiCityLegs.filter((l) => l.id !== id)); };
-  const updateMultiCityLeg = (id: string, field: keyof Omit<FlightLeg, 'id'>, value: string) => {
-    setMultiCityLegs(multiCityLegs.map((l) => l.id === id ? { ...l, [field]: value } : l));
+  const handleAddLeg = () => { if (multiCityLegs.length < 6) setMultiCityLegs([...multiCityLegs, { from: "", to: "", date: "" }]); };
+  const handleRemoveLeg = (index: number) => { if (multiCityLegs.length > 2) setMultiCityLegs(multiCityLegs.filter((_, i) => i !== index)); };
+  const updateMultiCityLeg = (index: number, field: keyof FlightLeg, value: string) => {
+    const updated = [...multiCityLegs]; updated[index] = { ...updated[index], [field]: value }; setMultiCityLegs(updated);
   };
 
   const handleSearch = (e: React.FormEvent) => {
@@ -297,17 +267,15 @@ export default function HomePage() {
 
   return (
     <main className="min-h-screen bg-[#FFFDF5]">
-      {/* ========== Hero Section ========== */}
-      <section className="relative w-full overflow-visible">
-        {/* Slides background */}
-        <div className="relative h-[400px] md:h-[440px] w-full">
+      {/* ========== Hero (slides only) ========== */}
+      <section className="relative min-h-[700px] md:min-h-[800px] w-full overflow-visible">
         {slides.map((slide, index) => (
           <div key={index}
             className={"absolute inset-0 transition-all duration-700 ease-in-out " + (index === currentSlide ? "opacity-100 z-10" : index === prevSlide ? "opacity-0 z-0" : "opacity-0 z-0")}>
             <div className="absolute inset-0 bg-cover bg-center"
               style={{ backgroundImage: `url(${slide.image})` }} />
             <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-black/30" />
-            <div className="absolute top-12 left-0 right-0 text-center px-4">
+            <div className="absolute top-14 md:top-18 left-0 right-0 text-center px-4">
               <span className="text-[#D4AF37] text-xs md:text-sm uppercase tracking-[0.3em] font-semibold">{slide.label}</span>
               <h2 className="text-3xl md:text-5xl lg:text-6xl font-bold text-white mt-2 mb-3" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>{slide.title}</h2>
               <p className="text-white/70 text-base md:text-lg max-w-xl mx-auto">{slide.subtitle}</p>
@@ -320,20 +288,17 @@ export default function HomePage() {
         <button onClick={nextSlide} className="absolute right-4 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center text-white hover:bg-white/20 transition-all cursor-pointer">
           <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
         </button>
-        <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-30 flex gap-3">
+        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-30 flex gap-3">
           {slides.map((_, index) => (
             <button key={index} onClick={() => goToSlide(index)}
               className={"w-3 h-3 rounded-full transition-all duration-300 cursor-pointer " + (index === currentSlide ? "bg-[#D4AF37] scale-125 shadow-lg shadow-[#D4AF37]/50" : "bg-white/40 hover:bg-white/70")}
               aria-label={"Go to slide " + (index + 1)} />
           ))}
         </div>
-        </div>
 
-        {/* Search Engine */}
-        <div className="relative z-30 px-4 -mt-48 md:-mt-56 pb-8">
-          <div className="max-w-5xl mx-auto">
-          {/* Service Icons — above flight search */}
-          <div className="flex flex-wrap justify-center gap-1.5 mb-4">
+        {/* ========== Service Navigation Icons (hero middle, below slide text) ========== */}
+        <div className="absolute left-0 right-0 top-[46%] md:top-[48%] z-20 px-1">
+          <div className="max-w-5xl mx-auto flex flex-wrap justify-center gap-1 md:gap-2">
             {[
               { label: 'Flights', icon: '✈️', href: '/' },
               { label: 'Tours', icon: '🏔️', href: '/tours' },
@@ -345,18 +310,22 @@ export default function HomePage() {
               { label: 'Sky Lounge', icon: '✨', href: '/mingalar' },
             ].map((item) => (
               <Link key={item.href} href={item.href}
-                className="flex flex-col items-center py-2 px-3 rounded-xl bg-white/80 backdrop-blur-sm border border-gray-200 hover:border-[#D4AF37] hover:bg-white hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 group cursor-pointer min-w-[64px]"
+                className="flex flex-col items-center py-1 px-1.5 rounded-md bg-white/85 backdrop-blur-sm border border-white/20 hover:border-[#D4AF37] hover:bg-white hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 group cursor-pointer text-center min-w-[52px]"
               >
-                <span className="text-lg group-hover:scale-110 transition-transform">{item.icon}</span>
-                <span className="text-[10px] font-semibold text-gray-700 group-hover:text-[#D4AF37] transition-colors mt-1">{item.label}</span>
+                <span className="text-sm md:text-base group-hover:scale-110 transition-transform">{item.icon}</span>
+                <span className="text-[9px] md:text-[10px] font-semibold text-gray-800 group-hover:text-[#D4AF37] transition-colors mt-0.5">{item.label}</span>
               </Link>
             ))}
           </div>
+        </div>
 
+        {/* ========== Search Engine (inside hero, below icons) ========== */}
+        <div className="absolute left-0 right-0 top-[57%] z-30 px-4">
+          <div className="max-w-5xl mx-auto">
           <div className="bg-white rounded-2xl border-2 border-[#2563EB] shadow-xl p-5 md:p-7">
             <div className="flex gap-1 mb-5 bg-gray-100 rounded-lg p-1 w-fit">
               {(["oneway", "roundtrip", "multicity"] as TabType[]).map((tab) => (
-                <button key={tab} onClick={() => { setActiveTab(tab); if (tab !== "roundtrip") setReturnDate(""); if (tab === "multicity") setMultiCityLegs([{ id: 'leg1', from: "", to: "", date: "" }, { id: 'leg2', from: "", to: "", date: "" }]); }}
+                <button key={tab} onClick={() => { setActiveTab(tab); if (tab !== "roundtrip") setReturnDate(""); if (tab === "multicity") setMultiCityLegs([{ from: "", to: "", date: "" }, { from: "", to: "", date: "" }]); }}
                   className={"px-4 py-2 rounded-md text-sm font-medium transition-all duration-300 cursor-pointer " +
                     (activeTab === tab ? "bg-[#D4AF37] text-white shadow-md" : "text-gray-500 hover:text-gray-900 hover:bg-gray-200")}>
                   {tab === "oneway" ? "✈ One Way" : tab === "roundtrip" ? "🔄 Round Trip" : "🌐 Multi-City"}
@@ -368,28 +337,28 @@ export default function HomePage() {
               {activeTab === "multicity" ? (
                 <div className="space-y-4">
                   {multiCityLegs.map((leg, index) => (
-                    <div key={leg.id} className="flex items-start gap-2">
-                      <AirportInput label="" value={leg.from} onChange={(val) => updateMultiCityLeg(leg.id, "from", val)} placeholder="From city"
+                    <div key={index} className="flex items-start gap-2">
+                      <span className="text-gray-400 text-xs pt-3 font-medium w-10 flex-shrink-0">#{index + 1}</span>
+                      <AirportInput label="" value={leg.from} onChange={(val) => updateMultiCityLeg(index, "from", val)} placeholder="From city"
                         icon={<svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" /></svg>} />
-                      <AirportInput label="" value={leg.to} onChange={(val) => updateMultiCityLeg(leg.id, "to", val)} placeholder="To city"
+                      <AirportInput label="" value={leg.to} onChange={(val) => updateMultiCityLeg(index, "to", val)} placeholder="To city"
                         icon={<svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /></svg>} />
                       <div className="flex-1 min-w-[110px]">
-                        <label className="block text-gray-500 text-xs uppercase tracking-wider mb-1 flex items-center gap-1">
-                          <span className="text-[#D4AF37]"><svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg></span>Date
-                        </label>
-                        <input type="date" value={leg.date} onChange={(e) => updateMultiCityLeg(leg.id, "date", e.target.value)}
+                        <label className="block text-gray-500 text-xs mb-1 sr-only">Date</label>
+                        <input type="date" value={leg.date} onChange={(e) => updateMultiCityLeg(index, "date", e.target.value)}
                           min={new Date().toISOString().split("T")[0]}
-                          className="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-3 text-gray-900 text-sm outline-none focus:border-[#D4AF37] transition-all" />
+                          className="w-full bg-gray-50 border border-gray-200 rounded-lg px-2 py-3 text-gray-900 text-sm outline-none focus:border-[#D4AF37] transition-all" />
                       </div>
                       {multiCityLegs.length > 2 && (
-                        <button type="button" onClick={(e) => { e.stopPropagation(); handleRemoveLeg(leg.id); }}
-                          className="relative z-20 flex items-center justify-center w-8 h-8 mt-3 rounded-full text-red-500 hover:text-white hover:bg-red-500 border-2 border-red-300 hover:border-red-500 transition-all cursor-pointer flex-shrink-0 text-lg font-bold leading-none" title="Remove this leg">✕</button>
+                        <button type="button" onClick={() => handleRemoveLeg(index)}
+                          className="flex items-center justify-center w-7 h-7 mt-3 rounded-full text-gray-300 hover:text-red-400 hover:bg-red-50 transition-all cursor-pointer flex-shrink-0 text-sm">✕</button>
                       )}
                     </div>
                   ))}
                   {multiCityLegs.length < 6 && (
-                    <div className="flex items-start">
-                      <div className="flex-1">
+                    <div className="flex items-start gap-2">
+                      <div className="w-10 flex-shrink-0" />
+                      <div className="flex-1 min-w-[140px]">
                         <button type="button" onClick={handleAddLeg}
                           className="flex items-center gap-2 text-[#D4AF37] hover:text-[#C5A028] text-sm font-medium transition-colors cursor-pointer py-1">
                           <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" /></svg>
