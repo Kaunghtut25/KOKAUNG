@@ -268,7 +268,7 @@ export default function HomePage() {
   return (
     <main className="min-h-screen bg-[#FFFDF5]">
       {/* ========== Hero (slides only) ========== */}
-      <section className="relative min-h-[700px] md:min-h-[800px] w-full overflow-visible">
+      <section className="relative min-h-[780px] md:min-h-[890px] w-full pb-8">
         {slides.map((slide, index) => (
           <div key={index}
             className={"absolute inset-0 transition-all duration-700 ease-in-out " + (index === currentSlide ? "opacity-100 z-10" : index === prevSlide ? "opacity-0 z-0" : "opacity-0 z-0")}>
@@ -319,10 +319,8 @@ export default function HomePage() {
           </div>
         </div>
 
-              </section>
-
 {/* ========== Search Engine (inside hero, below icons) ========== */}
-        <div className="relative z-30 px-4 mt-6 md:mt-8">
+        <div className="absolute left-0 right-0 top-[57%] z-30 px-4">
           <div className="max-w-5xl mx-auto">
           <div className="bg-white rounded-2xl border-2 border-[#2563EB] shadow-xl p-5 md:p-7">
             <div className="flex gap-1 mb-5 bg-gray-100 rounded-lg p-1 w-fit">
@@ -340,7 +338,7 @@ export default function HomePage() {
                 <div className="space-y-4">
                   {multiCityLegs.map((leg, index) => (
                     <div key={index} className="flex items-start gap-2">
-                      
+
                       <AirportInput label="" value={leg.from} onChange={(val) => updateMultiCityLeg(index, "from", val)} placeholder="From city"
                         icon={<svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" /></svg>} />
                       <AirportInput label="" value={leg.to} onChange={(val) => updateMultiCityLeg(index, "to", val)} placeholder="To city"
@@ -464,12 +462,10 @@ export default function HomePage() {
           </div>
         </div>
         </div>
-
+      </section>
 
       {/* ========== Popular Destinations ========== */}
-      <div className="mt-6 md:mt-10">
       <PopularDestinations />
-      </div>
 
       <section className="py-16 bg-[#FFFDF5]">
         <div className="max-w-6xl mx-auto px-4 grid grid-cols-2 md:grid-cols-4 gap-6">
