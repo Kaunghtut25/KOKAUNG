@@ -268,7 +268,7 @@ export default function HomePage() {
   return (
     <main className="min-h-screen bg-[#FFFDF5]">
       {/* ========== Hero (slides only) ========== */}
-      <section className="relative min-h-[890px] md:min-h-[920px] w-full overflow-hidden">
+      <section className="relative min-h-[700px] md:min-h-[800px] w-full overflow-visible">
         {slides.map((slide, index) => (
           <div key={index}
             className={"absolute inset-0 transition-all duration-700 ease-in-out " + (index === currentSlide ? "opacity-100 z-10" : index === prevSlide ? "opacity-0 z-0" : "opacity-0 z-0")}>
@@ -335,10 +335,9 @@ export default function HomePage() {
 
             <form onSubmit={handleSearch} className="space-y-3">
               {activeTab === "multicity" ? (<>
-                <div className="space-y-4 max-h-[380px] overflow-y-auto">
+                <div className="space-y-4 max-h-[320px] overflow-y-auto pr-1">
                   {multiCityLegs.map((leg, index) => (
                     <div key={index} className="flex items-start gap-2">
-                      <span className="w-10 flex-shrink-0" />
                       <AirportInput label="" value={leg.from} onChange={(val) => updateMultiCityLeg(index, "from", val)} placeholder="From city"
                         icon={<svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" /></svg>} />
                       <AirportInput label="" value={leg.to} onChange={(val) => updateMultiCityLeg(index, "to", val)} placeholder="To city"
