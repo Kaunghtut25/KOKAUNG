@@ -95,7 +95,7 @@ function AirportInput({ label, value, onChange, placeholder, icon }: { label: st
       )}
       <input ref={inputRef} type="text" value={isOpen ? query : value}
         onChange={(e) => { setQuery(e.target.value); onChange(e.target.value); setIsOpen(true); setHighlightIndex(-1); }}
-        onFocus={() => { setIsOpen(true); setQuery(value); }}
+        onFocus={(e) => { setIsOpen(true); setQuery(value); e.target.select(); }}
         onKeyDown={handleKeyDown} placeholder={placeholder}
         className="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 text-gray-900 placeholder-gray-400 outline-none focus:border-[#D4AF37] transition-all duration-200" />
       {isOpen && filtered.length > 0 && (
