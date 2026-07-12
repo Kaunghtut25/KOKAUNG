@@ -328,30 +328,6 @@ export default function HomePage() {
           ))}
         </div>
 
-        {/* Service Navigation Icons — overlaid on hero slides */}
-        <div className="absolute left-0 right-0 bottom-[-20px] z-20 px-1">
-          <div className="max-w-5xl mx-auto flex flex-wrap justify-center gap-1 md:gap-2">
-            {[
-              { label: 'Flights', icon: '✈️', href: '/' },
-              { label: 'Tours', icon: '🏔️', href: '/tours' },
-              { label: 'Hotels', icon: '🏨', href: '/hotels' },
-              { label: 'Cars', icon: '🚗', href: '/cars' },
-              { label: 'Visas', icon: '🛂', href: '/visas' },
-              { label: 'Insurance', icon: '🛡️', href: '/insurance' },
-              { label: 'Cruises', icon: '🚢', href: '/cruises' },
-              { label: 'Sky Lounge', icon: '✨', href: '/mingalar' },
-            ].map((item) => (
-              <Link key={item.href} href={item.href}
-                className="flex flex-col items-center py-1 px-1.5 rounded-md bg-white/85 backdrop-blur-sm border border-white/20 hover:border-[#D4AF37] hover:bg-white hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 group cursor-pointer text-center min-w-[52px]"
-              >
-                <span className="text-sm md:text-base group-hover:scale-110 transition-transform">{item.icon}</span>
-                <span className="text-[9px] md:text-[10px] font-semibold text-gray-800 group-hover:text-[#D4AF37] transition-colors mt-0.5">{item.label}</span>
-              </Link>
-            ))}
-          </div>
-        </div>
-        </div>
-
         {/* Search Engine */}
         <div className="relative z-30 px-4 -mt-10 md:-mt-8 pb-8">
           <div className="max-w-5xl mx-auto">
