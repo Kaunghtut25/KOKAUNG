@@ -42,9 +42,19 @@ export default function LoginPage() {
     setDebug('');
     try {
       const response = await loginApi({ email, password });
-      localStorage.setItem('a9token', response.token);
-      localStorage.setItem('a9user', JSON.stringify(response.user));
-      router.push('/');
+      const { token, user } = response;
+      
+      // Admin → store in admin_token, redirect to dashboard
+      if (user.role === 'admin') {
+        localStorage.setItem('admin_token', token);
+        localStorage.setItem('admin_user', JSON.stringify(user));
+        router.push('/admin/dashboard');
+      } else {
+        // Client → store in client token, redirect to homepage
+        localStorage.setItem('client_token', token);
+        localStorage.setItem('client_user', JSON.stringify(user));
+        router.push('/');
+      }
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : 'Unknown error';
       setError(msg);

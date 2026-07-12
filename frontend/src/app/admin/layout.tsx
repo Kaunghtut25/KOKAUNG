@@ -16,8 +16,22 @@ export default function AdminLayout({
     const token = localStorage.getItem("admin_token");
     if (!token) {
       router.replace("/auth/login");
-    } else {
+      return;
+    }
+    // Verify token contains admin role
+    try {
+      const payload = JSON.parse(atob(token));
+      if (payload.role !== "admin") {
+        localStorage.removeItem("admin_token");
+        localStorage.removeItem("admin_user");
+        router.replace("/auth/login");
+        return;
+      }
       setAuthorized(true);
+    } catch {
+      localStorage.removeItem("admin_token");
+      localStorage.removeItem("admin_user");
+      router.replace("/auth/login");
     }
   }, [router]);
 

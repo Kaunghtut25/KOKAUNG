@@ -5,10 +5,10 @@ seed();
 
 export async function POST(request: NextRequest) {
   try {
-    const { name, email, password } = await request.json();
+    const { name, fullName, email, password } = await request.json();
 
-    if (!name || !email || !password) {
-      return NextResponse.json({ success: false, message: 'Name, email, and password required' }, { status: 400 });
+    if ((!name && !fullName) || !email || !password) {
+      return NextResponse.json({ success: false, message: 'Full name, email, and password required' }, { status: 400 });
     }
 
     const users: any[] = getAll('users');
@@ -16,7 +16,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ success: false, message: 'Email already registered' }, { status: 409 });
     }
 
-    const user = create('users', { name, email, role: 'user' }) as any;
+    const user = create('users', { name: name || fullName, email, password, role: 'user' }) as any;
 
     const token = Buffer.from(JSON.stringify({ id: user._id, email: user.email, role: user.role })).toString('base64');
 
