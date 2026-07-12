@@ -3,7 +3,7 @@
 import { useRef, useState, useEffect, useCallback } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
-const STEP = 260;
+const STEP = 320;
 const AUTOPLAY_MS = 4000;
 
 interface ScrollingRowProps {

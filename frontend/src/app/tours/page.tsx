@@ -174,7 +174,7 @@ export default function ToursPage() {
         </div>
         <ScrollingRow>
           {categoryTours.slice(0, 10).map((item) => (
-            <div key={item._id} className="w-[320px] flex-shrink-0 snap-start">
+            <div key={item._id} className="w-[300px] flex-shrink-0 snap-start">
               <TourCard tour={item} currency={currency} />
             </div>
           ))}
@@ -282,8 +282,7 @@ export default function ToursPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {displayTours.map((item) => (
                 <TourCard key={item._id} tour={item} currency={currency} />
-              ))}
-            </div>
+              ))}</div>
 
             {/* Pagination */}
             {computedTotalPages > 1 && (

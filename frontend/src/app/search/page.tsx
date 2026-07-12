@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useCallback, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
+import Link from 'next/link';
 import SearchBar from '@/components/SearchBar';
 import CurrencyToggle from '@/components/CurrencyToggle';
 import TourCard from '@/components/TourCard';
@@ -10,6 +11,17 @@ import CarCard from '@/components/CarCard';
 import { SearchResults, Tour, Hotel, Car, searchAll, SearchParams } from '@/lib/api';
 
 type TabType = 'all' | 'tours' | 'hotels' | 'cars';
+
+const serviceLinks = [
+  { label: 'Flights', icon: '✈️', href: '/search' },
+  { label: 'Tours', icon: '🏔️', href: '/tours' },
+  { label: 'Hotels', icon: '🏨', href: '/hotels' },
+  { label: 'Cars', icon: '🚗', href: '/cars' },
+  { label: 'Visas', icon: '🛂', href: '/visas' },
+  { label: 'Insurance', icon: '🛡️', href: '/insurance' },
+  { label: 'Cruises', icon: '🚢', href: '/cruises' },
+  { label: 'Sky Lounge', icon: '✨', href: '/mingalar' },
+];
 
 function SkeletonCard() {
   return (
@@ -122,9 +134,24 @@ function SearchPageContent() {
           >
             Discover Your Journey
           </h1>
-          <p className="text-gray-400 text-center mb-10 text-lg">
+          <p className="text-gray-400 text-center mb-6 text-lg">
             Search tours, hotels, and car rentals across Myanmar
           </p>
+
+          {/* Service Navigation Icons */}
+          <div className="flex flex-wrap justify-center gap-1.5 mb-8">
+            {serviceLinks.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                className="flex flex-col items-center py-2 px-3 rounded-xl bg-white/10 backdrop-blur-sm border border-white/10 hover:border-[#D4AF37] hover:bg-white/15 hover:shadow-lg hover:shadow-[#D4AF37]/10 hover:-translate-y-0.5 transition-all duration-200 group cursor-pointer min-w-[64px]"
+              >
+                <span className="text-lg md:text-xl group-hover:scale-110 transition-transform">{item.icon}</span>
+                <span className="text-[10px] md:text-[11px] font-semibold text-gray-300 group-hover:text-[#D4AF37] transition-colors mt-1">{item.label}</span>
+              </Link>
+            ))}
+          </div>
+
           <SearchBar onSearch={handleSearch} initialParams={initialParams} />
         </div>
       </section>

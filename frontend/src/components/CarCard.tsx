@@ -25,7 +25,6 @@ export default function CarCard({ car, currency = 'MMK' }: CarCardProps) {
   const mainImage = getImages(car.images)[0] || FALLBACK_IMAGE;
   const displayImage = imgError ? FALLBACK_IMAGE : mainImage;
 
-  // Get cheapest pricing
   const cheapestOption =
     car.pricingWithDriver && car.pricingWithDriver.length > 0
       ? car.pricingWithDriver.reduce((prev, curr) =>
@@ -37,9 +36,7 @@ export default function CarCard({ car, currency = 'MMK' }: CarCardProps) {
 
   const currencySymbol = currency === 'MMK' ? 'Ks' : '$';
   const displayPrice = cheapestOption
-    ? currency === 'MMK'
-      ? cheapestOption.priceMMK
-      : cheapestOption.priceUSD
+    ? currency === 'MMK' ? cheapestOption.priceMMK : cheapestOption.priceUSD
     : 0;
 
   const features = car.features || [];
@@ -54,7 +51,7 @@ export default function CarCard({ car, currency = 'MMK' }: CarCardProps) {
       className={`group relative rounded-2xl overflow-hidden cursor-pointer border transition-all duration-300 ${
         isHovered
           ? 'border-[#D4AF37]/60 shadow-xl shadow-[#D4AF37]/10 scale-[1.02]'
-          : 'border-gold/20 shadow-lg shadow-black/20'
+          : 'border-gray-200 shadow-lg shadow-black/10'
       }`}
     >
       {/* Image container */}
@@ -71,13 +68,13 @@ export default function CarCard({ car, currency = 'MMK' }: CarCardProps) {
         <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent" />
 
         {/* Car type badge */}
-        <span className="absolute top-4 left-4 px-3 py-1 rounded-full bg-[#D4AF37]/90 text-gray-900 text-xs font-semibold backdrop-blur-sm">
+        <span className="absolute top-4 left-4 px-2.5 py-0.5 rounded-full bg-[#D4AF37]/90 text-gray-900 text-[11px] font-semibold backdrop-blur-sm">
           {car.carType}
         </span>
 
         {/* Capacity badge */}
-        <span className="absolute top-4 right-4 px-3 py-1 rounded-full bg-black/60 text-white text-xs font-medium backdrop-blur-sm border border-white/10 inline-flex items-center gap-1">
-          <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+        <span className="absolute top-4 right-4 px-2.5 py-0.5 rounded-full bg-black/60 text-white text-[11px] font-medium backdrop-blur-sm border border-white/10 inline-flex items-center gap-1">
+          <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
           </svg>
           {car.capacity} seats
@@ -86,13 +83,13 @@ export default function CarCard({ car, currency = 'MMK' }: CarCardProps) {
         {/* Bottom overlay */}
         <div className="absolute bottom-0 left-0 right-0 p-5">
           <h3
-            className="text-white text-xl font-bold mb-1"
+            className="text-white text-xl font-bold mb-1 line-clamp-1"
             style={{ fontFamily: "'Playfair Display', Georgia, serif" }}
           >
             {car.carType}
           </h3>
           <div className="flex items-center justify-between">
-            <span className="text-gray-300 text-sm">
+            <span className="text-gray-300 text-xs">
               {cheapestOption ? cheapestOption.duration : 'Contact us'}
             </span>
             <div className="text-right">
@@ -100,7 +97,7 @@ export default function CarCard({ car, currency = 'MMK' }: CarCardProps) {
                 {currencySymbol} {displayPrice.toLocaleString()}
               </span>
               {cheapestOption && (
-                <span className="text-gray-400 text-xs ml-1">/{cheapestOption.duration}</span>
+                <span className="text-gray-400 text-[11px] ml-0.5">/{cheapestOption.duration}</span>
               )}
             </div>
           </div>
@@ -109,17 +106,17 @@ export default function CarCard({ car, currency = 'MMK' }: CarCardProps) {
 
       {/* Features */}
       {features.length > 0 && (
-        <div className="p-4 flex flex-wrap gap-2">
+        <div className="p-4 flex flex-wrap gap-1.5">
           {visibleFeatures.map((feature, idx) => (
             <span
               key={idx}
-              className="px-2 py-0.5 rounded-full bg-[#D4AF37]/10 text-[#D4AF37] text-xs border border-[#D4AF37]/20"
+              className="px-2.5 py-0.5 rounded-full bg-[#D4AF37]/10 text-[#B8960F] text-[10px] font-medium border border-[#D4AF37]/20"
             >
               {feature}
             </span>
           ))}
           {extraCount > 0 && (
-            <span className="px-2 py-0.5 rounded-full bg-white/5 text-gray-400 text-xs">
+            <span className="px-2.5 py-0.5 rounded-full bg-gray-100 text-gray-400 text-[10px]">
               +{extraCount} more
             </span>
           )}

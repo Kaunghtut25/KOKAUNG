@@ -63,12 +63,12 @@ export default function HotelsPage() {
     } catch (err) {
       console.error('Failed to fetch hotels:', err);
       const fallbackHotels: Hotel[] = [
-        { _id: 'fh1', slug: 'fbh1', name: 'Sule Shangri-La Yangon', location: 'Yangon', rating: 4.7, pricePerNightMMK: 180000, pricePerNightUSD: 86, images: ['https://picsum.photos/seed/a9hotel1/600/400'], amenities: [], availableRooms: 20, description: '', reviewCount: 320 },
-        { _id: 'fh2', slug: 'fbh2', name: 'The Strand Yangon', location: 'Yangon', rating: 4.9, pricePerNightMMK: 350000, pricePerNightUSD: 167, images: ['https://picsum.photos/seed/a9hotel2/600/400'], amenities: [], availableRooms: 8, description: '', reviewCount: 412 },
-        { _id: 'fh3', slug: 'fbh3', name: 'Aureum Palace Bagan', location: 'Bagan', rating: 4.8, pricePerNightMMK: 220000, pricePerNightUSD: 105, images: ['https://picsum.photos/seed/a9hotel3/600/400'], amenities: [], availableRooms: 30, description: '', reviewCount: 225 },
-        { _id: 'fh4', slug: 'fbh4', name: 'Inle Princess Resort', location: 'Inle Lake', rating: 4.6, pricePerNightMMK: 160000, pricePerNightUSD: 76, images: ['https://picsum.photos/seed/a9hotel4/600/400'], amenities: [], availableRooms: 25, description: '', reviewCount: 178 },
-        { _id: 'fh5', slug: 'fbh5', name: 'Ngapali Bay Hotel', location: 'Ngapali Beach', rating: 4.7, pricePerNightMMK: 250000, pricePerNightUSD: 119, images: ['https://picsum.photos/seed/a9hotel5/600/400'], amenities: [], availableRooms: 40, description: '', reviewCount: 168 },
-        { _id: 'fh6', slug: 'fbh6', name: 'Mandalay Hill Resort', location: 'Mandalay', rating: 4.3, pricePerNightMMK: 120000, pricePerNightUSD: 57, images: ['https://picsum.photos/seed/a9hotel6/600/400'], amenities: [], availableRooms: 55, description: '', reviewCount: 190 },
+        { _id: 'fh1', slug: 'fbh1', name: 'Sule Shangri-La Yangon', location: 'Yangon', rating: 4.7, pricePerNightMMK: 180000, pricePerNightUSD: 86, images: ['https://picsum.photos/seed/a9hotel1/600/400'], amenities: ['Restaurant', 'Bar', 'Butler Service', 'Spa', 'Pool'], availableRooms: 20, description: '', reviewCount: 320 },
+        { _id: 'fh2', slug: 'fbh2', name: 'The Strand Yangon', location: 'Yangon', rating: 4.9, pricePerNightMMK: 350000, pricePerNightUSD: 167, images: ['https://picsum.photos/seed/a9hotel2/600/400'], amenities: ['Restaurant', 'Bar', 'Butler Service', 'Spa', 'Fitness Center'], availableRooms: 8, description: '', reviewCount: 412 },
+        { _id: 'fh3', slug: 'fbh3', name: 'Aureum Palace Bagan', location: 'Bagan', rating: 4.8, pricePerNightMMK: 220000, pricePerNightUSD: 105, images: ['https://picsum.photos/seed/a9hotel3/600/400'], amenities: ['Restaurant', 'Bar', 'Butler Service', 'Spa', 'Garden'], availableRooms: 30, description: '', reviewCount: 225 },
+        { _id: 'fh4', slug: 'fbh4', name: 'Inle Princess Resort', location: 'Inle Lake', rating: 4.6, pricePerNightMMK: 160000, pricePerNightUSD: 76, images: ['https://picsum.photos/seed/a9hotel4/600/400'], amenities: ['Restaurant', 'Bar', 'Butler Service', 'Spa', 'Lake View'], availableRooms: 25, description: '', reviewCount: 178 },
+        { _id: 'fh5', slug: 'fbh5', name: 'Ngapali Bay Hotel', location: 'Ngapali Beach', rating: 4.7, pricePerNightMMK: 250000, pricePerNightUSD: 119, images: ['https://picsum.photos/seed/a9hotel5/600/400'], amenities: ['Restaurant', 'Bar', 'Butler Service', 'Spa', 'Beach Access'], availableRooms: 40, description: '', reviewCount: 168 },
+        { _id: 'fh6', slug: 'fbh6', name: 'Mandalay Hill Resort', location: 'Mandalay', rating: 4.3, pricePerNightMMK: 120000, pricePerNightUSD: 57, images: ['https://picsum.photos/seed/a9hotel6/600/400'], amenities: ['Restaurant', 'Bar', 'Butler Service', 'Spa', 'Hill View'], availableRooms: 55, description: '', reviewCount: 190 },
       ];
       setHotels(fallbackHotels);
       setTotal(fallbackHotels.length);
@@ -190,6 +190,17 @@ export default function HotelsPage() {
                     </div>
                   </div>
                 </div>
+                <div className="p-4 flex flex-wrap gap-2">
+                  <span className="px-2 py-0.5 rounded-full bg-[#D4AF37]/10 text-[#D4AF37] text-xs border border-[#D4AF37]/20">Restaurant</span>
+                  <span className="px-2 py-0.5 rounded-full bg-[#D4AF37]/10 text-[#D4AF37] text-xs border border-[#D4AF37]/20">Bar</span>
+                  <span className="px-2 py-0.5 rounded-full bg-[#D4AF37]/10 text-[#D4AF37] text-xs border border-[#D4AF37]/20">Butler Service</span>
+                  <span className="px-2 py-0.5 rounded-full bg-[#D4AF37]/10 text-[#D4AF37] text-xs border border-[#D4AF37]/20">Spa</span>
+                </div>
+                <div className="px-4 pb-4">
+                  <button onClick={(e) => { e.stopPropagation(); window.location.href = '/contact'; }} className="w-full py-2.5 rounded-xl bg-gradient-to-r from-[#D4AF37] to-[#C5A028] hover:from-[#E5C048] hover:to-[#D4AF37] text-gray-900 font-semibold text-sm transition-all duration-300 hover:shadow-lg hover:shadow-[#D4AF37]/20">
+                    Book Now
+                  </button>
+                </div>
               </div>
             </div>
           ))}
@@ -236,6 +247,17 @@ export default function HotelsPage() {
                       </div>
                     </div>
                   </div>
+                </div>
+                <div className="p-4 flex flex-wrap gap-2">
+                  <span className="px-2 py-0.5 rounded-full bg-[#D4AF37]/10 text-[#D4AF37] text-xs border border-[#D4AF37]/20">Restaurant</span>
+                  <span className="px-2 py-0.5 rounded-full bg-[#D4AF37]/10 text-[#D4AF37] text-xs border border-[#D4AF37]/20">Bar</span>
+                  <span className="px-2 py-0.5 rounded-full bg-[#D4AF37]/10 text-[#D4AF37] text-xs border border-[#D4AF37]/20">Butler Service</span>
+                  <span className="px-2 py-0.5 rounded-full bg-[#D4AF37]/10 text-[#D4AF37] text-xs border border-[#D4AF37]/20">Spa</span>
+                </div>
+                <div className="px-4 pb-4">
+                  <button onClick={(e) => { e.stopPropagation(); window.location.href = '/contact'; }} className="w-full py-2.5 rounded-xl bg-gradient-to-r from-[#D4AF37] to-[#C5A028] hover:from-[#E5C048] hover:to-[#D4AF37] text-gray-900 font-semibold text-sm transition-all duration-300 hover:shadow-lg hover:shadow-[#D4AF37]/20">
+                    Book Now
+                  </button>
                 </div>
               </div>
             </div>

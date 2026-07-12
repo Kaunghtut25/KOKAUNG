@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
@@ -10,6 +10,17 @@ export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
+  const serviceLinks = [
+    { label: '✈️ Flights', icon: '✈️', href: '/search' },
+    { label: '🏔️ Tours', icon: '🏔️', href: '/tours' },
+    { label: '🏨 Hotels', icon: '🏨', href: '/hotels' },
+    { label: '🚗 Cars', icon: '🚗', href: '/cars' },
+    { label: '🛂 Visas', icon: '🛂', href: '/visas' },
+    { label: '🛡️ Insurance', icon: '🛡️', href: '/insurance' },
+    { label: '🚢 Cruises', icon: '🚢', href: '/cruises' },
+    { label: '✨ Sky Lounge', icon: '✨', href: '/mingalar' },
+  ];
+
 
   useEffect(() => {
     const handleScroll = () => { setScrolled(window.scrollY > 20); };
@@ -80,10 +91,22 @@ export default function Navbar() {
                   <Link href="/book-now" className="block px-4 py-3 text-sm font-semibold text-gray-700 hover:bg-gray-50 hover:text-[#D4AF37] rounded-t-xl transition-colors">📋 Book Now</Link>
                   <Link href="/contact" className="block px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 hover:text-[#D4AF37] rounded-b-xl border-t border-gray-100 transition-colors">📞 Contact Us</Link>
                 </div>
-              </div>
+              
+            {/* Service Navigation Icons — desktop */}
+            <div className="hidden lg:flex items-center gap-0.5 border-l border-[#D4AF37]/20 pl-3 ml-2">
+              {serviceLinks.map((item) => (
+                <Link key={item.href} href={item.href}
+                  className={`flex flex-col items-center px-2 py-1 rounded-md transition-all duration-200 hover:bg-white/10 group ${
+                    isActive(item.href) ? 'text-[#D4AF37]' : 'text-white/80 hover:text-[#D4AF37]'
+                  }`}
+                  title={item.label}
+                >
+                  <span className="text-sm group-hover:scale-110 transition-transform">{item.icon}</span>
+                  <span className="text-[9px] font-medium mt-0.5">{item.label}</span>
+                </Link>
+              ))}
             </div>
-
-            <button onClick={() => setMobileOpen(!mobileOpen)}
+          (</div>\s*\n\s*</div>\s*\n\s*<button onClick=\{\(\) => setMobileOpen)(!mobileOpen)}
               className="lg:hidden p-2 text-white hover:text-[#D4AF37] transition-colors" aria-label="Toggle menu">
               {mobileOpen ? <HiX className="w-7 h-7" /> : <HiMenuAlt3 className="w-7 h-7" />}
             </button>
@@ -125,7 +148,22 @@ export default function Navbar() {
               }`}>Blog</Link>
           </div>
 
-          <div className="px-6 py-6 border-t border-[#D4AF37]/20 space-y-3">
+          
+          {/* Service Navigation Icons — mobile */}
+          <div className="grid grid-cols-4 gap-1 px-4 py-4 border-t border-[#D4AF37]/10">
+            {serviceLinks.map((item) => (
+              <Link key={item.href} href={item.href} onClick={() => setMobileOpen(false)}
+                className={`flex flex-col items-center py-1.5 px-1 rounded-lg transition-all duration-200 hover:bg-white/10 ${
+                  isActive(item.href) ? 'text-[#D4AF37] bg-[#D4AF37]/10' : 'text-white/70 hover:text-[#D4AF37]'
+                }`}
+              >
+                <span className="text-base">{item.icon}</span>
+                <span className="text-[10px] font-medium mt-0.5">{item.label}</span>
+              </Link>
+            ))}
+          </div>
+
+<div className="px-6 py-6 border-t border-[#D4AF37]/20 space-y-3">
             <Link href="/book-now" onClick={() => setMobileOpen(false)}
               className="block text-center w-full bg-[#D4AF37] text-[#0A1628] font-bold rounded-full py-3 text-sm hover:bg-[#C5A028] hover:shadow-lg transition-all whitespace-nowrap">📋 Book Now</Link>
             <Link href="/contact" onClick={() => setMobileOpen(false)}

@@ -44,17 +44,17 @@ function DestinationCard({ dest }: { dest: Destination }) {
   const [imgError, setImgError] = useState(false);
 
   return (
-    <div className="flex-shrink-0 w-[160px] rounded-xl overflow-hidden border border-gray-200 shadow-sm hover:shadow-md hover:border-[#D4AF37]/40 transition-all group cursor-pointer">
+    <div className="flex-shrink-0 w-[300px] rounded-xl overflow-hidden border border-gray-200 shadow-sm hover:shadow-md hover:border-[#D4AF37]/40 transition-all group cursor-pointer">
       {/* Background image */}
       <img
         src={imgError ? FALLBACK_IMG : dest.imageUrl}
         alt={dest.name}
-        className="w-full h-28 object-cover group-hover:scale-105 transition-transform duration-500"
+        className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-500"
         onError={() => setImgError(true)}
         loading="lazy"
       />
-      <div className="p-3 text-center bg-white">
-        <p className="text-sm font-semibold text-[#0A1628] group-hover:text-[#D4AF37] transition-colors">{dest.name}</p>
+      <div className="p-2 text-center bg-white">
+        <p className="text-lg font-semibold text-[#0A1628] group-hover:text-[#D4AF37] transition-colors">{dest.name}</p>
       </div>
     </div>
   );
