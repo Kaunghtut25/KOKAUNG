@@ -373,11 +373,13 @@ export default function HomePage() {
                         icon={<svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" /></svg>} />
                       <AirportInput label="" value={leg.to} onChange={(val) => updateMultiCityLeg(leg.id, "to", val)} placeholder="To city"
                         icon={<svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /></svg>} />
-                      <div className="flex-1 min-w-[110px] mt-5">
-                        <label className="block text-gray-500 text-xs mb-1 sr-only">Date</label>
+                      <div className="flex-1 min-w-[110px]">
+                        <label className="block text-gray-500 text-xs uppercase tracking-wider mb-1 flex items-center gap-1">
+                          <span className="text-[#D4AF37]"><svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg></span>Date
+                        </label>
                         <input type="date" value={leg.date} onChange={(e) => updateMultiCityLeg(leg.id, "date", e.target.value)}
                           min={new Date().toISOString().split("T")[0]}
-                          className="w-full bg-gray-50 border border-gray-200 rounded-lg px-2 py-3 text-gray-900 text-sm outline-none focus:border-[#D4AF37] transition-all" />
+                          className="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-3 text-gray-900 text-sm outline-none focus:border-[#D4AF37] transition-all" />
                       </div>
                       {multiCityLegs.length > 2 && (
                         <button type="button" onClick={(e) => { e.stopPropagation(); handleRemoveLeg(leg.id); }}
