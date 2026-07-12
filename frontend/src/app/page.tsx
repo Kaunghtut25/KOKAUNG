@@ -319,8 +319,10 @@ export default function HomePage() {
           </div>
         </div>
 
-        {/* ========== Search Engine (inside hero, below icons) ========== */}
-        <div className="absolute left-0 right-0 top-[57%] z-30 px-4">
+              </section>
+
+{/* ========== Search Engine (inside hero, below icons) ========== */}
+        <div className="relative z-30 px-4 -mt-40 md:-mt-48">
           <div className="max-w-5xl mx-auto">
           <div className="bg-white rounded-2xl border-2 border-[#2563EB] shadow-xl p-5 md:p-7">
             <div className="flex gap-1 mb-5 bg-gray-100 rounded-lg p-1 w-fit">
@@ -462,7 +464,7 @@ export default function HomePage() {
           </div>
         </div>
         </div>
-      </section>
+
 
       {/* ========== Popular Destinations ========== */}
       <PopularDestinations />
