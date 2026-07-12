@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
@@ -11,14 +11,14 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
   const serviceLinks = [
-    { label: '✈️ Flights', icon: '✈️', href: '/search' },
-    { label: '🏔️ Tours', icon: '🏔️', href: '/tours' },
-    { label: '🏨 Hotels', icon: '🏨', href: '/hotels' },
-    { label: '🚗 Cars', icon: '🚗', href: '/cars' },
-    { label: '🛂 Visas', icon: '🛂', href: '/visas' },
-    { label: '🛡️ Insurance', icon: '🛡️', href: '/insurance' },
-    { label: '🚢 Cruises', icon: '🚢', href: '/cruises' },
-    { label: '✨ Sky Lounge', icon: '✨', href: '/mingalar' },
+    { label: 'Flights', icon: '✈️', href: '/search' },
+    { label: 'Tours', icon: '🏔️', href: '/tours' },
+    { label: 'Hotels', icon: '🏨', href: '/hotels' },
+    { label: 'Cars', icon: '🚗', href: '/cars' },
+    { label: 'Visas', icon: '🛂', href: '/visas' },
+    { label: 'Insurance', icon: '🛡️', href: '/insurance' },
+    { label: 'Cruises', icon: '🚢', href: '/cruises' },
+    { label: 'Sky Lounge', icon: '✨', href: '/mingalar' },
   ];
 
 
@@ -92,6 +92,10 @@ export default function Navbar() {
                   <Link href="/contact" className="block px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 hover:text-[#D4AF37] rounded-b-xl border-t border-gray-100 transition-colors">📞 Contact Us</Link>
                 </div>
               </div>
+            </div>
+
+
+
             {/* Service Navigation Icons — desktop */}
             <div className="hidden lg:flex items-center gap-0.5 border-l border-[#D4AF37]/20 pl-3 ml-2">
               {serviceLinks.map((item) => (
@@ -106,6 +110,7 @@ export default function Navbar() {
                 </Link>
               ))}
             </div>
+
             <button onClick={() => setMobileOpen(!mobileOpen)}
               className="lg:hidden p-2 text-white hover:text-[#D4AF37] transition-colors" aria-label="Toggle menu">
               {mobileOpen ? <HiX className="w-7 h-7" /> : <HiMenuAlt3 className="w-7 h-7" />}
@@ -148,7 +153,6 @@ export default function Navbar() {
               }`}>Blog</Link>
           </div>
 
-          
           {/* Service Navigation Icons — mobile */}
           <div className="grid grid-cols-4 gap-1 px-4 py-4 border-t border-[#D4AF37]/10">
             {serviceLinks.map((item) => (
@@ -163,7 +167,7 @@ export default function Navbar() {
             ))}
           </div>
 
-<div className="px-6 py-6 border-t border-[#D4AF37]/20 space-y-3">
+          <div className="px-6 py-6 border-t border-[#D4AF37]/20 space-y-3">
             <Link href="/book-now" onClick={() => setMobileOpen(false)}
               className="block text-center w-full bg-[#D4AF37] text-[#0A1628] font-bold rounded-full py-3 text-sm hover:bg-[#C5A028] hover:shadow-lg transition-all whitespace-nowrap">📋 Book Now</Link>
             <Link href="/contact" onClick={() => setMobileOpen(false)}
