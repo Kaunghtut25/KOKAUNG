@@ -334,11 +334,11 @@ export default function HomePage() {
             </div>
 
             <form onSubmit={handleSearch} className="space-y-3">
-              {activeTab === "multicity" ? (
-                <div className="space-y-4 max-h-[280px] overflow-y-auto pr-1">
+              {activeTab === "multicity" ? (<div className="overflow-y-auto max-h-[380px]">
+                <div className="space-y-4">
                   {multiCityLegs.map((leg, index) => (
                     <div key={index} className="flex items-start gap-2">
-                      <span className="w-6 flex-shrink-0" />
+                      
                       <AirportInput label="" value={leg.from} onChange={(val) => updateMultiCityLeg(index, "from", val)} placeholder="From city"
                         icon={<svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" /></svg>} />
                       <AirportInput label="" value={leg.to} onChange={(val) => updateMultiCityLeg(index, "to", val)} placeholder="To city"
@@ -398,7 +398,7 @@ export default function HomePage() {
                     </button>
                   </div>
                 </div>
-              ) : (
+              </div>) : (
                 <>
                   <div className="flex flex-col md:flex-row gap-3 flex-wrap">
                     <AirportInput label={nearest ? `📍 From ${fromAutoSet ? '· Auto-detected' : ''}` : 'From'} value={from} onChange={setFrom} placeholder="Departure city"
