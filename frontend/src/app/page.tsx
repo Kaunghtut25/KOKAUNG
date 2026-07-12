@@ -355,6 +355,27 @@ export default function HomePage() {
         {/* Search Engine */}
         <div className="relative z-30 px-4 -mt-10 md:-mt-8 pb-8">
           <div className="max-w-5xl mx-auto">
+          {/* Service Icons — above flight search */}
+          <div className="flex flex-wrap justify-center gap-1.5 mb-4">
+            {[
+              { label: 'Flights', icon: '✈️', href: '/search' },
+              { label: 'Tours', icon: '🏔️', href: '/tours' },
+              { label: 'Hotels', icon: '🏨', href: '/hotels' },
+              { label: 'Cars', icon: '🚗', href: '/cars' },
+              { label: 'Visas', icon: '🛂', href: '/visas' },
+              { label: 'Insurance', icon: '🛡️', href: '/insurance' },
+              { label: 'Cruises', icon: '🚢', href: '/cruises' },
+              { label: 'Sky Lounge', icon: '✨', href: '/mingalar' },
+            ].map((item) => (
+              <Link key={item.href} href={item.href}
+                className="flex flex-col items-center py-2 px-3 rounded-xl bg-white/80 backdrop-blur-sm border border-gray-200 hover:border-[#D4AF37] hover:bg-white hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 group cursor-pointer min-w-[64px]"
+              >
+                <span className="text-lg group-hover:scale-110 transition-transform">{item.icon}</span>
+                <span className="text-[10px] font-semibold text-gray-700 group-hover:text-[#D4AF37] transition-colors mt-1">{item.label}</span>
+              </Link>
+            ))}
+          </div>
+
           <div className="bg-white rounded-2xl border-2 border-[#2563EB] shadow-xl p-5 md:p-7">
             <div className="flex gap-1 mb-5 bg-gray-100 rounded-lg p-1 w-fit">
               {(["oneway", "roundtrip", "multicity"] as TabType[]).map((tab) => (
