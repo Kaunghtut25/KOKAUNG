@@ -332,7 +332,7 @@ export default function HomePage() {
         <div className="absolute left-0 right-0 bottom-[-20px] z-20 px-1">
           <div className="max-w-5xl mx-auto flex flex-wrap justify-center gap-1 md:gap-2">
             {[
-              { label: 'Flights', icon: '✈️', href: '/search' },
+              { label: 'Flights', icon: '✈️', href: '/' },
               { label: 'Tours', icon: '🏔️', href: '/tours' },
               { label: 'Hotels', icon: '🏨', href: '/hotels' },
               { label: 'Cars', icon: '🚗', href: '/cars' },
@@ -355,7 +355,6 @@ export default function HomePage() {
         {/* Search Engine */}
         <div className="relative z-30 px-4 -mt-10 md:-mt-8 pb-8">
           <div className="max-w-5xl mx-auto">
-          
           <div className="bg-white rounded-2xl border-2 border-[#2563EB] shadow-xl p-5 md:p-7">
             <div className="flex gap-1 mb-5 bg-gray-100 rounded-lg p-1 w-fit">
               {(["oneway", "roundtrip", "multicity"] as TabType[]).map((tab) => (
