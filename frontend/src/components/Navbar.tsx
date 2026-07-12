@@ -106,7 +106,7 @@ export default function Navbar() {
                 </Link>
               ))}
             </div>
-          (</div>\s*\n\s*</div>\s*\n\s*<button onClick=\{\(\) => setMobileOpen)(!mobileOpen)}
+            <button onClick={() => setMobileOpen(!mobileOpen)}
               className="lg:hidden p-2 text-white hover:text-[#D4AF37] transition-colors" aria-label="Toggle menu">
               {mobileOpen ? <HiX className="w-7 h-7" /> : <HiMenuAlt3 className="w-7 h-7" />}
             </button>
