@@ -268,7 +268,7 @@ export default function HomePage() {
   return (
     <main className="min-h-screen bg-[#FFFDF5]">
       {/* ========== Hero (slides only) ========== */}
-      <section className="relative min-h-[580px] md:min-h-[680px] w-full overflow-visible">
+      <section className="relative min-h-[450px] md:min-h-[500px] w-full overflow-visible">
         {slides.map((slide, index) => (
           <div key={index}
             className={"absolute inset-0 transition-all duration-700 ease-in-out " + (index === currentSlide ? "opacity-100 z-10" : index === prevSlide ? "opacity-0 z-0" : "opacity-0 z-0")}>
@@ -319,8 +319,10 @@ export default function HomePage() {
           </div>
         </div>
 
-        {/* ========== Search Engine (inside hero, below icons) ========== */}
-        <div className="absolute left-0 right-0 top-[52%] z-30 px-4">
+              </section>
+
+{/* ========== Search Engine (straddling hero/body, below icons) ========== */}
+        <div className="relative -mt-40 md:-mt-48 z-30 px-4">
           <div className="max-w-5xl mx-auto">
           <div className="bg-white rounded-2xl border-2 border-[#2563EB] shadow-xl p-5 md:p-7">
             <div className="flex gap-1 mb-5 bg-gray-100 rounded-lg p-1 w-fit">
@@ -461,10 +463,10 @@ export default function HomePage() {
           </div>
         </div>
         </div>
-      </section>
 
-      <div className="mt-12 md:mt-16">{/* ========== Popular Destinations ========== */}
-      <PopularDestinations /></div>
+
+      {/* ========== Popular Destinations ========== */}
+      <PopularDestinations />
 
       <section className="py-16 bg-[#FFFDF5]">
         <div className="max-w-6xl mx-auto px-4 grid grid-cols-2 md:grid-cols-4 gap-6">
