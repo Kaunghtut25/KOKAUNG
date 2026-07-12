@@ -334,7 +334,7 @@ export default function HomePage() {
             </div>
 
             <form onSubmit={handleSearch} className="space-y-3">
-              {activeTab === "multicity" ? (
+              {activeTab === "multicity" ? (<>
                 <div className="space-y-4 max-h-[380px] overflow-y-auto">
                   {multiCityLegs.map((leg, index) => (
                     <div key={index} className="flex items-start gap-2">
@@ -355,6 +355,7 @@ export default function HomePage() {
                       )}
                     </div>
                   ))}
+                </div>
                   {multiCityLegs.length < 6 && (
                     <div className="flex items-start gap-2">
                       <div className="w-10 flex-shrink-0" />
@@ -397,8 +398,7 @@ export default function HomePage() {
                       🔍 Search Flights
                     </button>
                   </div>
-                </div>
-              ) : (
+              </>) : (
                 <>
                   <div className="flex flex-col md:flex-row gap-3 flex-wrap">
                     <AirportInput label={nearest ? `📍 From ${fromAutoSet ? '· Auto-detected' : ''}` : 'From'} value={from} onChange={setFrom} placeholder="Departure city"
