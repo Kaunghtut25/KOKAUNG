@@ -197,9 +197,9 @@ export default function AdminToursPage() {
 
   const getStatusBadge = (status: string) => {
     const map: Record<string, string> = {
-      active: "bg-green-500/20 text-green-400 border-green-500/30",
-      inactive: "bg-red-500/20 text-red-400 border-red-500/30",
-      featured: "bg-gold/20 text-gold border-gold/30",
+      active: "bg-green-600 text-white font-medium border border-green-400",
+      inactive: "bg-red-600 text-white font-medium border border-red-400",
+      featured: "bg-[#D4AF37] text-[#0A1628] font-bold border border-[#D4AF37]",
     };
     return `px-2 py-0.5 rounded-full text-xs font-medium border ${
       map[status] || "bg-gray-500/20 text-gray-400 border-gray-500/30"
@@ -309,16 +309,29 @@ export default function AdminToursPage() {
       {/* ─── Multi-Image Management ─── */}
       <div>
         <label className="block text-white/70 text-sm mb-1">
-          Images (add by URL, then click Add)
+          Images (drag & drop, paste from clipboard, or type URL)
         </label>
-        <div className="flex gap-2 mb-3">
+        <div
+            className="flex gap-2 mb-3"
+            onDragOver={(e) => { e.preventDefault(); (e.currentTarget as HTMLDivElement).style.borderColor = '#D4AF37'; }}
+            onDragLeave={(e) => { (e.currentTarget as HTMLDivElement).style.borderColor = ''; }}
+            onDrop={(e) => {
+              e.preventDefault();
+              (e.currentTarget as HTMLDivElement).style.borderColor = '';
+              const file = e.dataTransfer?.files?.[0];
+              if (file && file.type.startsWith('image/')) {
+                const reader = new FileReader();
+                reader.onload = () => { setImageUrlInput(reader.result as string); handleImageUrlChange(reader.result as string); };
+                reader.readAsDataURL(file);
+              }
+            }}>
           <input
             type="text"
             value={imageUrlInput}
             onChange={(e) => {
               handleImageUrlChange(e.target.value);
             }}
-            placeholder="https://..."
+            placeholder="Drag, paste, or type image URL..."
             className="flex-1 bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-gold/50 transition-colors"
             onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); addImage(); } }}
           />
