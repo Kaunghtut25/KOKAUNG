@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getAll, create, updateById, deleteById } from "@/lib/adminStore";
+import { getAll, create, updateById, deleteById } from "@/lib/persistentStore";
 
 export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
   try {

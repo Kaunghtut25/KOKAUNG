@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { create, delete_, getAll, getById, update } from "@/lib/adminStore";
+import { create, delete_, getAll, getById, update } from "@/lib/persistentStore";
 
 export async function GET() {
   try {

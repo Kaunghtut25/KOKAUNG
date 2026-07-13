@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getAll } from "@/lib/adminStore";
+import { getAll } from "@/lib/persistentStore";
 
 export async function GET() {
   try {
