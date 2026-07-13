@@ -59,11 +59,18 @@ function AirportInput({ label, value, onChange, placeholder, icon }: { label: st
   const inputRef = useRef<HTMLInputElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
 
-  const filtered = airports.filter((a) => {
+  // Priority cities: Yangon, Mandalay, Bangkok, Kuala Lumpur, Singapore
+  const priorityCities = ["RGN","MDL","BKK","KUL","SIN"];
+  const priorityAirports = airports.filter(a => priorityCities.includes(a.code));
+  const otherAirports = airports.filter(a => !priorityCities.includes(a.code));
+
+  const filtered = (() => {
     const q = query.toLowerCase().trim();
-    if (!q) return airports.slice(0, 8);
-    return a.code.toLowerCase().includes(q) || a.city.toLowerCase().includes(q) || a.country.toLowerCase().includes(q);
-  });
+    if (!q) return priorityAirports;
+    return airports.filter((a) => {
+      return a.code.toLowerCase().includes(q) || a.city.toLowerCase().includes(q) || a.country.toLowerCase().includes(q);
+    }).slice(0, 50);
+  })();
 
   useEffect(() => {
     function handleClick(e: MouseEvent) { if (wrapperRef.current && !wrapperRef.current.contains(e.target as Node)) setIsOpen(false); }
