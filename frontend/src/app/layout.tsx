@@ -16,10 +16,9 @@ const inter = Inter({
 export const metadata: Metadata = {
   icons: {
     icon: [
-      { url: "/favicon.svg", type: "image/svg+xml" },
-      { url: "/favicon.png", type: "image/png", sizes: "32x32" },
+      { url: "/favicon-32x32.png", type: "image/png", sizes: "32x32" },
     ],
-    apple: { url: "/favicon.png", sizes: "180x180" },
+    apple: { url: "/favicon-180x180.png", sizes: "180x180" },
   },
   title: "A9 Global Travels & Tours | Luxury Travel Myanmar",
   description:
