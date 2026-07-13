@@ -80,9 +80,8 @@ export default function Footer() {
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="text-sm text-white/60 hover:text-gold transition-colors duration-200 flex items-center group"
+                    className="text-sm text-white/60 hover:text-gold transition-colors duration-200 block"
                   >
-                    <span className="w-0 group-hover:w-2 h-px bg-gold transition-all duration-300 mr-0 group-hover:mr-2" />
                     {link.label}
                   </Link>
                 </li>
