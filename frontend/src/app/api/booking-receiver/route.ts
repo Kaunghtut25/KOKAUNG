@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { sendBookingEmail } from '@/lib/email';
-import { getInquiries, create as storeCreate } from '@/lib/adminStore';
+import { create as storeCreate, getAll } from '@/lib/persistentStore';
 
 export const dynamic = 'force-dynamic';
 
@@ -51,7 +51,7 @@ export async function POST(request: NextRequest) {
 
     // Store in admin store (in-memory / Vercel-compatible)
     try {
-      storeCreate('inquiries', inquiryData);
+      storeCreate('bookings', inquiryData);
     } catch (storeErr) {
       console.error('[Booking] Failed to store inquiry:', storeErr);
     }
