@@ -1,11 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
-
-// Simple in-memory store (resets on cold start — use KV in production)
-let config: any = null;
+import { getAll } from "@/lib/persistentStore";
 
 export async function GET() {
   try {
-    return NextResponse.json(config || {});
+    const cfg = await getAll("site-config" as any);
+    return NextResponse.json(cfg?.[0] || {});
   } catch {
     return NextResponse.json({});
   }
@@ -14,7 +13,8 @@ export async function GET() {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    config = body;
+    const { create } = await import("@/lib/persistentStore");
+    await create("site-config" as any, body);
     return NextResponse.json({ success: true });
   } catch {
     return NextResponse.json({ success: false, message: "Invalid JSON" }, { status: 400 });
