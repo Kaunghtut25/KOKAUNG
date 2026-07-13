@@ -306,7 +306,7 @@ export default function AdminInsurancePage() {
                     </td>
                     <td className="p-4">
                       <span className={getStatusBadge(insurance.status)}>
-                        {insurance.status}
+                        {insurance.status.charAt(0).toUpperCase() + insurance.status.slice(1)}
                       </span>
                     </td>
                     <td className="p-4">

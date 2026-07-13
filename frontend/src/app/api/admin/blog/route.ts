@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getAll, getById, create, update, delete_ } from "@/lib/adminStore";
+import { update } from "@/lib/adminStore";
 
 export async function GET() {
   try {
@@ -11,6 +12,19 @@ export async function GET() {
   }
 }
 
+
+export async function PUT(request: NextRequest) {
+  try {
+    const body = await request.json();
+    const { id } = body;
+    if (!id) return NextResponse.json({ message: "ID required" }, { status: 400 });
+    const updated = update("blog", id, body);
+    if (!updated) return NextResponse.json({ message: "Not found" }, { status: 404 });
+    return NextResponse.json(updated);
+  } catch (err: any) {
+    return NextResponse.json({ message: err.message || "Server error" }, { status: 500 });
+  }
+}
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();

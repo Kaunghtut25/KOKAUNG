@@ -582,7 +582,7 @@ export default function AdminCarsPage() {
                       </td>
                       <td className="p-4">
                         <span className={getStatusBadge(car.status)}>
-                          {car.status}
+                          {car.status.charAt(0).toUpperCase() + car.status.slice(1)}
                         </span>
                       </td>
                       <td className="p-4">

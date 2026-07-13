@@ -715,7 +715,7 @@ export default function AdminHotelsPage() {
                           <span
                             className={getStatusBadge(hotel.status)}
                           >
-                            {hotel.status}
+                            {hotel.status.charAt(0).toUpperCase() + hotel.status.slice(1)}
                           </span>
                           {hotel.featured && (
                             <span className="text-xs" title="Featured">⭐</span>

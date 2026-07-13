@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React, { useEffect, useState, useCallback } from "react";
 import AdminFormModal from "@/components/AdminFormModal";
@@ -586,7 +586,7 @@ export default function AdminCruisesPage() {
                       <td className="p-4">
                         <div className="flex items-center gap-1.5">
                           <span className={getStatusBadge(cruise.status)}>
-                            {cruise.status}
+                            {cruise.status.charAt(0).toUpperCase() + cruise.status.slice(1)}
                           </span>
                           {cruise.featured && (
                             <span className="text-xs" title="Featured">⭐</span>
