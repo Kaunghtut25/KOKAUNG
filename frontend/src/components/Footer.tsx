@@ -71,7 +71,7 @@ export default function Footer() {
           </div>
 
           {/* Column 2: Quick Links */}
-          <div>
+          <div className="text-center">
             <h4 className="font-display text-lg font-semibold text-white mb-6 gold-underline inline-block">
               Quick Links
             </h4>
