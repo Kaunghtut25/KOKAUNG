@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
-import { create, getAll, update } from "@/lib/adminStore";
+import { create, getAll, update } from "@/lib/persistentStore";
 
 export const dynamic = 'force-dynamic';
 
 export async function GET() {
   try {
-    const cruises = getAll("cruises");
+    const cruises = await getAll("cruises");
     return NextResponse.json(cruises);
   } catch (err: any) {
     return NextResponse.json({ message: err.message || "Server error" }, { status: 500 });

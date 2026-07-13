@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getAll, create } from "@/lib/adminStore";
+import { getAll, create } from "@/lib/persistentStore";
 
 export async function GET() {
-  try { return NextResponse.json({ success: true, data: await getAll("mingalar") }); }
+  try { return NextResponse.json({ success: true, data: await await getAll("mingalar") }); }
   catch (err: any) { return NextResponse.json({ success: false, message: err.message }, { status: 500 }); }
 }
 

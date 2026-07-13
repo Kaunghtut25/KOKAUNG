@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getAll } from "@/lib/adminStore";
+import { getAll } from "@/lib/persistentStore";
 
 export const dynamic = 'force-dynamic';
 
@@ -32,7 +32,7 @@ export async function GET(request: NextRequest) {
     const currency = searchParams.get('currency') || 'MMK';
     const sort = searchParams.get('sort') || '';
 
-    let rawCars = getAll("cars") as Record<string, unknown>[];
+    let rawCars = await getAll("cars") as Record<string, unknown>[];
 
     // Filter on raw data before transforming
     if (carType.trim() && carType !== 'All') {
