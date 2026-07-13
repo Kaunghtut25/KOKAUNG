@@ -12,7 +12,8 @@ async function getMongo() {
   if (!MONGO_URI || mongoFailed) throw new Error('MongoDB unavailable');
   try {
     const { MongoClient } = await import('mongodb');
-    mongoClient = new MongoClient(MONGO_URI, {
+    const fullUri = MONGO_URI.includes("?") ? MONGO_URI : MONGO_URI + "?retryWrites=true&w=majority&appName=Cluster0";
+    mongoClient = new MongoClient(fullUri, {
       serverSelectionTimeoutMS: 5000,
       connectTimeoutMS: 10000,
       socketTimeoutMS: 45000,
