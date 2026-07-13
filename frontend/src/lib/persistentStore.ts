@@ -102,3 +102,39 @@ export function enableMongo() {
     console.log('[DB] Using MongoDB Atlas backend');
   }
 }
+
+// ─── Alias exports (match adminStore API) ───
+
+export async function updateById(collection: string, id: string, data: Record<string, any>): Promise<any> {
+  return update(collection, id, data);
+}
+
+export async function deleteById(collection: string, id: string): Promise<boolean> {
+  return delete_(collection, id);
+}
+
+export async function getDashboardStats() {
+  // Returns aggregate stats from all collections
+  const cols = ['tours','hotels','cars','cruises','visas','insurances','blog','bookings','inquiries'];
+  const stats: Record<string, number> = {};
+  for (const c of cols) {
+    try { stats[c] = (await getAll(c)).length; } catch { stats[c] = 0; }
+  }
+  return stats;
+}
+
+export async function getBookings(page = 1, limit = 10, statusFilter?: string) {
+  let items = await getAll('bookings');
+  if (statusFilter) items = items.filter((b: any) => b.status === statusFilter);
+  const total = items.length;
+  const start = (page - 1) * limit;
+  return { data: items.slice(start, start + limit), total, page, limit };
+}
+
+export async function getInquiries(page = 1, limit = 50, statusFilter?: string) {
+  let items = await getAll('inquiries');
+  if (statusFilter) items = items.filter((b: any) => b.status === statusFilter);
+  const total = items.length;
+  const start = (page - 1) * limit;
+  return { data: items.slice(start, start + limit), total, page, limit };
+}
