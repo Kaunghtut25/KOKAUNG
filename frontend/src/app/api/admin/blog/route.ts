@@ -3,7 +3,7 @@ import { create, delete_, getAll, getById, update } from "@/lib/persistentStore"
 
 export async function GET() {
   try {
-    const posts = await getAll("blog");
+    const posts = await await getAll("blog");
     return NextResponse.json({ success: true, data: posts });
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : "Server error";
@@ -17,7 +17,7 @@ export async function PUT(request: NextRequest) {
     const body = await request.json();
     const { id } = body;
     if (!id) return NextResponse.json({ message: "ID required" }, { status: 400 });
-    const updated = update("blog", id, body);
+    const updated = await update("blog", id, body);
     if (!updated) return NextResponse.json({ message: "Not found" }, { status: 404 });
     return NextResponse.json(updated);
   } catch (err: any) {
@@ -27,7 +27,7 @@ export async function PUT(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const post = create("blog", body);
+    const post = await create("blog", body);
     return NextResponse.json({ success: true, data: post }, { status: 201 });
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : "Server error";

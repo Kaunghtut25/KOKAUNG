@@ -5,7 +5,7 @@ export const dynamic = 'force-dynamic';
 
 export async function GET() {
   try {
-    const cruises = await getAll("cruises");
+    const cruises = await await getAll("cruises");
     return NextResponse.json(cruises);
   } catch (err: any) {
     return NextResponse.json({ message: err.message || "Server error" }, { status: 500 });
@@ -18,7 +18,7 @@ export async function PUT(request: NextRequest) {
     const body = await request.json();
     const { id } = body;
     if (!id) return NextResponse.json({ message: "ID required" }, { status: 400 });
-    const updated = update("cruises", id, body);
+    const updated = await update("cruises", id, body);
     if (!updated) return NextResponse.json({ message: "Not found" }, { status: 404 });
     return NextResponse.json(updated);
   } catch (err: any) {
@@ -28,7 +28,7 @@ export async function PUT(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const cruise = create("cruises", body);
+    const cruise = await create("cruises", body);
     return NextResponse.json(cruise, { status: 201 });
   } catch (err: any) {
     return NextResponse.json({ message: err.message || "Server error" }, { status: 500 });
