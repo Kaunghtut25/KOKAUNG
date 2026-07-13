@@ -1,214 +1,199 @@
-// persistentStore.ts — MongoDB Atlas-backed persistent storage
-// On Vercel serverless: tries MongoDB, falls back to in-memory if unreachable
+/**
+ * persistentStore.ts — Vercel KV-backed store with in-memory fallback
+ * 
+ * Architecture: each collection stored as single key containing full array
+ * e.g. kv.get("a9:tours") → [{id:"t1", ...}, ...]
+ * 
+ * Uses @vercel/kv which is already in package.json.
+ * Falls back to in-memory Map if KV not configured (local dev / no KV env vars).
+ */
 
-let mongoClient: any = null;
-let mongoDb: any = null;
-let mongoFailed = false;
+import { kv } from "@vercel/kv";
 
-const MONGO_URI = process.env.MONGODB_URI || '';
+// ── Collection types ──────────────────────────────────────
+type Collection = "tours" | "hotels" | "cars" | "cruises" | "visas" | "insurances" | "blog" | "bookings" | "mingalar";
 
-async function getMongo() {
-  if (mongoDb) return mongoDb;
-  if (!MONGO_URI || mongoFailed) throw new Error('MongoDB unavailable');
-  try {
-    const { MongoClient } = await import('mongodb');
-    const fullUri = MONGO_URI.includes("?") ? MONGO_URI : MONGO_URI + "?retryWrites=true&w=majority&appName=Cluster0";
-    mongoClient = new MongoClient(fullUri, {
-      serverSelectionTimeoutMS: 5000,
-      connectTimeoutMS: 10000,
-      socketTimeoutMS: 45000,
-      maxPoolSize: 1,
-      minPoolSize: 0,
-      retryWrites: true,
-      w: "majority",
-      ssl: true,
-      tls: true,
-      tlsAllowInvalidCertificates: true,
-    });
-    await mongoClient.connect();
-    mongoDb = mongoClient.db('a9global');
-    console.log('[DB] MongoDB Atlas connected ✓');
-    return mongoDb;
-  } catch (err: any) {
-    mongoFailed = true;
-    console.warn('[DB] MongoDB unavailable — using in-memory store:', err.message?.substring(0, 80));
-    throw err;
+// ── Seed data ─────────────────────────────────────────────
+const SEEDS: Record<string, any[]> = {
+  tours: [
+    { id: "t1", title: "Golden Land Explorer", destination: "Bagan",  priceMMK: 450000,  priceUSD: 215,  duration: "5 days", image: "/images/bagan.jpg",        description: "Explore ancient temples", category: "Cultural", featured: true  },
+    { id: "t2", title: "Yangon City Lights",   destination: "Yangon", priceMMK: 250000,  priceUSD: 119,  duration: "3 days", image: "/images/yangon.jpg",       description: "Discover colonial charm", category: "City",     featured: false },
+    { id: "t3", title: "Inle Lake Serenity",   destination: "Inle",   priceMMK: 380000,  priceUSD: 181,  duration: "4 days", image: "/images/inle.jpg",         description: "Floating gardens & markets", category: "Nature",   featured: true  },
+    { id: "t4", title: "Ngapali Beach Bliss",  destination: "Ngapali",priceMMK: 520000,  priceUSD: 248,  duration: "5 days", image: "/images/ngapali.jpg",      description: "Pristine beach getaway",   category: "Beach",    featured: true  },
+    { id: "t5", title: "Mandalay Royal Tour",  destination: "Mandalay",priceMMK:320000,  priceUSD: 152,  duration: "4 days", image: "/images/mandalay.jpg",     description: "Last royal capital",       category: "Cultural", featured: false },
+    { id: "t6", title: "Myanmar Grand Tour",   destination: "Multi",   priceMMK: 850000,  priceUSD: 405,  duration: "10 days",image: "/images/myanmar.jpg",       description: "Complete Myanmar experience", category: "Multi",    featured: true  },
+  ],
+  hotels: [
+    { id: "h1", title: "Sule Shangri-La Yangon",   destination: "Yangon", priceMMK: 180000, priceUSD: 86,  rating: 4.5, reviewCount: 320, image: "/images/hotel1.jpg" },
+    { id: "h2", title: "Aureum Palace Bagan",      destination: "Bagan",  priceMMK: 220000, priceUSD: 105, rating: 4.7, reviewCount: 180, image: "/images/hotel2.jpg" },
+    { id: "h3", title: "Novotel Yangon Max",       destination: "Yangon", priceMMK: 150000, priceUSD: 71,  rating: 4.3, reviewCount: 250, image: "/images/hotel3.jpg" },
+    { id: "h4", title: "Pristine Lotus Inle",      destination: "Inle",   priceMMK: 200000, priceUSD: 95,  rating: 4.6, reviewCount: 150, image: "/images/hotel4.jpg" },
+    { id: "h5", title: "Mandalay Hill Resort",     destination: "Mandalay",priceMMK:170000,priceUSD: 81,  rating: 4.4, reviewCount: 200, image: "/images/hotel5.jpg" },
+    { id: "h6", title: "Amazing Ngapali Resort",   destination: "Ngapali",priceMMK: 250000,priceUSD: 119, rating: 4.8, reviewCount: 90,  image: "/images/hotel6.jpg" },
+  ],
+  cars: [
+    { id: "c1", title: "Toyota Alphard",        type: "Luxury",   pricePerDayMMK: 150000, pricePerDayUSD: 71,  passengers: 7, image: "/images/car1.jpg" },
+    { id: "c2", title: "Toyota Wish",           type: "Standard", pricePerDayMMK: 80000,  pricePerDayUSD: 38,  passengers: 5, image: "/images/car2.jpg" },
+    { id: "c3", title: "Toyota Noah",           type: "Standard", pricePerDayMMK: 85000,  pricePerDayUSD: 40,  passengers: 7, image: "/images/car3.jpg" },
+    { id: "c4", title: "Alphard Executive",     type: "Premium",  pricePerDayMMK: 200000, pricePerDayUSD: 95,  passengers: 6, image: "/images/car4.jpg" },
+    { id: "c5", title: "Minibus 15-Seater",     type: "Group",    pricePerDayMMK: 120000, pricePerDayUSD: 57,  passengers: 15,image: "/images/car5.jpg" },
+    { id: "c6", title: "Probox Budget",         type: "Economy",  pricePerDayMMK: 50000,  pricePerDayUSD: 24,  passengers: 4, image: "/images/car6.jpg" },
+  ],
+  cruises: [],
+  visas: [
+    { id: "v1",  country: "Thailand",      visaType: "Tourist",       feeMMK: 60000,  feeUSD: 29,  processingTime: "3-5 days", notes: "eVisa available" },
+    { id: "v2",  country: "Singapore",     visaType: "Tourist",       feeMMK: 45000,  feeUSD: 21,  processingTime: "3 days",   notes: "eVisa available" },
+    { id: "v3",  country: "Malaysia",      visaType: "Tourist",       feeMMK: 40000,  feeUSD: 19,  processingTime: "2-3 days", notes: "eVisa available" },
+    { id: "v4",  country: "Vietnam",       visaType: "Tourist",       feeMMK: 55000,  feeUSD: 26,  processingTime: "3-5 days", notes: "eVisa available" },
+    { id: "v5",  country: "Cambodia",      visaType: "Tourist",       feeMMK: 50000,  feeUSD: 24,  processingTime: "3 days",   notes: "eVisa or VOA" },
+    { id: "v6",  country: "Laos",          visaType: "Tourist",       feeMMK: 45000,  feeUSD: 21,  processingTime: "3-5 days", notes: "eVisa or VOA" },
+    { id: "v7",  country: "India",         visaType: "Tourist",       feeMMK: 75000,  feeUSD: 36,  processingTime: "5-7 days", notes: "eVisa available" },
+    { id: "v8",  country: "Japan",         visaType: "Tourist",       feeMMK: 55000,  feeUSD: 26,  processingTime: "5-7 days", notes: "Requires docs" },
+    { id: "v9",  country: "South Korea",   visaType: "Tourist",       feeMMK: 50000,  feeUSD: 24,  processingTime: "5-7 days", notes: "eVisa available" },
+    { id: "v10", country: "China",         visaType: "Tourist",       feeMMK: 80000,  feeUSD: 38,  processingTime: "5-7 days", notes: "Requires docs" },
+    { id: "v11", country: "UK",            visaType: "Tourist",       feeMMK: 250000, feeUSD: 119, processingTime: "10-15 days",notes: "Full docs required" },
+    { id: "v12", country: "USA",           visaType: "Tourist",       feeMMK: 320000, feeUSD: 152, processingTime: "10-15 days",notes: "Interview required" },
+    { id: "v13", country: "Australia",     visaType: "Tourist",       feeMMK: 280000, feeUSD: 133, processingTime: "10-15 days",notes: "Full docs required" },
+    { id: "v14", country: "UAE (Dubai)",   visaType: "Tourist",       feeMMK: 120000, feeUSD: 57,  processingTime: "5-7 days", notes: "eVisa available" },
+    { id: "v15", country: "Turkey",        visaType: "Tourist",       feeMMK: 90000,  feeUSD: 43,  processingTime: "3-5 days", notes: "eVisa available" },
+    { id: "v16", country: "Thailand",      visaType: "Business",      feeMMK: 120000, feeUSD: 57,  processingTime: "5-7 days", notes: "Company docs required" },
+    { id: "v17", country: "Singapore",     visaType: "Business",      feeMMK: 100000, feeUSD: 48,  processingTime: "5-7 days", notes: "Sponsor letter required" },
+    { id: "v18", country: "Malaysia",      visaType: "Business",      feeMMK: 95000,  feeUSD: 45,  processingTime: "5-7 days", notes: "Sponsor letter required" },
+    { id: "v19", country: "South Korea",   visaType: "Work (E-7)",    feeMMK: 180000, feeUSD: 86,  processingTime: "10-15 days",notes: "Contract + sponsor docs" },
+    { id: "v20", country: "Japan",         visaType: "Work",          feeMMK: 150000, feeUSD: 71,  processingTime: "10-15 days",notes: "COE required" },
+    { id: "v21", country: "Canada",        visaType: "Student",       feeMMK: 280000, feeUSD: 133, processingTime: "15-20 days",notes: "LOA + funds proof" },
+    { id: "v22", country: "UK",            visaType: "Student",       feeMMK: 300000, feeUSD: 143, processingTime: "15-20 days",notes: "CAS letter required" },
+    { id: "v23", country: "Australia",     visaType: "Student",       feeMMK: 320000, feeUSD: 152, processingTime: "15-20 days",notes: "COE required" },
+  ],
+  insurances: [
+    { id: "i1", title: "Basic Travel Shield",     coverage: "Medical + Trip Delay", priceMMK: 15000,  priceUSD: 7,   duration: "Per trip" },
+    { id: "i2", title: "Standard Travel Guard",   coverage: "Medical + Baggage",    priceMMK: 25000,  priceUSD: 12,  duration: "Per trip" },
+    { id: "i3", title: "Premium Travel Protect",  coverage: "Medical + Cancellation",priceMMK:45000,  priceUSD: 21,  duration: "Annual" },
+    { id: "i4", title: "Family Travel Plan",      coverage: "Family Medical + Trip",priceMMK: 60000,  priceUSD: 29,  duration: "Per trip" },
+    { id: "i5", title: "Business Travel Cover",   coverage: "Business + Medical",   priceMMK: 35000,  priceUSD: 17,  duration: "Per trip" },
+    { id: "i6", title: "Senior Travel Care",      coverage: "Medical + Evacuation",  priceMMK: 50000,  priceUSD: 24,  duration: "Per trip" },
+  ],
+  blog: [
+    { id: "b1", title: "Top 10 Temples in Bagan",           slug: "top-10-temples-bagan",           image: "/images/blog1.jpg", excerpt: "Discover the most stunning temples...",     content: "Full article here...", category: "Travel Guide", date: "2025-12-01" },
+    { id: "b2", title: "Yangon Street Food Guide",          slug: "yangon-street-food-guide",       image: "/images/blog2.jpg", excerpt: "Best street food spots in Yangon...",    content: "Full article here...", category: "Food",         date: "2025-12-05" },
+    { id: "b3", title: "Inle Lake: A Photographer's Dream", slug: "inle-lake-photographers-dream",  image: "/images/blog3.jpg", excerpt: "Capture the beauty of Inle Lake...",     content: "Full article here...", category: "Photography",  date: "2025-12-10" },
+    { id: "b4", title: "Myanmar Visa Guide 2026",           slug: "myanmar-visa-guide-2026",        image: "/images/blog4.jpg", excerpt: "Everything you need to know...",         content: "Full article here...", category: "Guide",        date: "2025-12-15" },
+  ],
+  mingalar: [
+    { id: "m1", title: "Fine Dining",          description: "Premium \u00e0 la carte dining experience",               icon: "\ud83c\udf7d\ufe0f",  price: "Included" },
+    { id: "m2", title: "Open Bar",             description: "Premium spirits, wine & cocktails",                   icon: "\ud83c\udf78",  price: "Included" },
+    { id: "m3", title: "Private Suite",        description: "Spacious lie-flat seating with privacy",              icon: "\ud83d\udecb\ufe0f",  price: "Included" },
+    { id: "m4", title: "Spa Service",          description: "Pre-flight massage & wellness treatments",             icon: "\ud83d\udc86",  price: "From $50" },
+    { id: "m5", title: "Business Center",      description: "Meeting rooms, printing & high-speed WiFi",            icon: "\ud83d\udcbc",  price: "Included" },
+    { id: "m6", title: "Personal Concierge",   description: "Dedicated concierge for all your travel needs",       icon: "\ud83e\udd35",  price: "Included" },
+  ],
+};
+
+// ── In-memory fallback ────────────────────────────────────
+const memoryStore = new Map<string, any[]>();
+
+// ── Detect KV availability ────────────────────────────────
+function kvAvailable(): boolean {
+  return !!(process.env.KV_URL && process.env.KV_REST_API_URL && process.env.KV_REST_API_TOKEN);
+}
+
+// ── Core store ops ─────────────────────────────────────────
+const PREFIX = "a9:";
+
+async function storeGetAll(collection: string): Promise<any[]> {
+  if (kvAvailable()) {
+    try {
+      const data = await kv.get<any[]>(`${PREFIX}${collection}`);
+      if (data && Array.isArray(data) && data.length > 0) return data;
+    } catch (e) {
+      console.warn(`[KV] get ${collection} failed, falling back:`, (e as Error).message.substring(0, 60));
+    }
+  }
+  // Memory fallback
+  const mem = memoryStore.get(collection);
+  if (mem && mem.length > 0) return mem;
+  // Seed fallback
+  return SEEDS[collection] || [];
+}
+
+async function storeSet(collection: string, data: any[]): Promise<void> {
+  // Always update memory fallback
+  memoryStore.set(collection, data);
+  // Try KV
+  if (kvAvailable()) {
+    try {
+      await kv.set(`${PREFIX}${collection}`, data);
+    } catch (e) {
+      console.warn(`[KV] set ${collection} failed:`, (e as Error).message.substring(0, 60));
+    }
   }
 }
 
-let memoryStore: Record<string, Map<string, any>> = {};
-
-function ensureCollection(name: string): Map<string, any> {
-  if (!memoryStore[name]) memoryStore[name] = new Map();
-  return memoryStore[name];
-}
-
-// Seeded defaults so public pages always have content
-function seedDefaults(name: string) {
-  const coll = ensureCollection(name);
-  if (coll.size > 0) return;
-  const seeds: Record<string, any[]> = {
-    tours: [
-      { id: 't1', title: 'Golden Land Explorer', destination: 'Bagan', description: 'Explore ancient temples', priceMMK: 450000, priceUSD: 215, duration: '3 Days', rating: 4.8, reviewCount: 124, images: [], status: 'active' },
-      { id: 't2', title: 'Yangon Heritage Walk', destination: 'Yangon', description: 'Discover colonial Yangon', priceMMK: 250000, priceUSD: 120, duration: '1 Day', rating: 4.5, reviewCount: 89, images: [], status: 'active' },
-      { id: 't3', title: 'Inle Lake Serenity', destination: 'Inle Lake', description: 'Floating gardens & leg rowers', priceMMK: 550000, priceUSD: 262, duration: '3 Days', rating: 4.7, reviewCount: 156, images: [], status: 'active' },
-      { id: 't4', title: 'Ngapali Beach Escape', destination: 'Ngapali', description: 'Pristine beaches', priceMMK: 650000, priceUSD: 310, duration: '4 Days', rating: 4.6, reviewCount: 98, images: [], status: 'active' },
-      { id: 't5', title: 'Mandalay Royal Tour', destination: 'Mandalay', description: 'Royal palace & U Bein Bridge', priceMMK: 380000, priceUSD: 181, duration: '2 Days', rating: 4.4, reviewCount: 112, images: [], status: 'active' },
-      { id: 't6', title: 'Myanmar Grand Loop', destination: 'Multi-City', description: 'Yangon-Bagan-Mandalay-Inle', priceMMK: 1200000, priceUSD: 572, duration: '10 Days', rating: 4.9, reviewCount: 67, images: [], status: 'featured' },
-    ],
-    hotels: [
-      { id: 'h1', title: 'Sule Shangri-La Yangon', destination: 'Yangon', description: '5-star luxury', priceMMK: 180000, priceUSD: 86, rating: 4.7, reviewCount: 234, images: [], status: 'active' },
-      { id: 'h2', title: 'Bagan Lodge', destination: 'Bagan', description: 'Desert oasis resort', priceMMK: 220000, priceUSD: 105, rating: 4.8, reviewCount: 189, images: [], status: 'active' },
-      { id: 'h3', title: 'Inle Princess Resort', destination: 'Inle Lake', description: 'Lakefront luxury', priceMMK: 250000, priceUSD: 119, rating: 4.6, reviewCount: 156, images: [], status: 'active' },
-      { id: 'h4', title: 'Mandalay Hill Resort', destination: 'Mandalay', description: 'Hilltop views', priceMMK: 160000, priceUSD: 76, rating: 4.5, reviewCount: 178, images: [], status: 'active' },
-      { id: 'h5', title: 'Ngapali Bay Villas', destination: 'Ngapali', description: 'Beachfront villas', priceMMK: 350000, priceUSD: 167, rating: 4.9, reviewCount: 92, images: [], status: 'featured' },
-      { id: 'h6', title: 'Chatrium Hotel Yangon', destination: 'Yangon', description: 'Royal lake views', priceMMK: 140000, priceUSD: 67, rating: 4.4, reviewCount: 312, images: [], status: 'active' },
-    ],
-    cars: [
-      { id: 'c1', title: 'Toyota Probox', type: 'Economy', description: 'Reliable budget sedan', pricePerDayMMK: 45000, pricePerDayUSD: 21, passengers: 4, status: 'active' },
-      { id: 'c2', title: 'Toyota Alphard', type: 'Luxury', description: 'Premium MPV', pricePerDayMMK: 120000, pricePerDayUSD: 57, passengers: 7, status: 'active' },
-      { id: 'c3', title: 'Honda Fit', type: 'Compact', description: 'City-friendly', pricePerDayMMK: 35000, pricePerDayUSD: 17, passengers: 4, status: 'active' },
-      { id: 'c4', title: 'Toyota Land Cruiser', type: 'SUV', description: 'Off-road capable', pricePerDayMMK: 150000, pricePerDayUSD: 71, passengers: 7, status: 'active' },
-      { id: 'c5', title: 'Nissan Van', type: 'Van', description: 'Group travel', pricePerDayMMK: 80000, pricePerDayUSD: 38, passengers: 12, status: 'active' },
-      { id: 'c6', title: 'BMW X5', type: 'Premium', description: 'Executive SUV', pricePerDayMMK: 250000, pricePerDayUSD: 119, passengers: 5, status: 'featured' },
-    ],
-    visas: [
-      { id: 'v1', country: 'Thailand', visaType: 'Tourist', processingTime: '3-5 Days', feeMMK: 85000, feeUSD: 40, status: 'active' },
-      { id: 'v2', country: 'Singapore', visaType: 'Tourist', processingTime: '5-7 Days', feeMMK: 65000, feeUSD: 31, status: 'active' },
-      { id: 'v3', country: 'Malaysia', visaType: 'Tourist', processingTime: '3-5 Days', feeMMK: 55000, feeUSD: 26, status: 'active' },
-      { id: 'v4', country: 'Vietnam', visaType: 'Tourist', processingTime: '2-3 Days', feeMMK: 45000, feeUSD: 21, status: 'active' },
-      { id: 'v5', country: 'Japan', visaType: 'Tourist', processingTime: '7-10 Days', feeMMK: 120000, feeUSD: 57, status: 'active' },
-      { id: 'v6', country: 'South Korea', visaType: 'Tourist', processingTime: '5-7 Days', feeMMK: 95000, feeUSD: 45, status: 'active' },
-      { id: 'v7', country: 'China', visaType: 'Tourist', processingTime: '5-7 Days', feeMMK: 110000, feeUSD: 52, status: 'active' },
-      { id: 'v8', country: 'India', visaType: 'Tourist', processingTime: '3-5 Days', feeMMK: 75000, feeUSD: 36, status: 'active' },
-      { id: 'v9', country: 'UAE (Dubai)', visaType: 'Tourist', processingTime: '3-5 Days', feeMMK: 135000, feeUSD: 64, status: 'active' },
-      { id: 'v10', country: 'Cambodia', visaType: 'Tourist', processingTime: '2-3 Days', feeMMK: 35000, feeUSD: 17, status: 'active' },
-      { id: 'v11', country: 'Laos', visaType: 'Tourist', processingTime: '2-3 Days', feeMMK: 30000, feeUSD: 14, status: 'active' },
-      { id: 'v12', country: 'Indonesia', visaType: 'Tourist', processingTime: '3-5 Days', feeMMK: 60000, feeUSD: 29, status: 'active' },
-    ],
-    insurance: [
-      { id: 'ins1', planName: 'Basic Travel Shield', coverageAmountMMK: 5000000, coverageAmountUSD: 2381, premiumMMK: 25000, premiumUSD: 12, duration: '1-30 Days', provider: 'A9 Global Insurance', status: 'active' },
-      { id: 'ins2', planName: 'Premium Explorer', coverageAmountMMK: 15000000, coverageAmountUSD: 7143, premiumMMK: 65000, premiumUSD: 31, duration: '1-90 Days', provider: 'A9 Global Insurance', status: 'active' },
-      { id: 'ins3', planName: 'Family Protection', coverageAmountMMK: 30000000, coverageAmountUSD: 14286, premiumMMK: 120000, premiumUSD: 57, duration: '1-180 Days', provider: 'A9 Global Insurance', status: 'active' },
-      { id: 'ins4', planName: 'Business Traveler', coverageAmountMMK: 20000000, coverageAmountUSD: 9524, premiumMMK: 85000, premiumUSD: 40, duration: '1-365 Days', provider: 'A9 Global Insurance', status: 'featured' },
-      { id: 'ins5', planName: 'Student Guard', coverageAmountMMK: 10000000, coverageAmountUSD: 4762, premiumMMK: 45000, premiumUSD: 21, duration: '30-365 Days', provider: 'A9 Global Insurance', status: 'active' },
-      { id: 'ins6', planName: 'Senior Comfort', coverageAmountMMK: 12000000, coverageAmountUSD: 5714, premiumMMK: 55000, premiumUSD: 26, duration: '1-90 Days', provider: 'A9 Global Insurance', status: 'active' },
-    ],
-    cruises: [
-      { id: 'cr1', title: 'Ayeyarwady Sunset Cruise', route: 'Mandalay-Bagan', description: '3-day river cruise', priceMMK: 350000, priceUSD: 167, duration: '3 Days', capacity: 40, status: 'active' },
-      { id: 'cr2', title: 'Mergui Archipelago Explorer', route: 'Kawthaung-Mergui', description: '5-day island hopping', priceMMK: 850000, priceUSD: 405, duration: '5 Days', capacity: 20, status: 'active' },
-      { id: 'cr3', title: 'Yangon River Dinner Cruise', route: 'Yangon River Loop', description: 'Evening dinner cruise', priceMMK: 85000, priceUSD: 40, duration: '3 Hours', capacity: 60, status: 'active' },
-      { id: 'cr4', title: 'Andaman Sea Adventure', route: 'Myeik Archipelago', description: '7-day diving cruise', priceMMK: 1200000, priceUSD: 572, duration: '7 Days', capacity: 16, status: 'featured' },
-      { id: 'cr5', title: 'Irrawaddy Explorer', route: 'Bhamo-Pyay', description: '10-day grand river journey', priceMMK: 2000000, priceUSD: 953, duration: '10 Days', capacity: 36, status: 'active' },
-      { id: 'cr6', title: 'Chindwin Discovery', route: 'Monywa-Homalin', description: '6-day off-beaten track', priceMMK: 1500000, priceUSD: 715, duration: '6 Days', capacity: 24, status: 'active' },
-    ],
-  };
-  const items = seeds[name];
-  if (items) items.forEach(item => coll.set(item.id, item));
-}
-
-// ─── Public API ───
-
-export async function getAll(collection: string): Promise<any[]> {
-  try {
-    const db = await getMongo();
-    return await db.collection(collection).find({}).toArray();
-  } catch {
-    seedDefaults(collection);
-    return Array.from((memoryStore[collection] || new Map()).values());
+async function storeDel(collection: string, keys: string[]): Promise<void> {
+  memoryStore.delete(collection);
+  if (kvAvailable()) {
+    try { await kv.del(...keys); } catch { /* nop */ }
   }
 }
 
-export async function getById(collection: string, id: string): Promise<any | null> {
-  try {
-    const db = await getMongo();
-    const { ObjectId } = await import('mongodb');
-    return await db.collection(collection).findOne({ _id: ObjectId.isValid(id) ? new ObjectId(id) : id });
-  } catch {
-    seedDefaults(collection);
-    return memoryStore[collection]?.get(id) || null;
-  }
+// ── Public API ────────────────────────────────────────────
+
+export async function getAll(collection: Collection): Promise<any[]> {
+  return await storeGetAll(collection);
 }
 
-export async function create(collection: string, data: Record<string, any>): Promise<any> {
-  try {
-    const db = await getMongo();
-    const result = await db.collection(collection).insertOne({ ...data, createdAt: new Date().toISOString() });
-    return { ...data, _id: result.insertedId.toString(), id: result.insertedId.toString() };
-  } catch {
-    seedDefaults(collection);
-    const id = data.id || `gen_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
-    const item = { ...data, id, _id: id, createdAt: data.createdAt || new Date().toISOString() };
-    memoryStore[collection]?.set(id, item);
-    return item;
-  }
+export async function getById(collection: Collection, id: string): Promise<any | null> {
+  const items = await storeGetAll(collection);
+  return items.find((item: any) => item.id === id || item._id === id) || null;
 }
 
-export async function update(collection: string, id: string, data: Record<string, any>): Promise<any | null> {
-  try {
-    const db = await getMongo();
-    const { ObjectId } = await import('mongodb');
-    const filter = ObjectId.isValid(id) ? { _id: new ObjectId(id) } : { _id: id };
-    await db.collection(collection).updateOne(filter, { $set: { ...data, updatedAt: new Date().toISOString() } });
-    return await db.collection(collection).findOne(filter);
-  } catch {
-    seedDefaults(collection);
-    const existing = memoryStore[collection]?.get(id);
-    if (!existing) return null;
-    const updated = { ...existing, ...data, id, _id: id, updatedAt: new Date().toISOString() };
-    memoryStore[collection]?.set(id, updated);
-    return updated;
-  }
+export async function create(collection: Collection, data: Record<string, any>): Promise<any> {
+  const items = await storeGetAll(collection);
+  const id = data.id || `gen_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
+  const item = { ...data, id, createdAt: data.createdAt || new Date().toISOString() };
+  items.push(item);
+  await storeSet(collection, items);
+  return item;
 }
 
-export async function delete_(collection: string, id: string): Promise<boolean> {
-  try {
-    const db = await getMongo();
-    const { ObjectId } = await import('mongodb');
-    const filter = ObjectId.isValid(id) ? { _id: new ObjectId(id) } : { _id: id };
-    await db.collection(collection).deleteOne(filter);
-    return true;
-  } catch {
-    seedDefaults(collection);
-    return memoryStore[collection]?.delete(id) || false;
-  }
-}
-// ─── Aliases for backward compatibility ───
-
-export const updateById = update;
-export const deleteById = delete_;
-
-export async function getBookings(page = 1, limit = 10, statusFilter?: string) {
-  const bookings = await getAll('bookings');
-  let filtered = bookings;
-  if (statusFilter && statusFilter !== 'all') {
-    filtered = bookings.filter((b: any) => b.status === statusFilter);
-  }
-  const total = filtered.length;
-  const start = (page - 1) * limit;
-  return {
-    data: filtered.slice(start, start + limit),
-    pagination: { page, limit, total, totalPages: Math.ceil(total / limit) || 1 },
-  };
+export async function update(collection: Collection, id: string, data: Record<string, any>): Promise<any | null> {
+  const items = await storeGetAll(collection);
+  const idx = items.findIndex((item: any) => item.id === id || item._id === id);
+  if (idx === -1) return null;
+  const updated = { ...items[idx], ...data, id: items[idx].id, updatedAt: new Date().toISOString() };
+  items[idx] = updated;
+  await storeSet(collection, items);
+  return updated;
 }
 
-export async function getDashboardStats() {
-  const [tours, hotels, cars, visas, insurance, cruises, bookings, blog] = await Promise.all([
-    getAll('tours'), getAll('hotels'), getAll('cars'), getAll('visas'),
-    getAll('insurance'), getAll('cruises'), getAll('bookings'), getAll('blog'),
+export const delete_ = async (collection: Collection, id: string): Promise<boolean> => {
+  const items = await storeGetAll(collection);
+  const idx = items.findIndex((item: any) => item.id === id || item._id === id);
+  if (idx === -1) return false;
+  items.splice(idx, 1);
+  await storeSet(collection, items);
+  return true;
+};
+
+// ── Specialized helpers ────────────────────────────────────
+
+export async function getBookings(): Promise<any[]> {
+  return await storeGetAll("bookings");
+}
+
+export async function getDashboardStats(): Promise<Record<string, number>> {
+  const [tours, hotels, cars, cruises, visas, insurances, blog, bookings, mingalar] = await Promise.all([
+    storeGetAll("tours"), storeGetAll("hotels"), storeGetAll("cars"), storeGetAll("cruises"),
+    storeGetAll("visas"), storeGetAll("insurances"), storeGetAll("blog"), storeGetAll("bookings"),
+    storeGetAll("mingalar"),
   ]);
   return {
-    totalUsers: 1,
-    totalBookings: (bookings || []).length,
-    totalRevenue: 0,
-    activeTours: (tours || []).filter((t: any) => t.status === 'active' || !t.status).length,
-    activeHotels: (hotels || []).filter((h: any) => h.status === 'active' || !h.status).length,
-    activeCars: (cars || []).filter((c: any) => c.status === 'active' || !c.status).length,
-    activeVisas: (visas || []).filter((v: any) => v.status === 'active' || !v.status).length,
-    activeInsurances: (insurance || []).filter((i: any) => i.status === 'active' || !i.status).length,
-    activeCruises: (cruises || []).filter((c: any) => c.status === 'active' || !c.status).length,
-    pendingBookings: (bookings || []).filter((b: any) => b.status === 'pending' || !b.status).length,
-    recentBookings: (bookings || []).slice(0, 5),
-    tours, hotels, cars, visas, insurance, cruises, blog,
+    tours: tours.length, hotels: hotels.length, cars: cars.length,
+    cruises: cruises.length, visas: visas.length, insurances: insurances.length,
+    blog: blog.length, bookings: bookings.length, mingalar: mingalar.length,
   };
 }
+
+// Backward-compat aliases
+export const updateById = update;
+export const deleteById = delete_;
