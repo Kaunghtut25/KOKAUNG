@@ -24,7 +24,7 @@ export default function Footer() {
           <div className="space-y-4">
             <Link href="/" className="inline-block">
               <h3 className="font-display text-2xl font-bold gold-text tracking-wider">
-                A9 GLOBAL
+                𝐀𝟗 𝐆𝐋𝐎𝐁𝐀𝐋
               </h3>
             </Link>
             <p className="text-sm italic text-gold/60">
@@ -35,7 +35,7 @@ export default function Footer() {
               Since our founding, we have been dedicated to crafting
               extraordinary travel experiences — from curated tours and premium
               hotel stays to seamless visa processing and comprehensive travel
-              insurance. At A9 Global, every detail is designed with you in
+              insurance. At 𝐀𝟗 𝐆𝐥𝐨𝐛𝐚𝐥, every detail is designed with you in
               mind.
             </p>
             {/* Social Icons */}
@@ -148,7 +148,7 @@ export default function Footer() {
       <div className="border-t border-gold/10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <p className="text-center text-xs text-white/50">
-            &copy; {currentYear} A9 Global Travels &amp; Tours. All rights
+            &copy; {currentYear} 𝐀𝟗 𝐆𝐥𝐨𝐛𝐚𝐥 Travels &amp; Tours. All rights
             reserved.
           </p>
           <p className="text-center text-[10px] text-white/30 mt-1.5 tracking-wide">

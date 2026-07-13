@@ -34,11 +34,11 @@ export default function Navbar() {
           <div className="flex items-center justify-between h-20">
             <Link href="/" className="flex-shrink-0 group flex items-center gap-3">
               <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-[#D4AF37] flex-shrink-0 shadow-md shadow-[#D4AF37]/20 group-hover:shadow-lg group-hover:shadow-[#D4AF37]/30 transition-all">
-                <Image src="/logo.jpeg" alt="A9 Global Travels & Tours" width={48} height={48} className="w-full h-full object-cover" />
+                <Image src="/logo.jpeg" alt="𝐀𝟗 𝐆𝐥𝐨𝐛𝐚𝐥 𝐓𝐫𝐚𝐯𝐞𝐥𝐬 & 𝐓𝐨𝐮𝐫𝐬" width={48} height={48} className="w-full h-full object-cover" />
               </div>
               <div>
                 <h1 className="font-display text-lg md:text-xl font-bold text-white tracking-wide leading-tight">
-                  A9 Global Travels & Tours
+                  𝐀𝟗 𝐆𝐥𝐨𝐛𝐚𝐥 𝐓𝐫𝐚𝐯𝐞𝐥𝐬 & 𝐓𝐨𝐮𝐫𝐬
                 </h1>
                 <p className="text-[10px] md:text-xs italic text-[#D4AF37] tracking-wide group-hover:text-[#F5A623] transition-colors">
                   Where every journey is a story waiting to be told!
@@ -105,10 +105,10 @@ export default function Navbar() {
             </button>
             <Link href="/" onClick={() => setMobileOpen(false)} className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-[#D4AF37] flex-shrink-0">
-                <Image src="/logo.jpeg" alt="A9 Global" width={40} height={40} className="w-full h-full object-cover" />
+                <Image src="/logo.jpeg" alt="𝐀𝟗 𝐆𝐥𝐨𝐛𝐚𝐥" width={40} height={40} className="w-full h-full object-cover" />
               </div>
               <div>
-                <h2 className="font-display text-base font-bold text-white tracking-wide">A9 Global Travels & Tours</h2>
+                <h2 className="font-display text-base font-bold text-white tracking-wide">𝐀𝟗 𝐆𝐥𝐨𝐛𝐚𝐥 𝐓𝐫𝐚𝐯𝐞𝐥𝐬 & 𝐓𝐨𝐮𝐫𝐬</h2>
                 <p className="text-[10px] italic text-[#D4AF37]/70">Where every journey is a story waiting to be told!</p>
               </div>
             </Link>

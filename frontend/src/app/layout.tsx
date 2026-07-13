@@ -20,15 +20,15 @@ export const metadata: Metadata = {
     ],
     apple: { url: "/favicon-180x180.png", sizes: "180x180" },
   },
-  title: "A9 Global Travels & Tours | Luxury Travel Myanmar",
+  title: "𝐀𝟗 𝐆𝐥𝐨𝐛𝐚𝐥 𝐓𝐫𝐚𝐯𝐞𝐥𝐬 & 𝐓𝐨𝐮𝐫𝐬 | Luxury Travel Myanmar",
   description:
-    "A9 Global Travels & Tours — Your premier IATA-accredited luxury travel partner in Myanmar. Offering premium tours, hotel bookings, car rentals, visa services, and travel insurance. Experience world-class travel with personalized service since 2015.",
+    "𝐀𝟗 𝐆𝐥𝐨𝐛𝐚𝐥 𝐓𝐫𝐚𝐯𝐞𝐥𝐬 & 𝐓𝐨𝐮𝐫𝐬 — Your premier IATA-accredited luxury travel partner in Myanmar. Offering premium tours, hotel bookings, car rentals, visa services, and travel insurance. Experience world-class travel with personalized service since 2015.",
   keywords: [
     "Luxury Travel Myanmar",
     "Myanmar Tours",
     "Yangon Travel Agency",
     "IATA Accredited",
-    "A9 Global",
+    "𝐀𝟗 𝐆𝐥𝐨𝐛𝐚𝐥",
     "Travel Myanmar",
     "Hotel Booking Yangon",
     "Visa Services Myanmar",
@@ -36,12 +36,12 @@ export const metadata: Metadata = {
     "Travel Insurance",
   ],
   openGraph: {
-    title: "A9 Global Travels & Tours | Luxury Travel Myanmar",
+    title: "𝐀𝟗 𝐆𝐥𝐨𝐛𝐚𝐥 𝐓𝐫𝐚𝐯𝐞𝐥𝐬 & 𝐓𝐨𝐮𝐫𝐬 | Luxury Travel Myanmar",
     description:
       "Premium travel experiences crafted for the discerning explorer. IATA-accredited luxury travel agency in Yangon, Myanmar.",
     type: "website",
     locale: "en_US",
-    siteName: "A9 Global Travels & Tours",
+    siteName: "𝐀𝟗 𝐆𝐥𝐨𝐛𝐚𝐥 𝐓𝐫𝐚𝐯𝐞𝐥𝐬 & 𝐓𝐨𝐮𝐫𝐬",
   },
 };
 
