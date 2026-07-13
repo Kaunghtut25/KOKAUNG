@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getAll, create } from "@/lib/persistentStore";
+import { getAll, create } from "@/lib/adminStore";
 
 export async function GET() {
   try { return NextResponse.json({ success: true, data: await getAll("mingalar") }); }

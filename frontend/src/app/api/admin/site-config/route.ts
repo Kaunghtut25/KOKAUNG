@@ -1,4 +1,4 @@
-﻿import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 // Simple in-memory store (resets on cold start — use KV in production)
 let config: any = null;

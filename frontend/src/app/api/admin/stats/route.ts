@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getDashboardStats } from "@/lib/persistentStore";
+import { getDashboardStats } from "@/lib/adminStore";
 
 export async function GET() {
   try {
