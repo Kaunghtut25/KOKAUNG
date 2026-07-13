@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 import Link from "next/link";
 import { useState, useEffect, useCallback, useRef } from "react";
 import { useRouter } from "next/navigation";
@@ -25,10 +25,16 @@ const slides = [
   { image: "https://images.unsplash.com/photo-1570610153147-5b6b6ca68701?w=1920&q=80", label: "Kingdom of Wonder", title: "Cambodia — Angkor Wat", subtitle: "The world's largest religious monument at dawn" },
 ];
 
-function StatsCard({ icon, title, description }: { icon: string; title: string; description: string }) {
+function StatsCard({ icon, title, description, imgSrc }: { icon: string; title: string; description: string; imgSrc?: string }) {
   return (
     <div className="bg-white rounded-xl p-6 text-center shadow-md hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
-      <div className="text-[#D4AF37] text-4xl mb-3">{icon}</div>
+      {imgSrc ? (
+        <div className="w-16 h-16 mx-auto mb-3 relative">
+          <Image src={imgSrc} alt={title} width={64} height={64} className="object-contain" />
+        </div>
+      ) : (
+        <div className="text-[#D4AF37] text-4xl mb-3">{icon}</div>
+      )}
       <h3 className="text-lg font-bold text-[#0A1628] mb-1">{title}</h3>
       <p className="text-gray-500 text-sm">{description}</p>
     </div>
@@ -474,10 +480,10 @@ export default function HomePage() {
 
       <section className="py-16 bg-[#FFFDF5]">
         <div className="max-w-6xl mx-auto px-4 grid grid-cols-2 md:grid-cols-4 gap-6">
-          <StatsCard icon="✈️" title="IATA Accredited" description="Fully licensed and certified travel agency" />
-          <StatsCard icon="🏆" title="10+ Years Exp" description="A decade of trusted travel expertise" />
-          <StatsCard icon="😊" title="500+ Happy Travelers" description="Satisfied customers across the globe" />
-          <StatsCard icon="🕐" title="24/7 Support" description="Round-the-clock assistance anytime" />
+          <StatsCard icon="✈️" title="IATA Accredited" description="Fully licensed and certified travel agency" imgSrc="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fe/IATA_logo.svg/512px-IATA_logo.svg.png" />
+          <StatsCard icon="🏆" title="10+ Years Exp" description="A decade of trusted travel expertise" imgSrc="https://images.unsplash.com/photo-1506784983877-45594efa4cbe?w=128&h=128&fit=crop&crop=center" />
+          <StatsCard icon="😊" title="500+ Happy Travelers" description="Satisfied customers across the globe" imgSrc="https://images.unsplash.com/photo-1539635278303-d4002c07eae3?w=128&h=128&fit=crop&crop=center" />
+          <StatsCard icon="🕐" title="24/7 Support" description="Round-the-clock assistance anytime" imgSrc="https://images.unsplash.com/photo-1560264280-88b68371db39?w=128&h=128&fit=crop&crop=center" />
         </div>
       </section>
 
