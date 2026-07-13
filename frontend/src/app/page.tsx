@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import PopularDestinations from "@/components/PopularDestinations";
 import { Airport, airports } from '@/data/airports';
-import { useNearestAirport } from '@/hooks/useNearestAirport';
 import Image from 'next/image';
 
 type TabType = "oneway" | "roundtrip" | "multicity";
@@ -199,7 +198,7 @@ export default function HomePage() {
   const [prevSlide, setPrevSlide] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [activeTab, setActiveTab] = useState<TabType>("oneway");
-  const [from, setFrom] = useState("");
+  const [from, setFrom] = useState("RGN - Yangon, Myanmar");
   const [to, setTo] = useState("");
   const [departDate, setDepartDate] = useState("");
   const [returnDate, setReturnDate] = useState("");
@@ -208,16 +207,7 @@ export default function HomePage() {
   const [multiCityLegs, setMultiCityLegs] = useState<FlightLeg[]>([{ from: "", to: "", date: "" }, { from: "", to: "", date: "" }]);
   const [clientType, setClientType] = useState<'local' | 'foreigner'>('local');
 
-  // Auto-detect nearest airport for departure
-  const { nearest } = useNearestAirport(airports);
-  const [fromAutoSet, setFromAutoSet] = useState(false);
-
-  useEffect(() => {
-    if (nearest && !fromAutoSet) {
-      setFrom(`${nearest.code} - ${nearest.city}, ${nearest.country}`);
-      setFromAutoSet(true);
-    }
-  }, [nearest, fromAutoSet]);
+  
 
   const goToSlide = useCallback((index: number) => {
     if (isTransitioning || index === currentSlide) return;
