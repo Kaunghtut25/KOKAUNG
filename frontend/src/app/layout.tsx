@@ -14,37 +14,42 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  icons: {
-    icon: [
-      { url: "/favicon-32x32.png", type: "image/png", sizes: "32x32" },
-    ],
-    apple: { url: "/favicon-180x180.png", sizes: "180x180" },
+  metadataBase: new URL("https://a9travel.com"),
+  title: {
+    default: "A9 Global Travels & Tours | Luxury Travel Myanmar",
+    template: "%s | A9 Global Travel",
   },
-  title: "𝐀𝟗 𝐆𝐥𝐨𝐛𝐚𝐥 𝐓𝐫𝐚𝐯𝐞𝐥𝐬 & 𝐓𝐨𝐮𝐫𝐬 | Luxury Travel Myanmar",
   description:
-    "𝐀𝟗 𝐆𝐥𝐨𝐛𝐚𝐥 𝐓𝐫𝐚𝐯𝐞𝐥𝐬 & 𝐓𝐨𝐮𝐫𝐬 — Your premier IATA-accredited luxury travel partner in Myanmar. Offering premium tours, hotel bookings, car rentals, visa services, and travel insurance. Experience world-class travel with personalized service since 2015.",
+    "Your premier IATA-accredited luxury travel partner in Myanmar. Premium tours, hotels, cars, visas, insurance. Since 2015.",
   keywords: [
-    "Luxury Travel Myanmar",
-    "Myanmar Tours",
-    "Yangon Travel Agency",
-    "IATA Accredited",
-    "𝐀𝟗 𝐆𝐥𝐨𝐛𝐚𝐥",
-    "Travel Myanmar",
-    "Hotel Booking Yangon",
-    "Visa Services Myanmar",
-    "Car Rental Myanmar",
-    "Travel Insurance",
+    "Myanmar Tours", "Yangon Travel Agency", "IATA Travel Myanmar",
+    "Hotel Booking Yangon", "Visa Services Myanmar", "Car Rental Myanmar",
+    "Travel Insurance Myanmar", "Luxury Travel Myanmar",
   ],
   openGraph: {
-    title: "𝐀𝟗 𝐆𝐥𝐨𝐛𝐚𝐥 𝐓𝐫𝐚𝐯𝐞𝐥𝐬 & 𝐓𝐨𝐮𝐫𝐬 | Luxury Travel Myanmar",
-    description:
-      "Premium travel experiences crafted for the discerning explorer. IATA-accredited luxury travel agency in Yangon, Myanmar.",
     type: "website",
-    locale: "en_US",
-    siteName: "𝐀𝟗 𝐆𝐥𝐨𝐛𝐚𝐥 𝐓𝐫𝐚𝐯𝐞𝐥𝐬 & 𝐓𝐨𝐮𝐫𝐬",
+    siteName: "A9 Global Travels & Tours",
+    title: "A9 Global Travels & Tours | Luxury Travel Myanmar",
+    description: "Premium travel experiences in Myanmar.",
+    url: "https://a9travel.com",
+    images: [{ url: "/og-image.jpg", width: 1200, height: 630 }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "A9 Global Travels & Tours",
+    description: "Premium travel experiences in Myanmar.",
+    images: ["/og-image.jpg"],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: { index: true, follow: true, "max-video-preview": -1, "max-image-preview": "large", "max-snippet": -1 },
+  },
+  icons: {
+    icon: [{ url: "/favicon-32x32.png", type: "image/png", sizes: "32x32" }],
+    apple: { url: "/favicon-180x180.png", sizes: "180x180" },
   },
 };
-
 export default function RootLayout({
   children,
 }: {
