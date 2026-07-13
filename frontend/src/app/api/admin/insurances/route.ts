@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getAll, create } from "@/lib/adminStore";
-import { update } from "@/lib/adminStore";
+import { create, getAll, update } from "@/lib/adminStore";
 
 export const dynamic = 'force-dynamic';
 
