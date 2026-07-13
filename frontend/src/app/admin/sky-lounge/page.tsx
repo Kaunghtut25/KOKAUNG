@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import AdminLayout from "@/components/AdminLayout";
 import toast from "react-hot-toast";
 import api from "@/lib/api";
 
@@ -62,7 +61,7 @@ export default function AdminMingalarPage() {
   };
 
   return (
-    <AdminLayout>
+    <>
       <div className="p-6">
         <div className="flex items-center justify-between mb-6">
           <div>
@@ -130,6 +129,6 @@ export default function AdminMingalarPage() {
           </div>
         )}
       </div>
-    </AdminLayout>
+    </>
   );
 }
