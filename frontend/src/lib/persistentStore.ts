@@ -138,3 +138,9 @@ export async function getInquiries(page = 1, limit = 50, statusFilter?: string) 
   const start = (page - 1) * limit;
   return { data: items.slice(start, start + limit), total, page, limit };
 }
+
+// Auto-enable MongoDB if URI is set
+if (MONGO_URI) {
+  backend = "mongo";
+  console.log("[DB] MongoDB Atlas configured — persistent storage active");
+}
