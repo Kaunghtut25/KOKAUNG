@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { sendBookingEmail } from '@/lib/email';
 import { getInquiries, create as storeCreate } from '@/lib/adminStore';
 
 export const dynamic = 'force-dynamic';
@@ -27,7 +28,7 @@ export async function POST(request: NextRequest) {
     if (!fullName) errors.push('Full name is required');
     if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) errors.push('A valid email is required');
     if (!phone) errors.push('Phone number is required');
-    const validTypes = ['flight', 'hotel', 'tour', 'car', 'visa', 'insurance'];
+    const validTypes = ['flight', 'hotel', 'tour', 'car', 'visa', 'insurance', 'cruise', 'mingalar'];
     if (!travelType || !validTypes.includes(travelType)) {
       errors.push(`Valid travel type is required (${validTypes.join('/')})`);
     }
@@ -54,6 +55,9 @@ export async function POST(request: NextRequest) {
     } catch (storeErr) {
       console.error('[Booking] Failed to store inquiry:', storeErr);
     }
+
+    // Send email notification to admin
+    sendBookingEmail(inquiryData).catch(err => console.error('[Email] Async send failed:', err));
 
     // Log booking for debugging
     console.log('[Booking]', JSON.stringify(inquiryData));
