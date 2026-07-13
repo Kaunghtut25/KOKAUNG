@@ -19,7 +19,7 @@ export default function Footer() {
     <footer className="bg-deepblue-dark border-t border-gold/20">
       {/* ── Main Footer Grid ──────────────────── */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 lg:gap-8">
           {/* Column 1: Brand */}
           <div className="space-y-4">
             <Link href="/" className="inline-block">
@@ -141,38 +141,7 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* Column 4: Working Hours */}
-          <div>
-            <h4 className="font-display text-lg font-semibold text-white mb-6 gold-underline inline-block">
-              Working Hours
-            </h4>
-            <div className="mt-6 space-y-3">
-              <div className="flex justify-between text-sm">
-                <span className="text-white/60">Monday – Friday</span>
-                <span className="text-gold font-medium">9:00 AM – 5:00 PM</span>
-              </div>
-              <div className="flex justify-between text-sm">
-                <span className="text-white/60">Saturday</span>
-                <span className="text-gold font-medium">
-                  9:00 AM – 12:00 PM
-                </span>
-              </div>
-              <p className="text-xs text-white/40 italic">(Half Day)</p>
-              <div className="flex justify-between text-sm pt-1">
-                <span className="text-white/60">Sunday &amp; Public Holidays</span>
-                <span className="text-red-400 font-medium">Closed</span>
-              </div>
-            </div>
-
-            {/* Decorative element */}
-            <div className="mt-8 p-4 rounded-xl border border-gold/10 bg-gold/5">
-              <p className="text-xs text-gold/70 italic leading-relaxed">
-                &ldquo;Where every journey is a story waiting to be told!&rdquo;
-                <br />
-                <span className="text-white/40">— The A9 Global Promise</span>
-              </p>
-            </div>
-          </div>
+          
         </div>
       </div>
 
