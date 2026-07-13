@@ -132,10 +132,10 @@ export default function Footer() {
               <div className="flex items-start space-x-3">
                 <span className="text-gold mt-0.5 flex-shrink-0">✉️</span>
                 <a
-                  href="mailto:a9ticketing@a9globalravel.com.mm"
+                  href="mailto:a9ticketing@a9globaltravel.com.mm"
                   className="text-sm text-white/60 hover:text-gold transition-colors"
                 >
-                  a9ticketing@a9globalravel.com.mm
+                  a9ticketing@a9globaltravel.com.mm
                 </a>
               </div>
             </div>

@@ -1,6 +1,6 @@
 import nodemailer from 'nodemailer';
 
-const ADMIN_EMAIL = 'a9ticketing@a9globalravel.com.mm';
+const ADMIN_EMAIL = 'a9ticketing@a9globaltravel.com.mm';
 
 // SMTP transporter — configure with your email provider
 let transporter: nodemailer.Transporter | null = null;
@@ -11,7 +11,7 @@ function getTransporter() {
   // Try Gmail SMTP (uses app password)
   const smtpHost = process.env.SMTP_HOST || 'smtp.gmail.com';
   const smtpPort = parseInt(process.env.SMTP_PORT || '587', 10);
-  const smtpUser = process.env.SMTP_USER || 'a9ticketing@a9globalravel.com.mm';
+  const smtpUser = process.env.SMTP_USER || 'a9ticketing@a9globaltravel.com.mm';
   const smtpPass = process.env.SMTP_PASS || '';
 
   transporter = nodemailer.createTransport({

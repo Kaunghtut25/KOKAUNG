@@ -10,6 +10,12 @@ type CategoryKey = 'all' | 'myanmar' | 'international' | 'adventure';
 
 // ─── Data ────────────────────────────────────────────────────
 
+
+// ─── Fetch from admin database ──────────────────────────
+const [apiTours, setApiTours] = useState<(Tour & { image: string })[]>([]);
+useEffect(() => { api.get('/tours').then((res: any) => { if (res?.data?.length) setApiTours(res.data); }).catch(() => {}); }, []);
+const effectiveTours = (list: (Tour & { image: string })[]) => apiTours.length > 0 ? apiTours.filter((t: any) => list.some((l: any) => l.slug === t.slug || l.title === t.title)) : list;
+
 const MYANMAR_TOURS: (Tour & { image: string })[] = [
   { _id: 'm1', slug: 'golden-land-explorer', title: 'Golden Land Explorer', destination: 'Yangon-Bagan-Mandalay-Inle', priceMMK: 1850000, priceUSD: 881, duration: '8D/7N', durationUnit: 'Days', rating: 4.8, reviewCount: 142, image: 'https://images.unsplash.com/photo-1570167574777-7e5c2c5e60b5?w=600&h=400&fit=crop', images: ['https://images.unsplash.com/photo-1570167574777-7e5c2c5e60b5?w=600&h=400&fit=crop'], amenities: ['Hotel', 'Breakfast', 'Guide', 'Transport'], featured: true, description: '', groupSize: 20, itinerary: [], included: [], excluded: [], createdAt: '' },
   { _id: 'm2', slug: 'bagan-sunrise-discovery', title: 'Bagan Sunrise Discovery', destination: 'Bagan', priceMMK: 950000, priceUSD: 452, duration: '5D/4N', durationUnit: 'Days', rating: 4.9, reviewCount: 98, image: 'https://images.unsplash.com/photo-1558704475-1428913b4c6b?w=600&h=400&fit=crop', images: ['https://images.unsplash.com/photo-1558704475-1428913b4c6b?w=600&h=400&fit=crop'], amenities: ['Hotel', 'Breakfast', 'E-Bike', 'Boat Cruise'], featured: true, description: '', groupSize: 15, itinerary: [], included: [], excluded: [], createdAt: '' },
@@ -43,7 +49,7 @@ const ADVENTURE_TOURS: (Tour & { image: string })[] = [
   MYANMAR_TOURS[1], INTERNATIONAL_TOURS[3], MYANMAR_TOURS[10],
 ];
 
-const ALL_TOURS_DATA = [...MYANMAR_TOURS, ...INTERNATIONAL_TOURS];
+const ALL_TOURS_DATA = [...effectiveTours(MYANMAR_TOURS), ...INTERNATIONAL_TOURS];
 
 function getCategoryTours(cat: CategoryKey): (Tour & { image: string })[] {
   switch (cat) {
