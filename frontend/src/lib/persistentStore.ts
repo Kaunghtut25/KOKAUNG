@@ -1,16 +1,17 @@
 /**
- * persistentStore.ts — Vercel KV-backed store with in-memory fallback
+ * persistentStore.ts — Upstash Redis-backed store with in-memory fallback
  * 
- * Architecture: each collection stored as single key containing full array
- * e.g. kv.get("a9:tours") → [{id:"t1", ...}, ...]
+ * Architecture: each collection stored as JSON string under a single key
+ * e.g. redis.get("a9:tours") → '[{id:"t1",...}]'
  * 
- * Uses @vercel/kv which is already in package.json.
- * Falls back to in-memory Map if KV not configured (local dev / no KV env vars).
+ * Uses @upstash/redis (already in package.json).
+ * Falls back to in-memory Map if no redis env vars configured.
+ * 
+ * To enable persistence:
+ * 1. Create free Upstash Redis database
+ * 2. Set env vars: UPSTASH_REDIS_REST_URL, UPSTASH_REDIS_REST_TOKEN
  */
 
-import { kv } from "@vercel/kv";
-
-// ── Collection types ──────────────────────────────────────
 type Collection = "tours" | "hotels" | "cars" | "cruises" | "visas" | "insurances" | "blog" | "bookings" | "mingalar";
 
 // ── Seed data ─────────────────────────────────────────────
@@ -80,33 +81,53 @@ const SEEDS: Record<string, any[]> = {
     { id: "b4", title: "Myanmar Visa Guide 2026",           slug: "myanmar-visa-guide-2026",        image: "/images/blog4.jpg", excerpt: "Everything you need to know...",         content: "Full article here...", category: "Guide",        date: "2025-12-15" },
   ],
   mingalar: [
-    { id: "m1", title: "Fine Dining",          description: "Premium \u00e0 la carte dining experience",               icon: "\ud83c\udf7d\ufe0f",  price: "Included" },
-    { id: "m2", title: "Open Bar",             description: "Premium spirits, wine & cocktails",                   icon: "\ud83c\udf78",  price: "Included" },
-    { id: "m3", title: "Private Suite",        description: "Spacious lie-flat seating with privacy",              icon: "\ud83d\udecb\ufe0f",  price: "Included" },
-    { id: "m4", title: "Spa Service",          description: "Pre-flight massage & wellness treatments",             icon: "\ud83d\udc86",  price: "From $50" },
-    { id: "m5", title: "Business Center",      description: "Meeting rooms, printing & high-speed WiFi",            icon: "\ud83d\udcbc",  price: "Included" },
-    { id: "m6", title: "Personal Concierge",   description: "Dedicated concierge for all your travel needs",       icon: "\ud83e\udd35",  price: "Included" },
+    { id: "m1", title: "Fine Dining",          description: "Premium à la carte dining experience",               icon: "🍽️",  price: "Included" },
+    { id: "m2", title: "Open Bar",             description: "Premium spirits, wine & cocktails",                   icon: "🍸",  price: "Included" },
+    { id: "m3", title: "Private Suite",        description: "Spacious lie-flat seating with privacy",              icon: "🛋️",  price: "Included" },
+    { id: "m4", title: "Spa Service",          description: "Pre-flight massage & wellness treatments",             icon: "💆",  price: "From \$50" },
+    { id: "m5", title: "Business Center",      description: "Meeting rooms, printing & high-speed WiFi",            icon: "💼",  price: "Included" },
+    { id: "m6", title: "Personal Concierge",   description: "Dedicated concierge for all your travel needs",       icon: "🤵",  price: "Included" },
   ],
 };
 
 // ── In-memory fallback ────────────────────────────────────
 const memoryStore = new Map<string, any[]>();
 
-// ── Detect KV availability ────────────────────────────────
-function kvAvailable(): boolean {
-  return !!(process.env.KV_URL && process.env.KV_REST_API_URL && process.env.KV_REST_API_TOKEN);
+// ── Lazy Upstash Redis init ───────────────────────────────
+let _redis: any = null;
+let _redisInitTried = false;
+
+function getRedis(): any {
+  if (_redis) return _redis;
+  if (_redisInitTried) return null;
+
+  const url = process.env.UPSTASH_REDIS_REST_URL;
+  const token = process.env.UPSTASH_REDIS_REST_TOKEN;
+
+  if (url && token) {
+    try {
+      const { Redis } = require("@upstash/redis");
+      _redis = new Redis({ url, token });
+      console.log("[Store] Upstash Redis connected");
+    } catch (e) {
+      console.warn("[Store] Upstash Redis init failed:", (e as Error).message.substring(0, 60));
+    }
+  }
+  _redisInitTried = true;
+  return _redis;
 }
 
 // ── Core store ops ─────────────────────────────────────────
 const PREFIX = "a9:";
 
 async function storeGetAll(collection: string): Promise<any[]> {
-  if (kvAvailable()) {
+  const redis = getRedis();
+  if (redis) {
     try {
-      const data = await kv.get<any[]>(`${PREFIX}${collection}`);
-      if (data && Array.isArray(data) && data.length > 0) return data;
+      const raw = await redis.get(`${PREFIX}${collection}`);
+      if (raw && Array.isArray(raw) && raw.length > 0) return raw;
     } catch (e) {
-      console.warn(`[KV] get ${collection} failed, falling back:`, (e as Error).message.substring(0, 60));
+      console.warn(`[Store] redis.get ${collection} failed, using fallback`);
     }
   }
   // Memory fallback
@@ -117,22 +138,10 @@ async function storeGetAll(collection: string): Promise<any[]> {
 }
 
 async function storeSet(collection: string, data: any[]): Promise<void> {
-  // Always update memory fallback
   memoryStore.set(collection, data);
-  // Try KV
-  if (kvAvailable()) {
-    try {
-      await kv.set(`${PREFIX}${collection}`, data);
-    } catch (e) {
-      console.warn(`[KV] set ${collection} failed:`, (e as Error).message.substring(0, 60));
-    }
-  }
-}
-
-async function storeDel(collection: string, keys: string[]): Promise<void> {
-  memoryStore.delete(collection);
-  if (kvAvailable()) {
-    try { await kv.del(...keys); } catch { /* nop */ }
+  const redis = getRedis();
+  if (redis) {
+    try { await redis.set(`${PREFIX}${collection}`, data); } catch (e) { /* silent */ }
   }
 }
 
@@ -175,8 +184,6 @@ export const delete_ = async (collection: Collection, id: string): Promise<boole
   return true;
 };
 
-// ── Specialized helpers ────────────────────────────────────
-
 export async function getBookings(): Promise<any[]> {
   return await storeGetAll("bookings");
 }
@@ -194,6 +201,5 @@ export async function getDashboardStats(): Promise<Record<string, number>> {
   };
 }
 
-// Backward-compat aliases
 export const updateById = update;
 export const deleteById = delete_;
