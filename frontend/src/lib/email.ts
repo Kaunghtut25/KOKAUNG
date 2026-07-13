@@ -48,7 +48,7 @@ export async function sendBookingEmail(data: {
   amount?: number;
   currency?: string;
 }): Promise<boolean> {
-  const mail = getTransporter();
+  const transporter = getTransporter();
   const adminEmail = getAdminEmail();
   const subject = `[A9 Booking] ${data.travelType.toUpperCase()} — ${data.referenceNumber} from ${data.fullName}`;
 
@@ -80,7 +80,7 @@ export async function sendBookingEmail(data: {
   `;
 
   try {
-    await mail.sendMail({
+    await transporter.sendMail({
       from: `"A9 Global Booking" <${adminEmail}>`,
       to: adminEmail,
       replyTo: data.email,
