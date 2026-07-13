@@ -482,9 +482,9 @@ export default function HomePage() {
       <section className="py-16 bg-[#FFFDF5]">
         <div className="max-w-6xl mx-auto px-4 grid grid-cols-2 md:grid-cols-4 gap-6">
           <StatsCard icon="✈️" title="IATA Accredited" description="Fully licensed and certified travel agency" imgSrc="/images/iata-logo.png" />
-          <StatsCard icon="🏆" title="10+ Years Exp" description="A decade of trusted travel expertise" imgSrc="https://images.unsplash.com/photo-1506784983877-45594efa4cbe?w=128&h=128&fit=crop&crop=center" />
-          <StatsCard icon="😊" title="500+ Happy Travelers" description="Satisfied customers across the globe" imgSrc="https://images.unsplash.com/photo-1539635278303-d4002c07eae3?w=128&h=128&fit=crop&crop=center" />
-          <StatsCard icon="🕐" title="24/7 Support" description="Round-the-clock assistance anytime" imgSrc="https://images.unsplash.com/photo-1560264280-88b68371db39?w=128&h=128&fit=crop&crop=center" />
+          <StatsCard icon="🏆" title="10+ Years Exp" description="A decade of trusted travel expertise" imgSrc="https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=600&h=300&fit=crop" />
+          <StatsCard icon="😊" title="500+ Happy Travelers" description="Satisfied customers across the globe" imgSrc="https://images.unsplash.com/photo-1527631746610-bca00a040d60?w=600&h=300&fit=crop" />
+          <StatsCard icon="🕐" title="24/7 Support" description="Round-the-clock assistance anytime" imgSrc="https://images.unsplash.com/photo-1553877522-43269d4ea984?w=600&h=300&fit=crop" />
         </div>
       </section>
 
