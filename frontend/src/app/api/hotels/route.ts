@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getAll } from "@/lib/adminStore";
+import { getAll } from "@/lib/persistentStore";
 
 export const dynamic = 'force-dynamic';
 
