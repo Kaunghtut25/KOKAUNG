@@ -32,7 +32,7 @@ export async function GET(request: NextRequest) {
     const currency = searchParams.get('currency') || 'MMK';
     const sort = searchParams.get('sort') || '';
 
-    let hotels = getAll("hotels") as Record<string, unknown>[];
+    let hotels = await getAll("hotels") as Record<string, unknown>[];
 
     // Filter by location
     if (location.trim()) {

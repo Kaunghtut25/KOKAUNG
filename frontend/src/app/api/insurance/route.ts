@@ -15,7 +15,7 @@ function transformInsurance(raw: Record<string, unknown>) {
 
 export async function GET() {
   try {
-    const plans = getAll("insurances") as Record<string, unknown>[];
+    const plans = await getAll("insurances") as Record<string, unknown>[];
     return NextResponse.json({
       success: true,
       data: plans.map(transformInsurance),
