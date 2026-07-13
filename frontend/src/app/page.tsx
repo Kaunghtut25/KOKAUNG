@@ -348,7 +348,7 @@ export default function HomePage() {
 
             <form onSubmit={handleSearch} className="space-y-3">
               {activeTab === "multicity" ? (<>
-                <div className="space-y-4 max-h-[280px] overflow-y-auto pr-1">
+                <div className="space-y-4"><div className="space-y-4 max-h-[280px] overflow-y-auto pr-1">
                   {multiCityLegs.map((leg, index) => (
                     <div key={index} className="flex items-start gap-2">
                       <AirportInput label="" value={leg.from} onChange={(val) => updateMultiCityLeg(index, "from", val)} placeholder="From city"
@@ -367,7 +367,7 @@ export default function HomePage() {
                       )}
                     </div>
                   ))}
-                </div>
+                </div></div>
                   {multiCityLegs.length < 6 && (
                     <div className="flex items-start gap-2">
                       <div className="w-10 flex-shrink-0" />
