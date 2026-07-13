@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { getDashboardStats } from "@/lib/adminStore";
 
 export async function GET() {
@@ -6,6 +6,6 @@ export async function GET() {
     const stats = getDashboardStats();
     return NextResponse.json(stats);
   } catch (err: any) {
-    return NextResponse.json({ message: err.message || "Server error" }, { status: 500 });
+    return NextResponse.json({ error: err.message }, { status: 500 });
   }
 }

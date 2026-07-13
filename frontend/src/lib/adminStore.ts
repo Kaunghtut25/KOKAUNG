@@ -431,3 +431,10 @@ export function getDashboardStats() {
     pendingPayments,
   };
 }
+export function updateById(name: string, id: string, data: Record<string, unknown>): unknown | null {
+  return update(name, id, data);
+}
+
+export function deleteById(name: string, id: string): boolean {
+  return delete_(name, id);
+}

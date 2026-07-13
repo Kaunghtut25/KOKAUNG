@@ -1,48 +1,32 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getById, update, delete_ } from "@/lib/adminStore";
+import { getAll, create, updateById, deleteById } from "@/lib/adminStore";
 
-export async function GET(
-  _request: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
   try {
-    const insurance = getById("insurances", params.id);
-    if (!insurance) {
-      return NextResponse.json({ message: "Insurance not found" }, { status: 404 });
-    }
-    return NextResponse.json(insurance);
+    const items = getAll('insurances') as any[];
+    const item = items.find((i: any) => i._id === params.id || i.id === params.id);
+    if (!item) return NextResponse.json({ success: false, message: "Not found" }, { status: 404 });
+    return NextResponse.json({ success: true, data: item });
   } catch (err: any) {
-    return NextResponse.json({ message: err.message || "Server error" }, { status: 500 });
+    return NextResponse.json({ success: false, message: err.message }, { status: 500 });
   }
 }
 
-export async function PUT(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function PUT(req: NextRequest, { params }: { params: { id: string } }) {
   try {
-    const body = await request.json();
-    const updated = update("insurances", params.id, body);
-    if (!updated) {
-      return NextResponse.json({ message: "Insurance not found" }, { status: 404 });
-    }
-    return NextResponse.json(updated);
+    const body = await req.json();
+    updateById('insurances', params.id, body);
+    return NextResponse.json({ success: true });
   } catch (err: any) {
-    return NextResponse.json({ message: err.message || "Server error" }, { status: 500 });
+    return NextResponse.json({ success: false, message: err.message }, { status: 500 });
   }
 }
 
-export async function DELETE(
-  _request: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function DELETE(req: NextRequest, { params }: { params: { id: string } }) {
   try {
-    const deleted = delete_("insurances", params.id);
-    if (!deleted) {
-      return NextResponse.json({ message: "Insurance not found" }, { status: 404 });
-    }
-    return NextResponse.json({ message: "Insurance deleted successfully" });
+    deleteById('insurances', params.id);
+    return NextResponse.json({ success: true });
   } catch (err: any) {
-    return NextResponse.json({ message: err.message || "Server error" }, { status: 500 });
+    return NextResponse.json({ success: false, message: err.message }, { status: 500 });
   }
 }

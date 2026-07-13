@@ -63,7 +63,7 @@ export default function AdminDashboardPage() {
     try {
       const token = localStorage.getItem("admin_token");
       const [statsRes, bookingsRes] = await Promise.all([
-        fetch(`${API_BASE}/admin/dashboard/stats`, {
+        fetch(`${API_BASE}/admin/stats`, {
           headers: { Authorization: `Bearer ${token}` },
         }),
         fetch(`${API_BASE}/admin/bookings?limit=5`, {
