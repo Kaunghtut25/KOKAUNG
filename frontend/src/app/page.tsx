@@ -116,7 +116,15 @@ function AirportInput({ label, value, onChange, placeholder, icon }: { label: st
         onKeyDown={handleKeyDown} placeholder={placeholder}
         className="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 text-gray-900 placeholder-gray-400 outline-none focus:border-[#D4AF37] transition-all duration-200" />
       {isOpen && filtered.length > 0 && (
-        <div ref={listRef} className="absolute top-full mt-1 left-0 right-0 bg-white border border-gray-200 rounded-xl max-h-60 overflow-y-auto z-[100] shadow-xl">
+        <div 
+          ref={listRef} 
+          className="fixed bg-white border border-gray-200 rounded-xl max-h-60 overflow-y-auto z-[999] shadow-xl"
+          style={{
+            width: wrapperRef.current ? `${wrapperRef.current.offsetWidth}px` : 'auto',
+            top: wrapperRef.current ? `${wrapperRef.current.getBoundingClientRect().bottom + 4}px` : '0',
+            left: wrapperRef.current ? `${wrapperRef.current.getBoundingClientRect().left}px` : '0',
+          }}
+        >
           {filtered.slice(0, 50).map((airport, idx) => (
             <button key={airport.code} type="button" onClick={() => selectAirport(airport)} onMouseEnter={() => setHighlightIndex(idx)}
               className={"w-full text-left px-4 py-3 flex items-center gap-3 border-b border-gray-100 last:border-b-0 transition-colors cursor-pointer " + (idx === highlightIndex ? "bg-[#D4AF37]/10 text-gray-900" : "text-gray-600 hover:bg-gray-50 hover:text-gray-900")}>
