@@ -13,12 +13,16 @@ interface FlightLeg { from: string; to: string; date: string; }
 interface PassengerCounts { adults: number; children: number; infants: number; }
 
 const slides = [
-  { image: "https://images.unsplash.com/photo-1500835556837-99ac94a94552?w=1920&q=80", label: "Luxury Escape", title: "Maldives Overwater Paradise", subtitle: "Crystal waters and private villas await your arrival" },
-  { image: "https://images.unsplash.com/photo-1476514525535-3be9f01f19e4?w=1920&q=80", label: "Nature Retreat", title: "Swiss Alps Adventure", subtitle: "Breathtaking peaks and serene mountain lakes" },
-  { image: "https://images.unsplash.com/photo-1503221383503-4a7621a78ad3?w=1920&q=80", label: "Urban Explorer", title: "Discover Tokyo", subtitle: "Where ancient tradition meets futuristic innovation" },
-  { image: "https://images.unsplash.com/photo-1548013146-724b4e8f0c4f?w=1920&q=80", label: "Romantic Getaway", title: "Paris, City of Lights", subtitle: "Iconic landmarks and world-class cuisine at every corner" },
-  { image: "https://images.unsplash.com/photo-1514282401047-d79a71a590e8?w=1920&q=80", label: "Tropical Bliss", title: "Maldives Beach Escape", subtitle: "Turquoise lagoons and powder-white sand beaches" },
-  { image: "https://images.unsplash.com/photo-1537996194471-e657f9e13fba?w=1920&q=80", label: "Cultural Journey", title: "Bagan, Land of Temples", subtitle: "Thousands of ancient pagodas across a mystical landscape" },
+  { image: "https://images.unsplash.com/photo-1570168007203-1c4a712df7ab?w=1920&q=80", label: "Golden Land", title: "Myanmar — Bagan Temples", subtitle: "Over 2,000 ancient pagodas across a mystical plain" },
+  { image: "https://images.unsplash.com/photo-1525625293386-3f8f99389edd?w=1920&q=80", label: "Lion City", title: "Singapore — Marina Bay", subtitle: "Futuristic skyline meets lush garden city living" },
+  { image: "https://images.unsplash.com/photo-1552465011-b4e21bf6e79a?w=1920&q=80", label: "Land of Smiles", title: "Thailand — Grand Palace", subtitle: "Golden spires and ornate temples in Bangkok" },
+  { image: "https://images.unsplash.com/photo-1596422846543-75c6fc197f07?w=1920&q=80", label: "Truly Asia", title: "Malaysia — Petronas Towers", subtitle: "Iconic twin towers rising above Kuala Lumpur" },
+  { image: "https://images.unsplash.com/photo-1528127269322-539801943592?w=1920&q=80", label: "Timeless Charm", title: "Vietnam — Ha Long Bay", subtitle: "Emerald waters dotted with limestone islands" },
+  { image: "https://images.unsplash.com/photo-1508804185872-d7badad00f7d?w=1920&q=80", label: "Ancient Empire", title: "China — The Great Wall", subtitle: "A wonder stretching across mountain peaks" },
+  { image: "https://images.unsplash.com/photo-1573843981267-be1999ff37cd?w=1920&q=80", label: "Pearl of the Orient", title: "Philippines — Palawan", subtitle: "Crystal-clear lagoons and dramatic limestone cliffs" },
+  { image: "https://images.unsplash.com/photo-1537996194471-e657f9e13fba?w=1920&q=80", label: "Emerald Isles", title: "Indonesia — Bali Temples", subtitle: "Sacred shrines perched on volcanic shores" },
+  { image: "https://images.unsplash.com/photo-1559592413-7cec4d0cae2b?w=1920&q=80", label: "Hidden Gem", title: "Laos — Luang Prabang", subtitle: "Golden temples along the Mekong River" },
+  { image: "https://images.unsplash.com/photo-1570610153147-5b6b6ca68701?w=1920&q=80", label: "Kingdom of Wonder", title: "Cambodia — Angkor Wat", subtitle: "The world's largest religious monument at dawn" },
 ];
 
 function StatsCard({ icon, title, description }: { icon: string; title: string; description: string }) {
