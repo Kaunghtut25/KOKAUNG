@@ -182,6 +182,16 @@ function SkeletonRow() {
 }
 
 export default function VisasPage() {
+  // Fetch from admin database
+  const [apiData, setApiData] = useState<any[]>([]);
+  const [dataLoaded, setDataLoaded] = useState(false);
+  useEffect(() => {
+    fetch('/api/visas').then(r => r.json()).then(data => {
+      const items = data?.data || data || [];
+      if (items.length > 0) { setApiData(items); setDataLoaded(true); }
+    }).catch(() => {});
+  }, []);
+
   const router = useRouter();
   const [visas, setVisas] = useState<VisaService[]>([]);
   const [loading, setLoading] = useState(true);

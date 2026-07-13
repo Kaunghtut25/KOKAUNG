@@ -61,6 +61,16 @@ const PLAN_IMAGES: Record<string, string> = {
 };
 
 export default function InsurancePage() {
+  // Fetch from admin database
+  const [apiData, setApiData] = useState<any[]>([]);
+  const [dataLoaded, setDataLoaded] = useState(false);
+  useEffect(() => {
+    fetch('/api/insurance').then(r => r.json()).then(data => {
+      const items = data?.data || data || [];
+      if (items.length > 0) { setApiData(items); setDataLoaded(true); }
+    }).catch(() => {});
+  }, []);
+
   const router = useRouter();
   const [plans, setPlans] = useState<InsurancePlan[]>([]);
   const [loading, setLoading] = useState(true);

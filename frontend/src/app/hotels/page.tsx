@@ -25,6 +25,16 @@ function SkeletonCard() {
 }
 
 export default function HotelsPage() {
+  // Fetch from admin database
+  const [apiData, setApiData] = useState<any[]>([]);
+  const [dataLoaded, setDataLoaded] = useState(false);
+  useEffect(() => {
+    fetch('/api/hotels').then(r => r.json()).then(data => {
+      const items = data?.data || data || [];
+      if (items.length > 0) { setApiData(items); setDataLoaded(true); }
+    }).catch(() => {});
+  }, []);
+
   const router = useRouter();
   const [hotels, setHotels] = useState<Hotel[]>([]);
   const [loading, setLoading] = useState(true);

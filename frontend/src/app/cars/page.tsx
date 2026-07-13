@@ -26,6 +26,16 @@ function SkeletonCard() {
 const CAR_TYPES = ['All', 'SUV', 'Sedan', 'MPV', 'Hatchback', 'Pickup', 'Luxury'];
 
 export default function CarsPage() {
+  // Fetch from admin database
+  const [apiData, setApiData] = useState<any[]>([]);
+  const [dataLoaded, setDataLoaded] = useState(false);
+  useEffect(() => {
+    fetch('/api/cars').then(r => r.json()).then(data => {
+      const items = data?.data || data || [];
+      if (items.length > 0) { setApiData(items); setDataLoaded(true); }
+    }).catch(() => {});
+  }, []);
+
   const router = useRouter();
   const [cars, setCars] = useState<Car[]>([]);
   const [loading, setLoading] = useState(true);

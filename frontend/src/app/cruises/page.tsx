@@ -1,9 +1,19 @@
 'use client';
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 
 export default function CruisesPage() {
+  // Fetch from admin database
+  const [apiData, setApiData] = useState<any[]>([]);
+  const [dataLoaded, setDataLoaded] = useState(false);
+  useEffect(() => {
+    fetch('/api/cruises').then(r => r.json()).then(data => {
+      const items = data?.data || data || [];
+      if (items.length > 0) { setApiData(items); setDataLoaded(true); }
+    }).catch(() => {});
+  }, []);
+
   return (
     <main className="min-h-screen bg-white">
       <section className="relative h-[400px] md:h-[500px] w-full overflow-hidden">
