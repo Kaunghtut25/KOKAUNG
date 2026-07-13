@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect,  useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { api, Tour } from '@/lib/api';
 import TourCard from '@/components/TourCard';
 import ScrollingRow from '@/components/ScrollingRow';
