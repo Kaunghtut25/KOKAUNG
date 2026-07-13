@@ -59,7 +59,7 @@ function AirportInput({ label, value, onChange, placeholder, icon }: { label: st
   const inputRef = useRef<HTMLInputElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
 
-  // Priority cities: Yangon, Mandalay, Bangkok, Kuala Lumpur, Singapore
+  // Priority cities: Yangon (deploy: 20260713-195843), Mandalay, Bangkok, Kuala Lumpur, Singapore
   const priorityCities = ["RGN","MDL","BKK","KUL","SIN"];
   const priorityAirports = airports.filter(a => priorityCities.includes(a.code));
   const otherAirports = airports.filter(a => !priorityCities.includes(a.code));
