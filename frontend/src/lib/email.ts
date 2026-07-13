@@ -90,7 +90,7 @@ export async function sendBookingEmail(data: {
     console.log(`[Email] Sent booking ${data.referenceNumber} to ${adminEmail}`);
     return true;
   } catch (err) {
-    console.error('[Email] Failed to send:', err);
+    console.error('[Email] Failed to send — type:', err?.constructor?.name, '— code:', err?.code, '— command:', err?.command, '— msg:', err?.message);
     return false;
   }
 }
