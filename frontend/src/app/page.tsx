@@ -6,6 +6,7 @@ import toast from "react-hot-toast";
 import PopularDestinations from "@/components/PopularDestinations";
 import { Airport, airports } from '@/data/airports';
 import { useNearestAirport } from '@/hooks/useNearestAirport';
+import Image from 'next/image';
 
 type TabType = "oneway" | "roundtrip" | "multicity";
 
