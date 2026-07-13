@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getAll } from "@/lib/persistentStore";
+import { getAll } from "@/lib/adminStore";
 
 export const dynamic = 'force-dynamic';
 
@@ -15,7 +15,7 @@ function transformInsurance(raw: Record<string, unknown>) {
 
 export async function GET() {
   try {
-    const plans = await getAll("insurances") as Record<string, unknown>[];
+    const plans = getAll("insurances") as Record<string, unknown>[];
     return NextResponse.json({
       success: true,
       data: plans.map(transformInsurance),

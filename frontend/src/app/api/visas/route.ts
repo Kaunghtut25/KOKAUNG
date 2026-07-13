@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getAll } from "@/lib/persistentStore";
+import { getAll } from "@/lib/adminStore";
 
 export const dynamic = 'force-dynamic';
 
 export async function GET() {
   try {
-    const visas = await getAll("visas");
+    const visas = getAll("visas");
     return NextResponse.json({
       success: true,
       data: visas,

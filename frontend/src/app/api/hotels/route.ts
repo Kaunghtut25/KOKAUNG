@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getAll } from "@/lib/persistentStore";
+import { getAll } from "@/lib/adminStore";
 
 export const dynamic = 'force-dynamic';
 
@@ -32,7 +32,7 @@ export async function GET(request: NextRequest) {
     const currency = searchParams.get('currency') || 'MMK';
     const sort = searchParams.get('sort') || '';
 
-    let hotels = await getAll("hotels") as Record<string, unknown>[];
+    let hotels = getAll("hotels") as Record<string, unknown>[];
 
     // Filter by location
     if (location.trim()) {
