@@ -1,29 +1,14 @@
-import nodemailer from 'nodemailer';
+import { Resend } from "resend";
 
-const ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'a9ticketing@a9globaltravel.com.mm';
+const ADMIN_EMAIL = process.env.ADMIN_EMAIL || "a9ticketing@a9globaltravel.com.mm";
+const RESEND_API_KEY = process.env.RESEND_API_KEY || "";
 
-// SMTP transporter — configure with your email provider
-let transporter: nodemailer.Transporter | null = null;
-
-function getTransporter() {
-  if (transporter) return transporter;
-
-  // Try Gmail SMTP (uses app password)
-  const smtpHost = process.env.SMTP_HOST || 'smtp.gmail.com';
-  const smtpPort = parseInt(process.env.SMTP_PORT || '587', 10);
-  const smtpUser = process.env.SMTP_USER || 'dadkaunghtut@gmail.com';
-  const smtpPass = process.env.SMTP_PASS || '';
-
-  transporter = nodemailer.createTransport({
-    host: smtpHost,
-    port: smtpPort,
-    secure: smtpPort === 465,
-    auth: {
-      user: smtpUser,
-      pass: smtpPass,
-    },
-  });
-  return transporter;
+function getResend(): Resend | null {
+  if (!RESEND_API_KEY) {
+    console.warn("[Email] RESEND_API_KEY not set — email disabled");
+    return null;
+  }
+  return new Resend(RESEND_API_KEY);
 }
 
 export function getAdminEmail(): string {
@@ -48,8 +33,9 @@ export async function sendBookingEmail(data: {
   amount?: number;
   currency?: string;
 }): Promise<boolean> {
-  const transporter = getTransporter();
-  const adminEmail = getAdminEmail();
+  const resend = getResend();
+  if (!resend) return false;
+
   const subject = `[A9 Booking] ${data.travelType.toUpperCase()} — ${data.referenceNumber} from ${data.fullName}`;
 
   const html = `
@@ -62,16 +48,16 @@ export async function sendBookingEmail(data: {
         <tr style="background: #f9f9f9;"><td style="padding: 8px; font-weight: bold;">Client Name</td><td style="padding: 8px;">${data.fullName}</td></tr>
         <tr><td style="padding: 8px; font-weight: bold;">Email</td><td style="padding: 8px;"><a href="mailto:${data.email}">${data.email}</a></td></tr>
         <tr style="background: #f9f9f9;"><td style="padding: 8px; font-weight: bold;">Phone</td><td style="padding: 8px;"><a href="tel:${data.phone}">${data.phone}</a></td></tr>
-        ${data.fromAirport ? `<tr><td style="padding: 8px; font-weight: bold;">From</td><td style="padding: 8px;">${data.fromAirport}</td></tr>` : ''}
-        ${data.toAirport ? `<tr style="background: #f9f9f9;"><td style="padding: 8px; font-weight: bold;">To</td><td style="padding: 8px;">${data.toAirport}</td></tr>` : ''}
-        ${data.departDate ? `<tr><td style="padding: 8px; font-weight: bold;">Departure</td><td style="padding: 8px;">${data.departDate}</td></tr>` : ''}
-        ${data.returnDate ? `<tr style="background: #f9f9f9;"><td style="padding: 8px; font-weight: bold;">Return</td><td style="padding: 8px;">${data.returnDate}</td></tr>` : ''}
-        ${data.passengers ? `<tr><td style="padding: 8px; font-weight: bold;">Passengers</td><td style="padding: 8px;">${data.passengers}</td></tr>` : ''}
-        ${data.travelClass ? `<tr style="background: #f9f9f9;"><td style="padding: 8px; font-weight: bold;">Class</td><td style="padding: 8px;">${data.travelClass}</td></tr>` : ''}
-        ${data.itemName ? `<tr><td style="padding: 8px; font-weight: bold;">Item</td><td style="padding: 8px;">${data.itemName}</td></tr>` : ''}
-        ${data.amount ? `<tr style="background: #f9f9f9;"><td style="padding: 8px; font-weight: bold;">Amount</td><td style="padding: 8px; font-weight: bold; color: #D4AF37;">${data.amount} ${data.currency || 'MMK'}</td></tr>` : ''}
-        ${data.specialRequests ? `<tr><td style="padding: 8px; font-weight: bold;">Special Requests</td><td style="padding: 8px;">${data.specialRequests}</td></tr>` : ''}
-        <tr style="background: #f9f9f9;"><td style="padding: 8px; font-weight: bold;">Contact Preference</td><td style="padding: 8px;">${data.contactPreference || 'email'}</td></tr>
+        ${data.fromAirport ? `<tr><td style="padding: 8px; font-weight: bold;">From</td><td style="padding: 8px;">${data.fromAirport}</td></tr>` : ""}
+        ${data.toAirport ? `<tr style="background: #f9f9f9;"><td style="padding: 8px; font-weight: bold;">To</td><td style="padding: 8px;">${data.toAirport}</td></tr>` : ""}
+        ${data.departDate ? `<tr><td style="padding: 8px; font-weight: bold;">Departure</td><td style="padding: 8px;">${data.departDate}</td></tr>` : ""}
+        ${data.returnDate ? `<tr style="background: #f9f9f9;"><td style="padding: 8px; font-weight: bold;">Return</td><td style="padding: 8px;">${data.returnDate}</td></tr>` : ""}
+        ${data.passengers ? `<tr><td style="padding: 8px; font-weight: bold;">Passengers</td><td style="padding: 8px;">${data.passengers}</td></tr>` : ""}
+        ${data.travelClass ? `<tr style="background: #f9f9f9;"><td style="padding: 8px; font-weight: bold;">Class</td><td style="padding: 8px;">${data.travelClass}</td></tr>` : ""}
+        ${data.itemName ? `<tr><td style="padding: 8px; font-weight: bold;">Item</td><td style="padding: 8px;">${data.itemName}</td></tr>` : ""}
+        ${data.amount ? `<tr style="background: #f9f9f9;"><td style="padding: 8px; font-weight: bold;">Amount</td><td style="padding: 8px; font-weight: bold; color: #D4AF37;">${data.amount} ${data.currency || "MMK"}</td></tr>` : ""}
+        ${data.specialRequests ? `<tr><td style="padding: 8px; font-weight: bold;">Special Requests</td><td style="padding: 8px;">${data.specialRequests}</td></tr>` : ""}
+        <tr style="background: #f9f9f9;"><td style="padding: 8px; font-weight: bold;">Contact Preference</td><td style="padding: 8px;">${data.contactPreference || "email"}</td></tr>
       </table>
       <div style="margin-top: 20px; padding: 15px; background: #0A1628; color: #D4AF37; border-radius: 6px; text-align: center; font-size: 14px;">
         📧 <strong>A9 Global Travel & Tours</strong> — Auto-generated booking notification
@@ -80,17 +66,17 @@ export async function sendBookingEmail(data: {
   `;
 
   try {
-    await transporter.sendMail({
-      from: `"A9 Global Booking" <${adminEmail}>`,
-      to: adminEmail,
-      replyTo: data.email,
+    const result = await resend.emails.send({
+      from: "A9 Global Travel <booking@a9travel.com>",
+      to: [ADMIN_EMAIL],
+      reply_to: data.email,
       subject,
       html,
     });
-    console.log(`[Email] Sent booking ${data.referenceNumber} to ${adminEmail}`);
+    console.log(`[Email] Sent ${data.referenceNumber} — Resend ID: ${result.data?.id}`);
     return true;
   } catch (err) {
-    console.error('[Email] Failed to send — type:', err?.constructor?.name, '— code:', err?.code, '— command:', err?.command, '— msg:', err?.message);
+    console.error("[Email] Resend failed:", (err as any)?.message || err);
     return false;
   }
 }
