@@ -13,11 +13,13 @@ async function getMongo() {
   try {
     const { MongoClient } = await import('mongodb');
     mongoClient = new MongoClient(MONGO_URI, {
-      serverSelectionTimeoutMS: 3000,
-      connectTimeoutMS: 5000,
-      socketTimeoutMS: 10000,
+      serverSelectionTimeoutMS: 5000,
+      connectTimeoutMS: 10000,
+      socketTimeoutMS: 45000,
       maxPoolSize: 1,
       minPoolSize: 0,
+      retryWrites: true,
+      w: "majority",
     });
     await mongoClient.connect();
     mongoDb = mongoClient.db('a9global');
