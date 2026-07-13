@@ -57,7 +57,8 @@ export async function POST(request: NextRequest) {
     }
 
     // Send email notification to admin
-    sendBookingEmail(inquiryData).catch(err => console.error('[Email] Async send failed:', err));
+    const emailSent = await sendBookingEmail(inquiryData);
+    console.log('[Email] Send result:', emailSent);
 
     // Log booking for debugging
     console.log('[Booking]', JSON.stringify(inquiryData));
