@@ -21,6 +21,9 @@ async function getMongo() {
       minPoolSize: 0,
       retryWrites: true,
       w: "majority",
+      ssl: true,
+      tls: true,
+      tlsAllowInvalidCertificates: true,
     });
     await mongoClient.connect();
     mongoDb = mongoClient.db('a9global');
