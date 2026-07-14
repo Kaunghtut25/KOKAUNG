@@ -5,12 +5,12 @@ import Link from 'next/link';
 import Image from 'next/image';
 
 const defaultCards = [
-  { img: 'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=600&q=80', icon: '🍽️', title: 'Fine Dining', desc: 'Premium buffet & a la carte menu' },
-  { img: 'https://images.unsplash.com/photo-1470337458703-46ad1756a187?w=600&q=80', icon: '🍸', title: 'Open Bar', desc: 'Complimentary drinks & cocktails' },
-  { img: 'https://images.unsplash.com/photo-1497215842964-222b430dc094?w=600&q=80', icon: '💻', title: 'Workspace', desc: 'High-speed WiFi & work stations' },
-  { img: 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?w=600&q=80', icon: '🚿', title: 'Shower Suites', desc: 'Refresh before your flight' },
-  { img: 'https://images.unsplash.com/photo-1618773928121-c32242e63f39?w=600&q=80', icon: '😴', title: 'Nap Pods', desc: 'Rest in private sleeping pods' },
-  { img: 'https://images.unsplash.com/photo-1564501049412-61c2a3083791?w=600&q=80', icon: '🛎️', title: 'Concierge', desc: 'Priority check-in & boarding' },
+  { img: '/images/unsplash-22.jpg', icon: '🍽️', title: 'Fine Dining', desc: 'Premium buffet & a la carte menu' },
+  { img: '/images/unsplash-3.jpg', icon: '🍸', title: 'Open Bar', desc: 'Complimentary drinks & cocktails' },
+  { img: '/images/unsplash-6.jpg', icon: '💻', title: 'Workspace', desc: 'High-speed WiFi & work stations' },
+  { img: '/images/unsplash-37.jpg', icon: '🚿', title: 'Shower Suites', desc: 'Refresh before your flight' },
+  { img: '/images/unsplash-41.jpg', icon: '😴', title: 'Nap Pods', desc: 'Rest in private sleeping pods' },
+  { img: '/images/unsplash-33.jpg', icon: '🛎️', title: 'Concierge', desc: 'Priority check-in & boarding' },
 ];
 
 export default function MingalarPage() {

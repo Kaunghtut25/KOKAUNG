@@ -22,12 +22,12 @@ export default function AdminMingalarPage() {
 
   const seedDefaults = async () => {
     const defaults = [
-      { img: "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=600&q=80", icon: "🍽️", title: "Fine Dining", desc: "Premium buffet & a la carte menu" },
-      { img: "https://images.unsplash.com/photo-1470337458703-46ad1756a187?w=600&q=80", icon: "🍸", title: "Open Bar", desc: "Complimentary drinks & cocktails" },
-      { img: "https://images.unsplash.com/photo-1497215842964-222b430dc094?w=600&q=80", icon: "💻", title: "Workspace", desc: "High-speed WiFi & work stations" },
-      { img: "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?w=600&q=80", icon: "🛿", title: "Shower Suites", desc: "Refresh before your flight" },
-      { img: "https://images.unsplash.com/photo-1618773928121-c32242e63f39?w=600&q=80", icon: "😴", title: "Nap Pods", desc: "Rest in private sleeping pods" },
-      { img: "https://images.unsplash.com/photo-1564501049412-61c2a3083791?w=600&q=80", icon: "🛎️", title: "Concierge", desc: "Priority check-in & boarding" },
+      { img: "/images/unsplash-22.jpg", icon: "🍽️", title: "Fine Dining", desc: "Premium buffet & a la carte menu" },
+      { img: "/images/unsplash-3.jpg", icon: "🍸", title: "Open Bar", desc: "Complimentary drinks & cocktails" },
+      { img: "/images/unsplash-6.jpg", icon: "💻", title: "Workspace", desc: "High-speed WiFi & work stations" },
+      { img: "/images/unsplash-37.jpg", icon: "🛿", title: "Shower Suites", desc: "Refresh before your flight" },
+      { img: "/images/unsplash-41.jpg", icon: "😴", title: "Nap Pods", desc: "Rest in private sleeping pods" },
+      { img: "/images/unsplash-33.jpg", icon: "🛎️", title: "Concierge", desc: "Priority check-in & boarding" },
     ];
     for (const d of defaults) { try { await api.post("/admin/mingalar", d); } catch {} }
   };
@@ -96,7 +96,7 @@ export default function AdminMingalarPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
             <div>
               <label className="block text-gray-400 text-sm mb-1">Image URL</label>
-              <input value={form.img} onChange={e => setForm({...form, img: e.target.value})} className="w-full bg-gray-800 border border-gray-600 rounded-lg px-3 py-2 text-white text-sm" placeholder="https://images.unsplash.com/..." />
+              <input value={form.img} onChange={e => setForm({...form, img: e.target.value})} className="w-full bg-gray-800 border border-gray-600 rounded-lg px-3 py-2 text-white text-sm" placeholder="Image URL or /images/..." />
             </div>
             <div>
               <label className="block text-gray-400 text-sm mb-1">Icon (emoji)</label>

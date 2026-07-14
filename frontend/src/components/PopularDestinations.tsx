@@ -11,32 +11,32 @@ interface Destination {
 }
 
 const TOP_PICKS: Destination[] = [
-  { name: "Paris", imageUrl: "https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=400&q=80" },
-  { name: "Dubai", imageUrl: "https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=400&q=80" },
-  { name: "Malaysia", imageUrl: "https://images.unsplash.com/photo-1596422846543-75c6fc197f07?w=400&q=80" },
-  { name: "Korea", imageUrl: "https://images.unsplash.com/photo-1534274988757-a28bf1a57c17?w=400&q=80" },
-  { name: "Vietnam", imageUrl: "https://images.unsplash.com/photo-1528127269322-539801943592?w=400&q=80" },
-  { name: "Myanmar", imageUrl: "https://images.unsplash.com/photo-1570168001899-b7d3b500a1c7?w=400&q=80" },
-  { name: "Australia", imageUrl: "https://images.unsplash.com/photo-1528072164453-f4e8ef0d475a?w=400&q=80" },
-  { name: "Turkey", imageUrl: "https://images.unsplash.com/photo-1524231757912-21f4fe3a7200?w=400&q=80" },
-  { name: "Netherlands", imageUrl: "https://images.unsplash.com/photo-1534351590666-13e3e96b5017?w=400&q=80" },
-  { name: "Thailand", imageUrl: "https://images.unsplash.com/photo-1552465011-b4e21bf6e79a?w=400&q=80" },
+  { name: "Paris", imageUrl: "/images/dest-paris.jpg" },
+  { name: "Dubai", imageUrl: "/images/dest-dubai.jpg" },
+  { name: "Malaysia", imageUrl: "/images/hero-malaysia.jpg" },
+  { name: "Korea", imageUrl: "/images/dest-korea.jpg" },
+  { name: "Vietnam", imageUrl: "/images/hero-vietnam.jpg" },
+  { name: "Myanmar", imageUrl: "/images/dest-myanmar.jpg" },
+  { name: "Australia", imageUrl: "/images/dest-australia.jpg" },
+  { name: "Turkey", imageUrl: "/images/dest-turkey.jpg" },
+  { name: "Netherlands", imageUrl: "/images/dest-netherlands.jpg" },
+  { name: "Thailand", imageUrl: "/images/hero-thailand.jpg" },
 ];
 
 const EXPLORE_MORE: Destination[] = [
-  { name: "Nepal", imageUrl: "https://images.unsplash.com/photo-1544735716-392fe2489ffa?w=400&q=80" },
-  { name: "Singapore", imageUrl: "https://images.unsplash.com/photo-1525625293386-3f8f99389edd?w=400&q=80" },
-  { name: "Japan", imageUrl: "https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=400&q=80" },
-  { name: "Egypt", imageUrl: "https://images.unsplash.com/photo-1539768942893-d1a84abb6882?w=400&q=80" },
-  { name: "Italy", imageUrl: "https://images.unsplash.com/photo-1523906834658-6e24ef2386f9?w=400&q=80" },
-  { name: "Spain", imageUrl: "https://images.unsplash.com/photo-1543783207-ec64e4d95325?w=400&q=80" },
-  { name: "Maldives", imageUrl: "https://images.unsplash.com/photo-1514282401047-d79a71a590e8?w=400&q=80" },
-  { name: "India", imageUrl: "https://images.unsplash.com/photo-1524492412937-b28074a5d7da?w=400&q=80" },
-  { name: "USA", imageUrl: "https://images.unsplash.com/photo-1485738422979-f5c462d49f74?w=400&q=80" },
-  { name: "UK", imageUrl: "https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?w=400&q=80" },
+  { name: "Nepal", imageUrl: "/images/dest-nepal.jpg" },
+  { name: "Singapore", imageUrl: "/images/hero-singapore.jpg" },
+  { name: "Japan", imageUrl: "/images/dest-japan.jpg" },
+  { name: "Egypt", imageUrl: "/images/dest-egypt.jpg" },
+  { name: "Italy", imageUrl: "/images/dest-italy.jpg" },
+  { name: "Spain", imageUrl: "/images/dest-spain.jpg" },
+  { name: "Maldives", imageUrl: "/images/dest-maldives.jpg" },
+  { name: "India", imageUrl: "/images/dest-india.jpg" },
+  { name: "USA", imageUrl: "/images/dest-usa.jpg" },
+  { name: "UK", imageUrl: "/images/dest-uk.jpg" },
 ];
 
-const FALLBACK_IMG = "https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=400&q=80";
+const FALLBACK_IMG = "/images/cta-bg.jpg";
 
 // ── Destination Card ────────────────────────────────────────────────────────
 

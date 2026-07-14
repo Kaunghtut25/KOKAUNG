@@ -3,28 +3,28 @@
 import React from "react";
 import Link from "next/link";
 
-const unsplashBase = "https://images.unsplash.com";
+
 
 const teamMembers = [
   {
     name: "U Aung Kyaw",
     role: "Founder & CEO",
-    image: `${unsplashBase}/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop&crop=face&q=80`,
+    image: `/images/team-ceo.jpg`,
   },
   {
     name: "Daw Su Myat",
     role: "Operations Director",
-    image: `${unsplashBase}/photo-1573496359142-b8d87734a5a2?w=200&h=200&fit=crop&crop=face&q=80`,
+    image: `/images/team-ops.jpg`,
   },
   {
     name: "U Zaw Htun",
     role: "Head of Tours",
-    image: `${unsplashBase}/photo-1506794778202-cad84cf45f1f?w=200&h=200&fit=crop&crop=face&q=80`,
+    image: `/images/team-tours.jpg`,
   },
   {
     name: "Daw Hnin Si",
     role: "Customer Relations",
-    image: `${unsplashBase}/photo-1580489944761-15a19d654956?w=200&h=200&fit=crop&crop=face&q=80`,
+    image: `/images/team-cr.jpg`,
   },
 ];
 
@@ -101,7 +101,7 @@ export default function AboutPage() {
           <div className="relative">
             <div className="w-full h-80 sm:h-96 rounded-2xl border-2 border-[#D4AF37]/30 overflow-hidden">
               <img
-                src={`${unsplashBase}/photo-1469854523086-cc02fe5d8800?w=800&q=80`}
+                src={`/images/about-hero.jpg`}
                 alt="A9 Global travel team"
                 className="w-full h-full object-cover"
               />

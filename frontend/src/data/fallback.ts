@@ -11,14 +11,14 @@ interface FallbackResult {
 export function searchFallbackData(query: string, destination?: string): FallbackResult[] {
   const q = (query || destination || "").toLowerCase().trim();
   const allResults: FallbackResult[] = [
-    { id: "1", title: "Yangon City Tour", destination: "Yangon", price: 120, airline: "A9 Global", duration: "3 days", image: "https://images.unsplash.com/photo-1508009603885-50cf7c579365?w=400" },
-    { id: "2", title: "Bagan Temple Discovery", destination: "Bagan", price: 280, airline: "A9 Global", duration: "4 days", image: "https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=400" },
-    { id: "3", title: "Inle Lake Adventure", destination: "Inle Lake", price: 350, airline: "A9 Global", duration: "5 days", image: "https://images.unsplash.com/photo-1568849676085-51415703900f?w=400" },
-    { id: "4", title: "Bangkok Express", destination: "Bangkok", price: 180, airline: "Thai Airways", duration: "3 days", image: "https://images.unsplash.com/photo-1508009603885-50cf7c579365?w=400" },
-    { id: "5", title: "Singapore Highlights", destination: "Singapore", price: 420, airline: "Singapore Airlines", duration: "4 days", image: "https://images.unsplash.com/photo-1525625293386-3f8f99389edd?w=400" },
-    { id: "6", title: "Dubai Luxury Package", destination: "Dubai", price: 890, airline: "Emirates", duration: "5 days", image: "https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=400" },
-    { id: "7", title: "Tokyo Explorer", destination: "Tokyo", price: 750, airline: "ANA", duration: "6 days", image: "https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=400" },
-    { id: "8", title: "Bali Paradise", destination: "Bali", price: 520, airline: "Garuda Indonesia", duration: "5 days", image: "https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=400" },
+    { id: "1", title: "Yangon City Tour", destination: "Yangon", price: 120, airline: "A9 Global", duration: "3 days", image: "/images/unsplash-9.jpg" },
+    { id: "2", title: "Bagan Temple Discovery", destination: "Bagan", price: 280, airline: "A9 Global", duration: "4 days", image: "/images/unsplash-18.jpg" },
+    { id: "3", title: "Inle Lake Adventure", destination: "Inle Lake", price: 350, airline: "A9 Global", duration: "5 days", image: "/images/unsplash-34.jpg" },
+    { id: "4", title: "Bangkok Express", destination: "Bangkok", price: 180, airline: "Thai Airways", duration: "3 days", image: "/images/unsplash-9.jpg" },
+    { id: "5", title: "Singapore Highlights", destination: "Singapore", price: 420, airline: "Singapore Airlines", duration: "4 days", image: "/images/unsplash-15.jpg" },
+    { id: "6", title: "Dubai Luxury Package", destination: "Dubai", price: 890, airline: "Emirates", duration: "5 days", image: "/images/unsplash-11.jpg" },
+    { id: "7", title: "Tokyo Explorer", destination: "Tokyo", price: 750, airline: "ANA", duration: "6 days", image: "/images/unsplash-21.jpg" },
+    { id: "8", title: "Bali Paradise", destination: "Bali", price: 520, airline: "Garuda Indonesia", duration: "5 days", image: "/images/unsplash-18.jpg" },
   ];
   if (!q) return allResults.slice(0, 6);
   return allResults.filter(r => r.destination.toLowerCase().includes(q) || r.title.toLowerCase().includes(q));

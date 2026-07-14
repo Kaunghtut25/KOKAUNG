@@ -13,16 +13,16 @@ interface FlightLeg { from: string; to: string; date: string; }
 interface PassengerCounts { adults: number; children: number; infants: number; }
 
 const slides = [
-  { image: "https://images.unsplash.com/photo-1570168007203-1c4a712df7ab?w=1920&q=80", label: "Golden Land", title: "Myanmar — Bagan Temples", subtitle: "Over 2,000 ancient pagodas across a mystical plain" },
-  { image: "https://images.unsplash.com/photo-1525625293386-3f8f99389edd?w=1920&q=80", label: "Lion City", title: "Singapore — Marina Bay", subtitle: "Futuristic skyline meets lush garden city living" },
-  { image: "https://images.unsplash.com/photo-1552465011-b4e21bf6e79a?w=1920&q=80", label: "Land of Smiles", title: "Thailand — Grand Palace", subtitle: "Golden spires and ornate temples in Bangkok" },
-  { image: "https://images.unsplash.com/photo-1596422846543-75c6fc197f07?w=1920&q=80", label: "Truly Asia", title: "Malaysia — Petronas Towers", subtitle: "Iconic twin towers rising above Kuala Lumpur" },
-  { image: "https://images.unsplash.com/photo-1528127269322-539801943592?w=1920&q=80", label: "Timeless Charm", title: "Vietnam — Ha Long Bay", subtitle: "Emerald waters dotted with limestone islands" },
-  { image: "https://images.unsplash.com/photo-1508804185872-d7badad00f7d?w=1920&q=80", label: "Ancient Empire", title: "China — The Great Wall", subtitle: "A wonder stretching across mountain peaks" },
-  { image: "https://images.unsplash.com/photo-1573843981267-be1999ff37cd?w=1920&q=80", label: "Pearl of the Orient", title: "Philippines — Palawan", subtitle: "Crystal-clear lagoons and dramatic limestone cliffs" },
-  { image: "https://images.unsplash.com/photo-1537996194471-e657f9e13fba?w=1920&q=80", label: "Emerald Isles", title: "Indonesia — Bali Temples", subtitle: "Sacred shrines perched on volcanic shores" },
-  { image: "https://images.unsplash.com/photo-1559592413-7cec4d0cae2b?w=1920&q=80", label: "Hidden Gem", title: "Laos — Luang Prabang", subtitle: "Golden temples along the Mekong River" },
-  { image: "https://images.unsplash.com/photo-1570610153147-5b6b6ca68701?w=1920&q=80", label: "Kingdom of Wonder", title: "Cambodia — Angkor Wat", subtitle: "The world's largest religious monument at dawn" },
+  { image: "/images/hero-bagan.jpg", label: "Golden Land", title: "Myanmar — Bagan Temples", subtitle: "Over 2,000 ancient pagodas across a mystical plain" },
+  { image: "/images/hero-singapore.jpg", label: "Lion City", title: "Singapore — Marina Bay", subtitle: "Futuristic skyline meets lush garden city living" },
+  { image: "/images/hero-thailand.jpg", label: "Land of Smiles", title: "Thailand — Grand Palace", subtitle: "Golden spires and ornate temples in Bangkok" },
+  { image: "/images/hero-malaysia.jpg", label: "Truly Asia", title: "Malaysia — Petronas Towers", subtitle: "Iconic twin towers rising above Kuala Lumpur" },
+  { image: "/images/hero-vietnam.jpg", label: "Timeless Charm", title: "Vietnam — Ha Long Bay", subtitle: "Emerald waters dotted with limestone islands" },
+  { image: "/images/hero-china.jpg", label: "Ancient Empire", title: "China — The Great Wall", subtitle: "A wonder stretching across mountain peaks" },
+  { image: "/images/hero-philippines.jpg", label: "Pearl of the Orient", title: "Philippines — Palawan", subtitle: "Crystal-clear lagoons and dramatic limestone cliffs" },
+  { image: "/images/hero-indonesia.jpg", label: "Emerald Isles", title: "Indonesia — Bali Temples", subtitle: "Sacred shrines perched on volcanic shores" },
+  { image: "/images/hero-laos.jpg", label: "Hidden Gem", title: "Laos — Luang Prabang", subtitle: "Golden temples along the Mekong River" },
+  { image: "/images/hero-cambodia.jpg", label: "Kingdom of Wonder", title: "Cambodia — Angkor Wat", subtitle: "The world's largest religious monument at dawn" },
 ];
 
 function StatsCard({ icon, title, description, imgSrc }: { icon: string; title: string; description: string; imgSrc?: string }) {
@@ -489,9 +489,9 @@ export default function HomePage() {
       <section className="py-16 bg-[#FFFDF5]">
         <div className="max-w-6xl mx-auto px-4 grid grid-cols-2 md:grid-cols-4 gap-6">
           <StatsCard icon="✈️" title="IATA Accredited" description="Fully licensed and certified travel agency" imgSrc="/images/iata-logo.png" />
-          <StatsCard icon="🏆" title="10+ Years Exp" description="A decade of trusted travel expertise" imgSrc="https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=600&h=300&fit=crop" />
-          <StatsCard icon="😊" title="500+ Happy Travelers" description="Satisfied customers across the globe" imgSrc="https://images.unsplash.com/photo-1527631746610-bca00a040d60?w=600&h=300&fit=crop" />
-          <StatsCard icon="🕐" title="24/7 Support" description="Round-the-clock assistance anytime" imgSrc="https://images.unsplash.com/photo-1553877522-43269d4ea984?w=600&h=300&fit=crop" />
+          <StatsCard icon="🏆" title="10+ Years Exp" description="A decade of trusted travel expertise" imgSrc="/images/stats-experience.jpg" />
+          <StatsCard icon="😊" title="500+ Happy Travelers" description="Satisfied customers across the globe" imgSrc="/images/stats-travelers.jpg" />
+          <StatsCard icon="🕐" title="24/7 Support" description="Round-the-clock assistance anytime" imgSrc="/images/stats-support.jpg" />
         </div>
       </section>
 
@@ -511,7 +511,7 @@ export default function HomePage() {
       </section>
 
       <section className="py-24 bg-[#0A1628] relative overflow-hidden">
-        <div className="absolute inset-0 opacity-10 bg-cover bg-center" style={{ backgroundImage: "url(https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=1920&q=80)" }} />
+        <div className="absolute inset-0 opacity-10 bg-cover bg-center" style={{ backgroundImage: "url(/images/cta-bg.jpg)" }} />
         <div className="relative z-10 max-w-3xl mx-auto text-center px-4">
           <h2 className="text-3xl md:text-5xl font-bold text-white font-['Playfair_Display',serif] mb-6">Ready to Start Your Journey?</h2>
           <p className="text-white/70 text-lg mb-10 max-w-xl mx-auto">Let us craft your perfect getaway. From flights to hotels, we handle every detail.</p>

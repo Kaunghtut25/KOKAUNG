@@ -31,21 +31,21 @@ export default function BlogPage() {
           {
             _id: '1', title: 'Top 10 Must-Visit Destinations in Myanmar',
             content: 'Myanmar is a land of golden pagodas, ancient temples, and breathtaking landscapes. From the plains of Bagan to the serene waters of Inle Lake, here are the top 10 destinations you must visit.',
-            image: 'https://images.unsplash.com/photo-1482938289607-e9573fc25ebb?w=800&q=80',
+            image: '/images/unsplash-4.jpg',
             author: 'A9 Global Team', tags: ['Myanmar', 'Travel Tips', 'Destinations'],
             createdAt: new Date().toISOString(),
           },
           {
             _id: '2', title: 'Travel Tips: How to Get the Best Flight Deals',
             content: 'Booking flights can be expensive, but with these insider tips you can save hundreds on your next trip. Learn when to book, which days to fly, and how to use price alerts.',
-            image: 'https://images.unsplash.com/photo-1436491865332-7a61a109bb05?w=800&q=80',
+            image: '/images/unsplash-1.jpg',
             author: 'A9 Global Team', tags: ['Flights', 'Travel Tips', 'Budget'],
             createdAt: new Date(Date.now() - 86400000).toISOString(),
           },
           {
             _id: '3', title: 'Visa Guide: Everything You Need to Know',
             content: 'Planning an international trip? Our comprehensive visa guide covers requirements for popular destinations including Thailand, Singapore, Japan, and more.',
-            image: 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=800&q=80',
+            image: '/images/unsplash-26.jpg',
             author: 'A9 Global Team', tags: ['Visa', 'Guide', 'International'],
             createdAt: new Date(Date.now() - 172800000).toISOString(),
           },
@@ -101,7 +101,7 @@ export default function BlogPage() {
                   src={post.image}
                   alt={post.title}
                   className="w-full h-64 object-cover"
-                  onError={(e) => { (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=800&q=80'; }}
+                  onError={(e) => { (e.target as HTMLImageElement).src = '/images/unsplash-5.jpg'; }}
                 />
                 <div className="p-6">
                   <div className="flex flex-wrap gap-2 mb-3">

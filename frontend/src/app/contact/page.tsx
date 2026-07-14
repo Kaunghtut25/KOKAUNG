@@ -13,7 +13,7 @@ const subjectOptions = [
   "Insurance",
 ];
 
-const unsplashBase = "https://images.unsplash.com";
+
 
 export default function ContactPage() {
   const [form, setForm] = useState({
@@ -79,7 +79,7 @@ export default function ContactPage() {
         <div
           className="absolute inset-0 bg-cover bg-center"
           style={{
-            backgroundImage: `url(${unsplashBase}/photo-1423666639041-f56000c27a9a?w=1600&q=80)`,
+            backgroundImage: `url(/images/contact-bg.jpg)`,
           }}
         />
         <div className="absolute inset-0 bg-[#0A1628]/80" />
@@ -406,7 +406,7 @@ export default function ContactPage() {
             <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-5">
               <div className="w-full h-56 rounded-xl overflow-hidden">
                 <img
-                  src={`${unsplashBase}/photo-1524661135-423995f22d0b?w=800&q=80`}
+                  src="/images/contact-info.jpg"
                   alt="World map travel concept"
                   className="w-full h-full object-cover"
                 />
