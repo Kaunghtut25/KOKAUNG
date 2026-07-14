@@ -3,7 +3,7 @@ import { seed, getAll, create } from '@/lib/adminStore';
 
 // Admin credentials (hardcoded — use proper auth + env vars in production)
 const ADMIN_EMAIL = 'admin@a9global.com';
-const ADMIN_PASSWORD = 'admin123';
+const ADMIN_PASSWORD = (process.env.ADMIN_PASSWORD || 'a9admin2026');
 
 seed();
 
