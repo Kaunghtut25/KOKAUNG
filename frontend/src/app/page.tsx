@@ -340,7 +340,7 @@ export default function HomePage() {
 {/* ========== Search Engine (straddling hero/body, below icons) ========== */}
         <div className="relative -mt-40 md:-mt-48 z-30 px-4">
           <div className="max-w-5xl mx-auto">
-          <div className="bg-white rounded-2xl border-2 border-[#2563EB] shadow-xl p-5 md:p-7">
+          <div className="bg-white rounded-2xl border-2 border-[#2563EB] shadow-xl p-5 md:p-7 overflow-hidden">
             <div className="flex gap-1 mb-5 bg-gray-100 rounded-lg p-1 w-fit">
               {(["oneway", "roundtrip", "multicity"] as TabType[]).map((tab) => (
                 <button key={tab} onClick={() => { setActiveTab(tab); if (tab !== "roundtrip") setReturnDate(""); if (tab === "multicity") setMultiCityLegs([{ from: "", to: "", date: "" }, { from: "", to: "", date: "" }]); }}
@@ -419,7 +419,7 @@ export default function HomePage() {
                   </div>
               </>) : (
                 <>
-                  <div className="flex flex-col md:flex-row gap-3 flex-wrap">
+                  <div className="grid grid-cols-1 md:flex md:flex-row gap-3">
                     <AirportInput label='From' value={from} onChange={setFrom} placeholder="Departure city"
                       icon={<svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" /></svg>} />
                     <button type="button" onClick={swapAirports}
