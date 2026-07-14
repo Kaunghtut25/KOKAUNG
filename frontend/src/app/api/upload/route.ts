@@ -2,10 +2,6 @@ export const dynamic = 'force-dynamic';
 
 import { NextRequest, NextResponse } from "next/server";
 
-// Upstash Redis-backed image store
-// Architecture: file → base64 → store in Redis key "a9:uploads" 
-// Serve via /api/upload?id=X to get base64-decoded image
-
 function getRedisClient() {
   const url = process.env.UPSTASH_REDIS_REST_URL;
   const token = process.env.UPSTASH_REDIS_REST_TOKEN;
@@ -16,10 +12,12 @@ function getRedisClient() {
   } catch { return null; }
 }
 
-const UPLOADS_KEY = "a9:uploads";
+const UPLOADS_KEY = "***";
+const NAME_INDEX_KEY = "***"; // filename → upload_id
 
 // In-memory fallback
 let memoryUploads: any[] = [];
+let memoryNameIndex: Record<string, string> = {};
 
 async function getAllUploads(): Promise<any[]> {
   const redis = getRedisClient();
@@ -32,6 +30,17 @@ async function getAllUploads(): Promise<any[]> {
   return memoryUploads;
 }
 
+async function getNameIndex(): Promise<Record<string, string>> {
+  const redis = getRedisClient();
+  if (redis) {
+    try {
+      const raw = await redis.get(NAME_INDEX_KEY);
+      if (raw) return raw as Record<string, string>;
+    } catch {}
+  }
+  return memoryNameIndex;
+}
+
 async function saveUploads(data: any[]) {
   memoryUploads = data;
   const redis = getRedisClient();
@@ -40,51 +49,74 @@ async function saveUploads(data: any[]) {
   }
 }
 
+async function saveNameIndex(idx: Record<string, string>) {
+  memoryNameIndex = idx;
+  const redis = getRedisClient();
+  if (redis) {
+    try { await redis.set(NAME_INDEX_KEY, idx); } catch {}
+  }
+}
+
 // POST /api/upload — upload image(s)
 export async function POST(request: NextRequest) {
   try {
     const formData = await request.formData();
     const uploads = await getAllUploads();
+    const nameIndex = await getNameIndex();
     const results: any[] = [];
 
-    for (const [key, value] of formData.entries()) {
+    for (const [, value] of formData.entries()) {
       if (value instanceof File) {
         const buffer = Buffer.from(await value.arrayBuffer());
         const base64 = buffer.toString("base64");
         const mimeType = value.type || "image/jpeg";
         const id = `img_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
-        const upload = {
-          id,
-          name: value.name,
-          mimeType,
-          base64,
-          size: buffer.length,
-          createdAt: new Date().toISOString(),
-        };
-        uploads.push(upload);
-        results.push({ id, name: value.name, size: buffer.length });
+
+        // Replace existing entry with same name
+        const existingIdx = uploads.findIndex((u: any) => u.name === value.name);
+        if (existingIdx >= 0) {
+          uploads[existingIdx] = { ...uploads[existingIdx], base64, size: buffer.length, mimeType, updatedAt: new Date().toISOString() };
+        } else {
+          uploads.push({ id, name: value.name, mimeType, base64, size: buffer.length, createdAt: new Date().toISOString() });
+        }
+        nameIndex[value.name] = existingIdx >= 0 ? uploads[existingIdx].id : id;
+        results.push({ id: existingIdx >= 0 ? uploads[existingIdx].id : id, name: value.name, size: buffer.length });
       }
     }
 
     await saveUploads(uploads);
+    await saveNameIndex(nameIndex);
     return NextResponse.json({ success: true, uploads: results, total: uploads.length });
   } catch (e: any) {
     return NextResponse.json({ success: false, error: e.message }, { status: 500 });
   }
 }
 
-// GET /api/upload?id=img_xxx — serve image binary
+// GET /api/upload?id=xxx OR /api/upload?name=hero-bagan.jpg
 export async function GET(request: NextRequest) {
   const id = request.nextUrl.searchParams.get("id");
-  const uploads = await getAllUploads();
+  const name = request.nextUrl.searchParams.get("name");
 
-  if (!id) {
-    // Return list of all uploads (without base64 data for efficiency)
+  // List all uploads (without base64)
+  if (!id && !name) {
+    const uploads = await getAllUploads();
     const list = uploads.map(({ base64, ...rest }: any) => rest);
     return NextResponse.json({ uploads: list });
   }
 
-  const found = uploads.find((u: any) => u.id === id);
+  // Lookup by name
+  let resolvedId = id;
+  if (name && !id) {
+    const nameIndex = await getNameIndex();
+    resolvedId = nameIndex[name];
+  }
+
+  if (!resolvedId) {
+    return NextResponse.json({ error: "Not found" }, { status: 404 });
+  }
+
+  const uploads = await getAllUploads();
+  const found = uploads.find((u: any) => u.id === resolvedId);
   if (!found) {
     return NextResponse.json({ error: "Not found" }, { status: 404 });
   }
