@@ -1,3 +1,4 @@
+// A9 v2.1 - images_v2 cache bust 2026-07-14
 "use client";
 import Link from "next/link";
 import { useState, useEffect, useCallback, useRef } from "react";
