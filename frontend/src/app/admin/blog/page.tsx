@@ -44,7 +44,7 @@ export default function AdminBlogPage() {
         });
       } else {
         await api.post('/admin/blog', {
-          title, content, image: image || '/images/unsplash-5.jpg',
+          title, content, image: image || '/images_v2/unsplash-5-v2.jpg',
           author: 'A9 Global Team',
           tags: tags.split(',').map((t: string) => t.trim()).filter(Boolean),
           createdAt: new Date().toISOString(),

@@ -55,12 +55,12 @@ export default function CarsPage() {
     } catch (err) {
       console.error('Failed to fetch cars:', err);
       const fallbackCars: Car[] = [
-        { _id: 'fc1', slug: 'fbc1', carType: 'Toyota Alphard', capacity: 6, images: ['/images/unsplash-25.jpg'], features: ['AC', 'Leather', 'WiFi'], pricingWithDriver: [{ duration: 'Full Day', priceMMK: 100000, priceUSD: 48 }], description: '' },
-        { _id: 'fc2', slug: 'fbc2', carType: 'Toyota Vios', capacity: 4, images: ['/images/unsplash-42.jpg'], features: ['AC', 'GPS', 'Fuel'], pricingWithDriver: [{ duration: 'Full Day', priceMMK: 60000, priceUSD: 29 }], description: '' },
-        { _id: 'fc3', slug: 'fbc3', carType: 'Toyota Hiace', capacity: 12, images: ['/images/unsplash-23.jpg'], features: ['AC', 'Luggage'], pricingWithDriver: [{ duration: 'Full Day', priceMMK: 140000, priceUSD: 67 }], description: '' },
-        { _id: 'fc4', slug: 'fbc4', carType: 'Honda CR-V', capacity: 5, images: ['/images/unsplash-16.jpg'], features: ['AC', 'Sunroof'], pricingWithDriver: [{ duration: 'Full Day', priceMMK: 85000, priceUSD: 40 }], description: '' },
+        { _id: 'fc1', slug: 'fbc1', carType: 'Toyota Alphard', capacity: 6, images: ['/images_v2/unsplash-25-v2.jpg'], features: ['AC', 'Leather', 'WiFi'], pricingWithDriver: [{ duration: 'Full Day', priceMMK: 100000, priceUSD: 48 }], description: '' },
+        { _id: 'fc2', slug: 'fbc2', carType: 'Toyota Vios', capacity: 4, images: ['/images_v2/unsplash-42-v2.jpg'], features: ['AC', 'GPS', 'Fuel'], pricingWithDriver: [{ duration: 'Full Day', priceMMK: 60000, priceUSD: 29 }], description: '' },
+        { _id: 'fc3', slug: 'fbc3', carType: 'Toyota Hiace', capacity: 12, images: ['/images_v2/unsplash-23-v2.jpg'], features: ['AC', 'Luggage'], pricingWithDriver: [{ duration: 'Full Day', priceMMK: 140000, priceUSD: 67 }], description: '' },
+        { _id: 'fc4', slug: 'fbc4', carType: 'Honda CR-V', capacity: 5, images: ['/images_v2/unsplash-16-v2.jpg'], features: ['AC', 'Sunroof'], pricingWithDriver: [{ duration: 'Full Day', priceMMK: 85000, priceUSD: 40 }], description: '' },
         { _id: 'fc5', slug: 'fbc5', carType: 'Mercedes S-Class', capacity: 3, images: ['/images/unsplash-43.jpg'], features: ['AC', 'WiFi', 'Massage'], pricingWithDriver: [{ duration: 'Full Day', priceMMK: 250000, priceUSD: 119 }], description: '' },
-        { _id: 'fc6', slug: 'fbc6', carType: 'Toyota Land Cruiser Prado', capacity: 7, images: ['/images/unsplash-31.jpg'], features: ['AC', '4WD', 'Sunroof'], pricingWithDriver: [{ duration: 'Full Day', priceMMK: 180000, priceUSD: 86 }], description: '' },
+        { _id: 'fc6', slug: 'fbc6', carType: 'Toyota Land Cruiser Prado', capacity: 7, images: ['/images_v2/unsplash-31-v2.jpg'], features: ['AC', '4WD', 'Sunroof'], pricingWithDriver: [{ duration: 'Full Day', priceMMK: 180000, priceUSD: 86 }], description: '' },
       ];
       setAllCars(fallbackCars);
     } finally {
@@ -87,7 +87,7 @@ export default function CarsPage() {
     <main className="min-h-screen bg-white">
       <section className="relative pt-24 pb-12 px-4 overflow-hidden">
         <div className="absolute inset-0">
-          <img src="/images/hero-cars.jpg" alt="A9 Global Car Rentals" className="w-full h-full object-cover" />
+          <img src="/images_v2/hero-cars-v2.jpg" alt="A9 Global Car Rentals" className="w-full h-full object-cover" />
           <div className="absolute inset-0 bg-white/75" />
         </div>
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(212,175,55,0.08),transparent_70%)]" />

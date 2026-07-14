@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React, { useEffect, useState, useCallback } from "react";
 
@@ -310,21 +310,21 @@ export default function SiteManagerPage() {
       {activeTab === "pages" && (
         <div className="space-y-4">
           <Section title="Tours Page" emoji="🏔️">
-            <Field label="Hero Image URL" value="" onChange={() => {}} placeholder="/images/hero-tours.jpg" />
+            <Field label="Hero Image URL" value="" onChange={() => {}} placeholder="/images_v2/hero-tours-v2.jpg" />
             <Field label="Page Title" value="" onChange={() => {}} placeholder="Explore Our Tours" />
             <Field label="Page Subtitle" value="" onChange={() => {}} placeholder="Discover amazing destinations across Asia" />
           </Section>
           <Section title="Hotels Page" emoji="🏨">
-            <Field label="Hero Image URL" value="" onChange={() => {}} placeholder="/images/hero-hotels.jpg" />
+            <Field label="Hero Image URL" value="" onChange={() => {}} placeholder="/images_v2/hero-hotels-v2.jpg" />
           </Section>
           <Section title="Cars Page" emoji="🚗">
-            <Field label="Hero Image URL" value="" onChange={() => {}} placeholder="/images/hero-cars.jpg" />
+            <Field label="Hero Image URL" value="" onChange={() => {}} placeholder="/images_v2/hero-cars-v2.jpg" />
           </Section>
           <Section title="Cruises Page" emoji="🚢">
-            <Field label="Hero Image URL" value="" onChange={() => {}} placeholder="/images/hero-cruises.jpg" />
+            <Field label="Hero Image URL" value="" onChange={() => {}} placeholder="/images_v2/hero-cruises-v2.jpg" />
           </Section>
           <Section title="Blog Page" emoji="📝">
-            <Field label="Hero Image URL" value="" onChange={() => {}} placeholder="/images/hero-blog.jpg" />
+            <Field label="Hero Image URL" value="" onChange={() => {}} placeholder="/images_v2/hero-blog-v2.jpg" />
           </Section>
         </div>
       )}

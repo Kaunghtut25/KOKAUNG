@@ -18,7 +18,7 @@ export default function CruisesPage() {
     <main className="min-h-screen bg-white">
       <section className="relative h-[400px] md:h-[500px] w-full overflow-hidden">
         <Image
-          src="/images/unsplash-24.jpg"
+          src="/images_v2/unsplash-24-v2.jpg"
           alt="Luxury Cruise Ship"
           fill
           className="object-cover"
@@ -39,12 +39,12 @@ export default function CruisesPage() {
       <section className="max-w-6xl mx-auto px-4 py-16">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
           {[
-            { icon: '🛳️', img: '/images/unsplash-24.jpg', title: 'Luxury Liners', desc: 'World-class cruise ships with premium amenities' },
-            { icon: '🏝️', img: '/images/unsplash-20.jpg', title: 'Exotic Routes', desc: 'Mediterranean, Caribbean, Alaska & more' },
-            { icon: '🍽️', img: '/images/unsplash-32.jpg', title: 'All-Inclusive', desc: 'Fine dining, drinks, entertainment included' },
-            { icon: '🎭', img: '/images/unsplash-13.jpg', title: 'Entertainment', desc: 'Live shows, casinos, pools & theatre' },
-            { icon: '👨‍👩‍👧‍👦', img: '/images/unsplash-8.jpg', title: 'Family Friendly', desc: 'Kids clubs, family suites & activities' },
-            { icon: '🌊', img: '/images/unsplash-29.jpg', title: 'Shore Excursions', desc: 'Curated tours at every port of call' },
+            { icon: '🛳️', img: '/images_v2/unsplash-24-v2.jpg', title: 'Luxury Liners', desc: 'World-class cruise ships with premium amenities' },
+            { icon: '🏝️', img: '/images_v2/unsplash-20-v2.jpg', title: 'Exotic Routes', desc: 'Mediterranean, Caribbean, Alaska & more' },
+            { icon: '🍽️', img: '/images_v2/unsplash-32-v2.jpg', title: 'All-Inclusive', desc: 'Fine dining, drinks, entertainment included' },
+            { icon: '🎭', img: '/images_v2/unsplash-13-v2.jpg', title: 'Entertainment', desc: 'Live shows, casinos, pools & theatre' },
+            { icon: '👨‍👩‍👧‍👦', img: '/images_v2/unsplash-8-v2.jpg', title: 'Family Friendly', desc: 'Kids clubs, family suites & activities' },
+            { icon: '🌊', img: '/images_v2/unsplash-29-v2.jpg', title: 'Shore Excursions', desc: 'Curated tours at every port of call' },
           ].map((item, i) => (
             <div key={i} className="bg-white rounded-xl border border-gray-200 overflow-hidden hover:shadow-md hover:border-[#D4AF37]/40 transition-all group">
               <div className="relative h-40 overflow-hidden">

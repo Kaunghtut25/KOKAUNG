@@ -31,7 +31,7 @@ export default function BlogPage() {
           {
             _id: '1', title: 'Top 10 Must-Visit Destinations in Myanmar',
             content: 'Myanmar is a land of golden pagodas, ancient temples, and breathtaking landscapes. From the plains of Bagan to the serene waters of Inle Lake, here are the top 10 destinations you must visit.',
-            image: '/images/unsplash-4.jpg',
+            image: '/images_v2/unsplash-4-v2.jpg',
             author: 'A9 Global Team', tags: ['Myanmar', 'Travel Tips', 'Destinations'],
             createdAt: new Date().toISOString(),
           },
@@ -45,7 +45,7 @@ export default function BlogPage() {
           {
             _id: '3', title: 'Visa Guide: Everything You Need to Know',
             content: 'Planning an international trip? Our comprehensive visa guide covers requirements for popular destinations including Thailand, Singapore, Japan, and more.',
-            image: '/images/unsplash-26.jpg',
+            image: '/images_v2/unsplash-26-v2.jpg',
             author: 'A9 Global Team', tags: ['Visa', 'Guide', 'International'],
             createdAt: new Date(Date.now() - 172800000).toISOString(),
           },
@@ -70,7 +70,7 @@ export default function BlogPage() {
       {/* Hero with Image */}
       <section className="relative h-[300px] md:h-[380px] w-full overflow-hidden">
         <Image
-          src="/images/hero-blog.jpg"
+          src="/images_v2/hero-blog-v2.jpg"
           alt="A9 Global Blog"
           fill
           className="object-cover"
@@ -101,7 +101,7 @@ export default function BlogPage() {
                   src={post.image}
                   alt={post.title}
                   className="w-full h-64 object-cover"
-                  onError={(e) => { (e.target as HTMLImageElement).src = '/images/unsplash-5.jpg'; }}
+                  onError={(e) => { (e.target as HTMLImageElement).src = '/images_v2/unsplash-5-v2.jpg'; }}
                 />
                 <div className="p-6">
                   <div className="flex flex-wrap gap-2 mb-3">

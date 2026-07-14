@@ -9,7 +9,7 @@ interface TourCardProps {
   currency?: 'MMK' | 'USD';
 }
 
-const FALLBACK_IMAGE = '/images/unsplash-2.jpg';
+const FALLBACK_IMAGE = '/images_v2/unsplash-2-v2.jpg';
 
 function getImages(images: string | string[] | undefined): string[] {
   if (!images) return [];

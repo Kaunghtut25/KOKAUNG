@@ -11,32 +11,32 @@ interface Destination {
 }
 
 const TOP_PICKS: Destination[] = [
-  { name: "Paris", imageUrl: "/images/dest-paris.jpg" },
-  { name: "Dubai", imageUrl: "/images/dest-dubai.jpg" },
-  { name: "Malaysia", imageUrl: "/images/hero-malaysia.jpg" },
-  { name: "Korea", imageUrl: "/images/dest-korea.jpg" },
-  { name: "Vietnam", imageUrl: "/images/hero-vietnam.jpg" },
-  { name: "Myanmar", imageUrl: "/images/dest-myanmar.jpg" },
-  { name: "Australia", imageUrl: "/images/dest-australia.jpg" },
-  { name: "Turkey", imageUrl: "/images/dest-turkey.jpg" },
-  { name: "Netherlands", imageUrl: "/images/dest-netherlands.jpg" },
-  { name: "Thailand", imageUrl: "/images/hero-thailand.jpg" },
+  { name: "Paris", imageUrl: "/images_v2/dest-paris-v2.jpg" },
+  { name: "Dubai", imageUrl: "/images_v2/dest-dubai-v2.jpg" },
+  { name: "Malaysia", imageUrl: "/images_v2/hero-malaysia-v2.jpg" },
+  { name: "Korea", imageUrl: "/images_v2/dest-korea-v2.jpg" },
+  { name: "Vietnam", imageUrl: "/images_v2/hero-vietnam-v2.jpg" },
+  { name: "Myanmar", imageUrl: "/images_v2/dest-myanmar-v2.jpg" },
+  { name: "Australia", imageUrl: "/images_v2/dest-australia-v2.jpg" },
+  { name: "Turkey", imageUrl: "/images_v2/dest-turkey-v2.jpg" },
+  { name: "Netherlands", imageUrl: "/images_v2/dest-netherlands-v2.jpg" },
+  { name: "Thailand", imageUrl: "/images_v2/hero-thailand-v2.jpg" },
 ];
 
 const EXPLORE_MORE: Destination[] = [
-  { name: "Nepal", imageUrl: "/images/dest-nepal.jpg" },
-  { name: "Singapore", imageUrl: "/images/hero-singapore.jpg" },
-  { name: "Japan", imageUrl: "/images/dest-japan.jpg" },
-  { name: "Egypt", imageUrl: "/images/dest-egypt.jpg" },
-  { name: "Italy", imageUrl: "/images/dest-italy.jpg" },
-  { name: "Spain", imageUrl: "/images/dest-spain.jpg" },
-  { name: "Maldives", imageUrl: "/images/dest-maldives.jpg" },
-  { name: "India", imageUrl: "/images/dest-india.jpg" },
-  { name: "USA", imageUrl: "/images/dest-usa.jpg" },
-  { name: "UK", imageUrl: "/images/dest-uk.jpg" },
+  { name: "Nepal", imageUrl: "/images_v2/dest-nepal-v2.jpg" },
+  { name: "Singapore", imageUrl: "/images_v2/hero-singapore-v2.jpg" },
+  { name: "Japan", imageUrl: "/images_v2/dest-japan-v2.jpg" },
+  { name: "Egypt", imageUrl: "/images_v2/dest-egypt-v2.jpg" },
+  { name: "Italy", imageUrl: "/images_v2/dest-italy-v2.jpg" },
+  { name: "Spain", imageUrl: "/images_v2/dest-spain-v2.jpg" },
+  { name: "Maldives", imageUrl: "/images_v2/dest-maldives-v2.jpg" },
+  { name: "India", imageUrl: "/images_v2/dest-india-v2.jpg" },
+  { name: "USA", imageUrl: "/images_v2/dest-usa-v2.jpg" },
+  { name: "UK", imageUrl: "/images_v2/dest-uk-v2.jpg" },
 ];
 
-const FALLBACK_IMG = "/images/cta-bg.jpg";
+const FALLBACK_IMG = "/images_v2/cta-bg-v2.jpg";
 
 // ── Destination Card ────────────────────────────────────────────────────────
 

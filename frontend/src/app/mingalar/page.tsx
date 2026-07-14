@@ -5,12 +5,12 @@ import Link from 'next/link';
 import Image from 'next/image';
 
 const defaultCards = [
-  { img: '/images/unsplash-22.jpg', icon: '🍽️', title: 'Fine Dining', desc: 'Premium buffet & a la carte menu' },
-  { img: '/images/unsplash-3.jpg', icon: '🍸', title: 'Open Bar', desc: 'Complimentary drinks & cocktails' },
-  { img: '/images/unsplash-6.jpg', icon: '💻', title: 'Workspace', desc: 'High-speed WiFi & work stations' },
-  { img: '/images/unsplash-37.jpg', icon: '🚿', title: 'Shower Suites', desc: 'Refresh before your flight' },
-  { img: '/images/unsplash-41.jpg', icon: '😴', title: 'Nap Pods', desc: 'Rest in private sleeping pods' },
-  { img: '/images/unsplash-33.jpg', icon: '🛎️', title: 'Concierge', desc: 'Priority check-in & boarding' },
+  { img: '/images_v2/unsplash-22-v2.jpg', icon: '🍽️', title: 'Fine Dining', desc: 'Premium buffet & a la carte menu' },
+  { img: '/images_v2/unsplash-3-v2.jpg', icon: '🍸', title: 'Open Bar', desc: 'Complimentary drinks & cocktails' },
+  { img: '/images_v2/unsplash-6-v2.jpg', icon: '💻', title: 'Workspace', desc: 'High-speed WiFi & work stations' },
+  { img: '/images_v2/unsplash-37-v2.jpg', icon: '🚿', title: 'Shower Suites', desc: 'Refresh before your flight' },
+  { img: '/images_v2/unsplash-41-v2.jpg', icon: '😴', title: 'Nap Pods', desc: 'Rest in private sleeping pods' },
+  { img: '/images_v2/unsplash-33-v2.jpg', icon: '🛎️', title: 'Concierge', desc: 'Priority check-in & boarding' },
 ];
 
 export default function MingalarPage() {
@@ -25,7 +25,7 @@ export default function MingalarPage() {
   return (
     <main className="min-h-screen bg-white">
       <section className="relative h-[400px] md:h-[500px] w-full overflow-hidden">
-        <Image src="/images/hero-mingalar.jpg" alt="Airport Lounge" fill className="object-cover" priority />
+        <Image src="/images_v2/hero-mingalar-v2.jpg" alt="Airport Lounge" fill className="object-cover" priority />
         <div className="absolute inset-0 bg-gradient-to-t from-[#0A1628]/90 via-[#0A1628]/40 to-[#0A1628]/30" />
         <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4">
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>

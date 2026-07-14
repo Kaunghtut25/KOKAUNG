@@ -229,7 +229,7 @@ export default function VisasPage() {
   return (
     <main className="min-h-screen bg-white">
       <section className="relative pt-24 pb-12 px-4 overflow-hidden">
-        <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: "url(/images/hero-visas.jpg)" }} />
+        <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: "url(/images_v2/hero-visas-v2.jpg)" }} />
         <div className="absolute inset-0 bg-gray-950/80" />
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(212,175,55,0.12),transparent_70%)]" />
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-[#D4AF37]/5 rounded-full blur-3xl" />

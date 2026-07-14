@@ -117,7 +117,7 @@ export default function InsurancePage() {
         <div
           className="absolute inset-0 bg-cover bg-center"
           style={{
-            backgroundImage: 'url(/images/hero-insurance.jpg)',
+            backgroundImage: 'url(/images_v2/hero-insurance-v2.jpg)',
           }}
         />
         <div className="absolute inset-0 bg-white/70 backdrop-blur-sm" />

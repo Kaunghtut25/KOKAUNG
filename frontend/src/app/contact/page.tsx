@@ -79,7 +79,7 @@ export default function ContactPage() {
         <div
           className="absolute inset-0 bg-cover bg-center"
           style={{
-            backgroundImage: `url(/images/contact-bg.jpg)`,
+            backgroundImage: `url(/images_v2/contact-bg-v2.jpg)`,
           }}
         />
         <div className="absolute inset-0 bg-[#0A1628]/80" />
@@ -406,7 +406,7 @@ export default function ContactPage() {
             <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-5">
               <div className="w-full h-56 rounded-xl overflow-hidden">
                 <img
-                  src="/images/contact-info.jpg"
+                  src="/images_v2/contact-info-v2.jpg"
                   alt="World map travel concept"
                   className="w-full h-full object-cover"
                 />

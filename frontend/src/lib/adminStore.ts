@@ -122,22 +122,22 @@ export function seed() {
   const carData = [
     {
       id: "fc1", carType: "Toyota Alphard", description: "Premium luxury MPV with seating for 6 passengers. Perfect for family trips and executive travel.",
-      capacity: 6, features: "AC, Leather Seats, WiFi, Refreshments", images: "/images/unsplash-25.jpg",
+      capacity: 6, features: "AC, Leather Seats, WiFi, Refreshments", images: "/images_v2/unsplash-25-v2.jpg",
       pricing: [{ duration: "Full Day", priceMMK: 100000, priceUSD: 48 }], status: "active",
     },
     {
       id: "fc2", carType: "Toyota Vios", description: "Reliable sedan with comfortable seating for 4 passengers. Ideal for city transfers and short trips.",
-      capacity: 4, features: "AC, GPS, Fuel Included", images: "/images/unsplash-42.jpg",
+      capacity: 4, features: "AC, GPS, Fuel Included", images: "/images_v2/unsplash-42-v2.jpg",
       pricing: [{ duration: "Full Day", priceMMK: 60000, priceUSD: 29 }], status: "active",
     },
     {
       id: "fc3", carType: "Toyota Hiace", description: "Spacious van for up to 12 passengers. Perfect for group tours and airport transfers.",
-      capacity: 12, features: "AC, Luggage Space, Comfortable Seats", images: "/images/unsplash-31.jpg",
+      capacity: 12, features: "AC, Luggage Space, Comfortable Seats", images: "/images_v2/unsplash-31-v2.jpg",
       pricing: [{ duration: "Full Day", priceMMK: 140000, priceUSD: 67 }], status: "active",
     },
     {
       id: "fc4", carType: "Honda CR-V", description: "Modern SUV with seating for 5. Great for countryside exploration and rough terrain.",
-      capacity: 5, features: "AC, Sunroof, 4WD", images: "/images/unsplash-16.jpg",
+      capacity: 5, features: "AC, Sunroof, 4WD", images: "/images_v2/unsplash-16-v2.jpg",
       pricing: [{ duration: "Full Day", priceMMK: 85000, priceUSD: 40 }], status: "active",
     },
     {
@@ -147,7 +147,7 @@ export function seed() {
     },
     {
       id: "fc6", carType: "Toyota Land Cruiser Prado", description: "Powerful 7-seater SUV with 4WD capability. Ideal for adventure tours and off-road journeys.",
-      capacity: 7, features: "AC, 4WD, Sunroof, Premium Audio", images: "/images/unsplash-31.jpg",
+      capacity: 7, features: "AC, 4WD, Sunroof, Premium Audio", images: "/images_v2/unsplash-31-v2.jpg",
       pricing: [{ duration: "Full Day", priceMMK: 180000, priceUSD: 86 }], status: "active",
     },
   ];
@@ -292,9 +292,9 @@ export function seed() {
   // ── Blog ──
   const blogCol = new Map<string, unknown>();
   const blogPosts = [
-    { id: "b1", title: "Top 10 Must-Visit Destinations in Myanmar", content: "Myanmar is a land of golden pagodas, ancient temples, and breathtaking landscapes. From the plains of Bagan to the serene waters of Inle Lake, here are the top 10 destinations you must visit on your next trip.", image: "/images/unsplash-4.jpg", author: "A9 Global Team", tags: ["Myanmar", "Travel Tips", "Destinations"], createdAt: new Date().toISOString() },
+    { id: "b1", title: "Top 10 Must-Visit Destinations in Myanmar", content: "Myanmar is a land of golden pagodas, ancient temples, and breathtaking landscapes. From the plains of Bagan to the serene waters of Inle Lake, here are the top 10 destinations you must visit on your next trip.", image: "/images_v2/unsplash-4-v2.jpg", author: "A9 Global Team", tags: ["Myanmar", "Travel Tips", "Destinations"], createdAt: new Date().toISOString() },
     { id: "b2", title: "Travel Tips: How to Get the Best Flight Deals", content: "Booking flights can be expensive, but with these insider tips you can save hundreds on your next trip. Learn when to book, which days to fly, and how to use price alerts effectively.", image: "/images/unsplash-1.jpg", author: "A9 Global Team", tags: ["Flights", "Travel Tips", "Budget"], createdAt: new Date(Date.now() - 86400000).toISOString() },
-    { id: "b3", title: "Visa Guide: Everything You Need to Know for 2026", content: "Planning an international trip? Our comprehensive visa guide covers requirements for popular destinations including Thailand, Singapore, Japan, South Korea, and more.", image: "/images/unsplash-26.jpg", author: "A9 Global Team", tags: ["Visa", "Guide", "International"], createdAt: new Date(Date.now() - 172800000).toISOString() },
+    { id: "b3", title: "Visa Guide: Everything You Need to Know for 2026", content: "Planning an international trip? Our comprehensive visa guide covers requirements for popular destinations including Thailand, Singapore, Japan, South Korea, and more.", image: "/images_v2/unsplash-26-v2.jpg", author: "A9 Global Team", tags: ["Visa", "Guide", "International"], createdAt: new Date(Date.now() - 172800000).toISOString() },
   ];
   blogPosts.forEach(b => blogCol.set(b.id, b));
   collections.set("blog", blogCol);

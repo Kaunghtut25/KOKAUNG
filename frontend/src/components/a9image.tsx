@@ -3,7 +3,7 @@
 import { useState } from "react";
 
 interface A9ImageProps {
-  src: string; // e.g. "/images/hero-bagan.jpg"
+  src: string; // e.g. "/images_v2/hero-bagan-v2.jpg"
   alt: string;
   className?: string;
   style?: React.CSSProperties;

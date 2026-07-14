@@ -9,22 +9,22 @@ const teamMembers = [
   {
     name: "U Aung Kyaw",
     role: "Founder & CEO",
-    image: `/images/team-ceo.jpg`,
+    image: `/images_v2/team-ceo-v2.jpg`,
   },
   {
     name: "Daw Su Myat",
     role: "Operations Director",
-    image: `/images/team-ops.jpg`,
+    image: `/images_v2/team-ops-v2.jpg`,
   },
   {
     name: "U Zaw Htun",
     role: "Head of Tours",
-    image: `/images/team-tours.jpg`,
+    image: `/images_v2/team-tours-v2.jpg`,
   },
   {
     name: "Daw Hnin Si",
     role: "Customer Relations",
-    image: `/images/team-cr.jpg`,
+    image: `/images_v2/team-cr-v2.jpg`,
   },
 ];
 
@@ -101,7 +101,7 @@ export default function AboutPage() {
           <div className="relative">
             <div className="w-full h-80 sm:h-96 rounded-2xl border-2 border-[#D4AF37]/30 overflow-hidden">
               <img
-                src={`/images/about-hero.jpg`}
+                src={`/images_v2/about-hero-v2.jpg`}
                 alt="A9 Global travel team"
                 className="w-full h-full object-cover"
               />
