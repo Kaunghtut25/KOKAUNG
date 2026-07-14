@@ -428,14 +428,14 @@ export default function HomePage() {
                     <AirportInput label="To" value={to} onChange={setTo} placeholder="Arrival city"
                       icon={<svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>} />
                     <div className="flex-1 min-w-[140px]">
-                      <label className="block text-gray-500 text-xs uppercase tracking-wider mb-1"><span className="text-[#D4AF37]">📅</span> Departure</label>
+                      <label className="block text-gray-500 text-xs uppercase tracking-wider mb-1 flex items-center gap-1"><span className="text-[#D4AF37]">📅</span>Departure</label>
                       <input type="date" value={departDate} onChange={(e) => setDepartDate(e.target.value)}
                         min={new Date().toISOString().split("T")[0]}
                         className="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 text-gray-900 outline-none focus:border-[#D4AF37] transition-all duration-200" />
                     </div>
                     {activeTab === "roundtrip" && (
                       <div className="flex-1 min-w-[140px]">
-                        <label className="block text-gray-500 text-xs uppercase tracking-wider mb-1"><span className="text-[#D4AF37]">📅</span> Return</label>
+                        <label className="block text-gray-500 text-xs uppercase tracking-wider mb-1 flex items-center gap-1"><span className="text-[#D4AF37]">📅</span>Return</label>
                         <input type="date" value={returnDate} onChange={(e) => setReturnDate(e.target.value)}
                           min={departDate || new Date().toISOString().split("T")[0]}
                           className="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 text-gray-900 outline-none focus:border-[#D4AF37] transition-all duration-200" />
