@@ -313,7 +313,7 @@ export default function HomePage() {
         </div>
 
         {/* ========== Service Navigation Icons (hero middle, below slide text) ========== */}
-        <div className="absolute left-0 right-0 top-[46%] md:top-[48%] z-20 px-1">
+        <div className="absolute left-0 right-0 top-[52%] md:top-[48%] z-20 px-1">
           <div className="max-w-5xl mx-auto flex flex-wrap justify-center gap-1 md:gap-2">
             {[
               { label: 'Flights', icon: '✈️', href: '/' },
@@ -355,12 +355,12 @@ export default function HomePage() {
               {activeTab === "multicity" ? (<>
                 <div className="space-y-4">
                   {multiCityLegs.map((leg, index) => (
-                    <div key={index} className="flex items-start gap-2">
+                    <div key={index} className="flex flex-col sm:flex-row items-start gap-2 sm:gap-3">
                       <AirportInput label="" value={leg.from} onChange={(val) => updateMultiCityLeg(index, "from", val)} placeholder="From city"
                         icon={<svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" /></svg>} />
                       <AirportInput label="" value={leg.to} onChange={(val) => updateMultiCityLeg(index, "to", val)} placeholder="To city"
                         icon={<svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /></svg>} />
-                      <div className="flex-1 min-w-[110px]">
+                      <div className="flex-1 min-w-[140px] w-full sm:w-auto">
                         <label className="block text-gray-500 text-xs mb-1 sr-only">Date</label>
                         <input type="date" value={leg.date} onChange={(e) => updateMultiCityLeg(index, "date", e.target.value)}
                           min={new Date().toISOString().split("T")[0]}
