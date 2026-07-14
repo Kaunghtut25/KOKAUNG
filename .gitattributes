@@ -1,0 +1,6 @@
+# Explicitly disable LFS for all image files
+*.jpg -filter -lfs -text
+*.png -filter -lfs -text
+*.svg -filter -lfs -text
+*.gif -filter -lfs -text
+*.webp -filter -lfs -text
