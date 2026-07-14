@@ -15,6 +15,11 @@ const nextConfig = {
       { protocol: 'https', hostname: 'logos-world.net' },
     ],
   },
+
+  images: {
+    formats: ["image/avif", "image/webp"],
+    minimumCacheTTL: 60,
+  },
 };
 
 module.exports = nextConfig;
