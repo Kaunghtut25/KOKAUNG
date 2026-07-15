@@ -2,8 +2,18 @@ import { NextRequest, NextResponse } from "next/server";
 
 export const runtime = "nodejs";
 
-const ADMIN_EMAIL = "admin@a9global.com";
-const ADMIN_PASSWORD = "a9admin2026";
+// Use env var with fallback — env var name is ADMIN_PASSWORD
+const ADMIN_EMAIL = process.env.ADMIN_EMAIL || "admin@a9global.com";
+const PASS = process.env.ADMIN_PASSWORD || "a9admin2026";
+
+function makeToken(user: Record<string, unknown>): string {
+  const payload = JSON.stringify({
+    ...user,
+    iat: Date.now(),
+    exp: Date.now() + 86400000,
+  });
+  return Buffer.from(payload).toString("base64");
+}
 
 export async function POST(request: NextRequest) {
   try {
@@ -12,7 +22,7 @@ export async function POST(request: NextRequest) {
     try {
       body = JSON.parse(text);
     } catch {
-      return NextResponse.json({ message: "Invalid JSON body received: " + text.substring(0, 100) }, { status: 400 });
+      return NextResponse.json({ message: "Invalid JSON body" }, { status: 400 });
     }
 
     const email = body.email;
@@ -22,7 +32,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ message: "Email and password are required" }, { status: 400 });
     }
 
-    if (email !== ADMIN_EMAIL || password !== ADMIN_PASSWORD) {
+    if (email !== ADMIN_EMAIL || password !== PASS) {
       return NextResponse.json({ message: "Invalid email or password" }, { status: 401 });
     }
 
@@ -33,10 +43,10 @@ export async function POST(request: NextRequest) {
       role: "admin",
     };
 
-    const token = Buffer.from(JSON.stringify({ ...user, exp: Date.now() + 86400000 })).toString("base64");
+    const token = makeToken(user);
 
     return NextResponse.json({ success: true, token, user });
   } catch (err) {
-    return NextResponse.json({ message: "Server error: " + String(err) }, { status: 500 });
+    return NextResponse.json({ message: "Server error" }, { status: 500 });
   }
 }

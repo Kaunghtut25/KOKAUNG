@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
-// Simple token check — token is base64 JSON with role:admin
+const PASS = process.env.ADMIN_PASSWORD || "a9admin2026";
+
 function isAdminToken(token: string | undefined): boolean {
   if (!token) return false;
   try {
@@ -14,7 +15,7 @@ function isAdminToken(token: string | undefined): boolean {
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // Protect /admin pages (not /api/admin)
+  // Protect /admin pages (not /api/)
   if (pathname.startsWith("/admin") && !pathname.startsWith("/api/")) {
     const auth = request.cookies.get("a9_admin_token");
     const header = request.headers.get("authorization");
@@ -33,7 +34,7 @@ export function middleware(request: NextRequest) {
     }
   }
 
-  // Protect /api/admin/* routes — require Bearer token
+  // Protect /api/admin/* routes
   if (pathname.startsWith("/api/admin/")) {
     const header = request.headers.get("authorization");
     const token = header?.startsWith("Bearer ") ? header.slice(7) : undefined;
