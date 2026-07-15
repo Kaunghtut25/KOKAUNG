@@ -5,12 +5,12 @@ import Link from 'next/link';
 import Image from 'next/image';
 
 const defaultCards = [
-  { img: '/images_v2/unsplash-22-v2.jpg', icon: '🍽️', title: 'Fine Dining', desc: 'Premium buffet & a la carte menu' },
-  { img: '/images_v2/unsplash-3-v2.jpg', icon: '🍸', title: 'Open Bar', desc: 'Complimentary drinks & cocktails' },
-  { img: '/images_v2/unsplash-6-v2.jpg', icon: '💻', title: 'Workspace', desc: 'High-speed WiFi & work stations' },
-  { img: '/images_v2/unsplash-37-v2.jpg', icon: '🚿', title: 'Shower Suites', desc: 'Refresh before your flight' },
-  { img: '/images_v2/unsplash-41-v2.jpg', icon: '😴', title: 'Nap Pods', desc: 'Rest in private sleeping pods' },
-  { img: '/images_v2/unsplash-33-v2.jpg', icon: '🛎️', title: 'Concierge', desc: 'Priority check-in & boarding' },
+  { img: '/images_v2/sky1-v3.jpg', icon: '🍽️', title: 'Fine Dining', desc: 'Premium buffet & a la carte menu' },
+  { img: '/images_v2/sky2-v3.jpg', icon: '🍸', title: 'Open Bar', desc: 'Complimentary drinks & cocktails' },
+  { img: '/images_v2/sky3-v3.jpg', icon: '💻', title: 'Workspace', desc: 'High-speed WiFi & work stations' },
+  { img: '/images_v2/sky1-v3.jpg', icon: '🚿', title: 'Shower Suites', desc: 'Refresh before your flight' },
+  { img: '/images_v2/sky2-v3.jpg', icon: '😴', title: 'Nap Pods', desc: 'Rest in private sleeping pods' },
+  { img: '/images_v2/sky3-v3.jpg', icon: '🛎️', title: 'Concierge', desc: 'Priority check-in & boarding' },
 ];
 
 export default function MingalarPage() {
