@@ -75,10 +75,10 @@ const SEEDS: Record<string, any[]> = {
     { id: "i6", title: "Senior Travel Care",      coverage: "Medical + Evacuation",  priceMMK: 50000,  priceUSD: 24,  duration: "Per trip" },
   ],
   blog: [
-    { id: "b1", title: "Top 10 Temples in Bagan",           slug: "top-10-temples-bagan",           image: "/images_v2/blog1-v2.jpg", excerpt: "Discover the most stunning temples...",     content: "Full article here...", category: "Travel Guide", date: "2025-12-01" },
-    { id: "b2", title: "Yangon Street Food Guide",          slug: "yangon-street-food-guide",       image: "/images_v2/blog2-v2.jpg", excerpt: "Best street food spots in Yangon...",    content: "Full article here...", category: "Food",         date: "2025-12-05" },
-    { id: "b3", title: "Inle Lake: A Photographer's Dream", slug: "inle-lake-photographers-dream",  image: "/images_v2/blog3-v2.jpg", excerpt: "Capture the beauty of Inle Lake...",     content: "Full article here...", category: "Photography",  date: "2025-12-10" },
-    { id: "b4", title: "Myanmar Visa Guide 2026",           slug: "myanmar-visa-guide-2026",        image: "/images_v2/blog4-v2.jpg", excerpt: "Everything you need to know...",         content: "Full article here...", category: "Guide",        date: "2025-12-15" },
+    { _id: "b1", title: "Top 10 Temples in Bagan",           content: "Discover the most stunning temples in Bagan, from the majestic Ananda to the mysterious Dhammayangyi. This guide covers the top 10 must-visit temples with tips on the best sunrise spots.", image: "/images_v2/blog1-v2.jpg", author: "A9 Global Team", tags: ["Myanmar", "Bagan", "Temples", "Travel Guide"], createdAt: "2025-12-01T00:00:00.000Z" },
+    { _id: "b2", title: "Yangon Street Food Guide",          content: "Explore the vibrant street food scene of Yangon. From mohinga to samosas, discover the best street food spots loved by locals and travelers alike.", image: "/images_v2/blog2-v2.jpg", author: "A9 Global Team", tags: ["Myanmar", "Yangon", "Food", "Guide"], createdAt: "2025-12-05T00:00:00.000Z" },
+    { _id: "b3", title: "Inle Lake: A Photographer's Dream", content: "Capture the stunning beauty of Inle Lake's floating gardens, leg-rowing fishermen, and misty morning landscapes. Tips for the best photography spots.", image: "/images_v2/blog3-v2.jpg", author: "A9 Global Team", tags: ["Myanmar", "Inle", "Photography", "Nature"], createdAt: "2025-12-10T00:00:00.000Z" },
+    { _id: "b4", title: "Myanmar Visa Guide 2026",           content: "Everything you need to know about getting a Myanmar visa in 2026. Requirements, processing times, e-visa tips, and border crossing information.", image: "/images_v2/blog4-v2.jpg", author: "A9 Global Team", tags: ["Myanmar", "Visa", "Guide", "International"], createdAt: "2025-12-15T00:00:00.000Z" },
   ],
   mingalar: [
     { id: "m1", title: "Fine Dining",          description: "Premium à la carte dining experience",               icon: "🍽️",  price: "Included" },

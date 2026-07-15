@@ -3,7 +3,7 @@ import { getAll, create, updateById, deleteById } from "@/lib/persistentStore";
 
 export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
   try {
-    const items = getAll('blog') as any[];
+    const items = await getAll('blog') as any[];
     const item = items.find((i: any) => i._id === params.id || i.id === params.id);
     if (!item) return NextResponse.json({ success: false, message: "Not found" }, { status: 404 });
     return NextResponse.json({ success: true, data: item });

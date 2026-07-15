@@ -38,7 +38,7 @@ export default function BlogPage() {
           {
             _id: '2', title: 'Travel Tips: How to Get the Best Flight Deals',
             content: 'Booking flights can be expensive, but with these insider tips you can save hundreds on your next trip. Learn when to book, which days to fly, and how to use price alerts.',
-            image: '/images_v2/unsplash-1-v2.jpg',
+            image: '/images_v2/unsplash-2-v2.jpg',
             author: 'A9 Global Team', tags: ['Flights', 'Travel Tips', 'Budget'],
             createdAt: new Date(Date.now() - 86400000).toISOString(),
           },
