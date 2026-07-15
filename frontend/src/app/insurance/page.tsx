@@ -154,7 +154,7 @@ export default function InsurancePage() {
       </section>
 
       {/* Grid */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 -mt-12 relative z-10 pb-12">
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 pt-4 pb-12">
         {loading ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {[1,2,3,4].map(i => <SkeletonCard key={i} />)}
