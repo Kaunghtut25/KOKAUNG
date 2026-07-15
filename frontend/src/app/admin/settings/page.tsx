@@ -13,6 +13,12 @@ interface HeroImages {
   insurance: string;
 }
 
+interface Certification {
+  title: string;
+  code: string;
+  image: string;
+}
+
 interface SocialLinks {
   facebook: string;
   instagram: string;
@@ -30,6 +36,7 @@ interface SiteSettings {
   contactAddress: string;
   socialLinks: SocialLinks;
   heroImages: HeroImages;
+  certifications: Certification[];
 }
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || "/api";
@@ -56,6 +63,11 @@ const defaultSettings: SiteSettings = {
     visas: "",
     insurance: "",
   },
+  certifications: [
+    { title: "IATA Accredited", code: "05301026", image: "/images_v2/iata-logo.png" },
+    { title: "Licensed Tour Operator", code: "T/O(YGN)-0946", image: "/images_v2/license-tour-operator.png" },
+    { title: "Company Registration", code: "126395248", image: "/images_v2/company-registration.png" },
+  ],
 };
 
 const themeColors = [
@@ -79,9 +91,10 @@ export default function AdminSettingsPage() {
   const [settings, setSettings] = useState<SiteSettings>(defaultSettings);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const [activeTab, setActiveTab] = useState<"general" | "hero" | "social" | "theme">("general");
+  const [activeTab, setActiveTab] = useState<"general" | "hero" | "social" | "certs" | "theme">("general");
   const [toast, setToast] = useState<{ message: string; type: "success" | "error" } | null>(null);
   const logoInputRef = useRef<HTMLInputElement>(null);
+  const fileInputRefs = useRef<(HTMLInputElement | null)[]>([]);
 
   const token = typeof window !== "undefined" ? localStorage.getItem("admin_token") : "";
 
@@ -98,6 +111,7 @@ export default function AdminSettingsPage() {
           ...data,
           socialLinks: { ...defaultSettings.socialLinks, ...(data.socialLinks || {}) },
           heroImages: { ...defaultSettings.heroImages, ...(data.heroImages || {}) },
+          certifications: data.certifications?.length ? data.certifications : defaultSettings.certifications,
         });
       }
     } catch (err) {
@@ -426,6 +440,99 @@ export default function AdminSettingsPage() {
     </div>
   );
 
+  const renderCertificationsTab = () => (
+    <div className="bg-white/5 border border-white/10 rounded-xl p-6">
+      <h3 className="text-lg font-semibold text-gold mb-2">Accreditations & Certifications</h3>
+      <p className="text-white/40 text-sm mb-6">
+        Update your certifications shown on the About Us page.
+      </p>
+      <div className="space-y-4">
+        {settings.certifications.map((cert, idx) => (
+          <div key={idx} className="bg-white/[0.03] border border-white/10 rounded-lg p-4 space-y-3">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+              <div>
+                <label className="block text-white/60 text-xs mb-1">Title</label>
+                <input
+                  type="text"
+                  value={cert.title}
+                  onChange={(e) => {
+                    const updated = [...settings.certifications];
+                    updated[idx] = { ...updated[idx], title: e.target.value };
+                    setSettings((prev) => ({ ...prev, certifications: updated }));
+                  }}
+                  className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-gold/50 transition-colors"
+                />
+              </div>
+              <div>
+                <label className="block text-white/60 text-xs mb-1">Code/Number</label>
+                <input
+                  type="text"
+                  value={cert.code}
+                  onChange={(e) => {
+                    const updated = [...settings.certifications];
+                    updated[idx] = { ...updated[idx], code: e.target.value };
+                    setSettings((prev) => ({ ...prev, certifications: updated }));
+                  }}
+                  className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-gold/50 transition-colors"
+                />
+              </div>
+              <div>
+                <label className="block text-white/60 text-xs mb-1">Image URL</label>
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    value={cert.image}
+                    onChange={(e) => {
+                      const updated = [...settings.certifications];
+                      updated[idx] = { ...updated[idx], image: e.target.value };
+                      setSettings((prev) => ({ ...prev, certifications: updated }));
+                    }}
+                    className="flex-1 bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-gold/50 transition-colors"
+                    placeholder="/images_v2/cert.png"
+                  />
+                  <input
+                    ref={(el) => { fileInputRefs.current[idx] = el; }}
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    onChange={async (e) => {
+                      const file = e.target.files?.[0];
+                      if (!file) return;
+                      const formData = new FormData();
+                      formData.append("file", file);
+                      try {
+                        const res = await fetch(`${API_BASE}/upload`, { method: "POST", body: formData });
+                        const data = await res.json();
+                        if (data.url) {
+                          showToast("Image uploaded!", "success");
+                          const updated = [...settings.certifications];
+                          updated[idx] = { ...updated[idx], image: data.url };
+                          setSettings((prev) => ({ ...prev, certifications: updated }));
+                        }
+                      } catch { showToast("Upload failed", "error"); }
+                    }}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => fileInputRefs.current[idx]?.click()}
+                    className="px-3 py-2 rounded-lg bg-gold/10 text-gold text-xs font-medium hover:bg-gold/20 transition-colors whitespace-nowrap"
+                  >
+                    📎 Upload
+                  </button>
+                </div>
+                {cert.image && (
+                  <div className="mt-2 w-12 h-12 rounded-lg bg-white/5 border border-white/10 overflow-hidden">
+                    <img src={cert.image} alt={cert.title} className="w-full h-full object-contain" />
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+
   if (loading) {
     return (
       <div className="flex items-center justify-center h-96">
@@ -438,6 +545,7 @@ export default function AdminSettingsPage() {
     { key: "general", label: "🏷️ General", icon: "⚙️" },
     { key: "hero", label: "🖼️ Hero Images", icon: "🖼️" },
     { key: "social", label: "🌐 Social Links", icon: "🔗" },
+    { key: "certs", label: "🏅 Certifications", icon: "🏅" },
     { key: "theme", label: "🎨 Theme Colors", icon: "🎨" },
   ] as const;
 
@@ -507,6 +615,7 @@ export default function AdminSettingsPage() {
       {activeTab === "general" && renderGeneralTab()}
       {activeTab === "hero" && renderHeroTab()}
       {activeTab === "social" && renderSocialTab()}
+      {activeTab === "certs" && renderCertificationsTab()}
       {activeTab === "theme" && renderThemeTab()}
     </div>
   );
