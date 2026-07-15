@@ -45,8 +45,8 @@ const defaultConfig = {
     { image: "/images_v2/hero-singapore-v2.jpg", label: "Lion City", title: "Singapore — Marina Bay", subtitle: "Futuristic skyline meets lush garden city living" },
     { image: "/images_v2/hero-thailand-v2.jpg", label: "Land of Smiles", title: "Thailand — Grand Palace", subtitle: "Golden spires and ornate temples in Bangkok" },
   ],
-  heroHeightMobile: 500,
-  heroHeightDesktop: 680,
+  heroHeightMobile: 340,
+  heroHeightDesktop: 460,
 
   // Service Icons Bar
   serviceIcons: [

@@ -173,15 +173,15 @@ export default function HomePage() {
   const handleRemoveLeg = (idx:number) => setMultiCityLegs(multiCityLegs.filter((_,i)=>i!==idx));
   const handleSearch = (e: React.FormEvent) => { e.preventDefault(); toast.success("Searching flights..."); };
 
-  const heroHeight = siteConfig?.heroHeightDesktop || 680;
-  const heroHeightMobile = siteConfig?.heroHeightMobile || 500;
+  const heroHeight = siteConfig?.heroHeightDesktop || 460;
+  const heroHeightMobile = siteConfig?.heroHeightMobile || 340;
   const statsCards = siteConfig?.statsCards?.length ? siteConfig.statsCards : [];
   const whyCards = siteConfig?.whyChooseCards?.length ? siteConfig.whyChooseCards : [];
 
   return (
     <main className="min-h-screen bg-white">
       {/* ========== Hero Section ========== */}
-      <section className="relative w-full overflow-hidden" style={{ height: `${heroHeight}px`, maxHeight: "100vh" }}>
+      <section className="relative w-full overflow-hidden" style={{ height: `${siteConfig?.heroHeightDesktop || 460}px`, maxHeight: "100vh" }}>
         {/* Gradient overlay */}
         <div className="absolute inset-0 overflow-hidden">
           {slides.map((slide:any, index:number) => (
@@ -219,7 +219,7 @@ export default function HomePage() {
         </div>
 
         {/* Service Icons */}
-        <div className="absolute left-0 right-0 top-[52%] md:top-[48%] z-20 px-1">
+        <div className="absolute left-0 right-0 bottom-4 z-20 px-1">
           <div className="max-w-5xl mx-auto flex flex-wrap justify-center gap-1 md:gap-2">
             {services.map((item:any) => (
               <Link key={item.href} href={item.href}
@@ -234,7 +234,7 @@ export default function HomePage() {
       </section>
 
       {/* ========== Search Engine ========== */}
-      <div className="relative -mt-40 md:-mt-48 z-30 px-4">
+      <div className="relative -mt-20 md:-mt-28 z-30 px-4">
         <div className="max-w-5xl mx-auto">
           <div className="bg-white rounded-2xl border-2 border-[#2563EB] shadow-xl p-5 md:p-7 overflow-visible">
             <div className="flex gap-1 mb-5 bg-gray-100 rounded-lg p-1 w-fit">

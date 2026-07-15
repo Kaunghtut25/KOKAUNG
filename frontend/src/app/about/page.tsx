@@ -191,14 +191,6 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* TEAM */}
-      <section className="px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto py-16 sm:py-20">
-        <div className="text-center mb-12"><h2 className="text-3xl sm:text-4xl font-bold mb-3 text-[#0A1628]" style={{fontFamily:"'Playfair Display',serif"}}>Our <span className="bg-gradient-to-r from-[#D4AF37] to-[#F5A623] bg-clip-text text-transparent">Expert Team</span></h2><p className="text-gray-500 max-w-xl mx-auto">{teamSubtitle}</p></div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {teamMembers.map((m,i)=><div key={i} className="bg-white rounded-2xl border border-gray-200 p-6 text-center hover:border-[#D4AF37]/40 hover:shadow-lg transition-all duration-300 group"><div className="w-24 h-24 mx-auto mb-4 rounded-full border-2 border-gray-200 group-hover:border-[#D4AF37]/40 transition-colors overflow-hidden"><img src={m.image||FALLBACK_IMG} alt={m.name} className="w-24 h-24 rounded-full object-cover" onError={e=>{(e.target as HTMLImageElement).src=FALLBACK_IMG}}/></div><h4 className="text-[#0A1628] font-semibold text-lg mb-1">{m.name}</h4><p className="text-[#D4AF37] text-sm font-medium">{m.role}</p></div>)}
-        </div>
-      </section>
-
       {/* COMMITMENT */}
       <section className="px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto pb-16 sm:pb-20">
         <div className="bg-[#0A1628] rounded-2xl p-10 sm:p-14 text-center relative overflow-hidden">
