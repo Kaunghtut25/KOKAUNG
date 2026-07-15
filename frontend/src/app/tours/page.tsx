@@ -6,78 +6,26 @@ import TourCard from '@/components/TourCard';
 import ScrollingRow from '@/components/ScrollingRow';
 import CurrencyToggle from '@/components/CurrencyToggle';
 
-type CategoryKey = 'all' | 'myanmar' | 'international' | 'adventure';
+type CategoryKey = 'all';
 
-// ─── Data ────────────────────────────────────────────────────
-
-const MYANMAR_TOURS: (Tour & { image: string })[] = [
-  { _id: 'm1', slug: 'golden-land-explorer', title: 'Golden Land Explorer', destination: 'Yangon-Bagan-Mandalay-Inle', priceMMK: 1850000, priceUSD: 881, duration: '8D/7N', durationUnit: 'Days', rating: 4.8, reviewCount: 142, image: '/images_v2/unsplash-35-v2.jpg', images: ['/images_v2/unsplash-35-v2.jpg'], amenities: ['Hotel', 'Breakfast', 'Guide', 'Transport'], featured: true, description: '', groupSize: 20, itinerary: [], included: [], excluded: [], createdAt: '' },
-  { _id: 'm2', slug: 'bagan-sunrise-discovery', title: 'Bagan Sunrise Discovery', destination: 'Bagan', priceMMK: 950000, priceUSD: 452, duration: '5D/4N', durationUnit: 'Days', rating: 4.9, reviewCount: 98, image: '/images_v2/unsplash-28-v2.jpg', images: ['/images_v2/unsplash-28-v2.jpg'], amenities: ['Hotel', 'Breakfast', 'E-Bike', 'Boat Cruise'], featured: true, description: '', groupSize: 15, itinerary: [], included: [], excluded: [], createdAt: '' },
-  { _id: 'm3', slug: 'mandalay-royal-heritage', title: 'Mandalay Royal Heritage', destination: 'Mandalay', priceMMK: 750000, priceUSD: 357, duration: '4D/3N', durationUnit: 'Days', rating: 4.6, reviewCount: 67, image: '/images_v2/unsplash-39-v2.jpg', images: ['/images_v2/unsplash-39-v2.jpg'], amenities: ['Hotel', 'Breakfast', 'Boat Trip', 'Guide'], featured: false, description: '', groupSize: 20, itinerary: [], included: [], excluded: [], createdAt: '' },
-  { _id: 'm4', slug: 'inle-lake-serenity', title: 'Inle Lake Serenity', destination: 'Inle Lake', priceMMK: 1100000, priceUSD: 524, duration: '5D/4N', durationUnit: 'Days', rating: 4.7, reviewCount: 85, image: '/images_v2/unsplash-36-v2.jpg', images: ['/images_v2/unsplash-36-v2.jpg'], amenities: ['Hotel', 'Breakfast', 'Boat Tour', 'Canoe'], featured: true, description: '', groupSize: 16, itinerary: [], included: [], excluded: [], createdAt: '' },
-  { _id: 'm5', slug: 'ngapali-beach-escape', title: 'Ngapali Beach Escape', destination: 'Ngapali Beach', priceMMK: 1350000, priceUSD: 643, duration: '4D/3N', durationUnit: 'Days', rating: 4.5, reviewCount: 52, image: '/images_v2/unsplash-8-v2.jpg', images: ['/images_v2/unsplash-8-v2.jpg'], amenities: ['Resort', 'Breakfast', 'Snorkeling', 'Beach'], featured: false, description: '', groupSize: 18, itinerary: [], included: [], excluded: [], createdAt: '' },
-  { _id: 'm6', slug: 'yangon-cultural-tour', title: 'Yangon Cultural Tour', destination: 'Yangon', priceMMK: 450000, priceUSD: 214, duration: '3D/2N', durationUnit: 'Days', rating: 4.4, reviewCount: 43, image: '/images_v2/unsplash-35-v2.jpg', images: ['/images_v2/unsplash-35-v2.jpg'], amenities: ['Hotel', 'Breakfast', 'Train Ride', 'Tea Shop'], featured: false, description: '', groupSize: 25, itinerary: [], included: [], excluded: [], createdAt: '' },
-  { _id: 'm7', slug: 'myeik-archipelago-adventure', title: 'Myeik Archipelago Adventure', destination: 'Myeik', priceMMK: 2200000, priceUSD: 1048, duration: '6D/5N', durationUnit: 'Days', rating: 4.9, reviewCount: 37, image: '/images_v2/unsplash-30-v2.jpg', images: ['/images_v2/unsplash-30-v2.jpg'], amenities: ['Boat Cabin', 'All Meals', 'Snorkeling', 'Kayak'], featured: true, description: '', groupSize: 12, itinerary: [], included: [], excluded: [], createdAt: '' },
-  { _id: 'm8', slug: 'yangon-mandalay-express', title: 'Yangon-Mandalay Express', destination: 'Yangon-Mandalay', priceMMK: 550000, priceUSD: 262, duration: '3D/2N', durationUnit: 'Days', rating: 4.3, reviewCount: 38, image: '/images_v2/unsplash-35-v2.jpg', images: ['/images_v2/unsplash-35-v2.jpg'], amenities: ['Hotel', 'Breakfast', 'Flight', 'Guide'], featured: false, description: '', groupSize: 22, itinerary: [], included: [], excluded: [], createdAt: '' },
-  { _id: 'm9', slug: 'shan-highland-trek', title: 'Shan Highland Trek', destination: 'Kalaw-Inle', priceMMK: 850000, priceUSD: 405, duration: '5D/4N', durationUnit: 'Days', rating: 4.8, reviewCount: 45, image: '/images_v2/unsplash-7-v2.jpg', images: ['/images_v2/unsplash-7-v2.jpg'], amenities: ['Homestay', 'All Meals', 'Guide', 'Porter'], featured: true, description: '', groupSize: 12, itinerary: [], included: [], excluded: [], createdAt: '' },
-  { _id: 'm10', slug: 'mrauk-u-ancient-kingdoms', title: 'Mrauk U Ancient Kingdoms', destination: 'Mrauk U', priceMMK: 950000, priceUSD: 452, duration: '4D/3N', durationUnit: 'Days', rating: 4.7, reviewCount: 24, image: '/images_v2/unsplash-40-v2.jpg', images: ['/images_v2/unsplash-40-v2.jpg'], amenities: ['Hotel', 'Breakfast', 'Boat', 'Guide'], featured: false, description: '', groupSize: 12, itinerary: [], included: [], excluded: [], createdAt: '' },
-  { _id: 'm11', slug: 'hpa-an-cave-explorer', title: 'Hpa-An Cave Explorer', destination: 'Hpa-An', priceMMK: 420000, priceUSD: 200, duration: '3D/2N', durationUnit: 'Days', rating: 4.5, reviewCount: 31, image: '/images_v2/unsplash-35-v2.jpg', images: ['/images_v2/unsplash-35-v2.jpg'], amenities: ['Hotel', 'Breakfast', 'Boat', 'Guide'], featured: false, description: '', groupSize: 18, itinerary: [], included: [], excluded: [], createdAt: '' },
-  { _id: 'm12', slug: 'pyin-oo-lwin-flower-festival', title: 'Pyin Oo Lwin Flower Festival', destination: 'Pyin Oo Lwin', priceMMK: 550000, priceUSD: 262, duration: '4D/3N', durationUnit: 'Days', rating: 4.4, reviewCount: 27, image: '/images_v2/unsplash-38-v2.jpg', images: ['/images_v2/unsplash-38-v2.jpg'], amenities: ['Hotel', 'Breakfast', 'Gardens', 'Coffee Tour'], featured: false, description: '', groupSize: 18, itinerary: [], included: [], excluded: [], createdAt: '' },
-];
-
-const INTERNATIONAL_TOURS: (Tour & { image: string })[] = [
-  { _id: 'i1', slug: 'bangkok-pattaya-luxury', title: 'Bangkok-Pattaya Luxury', destination: 'Thailand', priceMMK: 1650000, priceUSD: 786, duration: '5D/4N', durationUnit: 'Days', rating: 4.5, reviewCount: 76, image: '/images_v2/unsplash-9-v2.jpg', images: ['/images_v2/unsplash-9-v2.jpg'], amenities: ['Hotel', 'Breakfast', 'Island Tour', 'Guide'], featured: false, description: '', groupSize: 22, itinerary: [], included: [], excluded: [], createdAt: '' },
-  { _id: 'i2', slug: 'singapore-city-lights', title: 'Singapore City Lights', destination: 'Singapore', priceMMK: 2100000, priceUSD: 1000, duration: '4D/3N', durationUnit: 'Days', rating: 4.7, reviewCount: 63, image: '/images_v2/unsplash-15-v2.jpg', images: ['/images_v2/unsplash-15-v2.jpg'], amenities: ['Hotel', 'Breakfast', 'Gardens', 'Sentosa'], featured: false, description: '', groupSize: 18, itinerary: [], included: [], excluded: [], createdAt: '' },
-  { _id: 'i3', slug: 'angkor-wat-discovery', title: 'Angkor Wat Discovery', destination: 'Cambodia', priceMMK: 1450000, priceUSD: 690, duration: '4D/3N', durationUnit: 'Days', rating: 4.5, reviewCount: 54, image: '/images_v2/unsplash-30-v2.jpg', images: ['/images_v2/unsplash-30-v2.jpg'], amenities: ['Hotel', 'Breakfast', 'Tuk-Tuk', 'Boat'], featured: false, description: '', groupSize: 20, itinerary: [], included: [], excluded: [], createdAt: '' },
-  { _id: 'i4', slug: 'vietnam-heritage-trail', title: 'Vietnam Heritage Trail', destination: 'Vietnam', priceMMK: 2400000, priceUSD: 1143, duration: '7D/6N', durationUnit: 'Days', rating: 4.8, reviewCount: 82, image: '/images_v2/unsplash-27-v2.jpg', images: ['/images_v2/unsplash-27-v2.jpg'], amenities: ['Hotel', 'Breakfast', 'Cruise', 'Guide'], featured: true, description: '', groupSize: 18, itinerary: [], included: [], excluded: [], createdAt: '' },
-  { _id: 'i5', slug: 'bali-paradise-escape', title: 'Bali Paradise Escape', destination: 'Indonesia', priceMMK: 1950000, priceUSD: 929, duration: '5D/4N', durationUnit: 'Days', rating: 4.7, reviewCount: 59, image: '/images_v2/unsplash-19-v2.jpg', images: ['/images_v2/unsplash-19-v2.jpg'], amenities: ['Resort', 'Breakfast', 'Temples', 'Spa'], featured: true, description: '', groupSize: 16, itinerary: [], included: [], excluded: [], createdAt: '' },
-  { _id: 'i6', slug: 'japan-cherry-blossom-tour', title: 'Japan Cherry Blossom Tour', destination: 'Japan', priceMMK: 3850000, priceUSD: 1833, duration: '7D/6N', durationUnit: 'Days', rating: 4.9, reviewCount: 72, image: '/images_v2/unsplash-14-v2.jpg', images: ['/images_v2/unsplash-14-v2.jpg'], amenities: ['Hotel', 'Breakfast', 'JR Pass', 'Tea Ceremony'], featured: true, description: '', groupSize: 14, itinerary: [], included: [], excluded: [], createdAt: '' },
-  { _id: 'i7', slug: 'golden-triangle-explorer', title: 'Golden Triangle Explorer', destination: 'Myanmar-Thailand-Laos', priceMMK: 3500000, priceUSD: 1667, duration: '10D/9N', durationUnit: 'Days', rating: 4.6, reviewCount: 29, image: '/images_v2/unsplash-30-v2.jpg', images: ['/images_v2/unsplash-30-v2.jpg'], amenities: ['Hotel', 'Breakfast', 'Cruise', 'Guide'], featured: false, description: '', groupSize: 15, itinerary: [], included: [], excluded: [], createdAt: '' },
-  { _id: 'i8', slug: 'maldives-honeymoon-special', title: 'Maldives Honeymoon Special', destination: 'Maldives', priceMMK: 3200000, priceUSD: 1524, duration: '4D/3N', durationUnit: 'Days', rating: 4.9, reviewCount: 44, image: '/images_v2/unsplash-12-v2.jpg', images: ['/images_v2/unsplash-12-v2.jpg'], amenities: ['Overwater Villa', 'Full Board', 'Spa', 'Cruise'], featured: true, description: '', groupSize: 2, itinerary: [], included: [], excluded: [], createdAt: '' },
-  { _id: 'i9', slug: 'south-korea-discovery', title: 'South Korea Discovery', destination: 'South Korea', priceMMK: 2950000, priceUSD: 1405, duration: '6D/5N', durationUnit: 'Days', rating: 4.6, reviewCount: 41, image: '/images_v2/unsplash-17-v2.jpg', images: ['/images_v2/unsplash-17-v2.jpg'], amenities: ['Hotel', 'Breakfast', 'KORAIL', 'Jeju'], featured: false, description: '', groupSize: 16, itinerary: [], included: [], excluded: [], createdAt: '' },
-  { _id: 'i10', slug: 'dubai-luxury-experience', title: 'Dubai Luxury Experience', destination: 'UAE', priceMMK: 2750000, priceUSD: 1310, duration: '5D/4N', durationUnit: 'Days', rating: 4.7, reviewCount: 88, image: '/images_v2/unsplash-10-v2.jpg', images: ['/images_v2/unsplash-10-v2.jpg'], amenities: ['Hotel', 'Breakfast', 'Burj Khalifa', 'Desert Safari'], featured: false, description: '', groupSize: 20, itinerary: [], included: [], excluded: [], createdAt: '' },
-];
-
-const ADVENTURE_TOURS: (Tour & { image: string })[] = [
-  MYANMAR_TOURS[6], MYANMAR_TOURS[8], INTERNATIONAL_TOURS[6],
-  MYANMAR_TOURS[1], INTERNATIONAL_TOURS[3], MYANMAR_TOURS[10],
-];
-
-const ALL_TOURS_DATA = [...MYANMAR_TOURS, ...INTERNATIONAL_TOURS];
-
-function getCategoryTours(cat: CategoryKey): (Tour & { image: string })[] {
-  switch (cat) {
-    case 'myanmar': return MYANMAR_TOURS;
-    case 'international': return INTERNATIONAL_TOURS;
-    case 'adventure': return ADVENTURE_TOURS;
-    default: return ALL_TOURS_DATA;
-  }
-}
-
-// ─── Components ──────────────────────────────────────────────
+// For now, tours page uses the database API directly
+// Categories (Myanmar/International/Adventure) are derived from destination
 
 const CATEGORY_TABS: { key: CategoryKey; label: string; emoji: string }[] = [
   { key: 'all', label: 'All Tours', emoji: '🌏' },
-  { key: 'myanmar', label: 'Discover Myanmar', emoji: '🇲🇲' },
-  { key: 'international', label: 'International', emoji: '✈️' },
-  { key: 'adventure', label: 'Adventure', emoji: '🏔️' },
 ];
 
 // ─── Page Component ──────────────────────────────────────────
 
 export default function ToursPage() {
-  // Fetch tours from admin database
-  const [apiTours, setApiTours] = useState<any[]>([]);
-  useEffect(() => {
-    fetch('/api/tours').then(r => r.json()).then(data => {
-      if (data?.data?.length) setApiTours(data.data);
-    }).catch(() => {});
-  }, []);
-  const [loading, setLoading] = useState(false);
+  const [apiTours, setApiTours] = useState<Tour[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
   const [currency, setCurrency] = useState<'MMK' | 'USD'>('MMK');
-  const [activeTab, setActiveTab] = useState<CategoryKey>('all');
+  const [activeTab] = useState<CategoryKey>('all');
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [totalCount, setTotalCount] = useState(0);
 
   const [destination, setDestination] = useState('');
   const [minPrice, setMinPrice] = useState('');
@@ -85,15 +33,53 @@ export default function ToursPage() {
   const [durationFilter, setDurationFilter] = useState('');
   const [sort, setSort] = useState('');
 
-  // Build client-filtered list
-  const categoryTours = getCategoryTours(activeTab);
+  // Fetch from database API
+  const fetchTours = useCallback(async () => {
+    setLoading(true);
+    setError('');
+    try {
+      const params = new URLSearchParams();
+      params.set('page', String(page));
+      params.set('limit', '50'); // Fetch all for client-side filtering
+      if (destination) params.set('destination', destination);
+      if (minPrice) params.set('minPrice', minPrice);
+      if (maxPrice) params.set('maxPrice', maxPrice);
+      if (sort) params.set('sort', sort);
+      params.set('currency', currency);
 
-  const filteredTours = categoryTours.filter((t) => {
-    if (destination.trim() && !t.destination.toLowerCase().includes(destination.trim().toLowerCase()) && !t.title.toLowerCase().includes(destination.trim().toLowerCase())) return false;
-    if (minPrice && t.priceMMK < Number(minPrice)) return false;
-    if (maxPrice && t.priceMMK > Number(maxPrice)) return false;
+      const res = await fetch(`/api/tours?${params.toString()}`);
+
+      if (!res.ok) throw new Error('Failed to load tours');
+
+      const data = await res.json();
+      const tours: Tour[] = (data.data || []).map((t: any) => ({
+        ...t,
+        _id: t._id || t.id || `tour-${Math.random()}`,
+        image: Array.isArray(t.images) ? t.images[0] : t.image || '/images_v2/hotel1-v3.jpg',
+        images: t.images || [],
+      }));
+
+      setTotalCount(data.pagination?.total || tours.length);
+      setTotalPages(data.pagination?.totalPages || Math.max(1, Math.ceil(tours.length / 6)));
+      setApiTours(tours);
+    } catch (err: any) {
+      setError(err.message || 'Failed to load tours');
+      console.error('Tours fetch error:', err);
+    } finally {
+      setLoading(false);
+    }
+  }, [page, destination, minPrice, maxPrice, sort, currency]);
+
+  useEffect(() => {
+    fetchTours();
+  }, [fetchTours]);
+
+  // Client-side duration filter
+  const filteredTours = apiTours.filter((t) => {
     if (durationFilter) {
-      const days = parseInt(t.duration.split('D')[0]) || 0;
+      const dur = String(t.duration || '');
+      const dayMatch = dur.match(/(\d+)/);
+      const days = dayMatch ? parseInt(dayMatch[1]) : 0;
       if (durationFilter === '1-3' && days > 3) return false;
       if (durationFilter === '4-7' && (days < 4 || days > 7)) return false;
       if (durationFilter === '8-14' && (days < 8 || days > 14)) return false;
@@ -102,29 +88,15 @@ export default function ToursPage() {
     return true;
   });
 
-  // Sort
-  const sortedTours = [...filteredTours].sort((a, b) => {
-    if (sort === 'rating') return b.rating - a.rating;
-    if (sort === 'price_asc') return a.priceMMK - b.priceMMK;
-    if (sort === 'price_desc') return b.priceMMK - a.priceMMK;
-    return 0;
-  });
-
-  const ITEMS_PER_PAGE = 6;
-  const totalFiltered = sortedTours.length;
-  const computedTotalPages = Math.ceil(totalFiltered / ITEMS_PER_PAGE);
-  const displayTours = sortedTours.slice((page - 1) * ITEMS_PER_PAGE, page * ITEMS_PER_PAGE);
+  const displayTours = filteredTours.slice((page - 1) * 6, page * 6);
+  const computedTotal = Math.max(1, Math.ceil(filteredTours.length / 6));
 
   // Reset page when filters change
-  useEffect(() => { setPage(1); }, [activeTab, destination, minPrice, maxPrice, durationFilter, sort]);
+  useEffect(() => { setPage(1); }, [destination, minPrice, maxPrice, durationFilter, sort]);
 
-  // Dynamic SEO title
+  // Dynamic SEO
   useEffect(() => {
     document.title = 'A9 Global Tours — Myanmar & International Tour Packages | A9 Global Travels';
-    const metaDesc = document.querySelector('meta[name="description"]');
-    if (metaDesc) {
-      metaDesc.setAttribute('content', 'Explore 20+ premium tour packages across Myanmar, Thailand, Vietnam, Singapore, Japan, Bali, Maldives, and more. Handpicked destinations, expert guides, IATA-accredited travel agency in Yangon.');
-    }
   }, []);
 
   const handleFilterChange = (setter: React.Dispatch<React.SetStateAction<string>>, value: string) => {
@@ -136,7 +108,7 @@ export default function ToursPage() {
       {/* Hero Banner */}
       <section className="relative pt-24 pb-12 px-4 overflow-hidden">
         <div className="absolute inset-0">
-          <img src="/images_v2/hero-tours-v2.jpg" alt="A9 Global Tours — Myanmar & International Travel Packages" className="w-full h-full object-cover" />
+          <img src="/images_v2/hero-tours-v2.jpg" alt="A9 Global Tours" className="w-full h-full object-cover" />
           <div className="absolute inset-0 bg-white/75" />
         </div>
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(212,175,55,0.08),transparent_70%)]" />
@@ -159,12 +131,7 @@ export default function ToursPage() {
           {CATEGORY_TABS.map((tab) => (
             <button
               key={tab.key}
-              onClick={() => setActiveTab(tab.key)}
-              className={`px-5 py-2.5 rounded-full text-sm font-semibold transition-all duration-200 ${
-                activeTab === tab.key
-                  ? 'bg-gradient-to-r from-[#D4AF37] to-[#C5A028] text-gray-900 shadow-md'
-                  : 'bg-gray-50 text-gray-600 hover:bg-gray-100 hover:text-gray-900'
-              }`}
+              className="px-5 py-2.5 rounded-full text-sm font-semibold bg-gradient-to-r from-[#D4AF37] to-[#C5A028] text-gray-900 shadow-md"
             >
               {tab.emoji} {tab.label}
             </button>
@@ -172,21 +139,23 @@ export default function ToursPage() {
         </div>
       </section>
 
-      {/* Scrolling Row — Featured / category showcase */}
-      <section className="max-w-7xl mx-auto px-4 pt-4">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl font-bold text-gray-900" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
-            {activeTab === 'all' ? '🌟 Featured Tours' : activeTab === 'myanmar' ? '🇲🇲 Discover Myanmar' : activeTab === 'international' ? '✈️ International Escapes' : '🏔️ Adventure Awaits'}
-          </h2>
-        </div>
-        <ScrollingRow>
-          {categoryTours.slice(0, 10).map((item) => (
-            <div key={item._id} className="w-[300px] flex-shrink-0 snap-start">
-              <TourCard tour={item} currency={currency} />
-            </div>
-          ))}
-        </ScrollingRow>
-      </section>
+      {/* Scrolling Row — Featured from DB */}
+      {apiTours.length > 0 && !loading && (
+        <section className="max-w-7xl mx-auto px-4 pt-4">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-xl font-bold text-gray-900" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
+              🌟 Featured Tours
+            </h2>
+          </div>
+          <ScrollingRow>
+            {apiTours.filter(t => t.featured).slice(0, 10).map((item) => (
+              <div key={item._id || item.id} className="w-[300px] flex-shrink-0 snap-start">
+                <TourCard tour={item} currency={currency} />
+              </div>
+            ))}
+          </ScrollingRow>
+        </section>
+      )}
 
       {/* Filter Bar */}
       <section className="sticky top-[72px] z-30 bg-white/95 backdrop-blur-md border-b border-gray-200 shadow-sm mt-8">
@@ -211,7 +180,7 @@ export default function ToursPage() {
                 value={minPrice}
                 onChange={(e) => handleFilterChange(setMinPrice, e.target.value)}
                 placeholder="Min MMK"
-                className="w-[100px] px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-gray-900 placeholder-gray-400 text-sm focus:outline-none focus:border-[#D4AF37] transition-colors [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                className="w-[100px] px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-gray-900 placeholder-gray-400 text-sm focus:outline-none focus:border-[#D4AF37] transition-colors [appearance:textfield]"
               />
               <span className="text-gray-400">–</span>
               <input
@@ -219,7 +188,7 @@ export default function ToursPage() {
                 value={maxPrice}
                 onChange={(e) => handleFilterChange(setMaxPrice, e.target.value)}
                 placeholder="Max MMK"
-                className="w-[100px] px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-gray-900 placeholder-gray-400 text-sm focus:outline-none focus:border-[#D4AF37] transition-colors [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                className="w-[100px] px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-gray-900 placeholder-gray-400 text-sm focus:outline-none focus:border-[#D4AF37] transition-colors [appearance:textfield]"
               />
             </div>
             <div className="relative">
@@ -228,11 +197,11 @@ export default function ToursPage() {
                 onChange={(e) => { setDurationFilter(e.target.value); setPage(1); }}
                 className="px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-gray-900 text-sm focus:outline-none focus:border-[#D4AF37] transition-colors appearance-none cursor-pointer pr-8"
               >
-                <option value="" className="bg-white text-gray-900">All Durations</option>
-                <option value="1-3" className="bg-white text-gray-900">1-3 Days</option>
-                <option value="4-7" className="bg-white text-gray-900">4-7 Days</option>
-                <option value="8-14" className="bg-white text-gray-900">8-14 Days</option>
-                <option value="15+" className="bg-white text-gray-900">15+ Days</option>
+                <option value="">All Durations</option>
+                <option value="1-3">1-3 Days</option>
+                <option value="4-7">4-7 Days</option>
+                <option value="8-14">8-14 Days</option>
+                <option value="15+">15+ Days</option>
               </select>
               <svg className="absolute right-2 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
@@ -244,10 +213,10 @@ export default function ToursPage() {
                 onChange={(e) => { setSort(e.target.value); setPage(1); }}
                 className="px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-gray-900 text-sm focus:outline-none focus:border-[#D4AF37] transition-colors appearance-none cursor-pointer pr-8"
               >
-                <option value="" className="bg-white text-gray-900">Sort by</option>
-                <option value="rating" className="bg-white text-gray-900">Rating</option>
-                <option value="price_asc" className="bg-white text-gray-900">Price: Low to High</option>
-                <option value="price_desc" className="bg-white text-gray-900">Price: High to Low</option>
+                <option value="">Sort by</option>
+                <option value="rating">Rating</option>
+                <option value="price_asc">Price: Low to High</option>
+                <option value="price_desc">Price: High to Low</option>
               </select>
               <svg className="absolute right-2 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
@@ -262,37 +231,81 @@ export default function ToursPage() {
 
       {/* Results Grid */}
       <section className="max-w-7xl mx-auto px-4 py-8 pb-20">
-        {displayTours.length === 0 && (
+        {/* Loading State */}
+        {loading && (
+          <div className="text-center py-20">
+            <div className="inline-block w-12 h-12 border-4 border-[#D4AF37]/30 border-t-[#D4AF37] rounded-full animate-spin" />
+            <p className="text-gray-400 mt-4">Loading tours...</p>
+          </div>
+        )}
+
+        {/* Error State */}
+        {error && !loading && (
           <div className="text-center py-20 space-y-4">
-            <h3 className="text-xl font-semibold text-gray-900" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>No Tours Found</h3>
+            <span className="text-4xl block">⚠️</span>
+            <h3 className="text-xl font-semibold text-gray-900" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
+              Something went wrong
+            </h3>
+            <p className="text-gray-500 max-w-md mx-auto">{error}</p>
+            <button
+              onClick={fetchTours}
+              className="px-6 py-2 rounded-xl bg-gradient-to-r from-[#D4AF37] to-[#C5A028] text-gray-900 font-semibold hover:shadow-lg transition-all"
+            >
+              Try Again
+            </button>
+          </div>
+        )}
+
+        {/* Empty State */}
+        {!loading && !error && apiTours.length === 0 && (
+          <div className="text-center py-20 space-y-4">
+            <span className="text-5xl block">✈️</span>
+            <h3 className="text-xl font-semibold text-gray-900" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
+              No Tours Available
+            </h3>
+            <p className="text-gray-500 max-w-md mx-auto">
+              Check back soon for new tour packages, or contact us for custom itineraries.
+            </p>
+            <button
+              onClick={fetchTours}
+              className="px-6 py-2 rounded-xl bg-gradient-to-r from-[#D4AF37] to-[#C5A028] text-gray-900 font-semibold hover:shadow-lg transition-all"
+            >
+              Refresh
+            </button>
+          </div>
+        )}
+
+        {!loading && !error && filteredTours.length === 0 && apiTours.length > 0 && (
+          <div className="text-center py-20 space-y-4">
+            <h3 className="text-xl font-semibold text-gray-900" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
+              No Tours Found
+            </h3>
             <p className="text-gray-500 max-w-md mx-auto">Try adjusting your filters or search terms.</p>
             <button
               onClick={() => { setDestination(''); setMinPrice(''); setMaxPrice(''); setDurationFilter(''); setSort(''); setPage(1); }}
               className="px-6 py-2 rounded-xl bg-gradient-to-r from-[#D4AF37] to-[#C5A028] text-gray-900 font-semibold hover:shadow-lg transition-all"
             >
-              Show All Tours
+              Clear All Filters
             </button>
           </div>
         )}
 
-        {displayTours.length > 0 && (
+        {!loading && !error && displayTours.length > 0 && (
           <>
             <div className="flex items-center justify-between mb-6">
               <p className="text-gray-500 text-sm">
                 Showing <span className="text-gray-900 font-medium">{displayTours.length}</span> of{' '}
-                <span className="text-gray-900 font-medium">{totalFiltered}</span> tours
+                <span className="text-gray-900 font-medium">{filteredTours.length}</span> tours
               </p>
-              <span className="text-xs text-gray-400">
-                {CATEGORY_TABS.find(t => t.key === activeTab)?.label}
-              </span>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {displayTours.map((item) => (
-                <TourCard key={item._id} tour={item} currency={currency} />
-              ))}</div>
+                <TourCard key={item._id || item.id} tour={item} currency={currency} />
+              ))}
+            </div>
 
             {/* Pagination */}
-            {computedTotalPages > 1 && (
+            {computedTotal > 1 && (
               <div className="flex items-center justify-center gap-2 mt-12">
                 <button
                   onClick={() => setPage((prev) => Math.max(1, prev - 1))}
@@ -301,8 +314,8 @@ export default function ToursPage() {
                 >
                   ← Prev
                 </button>
-                {Array.from({ length: computedTotalPages }, (_, i) => i + 1)
-                  .filter((p) => { if (computedTotalPages <= 7) return true; if (p === 1 || p === computedTotalPages) return true; if (Math.abs(p - page) <= 1) return true; return false; })
+                {Array.from({ length: computedTotal }, (_, i) => i + 1)
+                  .filter((p) => { if (computedTotal <= 7) return true; if (p === 1 || p === computedTotal) return true; if (Math.abs(p - page) <= 1) return true; return false; })
                   .map((p, idx, arr) => {
                     const showEllipsis = idx > 0 && arr[idx - 1] !== p - 1;
                     return (
@@ -322,8 +335,8 @@ export default function ToursPage() {
                     );
                   })}
                 <button
-                  onClick={() => setPage((prev) => Math.min(computedTotalPages, prev + 1))}
-                  disabled={page === computedTotalPages}
+                  onClick={() => setPage((prev) => Math.min(computedTotal, prev + 1))}
+                  disabled={page === computedTotal}
                   className="px-4 py-2 rounded-lg border border-gray-200 text-gray-500 hover:text-gray-900 hover:border-[#D4AF37] disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
                 >
                   Next →

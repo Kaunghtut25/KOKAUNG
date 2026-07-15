@@ -48,6 +48,7 @@ export default function AdminToursPage() {
   const [isNew, setIsNew] = useState(true);
   const [saving, setSaving] = useState(false);
   const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
+  const [uploadingImg, setUploadingImg] = useState(false);
   const [imageUrlInput, setImageUrlInput] = useState("");
   const [imagePreviewUrl, setImagePreviewUrl] = useState("");
   const [imageList, setImageList] = useState<string[]>([]);
@@ -115,6 +116,31 @@ export default function AdminToursPage() {
     setImageUrlInput("");
     setImagePreviewUrl("");
     setEditingTour((prev) => ({ ...prev, images: JSON.stringify(newList) }));
+  };
+
+  const handleFileUpload = async (file: File) => {
+    if (!file || !file.type.startsWith('image/')) {
+      alert('Please select an image file (JPG, PNG, WebP)');
+      return;
+    }
+    setUploadingImg(true);
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+      const res = await fetch('/api/upload', { method: 'POST', body: formData });
+      const data = await res.json();
+      if (data.url) {
+        const newList = [...imageList, data.url];
+        setImageList(newList);
+        setEditingTour((prev) => ({ ...prev, images: JSON.stringify(newList) }));
+      } else {
+        alert(data.message || 'Upload failed');
+      }
+    } catch (err: any) {
+      alert('Upload failed: ' + (err.message || 'Network error'));
+    } finally {
+      setUploadingImg(false);
+    }
   };
 
   const removeImage = (index: number) => {
@@ -315,14 +341,12 @@ export default function AdminToursPage() {
             className="flex gap-2 mb-3"
             onDragOver={(e) => { e.preventDefault(); (e.currentTarget as HTMLDivElement).style.borderColor = '#D4AF37'; }}
             onDragLeave={(e) => { (e.currentTarget as HTMLDivElement).style.borderColor = ''; }}
-            onDrop={(e) => {
+            onDrop={async (e) => {
               e.preventDefault();
               (e.currentTarget as HTMLDivElement).style.borderColor = '';
               const file = e.dataTransfer?.files?.[0];
               if (file && file.type.startsWith('image/')) {
-                const reader = new FileReader();
-                reader.onload = () => { setImageUrlInput(reader.result as string); handleImageUrlChange(reader.result as string); };
-                reader.readAsDataURL(file);
+                handleFileUpload(file);
               }
             }}>
           <input
@@ -335,13 +359,17 @@ export default function AdminToursPage() {
             className="flex-1 bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-gold/50 transition-colors"
             onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); addImage(); } }}
           />
+          <label className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors cursor-pointer ${uploadingImg ? 'bg-white/5 text-white/40' : 'bg-blue-500/10 text-blue-400 hover:bg-blue-500/20'}`}>
+            <input type="file" accept="image/*" onChange={(e) => { const f = e.target.files?.[0]; if (f) handleFileUpload(f); e.target.value = ''; }} className="hidden" disabled={uploadingImg} />
+            {uploadingImg ? '⏳ Uploading...' : '📁 Upload'}
+          </label>
           <button
             type="button"
             onClick={addImage}
             disabled={!imageUrlInput.trim()}
             className="px-4 py-2 rounded-lg bg-gold/10 text-gold text-sm font-medium hover:bg-gold/20 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
           >
-            + Add
+            + Add URL
           </button>
         </div>
 

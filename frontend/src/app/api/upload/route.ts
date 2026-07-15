@@ -1,131 +1,76 @@
-export const dynamic = 'force-dynamic';
-
 import { NextRequest, NextResponse } from "next/server";
 
-function getRedisClient() {
-  const url = process.env.UPSTASH_REDIS_REST_URL;
-  const token = process.env.UPSTASH_REDIS_REST_TOKEN;
-  if (!url || !token) return null;
-  try {
-    const { Redis } = require("@upstash/redis");
-    return new Redis({ url, token });
-  } catch { return null; }
-}
+const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
+const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp", "image/gif"];
 
-const UPLOADS_KEY = "***";
-const NAME_INDEX_KEY = "***"; // filename → upload_id
-
-// In-memory fallback
-let memoryUploads: any[] = [];
-let memoryNameIndex: Record<string, string> = {};
-
-async function getAllUploads(): Promise<any[]> {
-  const redis = getRedisClient();
-  if (redis) {
-    try {
-      const raw = await redis.get(UPLOADS_KEY);
-      if (raw && Array.isArray(raw) && raw.length > 0) return raw;
-    } catch {}
-  }
-  return memoryUploads;
-}
-
-async function getNameIndex(): Promise<Record<string, string>> {
-  const redis = getRedisClient();
-  if (redis) {
-    try {
-      const raw = await redis.get(NAME_INDEX_KEY);
-      if (raw) return raw as Record<string, string>;
-    } catch {}
-  }
-  return memoryNameIndex;
-}
-
-async function saveUploads(data: any[]) {
-  memoryUploads = data;
-  const redis = getRedisClient();
-  if (redis) {
-    try { await redis.set(UPLOADS_KEY, data); } catch {}
-  }
-}
-
-async function saveNameIndex(idx: Record<string, string>) {
-  memoryNameIndex = idx;
-  const redis = getRedisClient();
-  if (redis) {
-    try { await redis.set(NAME_INDEX_KEY, idx); } catch {}
-  }
-}
-
-// POST /api/upload — upload image(s)
 export async function POST(request: NextRequest) {
   try {
     const formData = await request.formData();
-    const uploads = await getAllUploads();
-    const nameIndex = await getNameIndex();
-    const results: any[] = [];
+    const file = formData.get("file") as File | null;
 
-    for (const [, value] of formData.entries()) {
-      if (value instanceof File) {
-        const buffer = Buffer.from(await value.arrayBuffer());
-        const base64 = buffer.toString("base64");
-        const mimeType = value.type || "image/jpeg";
-        const id = `img_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
+    if (!file) {
+      return NextResponse.json({ message: "No file provided" }, { status: 400 });
+    }
 
-        // Replace existing entry with same name
-        const existingIdx = uploads.findIndex((u: any) => u.name === value.name);
-        if (existingIdx >= 0) {
-          uploads[existingIdx] = { ...uploads[existingIdx], base64, size: buffer.length, mimeType, updatedAt: new Date().toISOString() };
-        } else {
-          uploads.push({ id, name: value.name, mimeType, base64, size: buffer.length, createdAt: new Date().toISOString() });
-        }
-        nameIndex[value.name] = existingIdx >= 0 ? uploads[existingIdx].id : id;
-        results.push({ id: existingIdx >= 0 ? uploads[existingIdx].id : id, name: value.name, size: buffer.length });
+    if (file.size > MAX_FILE_SIZE) {
+      return NextResponse.json({ message: "File too large (max 10MB)" }, { status: 400 });
+    }
+
+    if (!ALLOWED_TYPES.includes(file.type)) {
+      return NextResponse.json({ message: "Unsupported file type. Use JPG, PNG, WebP, or GIF" }, { status: 400 });
+    }
+
+    // Upload to ImgBB (free, no account needed for basic use)
+    // Or use Cloudinary if env vars are set
+    const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
+    const apiKey = process.env.CLOUDINARY_API_KEY;
+    const apiSecret = process.env.CLOUDINARY_API_SECRET;
+
+    if (cloudName && apiKey && apiSecret) {
+      // Cloudinary unsigned upload
+      const bytes = await file.arrayBuffer();
+      const buffer = Buffer.from(bytes);
+      const base64 = `data:${file.type};base64,${buffer.toString("base64")}`;
+
+      const formData2 = new FormData();
+      formData2.append("file", base64);
+      formData2.append("upload_preset", "a9-global-unsigned");
+      formData2.append("folder", "a9-global");
+
+      const cloudRes = await fetch(
+        `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
+        { method: "POST", body: formData2 }
+      );
+      const cloudData = await cloudRes.json();
+
+      if (cloudData.secure_url) {
+        return NextResponse.json({
+          success: true,
+          url: cloudData.secure_url,
+          publicId: cloudData.public_id,
+          width: cloudData.width,
+          height: cloudData.height,
+        });
       }
     }
 
-    await saveUploads(uploads);
-    await saveNameIndex(nameIndex);
-    return NextResponse.json({ success: true, uploads: results, total: uploads.length });
-  } catch (e: any) {
-    return NextResponse.json({ success: false, error: e.message }, { status: 500 });
+    // Fallback: base64 data URL (works but large, stored in Upstash Redis)
+    const bytes = await file.arrayBuffer();
+    const buffer = Buffer.from(bytes);
+    const base64 = `data:${file.type};base64,${buffer.toString("base64")}`;
+
+    return NextResponse.json({
+      success: true,
+      url: base64,
+      publicId: `local_${Date.now()}`,
+      fallback: true,
+      message: "Stored as base64 — configure Cloudinary for permanent URLs",
+    });
+  } catch (err: any) {
+    console.error("Upload error:", err);
+    return NextResponse.json(
+      { message: err.message || "Upload failed" },
+      { status: 500 }
+    );
   }
-}
-
-// GET /api/upload?id=xxx OR /api/upload?name=hero-bagan.jpg
-export async function GET(request: NextRequest) {
-  const id = request.nextUrl.searchParams.get("id");
-  const name = request.nextUrl.searchParams.get("name");
-
-  // List all uploads (without base64)
-  if (!id && !name) {
-    const uploads = await getAllUploads();
-    const list = uploads.map(({ base64, ...rest }: any) => rest);
-    return NextResponse.json({ uploads: list });
-  }
-
-  // Lookup by name
-  let resolvedId = id;
-  if (name && !id) {
-    const nameIndex = await getNameIndex();
-    resolvedId = nameIndex[name];
-  }
-
-  if (!resolvedId) {
-    return NextResponse.json({ error: "Not found" }, { status: 404 });
-  }
-
-  const uploads = await getAllUploads();
-  const found = uploads.find((u: any) => u.id === resolvedId);
-  if (!found) {
-    return NextResponse.json({ error: "Not found" }, { status: 404 });
-  }
-
-  const buffer = Buffer.from(found.base64, "base64");
-  return new NextResponse(buffer, {
-    headers: {
-      "Content-Type": found.mimeType || "image/jpeg",
-      "Cache-Control": "public, max-age=31536000, immutable",
-    },
-  });
 }

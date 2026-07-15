@@ -1,57 +1,59 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { seed, getAll, create } from '@/lib/adminStore';
+import { NextRequest, NextResponse } from "next/server";
 
-// Admin credentials (hardcoded — use proper auth + env vars in production)
-const ADMIN_EMAIL = 'admin@a9global.com';
-const ADMIN_PASSWORD = (process.env.ADMIN_PASSWORD || 'a9admin2026');
+// In production, use environment variables
+const ADMIN_EMAIL = process.env.ADMIN_EMAIL || "admin@a9global.com";
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "A9Admin2024!";
 
-seed();
+// Create a simple JWT-like token (base64 payload)
+function createToken(user: Record<string, unknown>): string {
+  const header = btoa(JSON.stringify({ alg: "HS256", typ: "JWT" }));
+  const payload = btoa(JSON.stringify({
+    ...user,
+    iat: Math.floor(Date.now() / 1000),
+    exp: Math.floor(Date.now() / 1000) + 86400, // 24 hours
+  }));
+  const secret = ADMIN_PASSWORD.slice(0, 16);
+  const signature = btoa(`${header}.${payload}.${secret}`);
+  return `${header}.${payload}.${signature}`;
+}
 
 export async function POST(request: NextRequest) {
   try {
     const { email, password } = await request.json();
 
     if (!email || !password) {
-      return NextResponse.json({ success: false, message: 'Email and password required' }, { status: 400 });
+      return NextResponse.json(
+        { message: "Email and password are required" },
+        { status: 400 }
+      );
     }
 
-    // ── Admin login ──
-    if (email === ADMIN_EMAIL && password === ADMIN_PASSWORD) {
-      let adminUser: any = (getAll('users') as any[]).find((u: any) => u.email === ADMIN_EMAIL);
-      if (!adminUser) {
-        adminUser = create('users', { name: 'Admin', email: ADMIN_EMAIL, role: 'admin' });
-      }
-      const token = Buffer.from(JSON.stringify({ id: adminUser._id, email: adminUser.email, role: 'admin' })).toString('base64');
-      return NextResponse.json({
-        success: true,
-        token,
-        user: { id: adminUser._id, name: adminUser.name, email: adminUser.email, role: 'admin' },
-      });
+    // Simple credential check
+    if (email !== ADMIN_EMAIL || password !== ADMIN_PASSWORD) {
+      return NextResponse.json(
+        { message: "Invalid email or password" },
+        { status: 401 }
+      );
     }
 
-    // ── Client login ──
-    const users: any[] = getAll('users');
-    const user = users.find((u: any) => u.email === email);
-    if (!user) {
-      return NextResponse.json({ success: false, message: 'Account not found. Please register first.' }, { status: 401 });
-    }
+    const user = {
+      id: "admin-001",
+      email: ADMIN_EMAIL,
+      name: "A9 Admin",
+      role: "admin",
+    };
 
-    if (user.role !== 'user') {
-      return NextResponse.json({ success: false, message: 'Invalid credentials' }, { status: 401 });
-    }
+    const token = createToken(user);
 
-    // Verify password (plaintext comparison — use bcrypt in production)
-    if (user.password !== password) {
-      return NextResponse.json({ success: false, message: 'Incorrect password' }, { status: 401 });
-    }
-
-    const token = Buffer.from(JSON.stringify({ id: user._id, email: user.email, role: user.role })).toString('base64');
     return NextResponse.json({
       success: true,
       token,
-      user: { id: user._id, name: user.name, email: user.email, role: user.role },
+      user,
     });
-  } catch (err: any) {
-    return NextResponse.json({ success: false, message: err.message }, { status: 500 });
+  } catch {
+    return NextResponse.json(
+      { message: "Server error" },
+      { status: 500 }
+    );
   }
 }
