@@ -65,7 +65,7 @@ export default function ServiceIcons() {
   return (
     <>
       {/* Fixed bar — always visible at top */}
-      <div className="fixed top-20 left-0 right-0 z-30">
+      <div className="fixed top-20 left-0 right-0 z-50">
         {iconBar}
       </div>
       {/* Spacer — pushes content down so nothing is hidden behind the fixed bar */}
