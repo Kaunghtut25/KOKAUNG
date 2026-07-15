@@ -86,6 +86,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${inter.variable} overflow-x-hidden`}>
       <head>
+        <meta name="google-site-verification" content="5Jm0-k00otih6d0kErhwREEJ5NNdqCUyCt2Cr9n7ZCs" />
         <link rel="icon" href="/favicon.ico" sizes="any" />
         <script
           type="application/ld+json"
