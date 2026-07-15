@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 
-// In production, use environment variables
+// In production, set these in Vercel environment variables
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL || "admin@a9global.com";
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "A9Admin2024!";
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "a9admin2026";
 
 // Create a simple JWT-like token (base64 payload)
 function createToken(user: Record<string, unknown>): string {
