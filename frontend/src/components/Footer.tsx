@@ -156,8 +156,12 @@ export default function Footer() {
             T/I(YGN)-2889 &nbsp;|&nbsp; T/O(YGN)-0946
           </p>
           <div className="flex items-center justify-center gap-6 mt-4">
-            <img src="/images_v2/iata-logo.png" alt="IATA Accredited" className="h-10 w-auto opacity-80 hover:opacity-100 transition-opacity" />
-            <img src="/images_v2/umta-logo.png" alt="UMTA Member" className="h-10 w-auto opacity-80 hover:opacity-100 transition-opacity" />
+            <div className="bg-white rounded-lg p-2">
+              <img src="/images_v2/iata-logo-white.png" alt="IATA Accredited" className="h-10 w-auto" />
+            </div>
+            <div className="bg-white rounded-lg p-2">
+              <img src="/images_v2/umta-logo-white.png" alt="UMTA Member" className="h-10 w-auto" />
+            </div>
           </div>
         </div>
       </div>
