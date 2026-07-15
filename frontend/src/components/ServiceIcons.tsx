@@ -29,7 +29,7 @@ export default function ServiceIcons() {
 
   // Fixed bar always visible under navbar, plus a spacer to prevent content jump
   const iconBar = (
-    <div className="w-full bg-white border-b border-gray-200 shadow-sm py-2 px-2">
+    <div className="w-full bg-[#1B2A4A]/85 backdrop-blur-md border-b border-[#D4AF37]/20 py-2 px-2">
       <div className="max-w-6xl mx-auto flex flex-wrap justify-center gap-1 md:gap-2">
         {services.map((item) => {
           const isActive = item.href !== '/' && (pathname === item.href || pathname.startsWith(item.href + '/'));
@@ -41,7 +41,7 @@ export default function ServiceIcons() {
                 'flex items-center gap-1.5 py-1.5 px-3 rounded-lg border transition-all duration-200 group cursor-pointer ' +
                 (isActive
                   ? 'bg-[#D4AF37] border-[#D4AF37]'
-                  : 'border-transparent hover:bg-[#D4AF37]/10 hover:border-[#D4AF37]/30')
+                  : 'border-transparent hover:bg-[#D4AF37]/20 hover:border-[#D4AF37]/40')
               }
             >
               <span className="text-sm group-hover:scale-110 transition-transform">
@@ -50,7 +50,7 @@ export default function ServiceIcons() {
               <span
                 className={
                   'text-xs font-semibold transition-colors hidden sm:inline ' +
-                  (isActive ? 'text-white' : 'text-gray-600 group-hover:text-[#D4AF37]')
+                  (isActive ? 'text-white' : 'text-white/80 group-hover:text-[#D4AF37]')
                 }
               >
                 {item.label}
