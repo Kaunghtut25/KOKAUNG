@@ -18,15 +18,17 @@ export default function AdminLayout({
       router.replace("/auth/login");
       return;
     }
-    // Verify token contains admin role
     try {
-      const payload = JSON.parse(atob(token));
-      if (payload.role !== "admin") {
+      // Token is base64 JSON
+      const decoded = JSON.parse(atob(token));
+      if (decoded.role !== "admin" || (decoded.exp && decoded.exp < Date.now())) {
         localStorage.removeItem("admin_token");
         localStorage.removeItem("admin_user");
         router.replace("/auth/login");
         return;
       }
+      // Set cookie for middleware (expires in 24h)
+      document.cookie = `a9_admin_token=${token}; path=/; max-age=86400; samesite=lax`;
       setAuthorized(true);
     } catch {
       localStorage.removeItem("admin_token");

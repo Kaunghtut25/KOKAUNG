@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState, useCallback } from "react";
 import AdminFormModal from "@/components/AdminFormModal";
+import toast from "react-hot-toast";
 
 interface Tour {
   id: string;
@@ -53,10 +54,14 @@ export default function AdminToursPage() {
   const [imagePreviewUrl, setImagePreviewUrl] = useState("");
   const [imageList, setImageList] = useState<string[]>([]);
 
-  const token =
-    typeof window !== "undefined" ? localStorage.getItem("admin_token") : "";
+  const [token, setToken] = useState("");
+
+  useEffect(() => {
+    setToken(localStorage.getItem("admin_token") || "");
+  }, []);
 
   const fetchTours = useCallback(async () => {
+    if (!token) return;
     try {
       const res = await fetch(`${API_BASE}/admin/tours`, {
         headers: { Authorization: `Bearer ${token}` },
@@ -120,7 +125,7 @@ export default function AdminToursPage() {
 
   const handleFileUpload = async (file: File) => {
     if (!file || !file.type.startsWith('image/')) {
-      alert('Please select an image file (JPG, PNG, WebP)');
+      toast.error('Please select an image file (JPG, PNG, WebP)');
       return;
     }
     setUploadingImg(true);
@@ -134,10 +139,10 @@ export default function AdminToursPage() {
         setImageList(newList);
         setEditingTour((prev) => ({ ...prev, images: JSON.stringify(newList) }));
       } else {
-        alert(data.message || 'Upload failed');
+        toast.error(data.message || 'Upload failed');
       }
     } catch (err: any) {
-      alert('Upload failed: ' + (err.message || 'Network error'));
+      toast.error('Upload failed: ' + (err.message || 'Network error'));
     } finally {
       setUploadingImg(false);
     }
@@ -188,13 +193,14 @@ export default function AdminToursPage() {
       if (res.ok) {
         setModalOpen(false);
         fetchTours();
+        toast.success(isNew ? "Tour added successfully! ✅" : "Tour updated successfully! ✅");
       } else {
         const err = await res.json();
-        alert(err.message || "Failed to save tour");
+        toast.error(err.message || "Failed to save tour");
       }
     } catch (err) {
       console.error("Save failed:", err);
-      alert("Failed to save tour");
+      toast.error("Failed to save tour");
     } finally {
       setSaving(false);
     }
@@ -209,8 +215,9 @@ export default function AdminToursPage() {
       if (res.ok) {
         setDeleteConfirm(null);
         fetchTours();
+        toast.success("Tour deleted successfully! 🗑️");
       } else {
-        alert("Failed to delete tour");
+        toast.error("Failed to delete tour");
       }
     } catch (err) {
       console.error("Delete failed:", err);
