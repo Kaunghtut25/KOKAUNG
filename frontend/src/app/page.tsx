@@ -189,7 +189,7 @@ export default function HomePage() {
               <img src={slide.image || defaultSlides[0].image} alt={slide.title || "A9 Global"} className="w-full h-full object-cover" loading={index===0?"eager":"lazy"} />
             </div>
           ))}
-          <div className="absolute inset-0 bg-gradient-to-b from-[#0A1628]/70 via-[#0A1628]/40 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-b from-[#1B2A4A]/60 via-[#1B2A4A]/30 to-transparent" />
         </div>
 
         {/* Slide content — moved up */}
