@@ -1,19 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 
-const ADMIN_EMAIL = process.env.ADMIN_EMAIL || "admin@a9global.com";
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "a9admin2026";
+export const runtime = "nodejs";
 
-function makeToken(user: Record<string, unknown>): string {
-  const header = Buffer.from(JSON.stringify({ alg: "HS256", typ: "JWT" })).toString("base64");
-  const payload = Buffer.from(JSON.stringify({
-    ...user,
-    iat: Math.floor(Date.now() / 1000),
-    exp: Math.floor(Date.now() / 1000) + 86400,
-  })).toString("base64");
-  const secret = ADMIN_PASSWORD.slice(0, 16);
-  const sig = Buffer.from(header + "." + payload + "." + secret).toString("base64");
-  return header + "." + payload + "." + sig;
-}
+const ADMIN_EMAIL = "admin@a9global.com";
+const ADMIN_PASSWORD = "a9admin2026";
 
 export async function POST(request: NextRequest) {
   try {
@@ -36,10 +26,11 @@ export async function POST(request: NextRequest) {
       role: "admin",
     };
 
-    const token = makeToken(user);
+    // Simple token: base64 of JSON payload
+    const token = Buffer.from(JSON.stringify({ ...user, exp: Date.now() + 86400000 })).toString("base64");
 
     return NextResponse.json({ success: true, token, user });
   } catch (err) {
-    return NextResponse.json({ message: "Server error" }, { status: 500 });
+    return NextResponse.json({ message: "Server error: " + String(err) }, { status: 500 });
   }
 }
