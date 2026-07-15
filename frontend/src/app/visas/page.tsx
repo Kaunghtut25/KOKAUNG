@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import { api } from '@/lib/api';
 import BookingModal from '@/components/BookingModal';
 
-const CARD_WIDTH = 200;
+const CARD_WIDTH = 260;
 const CARD_GAP = 16;
 const STEP = CARD_WIDTH + CARD_GAP;
 const AUTOPLAY_MS = 3500;
@@ -123,10 +123,10 @@ function VisaSliderCard({ visa }: { visa: VisaService }) {
   return (
     <div
       onClick={() => router.push(`/visas?apply=${visa.country}`)}
-      className="w-[200px] h-[240px] rounded-2xl overflow-hidden flex-shrink-0 snap-start group cursor-pointer border border-gray-100 hover:border-gold/40 transition-all duration-300 bg-white shadow-sm flex flex-col"
+      className="w-[260px] h-[300px] rounded-2xl overflow-hidden flex-shrink-0 snap-start group cursor-pointer border border-gray-100 hover:border-gold/40 transition-all duration-300 bg-white shadow-sm flex flex-col"
     >
       {imageUrl ? (
-        <div className="relative h-28 overflow-hidden">
+        <div className="relative h-40 overflow-hidden">
           <img src={imageUrl} alt={visa.country} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" loading="lazy" />
           <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
           <div className="absolute bottom-1.5 left-2 flex items-center gap-1.5">
@@ -135,11 +135,11 @@ function VisaSliderCard({ visa }: { visa: VisaService }) {
           </div>
         </div>
       ) : (
-        <div className="h-28 bg-gradient-to-br from-[#D4AF37]/20 to-[#F5A623]/20 flex items-center justify-center">
+        <div className="h-40 bg-gradient-to-br from-[#D4AF37]/20 to-[#F5A623]/20 flex items-center justify-center">
           <span className="text-4xl">{flag}</span>
         </div>
       )}
-      <div className="p-2.5 flex flex-col flex-1 justify-between">
+      <div className="p-3 flex flex-col flex-1 justify-between">
         <p className="text-[11px] text-gray-500">{visa.processingTime}</p>
         <div className="flex flex-wrap gap-1 mt-1">
           {visa.requirements.slice(0, 2).map((r, i) => (
@@ -169,7 +169,7 @@ export default function VisasPage() {
       <section className="relative w-full h-64 sm:h-80 overflow-hidden">
         <img src="/images_v2/visa1-v3.jpg" alt="Visa Services" className="w-full h-full object-cover" />
         <div className="absolute inset-0 bg-gradient-to-b from-[#0A1628]/70 to-[#0A1628]/40" />
-        <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4">
+        <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4 mb-8">
           <h1 className="text-3xl sm:text-4xl font-bold text-white mb-2" style={{ fontFamily: "'Playfair Display', serif" }}>Visa Services</h1>
           <p className="text-white/70 max-w-xl text-xs sm:text-sm">Hassle-free visa processing for destinations worldwide</p>
           <div className="flex gap-2 mt-3">
@@ -180,7 +180,7 @@ export default function VisasPage() {
       </section>
 
       {/* 2 Slider Rows */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 -mt-12 relative z-10 pb-10 space-y-4">
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 pt-4 pb-10 space-y-4">
         <VisaRow row={row1} />
         <VisaRow row={row2} />
       </section>
