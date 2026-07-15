@@ -155,6 +155,10 @@ export default function Footer() {
             Company Reg: 126395248 &nbsp;|&nbsp; IATA: 05301026 &nbsp;|&nbsp;
             T/I(YGN)-2889 &nbsp;|&nbsp; T/O(YGN)-0946
           </p>
+          <div className="flex items-center justify-center gap-6 mt-4">
+            <img src="/images_v2/iata-logo.png" alt="IATA Accredited" className="h-10 w-auto opacity-80 hover:opacity-100 transition-opacity" />
+            <img src="/images_v2/umta-logo.png" alt="UMTA Member" className="h-10 w-auto opacity-80 hover:opacity-100 transition-opacity" />
+          </div>
         </div>
       </div>
     </footer>
