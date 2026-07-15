@@ -52,7 +52,7 @@ const defaultCfg: SiteConfig = {
   socialLinks: [], footerSections: [],
 };
 
-type Tab = "hero"|"services"|"nav"|"stats"|"why"|"destinations"|"cta"|"contact"|"social"|"footer"|"meta";
+type Tab = "hero"|"services"|"nav"|"stats"|"why"|"destinations"|"cta"|"contact"|"social"|"footer"|"meta"|"about";
 
 export default function SiteManagerPage() {
   const [cfg, setCfg] = useState(defaultCfg);
@@ -100,6 +100,7 @@ export default function SiteManagerPage() {
     {key:"stats",label:"📊 Stats Cards"}, {key:"why",label:"⭐ Why Choose Us"}, {key:"destinations",label:"🌍 Destinations"},
     {key:"cta",label:"📢 CTA Section"}, {key:"contact",label:"📞 Contact Info"}, {key:"social",label:"🌐 Social Links"},
     {key:"footer",label:"📝 Footer"}, {key:"meta",label:"🔍 Meta & SEO"},
+    {key:"about",label:"📄 About Us"},
   ];
 
   return (
@@ -292,6 +293,8 @@ export default function SiteManagerPage() {
         </SectionCard>
       )}
 
+      {tab==="about" && <AboutUsTab cfg={cfg} setCfg={setCfg} onUpload={uploadFile} showToast={showToast} />}
+
       {/* Bottom Save */}
       <div className="pt-4 border-t border-white/10">
         <button onClick={handleSave} disabled={saving} className="px-8 py-3 rounded-lg bg-gold text-deepblue-dark font-bold text-base hover:bg-gold/90 disabled:opacity-50 transition-all w-full sm:w-auto">{saving?"⏳ Saving...":"💾 Save All Changes & Publish Live"}</button>
@@ -348,4 +351,101 @@ function ImageUploadBtn({ onUpload }: { onUpload:(f:File)=>Promise<void> }) {
     <input ref={ref} type="file" accept="image/*" className="hidden" onChange={e=>{const f=e.target.files?.[0];if(f)onUpload(f)}} />
     <button type="button" onClick={()=>ref.current?.click()} className="px-3 py-2 rounded-lg bg-gold/10 text-gold text-xs font-medium hover:bg-gold/20 whitespace-nowrap">📎 Upload</button>
   </>;
+}
+
+/* ── About Us Tab ───────────────────────────────────── */
+function AboutUsTab({ cfg, setCfg, onUpload, showToast }: { cfg: any; setCfg: (f: (p: any) => any) => void; onUpload: (f: File) => Promise<string>; showToast: (m: string, t?: "success" | "error") => void }) {
+  const about = cfg.about || {};
+  const updateAbout = (key: string, value: any) => {
+    setCfg((prev: any) => ({ ...prev, about: { ...prev.about, [key]: value } }));
+  };
+  const whoWeAreText = about.whoWeAreText || [];
+  const values = about.values || [];
+  const services = about.services || [];
+  const whyChooseUs = about.whyChooseUs || [];
+  const team = about.teamMembers || [];
+
+  return (
+    <div className="space-y-6">
+      <SectionCard title="About Us Page" desc="Every element of the About Us page.">
+        <h4 className="text-white font-semibold">Hero Section</h4>
+        <div className="flex gap-3 items-end flex-wrap">
+          <Field label="Hero Image URL" value={about.heroImage || ""} onChange={v => updateAbout("heroImage", v)} cls="flex-1" />
+          <ImageUploadBtn onUpload={async f => { const url = await onUpload(f); if (url) { updateAbout("heroImage", url); showToast("Uploaded!"); } }} />
+        </div>
+        <Field label="Hero Title" value={about.heroTitle || ""} onChange={v => updateAbout("heroTitle", v)} />
+        <Field label="Hero Subtitle" value={about.heroSubtitle || ""} onChange={v => updateAbout("heroSubtitle", v)} />
+
+        <h4 className="text-white font-semibold mt-4">Who We Are Text</h4>
+        {whoWeAreText.map((p: string, i: number) => (
+          <div key={i} className="flex gap-2">
+            <Field label={`Paragraph ${i + 1}`} value={p} onChange={v => { const a = [...whoWeAreText]; a[i] = v; updateAbout("whoWeAreText", a); }} cls="flex-1" />
+            <button onClick={() => updateAbout("whoWeAreText", whoWeAreText.filter((_: any, j: number) => j !== i))} className="text-red-400 text-xs mt-5">X</button>
+          </div>
+        ))}
+        <button onClick={() => updateAbout("whoWeAreText", [...whoWeAreText, ""])} className="text-gold text-sm font-medium">+ Add Paragraph</button>
+      </SectionCard>
+
+      <SectionCard title="Mission & Vision" desc="">
+        <Field label="Mission Title" value={about.missionTitle || ""} onChange={v => updateAbout("missionTitle", v)} />
+        <Field label="Mission Text" value={about.missionText || ""} onChange={v => updateAbout("missionText", v)} />
+        <Field label="Vision Title" value={about.visionTitle || ""} onChange={v => updateAbout("visionTitle", v)} />
+        <Field label="Vision Text" value={about.visionText || ""} onChange={v => updateAbout("visionText", v)} />
+      </SectionCard>
+
+      <SectionCard title="Values" desc="">
+        {values.map((v: any, i: number) => (
+          <div key={i} className="flex gap-2 items-end flex-wrap bg-white/[0.03] border border-white/10 rounded-lg p-3">
+            <Field label="Icon" value={v.icon||""} onChange={x => { const a = [...values]; a[i] = { ...a[i], icon: x }; updateAbout("values", a); }} />
+            <Field label="Title" value={v.title||""} onChange={x => { const a = [...values]; a[i] = { ...a[i], title: x }; updateAbout("values", a); }} />
+            <Field label="Description" value={v.desc||""} onChange={x => { const a = [...values]; a[i] = { ...a[i], desc: x }; updateAbout("values", a); }} cls="flex-1" />
+            <button onClick={() => updateAbout("values", values.filter((_: any, j: number) => j !== i))} className="text-red-400 text-xs">Remove</button>
+          </div>
+        ))}
+        <button onClick={() => updateAbout("values", [...values, { title: "", desc: "", icon: "" }])} className="text-gold text-sm">+ Add Value</button>
+      </SectionCard>
+
+      <SectionCard title="Services" desc="">
+        {services.map((s: string, i: number) => (
+          <div key={i} className="flex gap-2 items-end">
+            <Field label="Service" value={s} onChange={v => { const a = [...services]; a[i] = v; updateAbout("services", a); }} cls="flex-1" />
+            <button onClick={() => updateAbout("services", services.filter((_: any, j: number) => j !== i))} className="text-red-400 text-xs mb-1">X</button>
+          </div>
+        ))}
+        <button onClick={() => updateAbout("services", [...services, ""])} className="text-gold text-sm">+ Add Service</button>
+      </SectionCard>
+
+      <SectionCard title="Why Choose Us" desc="">
+        {whyChooseUs.map((s: string, i: number) => (
+          <div key={i} className="flex gap-2 items-end"><Field label="Reason" value={s} onChange={v => { const a = [...whyChooseUs]; a[i] = v; updateAbout("whyChooseUs", a); }} cls="flex-1" /><button onClick={() => updateAbout("whyChooseUs", whyChooseUs.filter((_: any, j: number) => j !== i))} className="text-red-400 text-xs mb-1">X</button></div>
+        ))}
+        <button onClick={() => updateAbout("whyChooseUs", [...whyChooseUs, ""])} className="text-gold text-sm">+ Add Reason</button>
+      </SectionCard>
+
+      <SectionCard title="Team Members" desc="">
+        {team.map((m: any, i: number) => (
+          <div key={i} className="bg-white/[0.03] border border-white/10 rounded-lg p-3 space-y-2">
+            <div className="flex gap-2 flex-wrap">
+              <Field label="Name" value={m.name||""} onChange={v => { const a = [...team]; a[i] = { ...a[i], name: v }; updateAbout("teamMembers", a); }} />
+              <Field label="Role" value={m.role||""} onChange={v => { const a = [...team]; a[i] = { ...a[i], role: v }; updateAbout("teamMembers", a); }} />
+            </div>
+            <div className="flex gap-2 items-end">
+              <Field label="Image URL" value={m.image||""} onChange={v => { const a = [...team]; a[i] = { ...a[i], image: v }; updateAbout("teamMembers", a); }} cls="flex-1" />
+              <ImageUploadBtn onUpload={async f => { const url = await onUpload(f); if (url) { const a = [...team]; a[i] = { ...a[i], image: url }; updateAbout("teamMembers", a); showToast("Uploaded!"); } }} />
+            </div>
+            <button onClick={() => updateAbout("teamMembers", team.filter((_: any, j: number) => j !== i))} className="text-red-400 text-xs">Remove Member</button>
+          </div>
+        ))}
+        <button onClick={() => updateAbout("teamMembers", [...team, { name: "", role: "", image: "" }])} className="text-gold text-sm">+ Add Team Member</button>
+      </SectionCard>
+
+      <SectionCard title="Commitment / CTA" desc="">
+        <Field label="Commitment Title" value={about.commitmentTitle||""} onChange={v => updateAbout("commitmentTitle", v)} />
+        <Field label="Commitment Text" value={about.commitmentText||""} onChange={v => updateAbout("commitmentText", v)} />
+        <Field label="Subtext" value={about.commitmentSubtext||""} onChange={v => updateAbout("commitmentSubtext", v)} />
+        <Field label="Button Label" value={about.commitmentButtonLabel||""} onChange={v => updateAbout("commitmentButtonLabel", v)} />
+        <Field label="Button URL" value={about.commitmentButtonHref||""} onChange={v => updateAbout("commitmentButtonHref", v)} />
+      </SectionCard>
+    </div>
+  );
 }
