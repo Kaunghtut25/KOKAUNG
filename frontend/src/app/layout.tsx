@@ -46,10 +46,38 @@ export const metadata: Metadata = {
     googleBot: { index: true, follow: true, "max-video-preview": -1, "max-image-preview": "large", "max-snippet": -1 },
   },
   icons: {
-    icon: [{ url: "/favicon-32x32.png", type: "image/png", sizes: "32x32" }],
-    apple: { url: "/favicon-180x180.png", sizes: "180x180" },
+    icon: [
+      { url: "/favicon-32x32.png", type: "image/png", sizes: "32x32" },
+      { url: "/favicon-48x48.png", type: "image/png", sizes: "48x48" },
+      { url: "/favicon-96x96.png", type: "image/png", sizes: "96x96" },
+      { url: "/favicon-192x192.png", type: "image/png", sizes: "192x192" },
+      { url: "/favicon.svg", type: "image/svg+xml", sizes: "any" },
+    ],
+    apple: [
+      { url: "/favicon-180x180.png", sizes: "180x180" },
+    ],
   },
 };
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "TravelAgency",
+  "name": "A9 Global Travels & Tours",
+  "url": "https://a9travel.com",
+  "logo": "https://a9travel.com/favicon-192x192.png",
+  "description": "Your premier IATA-accredited luxury travel partner in Myanmar. Premium tours, hotels, cars, visas, insurance.",
+  "address": {
+    "@type": "PostalAddress",
+    "addressLocality": "Yangon",
+    "addressCountry": "MM"
+  },
+  "contactPoint": {
+    "@type": "ContactPoint",
+    "telephone": "+959123456789",
+    "contactType": "customer service"
+  },
+  "sameAs": []
+};
+
 export default function RootLayout({
   children,
 }: {
@@ -57,6 +85,13 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={`${inter.variable} overflow-x-hidden`}>
+      <head>
+        <link rel="icon" href="/favicon.ico" sizes="any" />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+      </head>
       <body className={`${inter.className} min-h-screen bg-white text-gray-900`}>
         <Navbar />
         <ServiceIcons />
