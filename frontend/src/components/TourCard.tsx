@@ -8,9 +8,10 @@ import { getImageFallback } from '@/lib/imageFallback';
 interface TourCardProps {
   tour: Tour;
   currency?: 'MMK' | 'USD';
+  preloadedImage?: string;
 }
 
-export default function TourCard({ tour, currency = 'MMK' }: TourCardProps) {
+export default function TourCard({ tour, currency = 'MMK', preloadedImage }: TourCardProps) {
   const router = useRouter();
   const [imgError, setImgError] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
@@ -19,7 +20,7 @@ export default function TourCard({ tour, currency = 'MMK' }: TourCardProps) {
   const currencySymbol = currency === 'MMK' ? 'Ks' : '$';
 
   const tourId = (tour._id || (tour as any).id) as string;
-  const displayImage = getImageFallback(tourId, tour.images);
+  const displayImage = preloadedImage || getImageFallback(tourId, tour.images);
 
   const renderStars = (rating: number) => {
     return Array.from({ length: 5 }, (_, i) => (

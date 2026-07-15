@@ -6,7 +6,7 @@ import ScrollingRow from '@/components/ScrollingRow';
 import CurrencyToggle from '@/components/CurrencyToggle';
 import type { Tour } from '@/lib/api';
 
-export default function ToursClient({ initialTours }: { initialTours: Tour[] }) {
+export default function ToursClient({ initialTours, preloadMap }: { initialTours: Tour[]; preloadMap: Record<string, string> }) {
   const [apiTours, setApiTours] = useState<Tour[]>(initialTours);
   const [currency, setCurrency] = useState<'MMK' | 'USD'>('MMK');
   const [page, setPage] = useState(1);
@@ -93,7 +93,7 @@ export default function ToursClient({ initialTours }: { initialTours: Tour[] }) 
           <ScrollingRow>
             {featuredTours.map((item) => (
               <div key={item._id || item.id} className="w-[300px] flex-shrink-0 snap-start">
-                <TourCard tour={item} currency={currency} />
+                <TourCard tour={item} currency={currency} preloadedImage={preloadMap?.[item._id || item.slug]} />
               </div>
             ))}
           </ScrollingRow>
@@ -141,7 +141,7 @@ export default function ToursClient({ initialTours }: { initialTours: Tour[] }) 
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {displayTours.map((item) => (
-                <TourCard key={item._id || item.id} tour={item} currency={currency} />
+                <TourCard key={item._id || item.id} tour={item} currency={currency} preloadedImage={preloadMap?.[item._id || item.slug]} />
               ))}
             </div>
             {computedTotal > 1 && (

@@ -1,9 +1,33 @@
 import { getAll } from "@/lib/persistentStore";
+import { getImageFallback } from "@/lib/imageFallback";
 import ToursClient from "./toursclient";
 
 export const dynamic = 'force-dynamic';
 
-async function getInitialTours() {
+interface Tour {
+  _id: string;
+  slug: string;
+  title: string;
+  destination: string;
+  description: string;
+  priceMMK: number;
+  priceUSD: number;
+  duration: string;
+  durationUnit: string;
+  groupSize: number;
+  rating: number;
+  reviewCount: number;
+  images: string[];
+  image: string;
+  amenities: string[];
+  itinerary: never[];
+  included: string[];
+  excluded: string[];
+  featured: boolean;
+  createdAt: string;
+}
+
+async function getInitialTours(): Promise<Tour[]> {
   try {
     const rawTours = await getAll("tours") as any[];
     return rawTours.map((t: any) => {
@@ -43,7 +67,17 @@ async function getInitialTours() {
   }
 }
 
+type PreloadMap = Record<string, string>;
+
 export default async function ToursPage() {
   const initialTours = await getInitialTours();
-  return <ToursClient initialTours={initialTours} />;
+  
+  // Build preload map of image URLs for server-side delivery
+  const preloadMap: PreloadMap = {};
+  for (const tour of initialTours) {
+    const img = getImageFallback(tour._id, tour.images);
+    preloadMap[tour._id || tour.slug] = img;
+  }
+  
+  return <ToursClient initialTours={initialTours} preloadMap={preloadMap} />;
 }
