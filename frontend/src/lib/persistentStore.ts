@@ -25,11 +25,11 @@ const SEEDS: Record<string, any[]> = {
     { id: "t6", title: "Myanmar Grand Tour",   destination: "Multi",   priceMMK: 850000,  priceUSD: 405,  duration: "10 days",image: "/images_v2/myanmar-v2.jpg",       description: "Complete Myanmar experience", category: "Multi",    featured: true  },
   ],
   hotels: [
-    { id: "h1", title: "Sule Shangri-La Yangon",   destination: "Yangon", priceMMK: 180000, priceUSD: 86,  rating: 4.5, reviewCount: 320, image: "/images_v2/hotel1-v2.jpg" },
-    { id: "h2", title: "Aureum Palace Bagan",      destination: "Bagan",  priceMMK: 220000, priceUSD: 105, rating: 4.7, reviewCount: 180, image: "/images_v2/hotel2-v2.jpg" },
-    { id: "h3", title: "Novotel Yangon Max",       destination: "Yangon", priceMMK: 150000, priceUSD: 71,  rating: 4.3, reviewCount: 250, image: "/images_v2/hotel3-v2.jpg" },
-    { id: "h4", title: "Pristine Lotus Inle",      destination: "Inle",   priceMMK: 200000, priceUSD: 95,  rating: 4.6, reviewCount: 150, image: "/images_v2/hotel4-v2.jpg" },
-    { id: "h5", title: "Mandalay Hill Resort",     destination: "Mandalay",priceMMK:170000,priceUSD: 81,  rating: 4.4, reviewCount: 200, image: "/images_v2/hotel5-v2.jpg" },
+    { id: "h1", title: "Sule Shangri-La Yangon",   destination: "Yangon", priceMMK: 180000, priceUSD: 86,  rating: 4.5, reviewCount: 320, image: "/images_v2/hotel1-v3.jpg" },
+    { id: "h2", title: "Aureum Palace Bagan",      destination: "Bagan",  priceMMK: 220000, priceUSD: 105, rating: 4.7, reviewCount: 180, image: "/images_v2/hotel2-v3.jpg" },
+    { id: "h3", title: "Novotel Yangon Max",       destination: "Yangon", priceMMK: 150000, priceUSD: 71,  rating: 4.3, reviewCount: 250, image: "/images_v2/hotel3-v3.jpg" },
+    { id: "h4", title: "Pristine Lotus Inle",      destination: "Inle",   priceMMK: 200000, priceUSD: 95,  rating: 4.6, reviewCount: 150, image: "/images_v2/hotel4-v3.jpg" },
+    { id: "h5", title: "Mandalay Hill Resort",     destination: "Mandalay",priceMMK:170000,priceUSD: 81,  rating: 4.4, reviewCount: 200, image: "/images_v2/hotel5-v3.jpg" },
     { id: "h6", title: "Amazing Ngapali Resort",   destination: "Ngapali",priceMMK: 250000,priceUSD: 119, rating: 4.8, reviewCount: 90,  image: "/images_v2/hotel6-v2.jpg" },
   ],
   cars: [
