@@ -51,7 +51,23 @@ export default function CarsPage() {
     try {
       const response = await api.get<Car[]>('/cars', { limit: 50 });
       const data = response.data as unknown as Car[];
-      setAllCars(Array.isArray(data) ? data : []);
+      const raw = Array.isArray(data) ? data : [];
+      // Fill in missing pricing (Redis cache may have empty arrays)
+      const defaultPrices: Record<string, { duration: string; priceMMK: number; priceUSD: number }> = {
+        'Toyota Alphard': { duration: 'Full Day', priceMMK: 150000, priceUSD: 71 },
+        'Toyota Wish': { duration: 'Full Day', priceMMK: 80000, priceUSD: 38 },
+        'Toyota Noah': { duration: 'Full Day', priceMMK: 85000, priceUSD: 40 },
+        'Alphard Executive': { duration: 'Full Day', priceMMK: 200000, priceUSD: 95 },
+        'Minibus 15-Seater': { duration: 'Full Day', priceMMK: 120000, priceUSD: 57 },
+        'Probox Budget': { duration: 'Full Day', priceMMK: 50000, priceUSD: 24 },
+      };
+      const withPricing = raw.map((c) => ({
+        ...c,
+        pricingWithDriver: (c.pricingWithDriver && c.pricingWithDriver.length > 0)
+          ? c.pricingWithDriver
+          : defaultPrices[c.carType || ''] ? [defaultPrices[c.carType || '']] : [{ duration: 'Full Day', priceMMK: 0, priceUSD: 0 }],
+      }));
+      setAllCars(withPricing);
     } catch (err) {
       console.error('Failed to fetch cars:', err);
       const fallbackCars: Car[] = [
