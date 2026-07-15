@@ -236,7 +236,7 @@ export default function HomePage() {
       {/* ========== Search Engine ========== */}
       <div className="relative -mt-40 md:-mt-48 z-30 px-4">
         <div className="max-w-5xl mx-auto">
-          <div className="bg-white rounded-2xl border-2 border-[#2563EB] shadow-xl p-5 md:p-7 overflow-hidden">
+          <div className="bg-white rounded-2xl border-2 border-[#2563EB] shadow-xl p-5 md:p-7 overflow-visible">
             <div className="flex gap-1 mb-5 bg-gray-100 rounded-lg p-1 w-fit">
               {(["oneway","roundtrip","multicity"] as TabType[]).map((tab)=><button key={tab} onClick={()=>{setActiveTab(tab);if(tab!=="roundtrip")setReturnDate("");if(tab==="multicity")setMultiCityLegs([{from:"",to:"",date:""},{from:"",to:"",date:""}]);}} className={"px-4 py-2 rounded-md text-sm font-medium transition-all duration-300 cursor-pointer "+(activeTab===tab?"bg-[#D4AF37] text-white shadow-md":"text-gray-500 hover:text-gray-900 hover:bg-gray-200")}>{tab==="oneway"?"✈ One Way":tab==="roundtrip"?"🔄 Round Trip":"🌐 Multi-City"}</button>)}
             </div>
