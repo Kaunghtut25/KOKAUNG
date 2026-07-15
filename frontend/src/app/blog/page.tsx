@@ -19,12 +19,24 @@ export default function BlogPage() {
   const [posts, setPosts] = useState<BlogPost[]>([]);
   const [loading, setLoading] = useState(true);
 
+  // Normalize data from both old and new API formats
+  const normalizePost = (raw: any): BlogPost => ({
+    _id: raw._id || raw.id || '',
+    title: raw.title || '',
+    content: raw.content || raw.excerpt || '',
+    image: raw.image || '',
+    author: raw.author || 'A9 Global Team',
+    tags: Array.isArray(raw.tags) ? raw.tags : (raw.category ? [raw.category] : raw.tags ? [raw.tags] : []),
+    createdAt: raw.createdAt || raw.date || new Date().toISOString(),
+  });
+
   useEffect(() => {
     const fetchPosts = async () => {
       try {
         const res = await api.get<BlogPost[]>('/blog');
-        const data = res.data as unknown as BlogPost[];
-        setPosts(data);
+        const raw = res.data as unknown as any[];
+        const normalized = Array.isArray(raw) ? raw.map(normalizePost) : [];
+        setPosts(normalized);
       } catch {
         // Fallback data
         setPosts([
