@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Hotel } from '@/lib/api';
-import { getImageFallback } from '@/lib/imageFallback';
+import { generateHotelSVG } from '@/lib/svgGenerator';
 
 interface HotelCardProps {
   hotel: Hotel;
@@ -17,8 +17,7 @@ export default function HotelCard({ hotel, currency = 'MMK' }: HotelCardProps) {
 
   const price = currency === 'MMK' ? hotel.pricePerNightMMK : hotel.pricePerNightUSD;
   const currencySymbol = currency === 'MMK' ? 'Ks' : '$';
-  const mainImage = getImageFallback(hotel._id as string, hotel.images);
-  const displayImage = imgError ? getImageFallback(hotel._id as string, undefined) : mainImage;
+  const svgImage = generateHotelSVG(hotel.name || 'Hotel');
   const roomsAvailable = hotel.availableRooms ?? 0;
   const roomsLabel = roomsAvailable === 0 ? 'Sold Out' : roomsAvailable <= 3 ? `Only ${roomsAvailable} left` : `${roomsAvailable} rooms`;
 
@@ -62,7 +61,7 @@ export default function HotelCard({ hotel, currency = 'MMK' }: HotelCardProps) {
 
         {/* Image Section */}
         <div className="relative h-[280px] w-full overflow-hidden bg-gray-200">
-          <img src={displayImage} alt={hotel.name} className="w-full h-full object-cover transition-transform duration-700 ease-out" style={{ position: 'absolute', inset: 0, transform: isHovered ? 'scale(1.08)' : 'scale(1)' }} onError={() => setImgError(true)} loading="lazy" />
+          <img src={svgImage} alt={hotel.name} className="w-full h-full object-cover transition-transform duration-700 ease-out" style={{ position: 'absolute', inset: 0, transform: isHovered ? 'scale(1.08)' : 'scale(1)' }} />
           <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/15 to-transparent" />
           {/* Location badge */}
           <div className="absolute top-7 left-3 z-20">
