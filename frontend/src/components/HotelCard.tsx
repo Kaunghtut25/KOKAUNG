@@ -3,18 +3,11 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Hotel } from '@/lib/api';
+import { getImageFallback } from '@/lib/imageFallback';
 
 interface HotelCardProps {
   hotel: Hotel;
   currency?: 'MMK' | 'USD';
-}
-
-const FALLBACK_IMAGE = '/images_v2/unsplash-2-v2.jpg';
-
-function getImages(images: string | string[] | undefined): string[] {
-  if (!images) return [];
-  if (Array.isArray(images)) return images;
-  return images.split(' ').filter(Boolean);
 }
 
 export default function HotelCard({ hotel, currency = 'MMK' }: HotelCardProps) {
@@ -24,8 +17,8 @@ export default function HotelCard({ hotel, currency = 'MMK' }: HotelCardProps) {
 
   const price = currency === 'MMK' ? hotel.pricePerNightMMK : hotel.pricePerNightUSD;
   const currencySymbol = currency === 'MMK' ? 'Ks' : '$';
-  const mainImage = getImages(hotel.images)[0] || FALLBACK_IMAGE;
-  const displayImage = imgError ? FALLBACK_IMAGE : mainImage;
+  const mainImage = getImageFallback(hotel._id as string, hotel.images);
+  const displayImage = imgError ? getImageFallback(hotel._id as string, undefined) : mainImage;
   const roomsAvailable = hotel.availableRooms ?? 0;
   const roomsLabel = roomsAvailable === 0 ? 'Sold Out' : roomsAvailable <= 3 ? `Only ${roomsAvailable} left` : `${roomsAvailable} rooms`;
 

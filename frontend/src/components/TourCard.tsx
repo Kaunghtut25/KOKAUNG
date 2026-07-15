@@ -3,18 +3,11 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Tour } from '@/lib/api';
+import { getImageFallback } from '@/lib/imageFallback';
 
 interface TourCardProps {
   tour: Tour;
   currency?: 'MMK' | 'USD';
-}
-
-const FALLBACK_IMAGE = '/images_v2/unsplash-2-v2.jpg';
-
-function getImages(images: string | string[] | undefined): string[] {
-  if (!images) return [];
-  if (Array.isArray(images)) return images;
-  return images.split(' ').filter(Boolean);
 }
 
 export default function TourCard({ tour, currency = 'MMK' }: TourCardProps) {
@@ -25,8 +18,9 @@ export default function TourCard({ tour, currency = 'MMK' }: TourCardProps) {
   const price = currency === 'MMK' ? tour.priceMMK : tour.priceUSD;
   const currencySymbol = currency === 'MMK' ? 'Ks' : '$';
 
-  const mainImage = getImages(tour.images)[0] || FALLBACK_IMAGE;
-  const displayImage = imgError ? FALLBACK_IMAGE : mainImage;
+  const tourId = (tour._id || (tour as any).id) as string;
+  const mainImage = getImageFallback(tourId, tour.images);
+  const displayImage = imgError ? getImageFallback(tourId, undefined) : mainImage;
 
   const renderStars = (rating: number) => {
     return Array.from({ length: 5 }, (_, i) => (

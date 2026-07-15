@@ -3,18 +3,11 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Car } from '@/lib/api';
+import { getImageFallback } from '@/lib/imageFallback';
 
 interface CarCardProps {
   car: Car;
   currency?: 'MMK' | 'USD';
-}
-
-const FALLBACK_IMAGE = '/images_v2/unsplash-2-v2.jpg';
-
-function getImages(images: string | string[] | undefined): string[] {
-  if (!images) return [];
-  if (Array.isArray(images)) return images;
-  return images.split(' ').filter(Boolean);
 }
 
 export default function CarCard({ car, currency = 'MMK' }: CarCardProps) {
@@ -22,10 +15,10 @@ export default function CarCard({ car, currency = 'MMK' }: CarCardProps) {
   const [imgError, setImgError] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
 
-  // Normalize both old (Redis) and new (seed) car data formats
   const carType = car.carType || (car as any).title || '';
-  const mainImage = getImages(car.images)[0] || (car as any).image || FALLBACK_IMAGE;
-  const displayImage = imgError ? FALLBACK_IMAGE : mainImage;
+  const carId = (car._id || (car as any).id) as string;
+  const mainImage = getImageFallback(carId, car.images, (car as any).image);
+  const displayImage = imgError ? getImageFallback(carId, undefined) : mainImage;
   const cheapestOption = (car.pricingWithDriver && car.pricingWithDriver.length > 0)
     ? car.pricingWithDriver.reduce((prev, curr) =>
         (currency === 'MMK' ? curr.priceMMK < prev.priceMMK : curr.priceUSD < prev.priceUSD) ? curr : prev)

@@ -25,35 +25,26 @@ const COUNTRY_FLAGS: Record<string, string> = {
   Thailand: '🇹🇭', Singapore: '🇸🇬', Malaysia: '🇲🇾', Vietnam: '🇻🇳',
   China: '🇨🇳', Japan: '🇯🇵', 'South Korea': '🇰🇷', India: '🇮🇳',
   'United Arab Emirates': '🇦🇪', Cambodia: '🇰🇭', Indonesia: '🇮🇩',
-  Philippines: '🇵🇭', Taiwan: '🇹🇼', Australia: '🇦🇺', 'United Kingdom': '🇬🇧',
-  'Hong Kong': '🇭🇰', Macau: '🇲🇴', 'Sri Lanka': '🇱🇰', Nepal: '🇳🇵',
-  Maldives: '🇲🇻', Laos: '🇱🇦', Brunei: '🇧🇳', Myanmar: '🇲🇲',
+  Taiwan: '🇹🇼', Philippines: '🇵🇭', Australia: '🇦🇺',
+  'United Kingdom': '🇬🇧', 'Hong Kong': '🇭🇰', Macau: '🇲🇴',
+  'Sri Lanka': '🇱🇰', Nepal: '🇳🇵', Maldives: '🇲🇻', Laos: '🇱🇦',
+  Brunei: '🇧🇳', Myanmar: '🇲🇲',
 };
 
+// LOCAL images — no external picsum dependency
 const COUNTRY_IMAGES: Record<string, string> = {
-  Thailand: 'https://picsum.photos/seed/a9visa-thailand/400/300',
-  Singapore: 'https://picsum.photos/seed/a9visa-singapore/400/300',
-  Vietnam: 'https://picsum.photos/seed/a9visa-vietnam/400/300',
-  China: 'https://picsum.photos/seed/a9visa-china/400/300',
-  Japan: 'https://picsum.photos/seed/a9visa-japan/400/300',
-  India: 'https://picsum.photos/seed/a9visa-india/400/300',
-  'South Korea': 'https://picsum.photos/seed/a9visa-southkorea/400/300',
-  'United Arab Emirates': 'https://picsum.photos/seed/a9visa-uae/400/300',
-  Cambodia: 'https://picsum.photos/seed/a9visa-cambodia/400/300',
-  Malaysia: 'https://picsum.photos/seed/a9visa-malaysia/400/300',
-  Indonesia: 'https://picsum.photos/seed/a9visa-indonesia/400/300',
-  Philippines: 'https://picsum.photos/seed/a9visa-philippines/400/300',
-  Taiwan: 'https://picsum.photos/seed/a9visa-taiwan/400/300',
-  Australia: 'https://picsum.photos/seed/a9visa-australia/400/300',
-  'United Kingdom': 'https://picsum.photos/seed/a9visa-uk/400/300',
-  'Hong Kong': 'https://picsum.photos/seed/a9visa-hongkong/400/300',
-  Macau: 'https://picsum.photos/seed/a9visa-macau/400/300',
-  'Sri Lanka': 'https://picsum.photos/seed/a9visa-srilanka/400/300',
-  Nepal: 'https://picsum.photos/seed/a9visa-nepal/400/300',
-  Maldives: 'https://picsum.photos/seed/a9visa-maldives/400/300',
-  Laos: 'https://picsum.photos/seed/a9visa-laos/400/300',
-  Brunei: 'https://picsum.photos/seed/a9visa-brunei/400/300',
-  Myanmar: 'https://picsum.photos/seed/a9visa-myanmar/400/300',
+  Thailand: '/images_v2/visa1-v3.jpg',  Singapore: '/images_v2/visa2-v3.jpg',
+  Malaysia: '/images_v2/visa3-v3.jpg',  China: '/images_v2/visa4-v3.jpg',
+  India: '/images_v2/visa5-v3.jpg',     'United Arab Emirates': '/images_v2/visa6-v3.jpg',
+  Vietnam: '/images_v2/visa4-v3.jpg',   Cambodia: '/images_v2/visa3-v3.jpg',
+  Japan: '/images_v2/visa1-v3.jpg',     'South Korea': '/images_v2/visa2-v3.jpg',
+  Indonesia: '/images_v2/visa3-v3.jpg', Taiwan: '/images_v2/visa2-v3.jpg',
+  Philippines: '/images_v2/visa6-v3.jpg', Australia: '/images_v2/visa1-v3.jpg',
+  'United Kingdom': '/images_v2/visa2-v3.jpg', 'Hong Kong': '/images_v2/visa1-v3.jpg',
+  Macau: '/images_v2/visa1-v3.jpg',     'Sri Lanka': '/images_v2/visa3-v3.jpg',
+  Nepal: '/images_v2/visa4-v3.jpg',     Maldives: '/images_v2/visa6-v3.jpg',
+  Laos: '/images_v2/visa3-v3.jpg',      Brunei: '/images_v2/visa1-v3.jpg',
+  Myanmar: '/images_v2/visa2-v3.jpg',
 };
 
 const FALLBACK_VISAS: VisaService[] = [
@@ -108,191 +99,68 @@ function VisaSliderCard({ visa, currency, onClick }: { visa: VisaService; curren
         {!imageUrl && (
           <h3 className="text-gray-900 font-semibold text-sm" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>{visa.country}</h3>
         )}
-        <div className="flex items-center gap-2 text-xs text-gray-400 mt-1">
-          <svg className="w-3.5 h-3.5 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-          </svg>
-          <span>{visa.processingTime}</span>
-        </div>
-        <div className="mt-2 flex items-center justify-between">
-          <p className="text-[#D4AF37] font-bold text-lg">{symbol} {fee?.toLocaleString()}</p>
-          <span className="text-gray-500 text-xs">Visa Fee</span>
-        </div>
+        <p className="text-xs text-gray-500">{visa.processingTime}</p>
+        <div className="mt-1 text-gold font-semibold text-sm">{symbol} {fee.toLocaleString()}</div>
       </div>
-    </div>
-  );
-}
-
-function ScrollingRow({ visas, currency, onApply }: { visas: VisaService[]; currency: 'MMK' | 'USD'; onApply: (visa: VisaService) => void }) {
-  const scrollRef = useRef<HTMLDivElement>(null);
-  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
-  const [canScrollLeft, setCanScrollLeft] = useState(false);
-  const [canScrollRight, setCanScrollRight] = useState(true);
-  const [isPaused, setIsPaused] = useState(false);
-
-  const updateArrows = useCallback(() => {
-    const el = scrollRef.current; if (!el) return;
-    setCanScrollLeft(el.scrollLeft > 4);
-    setCanScrollRight(el.scrollLeft < el.scrollWidth - el.clientWidth - 4);
-  }, []);
-  const scroll = useCallback((direction: 'left' | 'right') => {
-    const el = scrollRef.current; if (!el) return;
-    el.scrollTo({ left: direction === 'left' ? el.scrollLeft - STEP : el.scrollLeft + STEP, behavior: 'smooth' });
-  }, []);
-  const autoScroll = useCallback(() => {
-    const el = scrollRef.current; if (!el) return;
-    if (el.scrollLeft >= el.scrollWidth - el.clientWidth - 4) { el.scrollTo({ left: 0, behavior: 'smooth' }); }
-    else { scroll('right'); }
-  }, [scroll]);
-
-  useEffect(() => {
-    if (isPaused) return;
-    intervalRef.current = setInterval(autoScroll, AUTOPLAY_MS);
-    return () => { if (intervalRef.current) clearInterval(intervalRef.current); };
-  }, [isPaused, autoScroll]);
-  useEffect(() => {
-    const el = scrollRef.current; if (!el) return;
-    updateArrows();
-    el.addEventListener('scroll', updateArrows, { passive: true });
-    return () => el.removeEventListener('scroll', updateArrows);
-  }, [updateArrows]);
-
-  if (!visas || visas.length === 0) return null;
-  return (
-    <div className="relative group/row" onMouseEnter={() => setIsPaused(true)} onMouseLeave={() => setIsPaused(false)}>
-      <button onClick={() => scroll('left')} aria-label="Scroll left" className={'absolute left-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full bg-[#D4AF37]/90 shadow-lg flex items-center justify-center transition-all duration-300 ' + (canScrollLeft ? 'opacity-0 group-hover/row:opacity-100 hover:bg-[#D4AF37] hover:scale-110' : 'opacity-0 pointer-events-none')} style={{ marginLeft: -16 }}>
-        <ChevronLeft className="w-5 h-5 text-gray-900" />
-      </button>
-      <div ref={scrollRef} className="flex gap-4 overflow-x-auto scrollbar-hide snap-x snap-mandatory scroll-smooth px-1" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
-        {visas.map((visa) => (<VisaSliderCard key={visa._id} visa={visa} currency={currency} onClick={() => onApply(visa)} />))}
-      </div>
-      <button onClick={() => scroll('right')} aria-label="Scroll right" className={'absolute right-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full bg-[#D4AF37]/90 shadow-lg flex items-center justify-center transition-all duration-300 ' + (canScrollRight ? 'opacity-0 group-hover/row:opacity-100 hover:bg-[#D4AF37] hover:scale-110' : 'opacity-0 pointer-events-none')} style={{ marginRight: -16 }}>
-        <ChevronRight className="w-5 h-5 text-gray-900" />
-      </button>
-    </div>
-  );
-}
-
-function SkeletonRow() {
-  return (
-    <div className="flex gap-4 overflow-hidden">
-      {Array.from({ length: 5 }).map((_, i) => (<div key={i} className="w-[220px] h-[280px] rounded-2xl flex-shrink-0 bg-white shadow-sm animate-pulse border border-gray-100" />))}
     </div>
   );
 }
 
 export default function VisasPage() {
-  // Fetch from admin database
-  const [apiData, setApiData] = useState<any[]>([]);
-  const [dataLoaded, setDataLoaded] = useState(false);
-  useEffect(() => {
-    fetch('/api/visas').then(r => r.json()).then(data => {
-      const items = data?.data || data || [];
-      if (items.length > 0) { setApiData(items); setDataLoaded(true); }
-    }).catch(() => {});
-  }, []);
-
   const router = useRouter();
-  const [visas, setVisas] = useState<VisaService[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [visas, setVisas] = useState<VisaService[]>(FALLBACK_VISAS);
   const [currency, setCurrency] = useState<'MMK' | 'USD'>('MMK');
-  const [useFallback, setUseFallback] = useState(false);
-  const [showBookingModal, setShowBookingModal] = useState(false);
+  const [scrollPos, setScrollPos] = useState(0);
+  const [maxScroll, setMaxScroll] = useState(0);
   const [selectedVisa, setSelectedVisa] = useState<VisaService | null>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
+  useEffect(() => { api.get('/visas').then(r => { if (r.data?.data) setVisas(r.data.data); }).catch(() => {}); }, []);
   useEffect(() => {
-    const fetchVisas = async () => {
-      setLoading(true); setUseFallback(false);
-      try {
-        const response = await api.get<VisaService[]>('/visas');
-        const data = response.data as unknown as VisaService[];
-        if (Array.isArray(data) && data.length > 0) { setVisas(data); }
-        else { setUseFallback(true); setVisas(FALLBACK_VISAS); }
-      } catch (err) {
-        console.error('Failed to fetch visas:', err);
-        setUseFallback(true); setVisas(FALLBACK_VISAS);
-      } finally { setLoading(false); }
-    };
-    fetchVisas();
-  }, []);
+    const el = containerRef.current;
+    if (!el) return;
+    const update = () => { setScrollPos(el.scrollLeft); setMaxScroll(el.scrollWidth - el.clientWidth); };
+    el.addEventListener('scroll', update, { passive: true });
+    update();
+    window.addEventListener('resize', update);
+    return () => { el.removeEventListener('scroll', update); window.removeEventListener('resize', update); };
+  }, [visas]);
 
-  const handleApplyNow = (visa: VisaService) => {
-    const token = typeof window !== 'undefined' ? localStorage.getItem('a9token') : null;
-    if (!token) { router.push('/auth/login'); return; }
-    setSelectedVisa(visa);
-    setShowBookingModal(true);
-  };
+  const scroll = (dir: 1 | -1) => { containerRef.current?.scrollBy({ left: STEP * dir, behavior: 'smooth' }); };
+  useEffect(() => { const id = setInterval(() => { if (document.visibilityState === 'visible') scroll(1); }, AUTOPLAY_MS); return () => clearInterval(id); }, []);
 
-  const asiaVisas = visas.filter(v => ['Thailand','Singapore','Vietnam','Malaysia','Cambodia','Indonesia','Philippines','Laos','Myanmar'].includes(v.country)).slice(0, 10);
-  const worldVisas = visas.filter(v => ['China','Japan','South Korea','India','United Arab Emirates','Taiwan','Australia','United Kingdom','Hong Kong','Macau','Sri Lanka','Nepal','Maldives','Brunei'].includes(v.country)).slice(0, 10);
+  const canScrollLeft = scrollPos > 4;
+  const canScrollRight = scrollPos < maxScroll - 4;
 
   return (
-    <main className="min-h-screen bg-white">
-      <section className="relative pt-24 pb-12 px-4 overflow-hidden">
-        <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: "url(/images_v2/hero-visas-v2.jpg)" }} />
-        <div className="absolute inset-0 bg-gray-950/80" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(212,175,55,0.12),transparent_70%)]" />
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-[#D4AF37]/5 rounded-full blur-3xl" />
-        <div className="relative max-w-7xl mx-auto text-center">
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4 bg-gradient-to-r from-[#D4AF37] via-[#F5A623] to-[#D4AF37] bg-clip-text text-transparent" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>Visa Services</h1>
-          <p className="text-gray-400 text-lg max-w-2xl mx-auto">Hassle-free visa processing for your international travel. We handle the paperwork so you can focus on your journey.</p>
+    <div className="min-h-screen bg-gray-50">
+      {/* Hero */}
+      <section className="relative w-full h-72 sm:h-96 overflow-hidden">
+        <img src="/images_v2/visa1-v3.jpg" alt="Visa Services" className="w-full h-full object-cover" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#0A1628]/70 to-[#0A1628]/40" />
+        <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4">
+          <h1 className="text-3xl sm:text-5xl font-bold text-white mb-3" style={{ fontFamily: "'Playfair Display', serif" }}>Visa Services</h1>
+          <p className="text-white/70 max-w-xl text-sm sm:text-base">Hassle-free visa processing for destinations worldwide</p>
+          <div className="flex gap-2 mt-4">
+            <button onClick={() => setCurrency('MMK')} className={`px-4 py-1.5 rounded-full text-xs font-semibold transition-all ${currency==='MMK'?'bg-gold text-white':'bg-white/20 text-white/70'}`}>🇲🇲 MMK</button>
+            <button onClick={() => setCurrency('USD')} className={`px-4 py-1.5 rounded-full text-xs font-semibold transition-all ${currency==='USD'?'bg-gold text-white':'bg-white/20 text-white/70'}`}>💵 USD</button>
+          </div>
         </div>
       </section>
 
-      <section className="max-w-7xl mx-auto px-4 pt-8 flex justify-end">
-        <div className="flex rounded-xl bg-white shadow-sm border border-gray-200 p-1">
-          <button onClick={() => setCurrency('MMK')} className={'px-4 py-1.5 rounded-lg text-xs font-semibold transition-all ' + (currency === 'MMK' ? 'bg-[#D4AF37] text-gray-900 shadow-md' : 'text-gray-900/60 hover:text-gray-900')}>MMK</button>
-          <button onClick={() => setCurrency('USD')} className={'px-4 py-1.5 rounded-lg text-xs font-semibold transition-all ' + (currency === 'USD' ? 'bg-[#D4AF37] text-gray-900 shadow-md' : 'text-gray-900/60 hover:text-gray-900')}>USD</button>
+      {/* Slider */}
+      <section className="max-w-7xl mx-auto px-4 -mt-16 relative z-10 pb-12">
+        <div className="relative">
+          {canScrollLeft && <button onClick={() => scroll(-1)} className="absolute left-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full bg-white shadow-lg border border-gray-200 flex items-center justify-center hover:shadow-xl transition-shadow"><ChevronLeft className="w-5 h-5 text-gray-700" /></button>}
+          {canScrollRight && <button onClick={() => scroll(1)} className="absolute right-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full bg-white shadow-lg border border-gray-200 flex items-center justify-center hover:shadow-xl transition-shadow"><ChevronRight className="w-5 h-5 text-gray-700" /></button>}
+          <div ref={containerRef} className="flex gap-4 overflow-x-auto scrollbar-hide scroll-smooth pb-2" style={{ scrollSnapType: 'x mandatory' }}>
+            {visas.map(v => <VisaSliderCard key={v._id} visa={v} currency={currency} onClick={() => setSelectedVisa(v)} />)}
+          </div>
         </div>
       </section>
 
-      <section className="max-w-7xl mx-auto px-4 py-10 pb-20">
-        {loading ? (
-          <div className="space-y-12"><SkeletonRow /><SkeletonRow /></div>
-        ) : visas.length === 0 ? (
-          <div className="text-center py-20 space-y-4">
-            <h3 className="text-xl text-gray-900 font-semibold" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>Visa services coming soon</h3>
-            <p className="text-gray-400">We are updating our visa service listings. Check back shortly.</p>
-          </div>
-        ) : (
-          <div className="space-y-12">
-            {useFallback && <p className="text-amber-400/70 text-sm text-center">Showing sample visas — using offline data</p>}
-            <div>
-              <div className="flex items-center gap-3 mb-4">
-                <div className="h-0.5 flex-1 bg-gradient-to-r from-transparent via-gold/30 to-transparent" />
-                <h2 className="text-lg font-bold text-gold" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>ASEAN & Nearby</h2>
-                <div className="h-0.5 flex-1 bg-gradient-to-r from-transparent via-gold/30 to-transparent" />
-              </div>
-              <ScrollingRow visas={asiaVisas.length > 0 ? asiaVisas : FALLBACK_VISAS.filter(v => ['Thailand','Singapore','Vietnam','Malaysia','Cambodia','Indonesia','Philippines'].includes(v.country)).slice(0, 10)} currency={currency} onApply={handleApplyNow} />
-            </div>
-            <div>
-              <div className="flex items-center gap-3 mb-4">
-                <div className="h-0.5 flex-1 bg-gradient-to-r from-transparent via-gold/30 to-transparent" />
-                <h2 className="text-lg font-bold text-gold" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>Asia Pacific & Middle East</h2>
-                <div className="h-0.5 flex-1 bg-gradient-to-r from-transparent via-gold/30 to-transparent" />
-              </div>
-              <ScrollingRow visas={worldVisas.length > 0 ? worldVisas : FALLBACK_VISAS.filter(v => ['China','Japan','South Korea','India','United Arab Emirates','Taiwan','Australia','United Kingdom'].includes(v.country)).slice(0, 10)} currency={currency} onApply={handleApplyNow} />
-            </div>
-            <p className="text-gray-500 text-xs text-center">Hover over arrows to scroll • Auto-scroll pauses on hover</p>
-          </div>
-        )}
-      </section>
-
-      {selectedVisa && (
-        <BookingModal
-          isOpen={showBookingModal}
-          onClose={() => setShowBookingModal(false)}
-          itemType="visa"
-          itemId={selectedVisa._id}
-          itemName={selectedVisa.country + ' Visa'}
-          itemSubtitle={selectedVisa.processingTime}
-          unitPrice={selectedVisa.visaFeeMMK || 0}
-          currency="MMK"
-          unitLabel="applicant"
-          maxQuantity={5}
-        />
-      )}
-      <style jsx>{'.scrollbar-hide::-webkit-scrollbar { display: none; }'}</style>
-    </main>
+      {/* Modal */}
+      {selectedVisa && <BookingModal isOpen={!!selectedVisa} onClose={() => setSelectedVisa(null)} title={`Apply for ${selectedVisa.country} Visa`} fields={['Name','Passport No','Travel Date']} />}
+    </div>
   );
 }
