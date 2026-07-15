@@ -22,16 +22,20 @@ export default function CarCard({ car, currency = 'MMK' }: CarCardProps) {
   const [imgError, setImgError] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
 
-  const mainImage = getImages(car.images)[0] || FALLBACK_IMAGE;
+  // Normalize both old (Redis) and new (seed) car data formats
+  const carType = car.carType || (car as any).title || '';
+  const mainImage = getImages(car.images)[0] || (car as any).image || FALLBACK_IMAGE;
   const displayImage = imgError ? FALLBACK_IMAGE : mainImage;
-  const cheapestOption = car.pricingWithDriver && car.pricingWithDriver.length > 0
+  const cheapestOption = (car.pricingWithDriver && car.pricingWithDriver.length > 0)
     ? car.pricingWithDriver.reduce((prev, curr) =>
         (currency === 'MMK' ? curr.priceMMK < prev.priceMMK : curr.priceUSD < prev.priceUSD) ? curr : prev)
-    : null;
+    : (car as any).pricePerDayMMK ? { duration: 'Full Day', priceMMK: (car as any).pricePerDayMMK, priceUSD: (car as any).pricePerDayUSD || 0 } : null;
   const currencySymbol = currency === 'MMK' ? 'Ks' : '$';
   const displayPrice = cheapestOption
     ? (currency === 'MMK' ? cheapestOption.priceMMK : cheapestOption.priceUSD) : 0;
-  const features = car.features || [];
+  const displayDuration = cheapestOption ? cheapestOption.duration : 'Contact us';
+  const features = (car.features && car.features.length > 0) ? car.features :
+    ((car as any).type ? [((car as any).type)] : []);
   const visibleFeatures = features.slice(0, 3);
   const extraCount = features.length - 3;
 
@@ -67,12 +71,12 @@ export default function CarCard({ car, currency = 'MMK' }: CarCardProps) {
 
         {/* Image Section */}
         <div className="relative h-[280px] w-full overflow-hidden bg-gray-200">
-          <img src={displayImage} alt={car.carType} className="w-full h-full object-cover transition-transform duration-700 ease-out" style={{ position: 'absolute', inset: 0, transform: isHovered ? 'scale(1.08)' : 'scale(1)' }} onError={() => setImgError(true)} loading="lazy" />
+          <img src={displayImage} alt={carType} className="w-full h-full object-cover transition-transform duration-700 ease-out" style={{ position: 'absolute', inset: 0, transform: isHovered ? 'scale(1.08)' : 'scale(1)' }} onError={() => setImgError(true)} loading="lazy" />
           <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/15 to-transparent" />
           {/* Car type badge */}
           <div className="absolute top-7 left-3 z-20">
             <span className="inline-block px-2.5 py-0.5 rounded-full bg-[#0A1628]/85 text-[#D4AF37] text-[11px] font-semibold backdrop-blur-sm border border-[#D4AF37]/40 shadow-lg shadow-black/30">
-              {car.carType}
+              🚗 {carType}
             </span>
           </div>
           {/* Capacity badge */}
@@ -90,13 +94,13 @@ export default function CarCard({ car, currency = 'MMK' }: CarCardProps) {
         {/* Info */}
         <div className="px-4 pt-2 pb-1 space-y-1.5">
           <h3 className="text-[#0A1628] text-base font-bold leading-tight line-clamp-2 group-hover:text-[#D4AF37] transition-colors duration-300" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
-            {car.carType}
+            {carType}
           </h3>
           <div className="flex items-center justify-between">
-            <span className="text-gray-400 text-[11px]">{cheapestOption ? cheapestOption.duration : 'Contact us'}</span>
+            <span className="text-gray-400 text-[11px]">{displayDuration}</span>
             <div className="text-right">
               <span className="text-[#0A1628] text-base font-bold">{currencySymbol} {displayPrice.toLocaleString()}</span>
-              {cheapestOption && <span className="text-gray-400 text-[11px] ml-0.5">/{cheapestOption.duration}</span>}
+              {cheapestOption && <span className="text-gray-400 text-[11px] ml-0.5">/{displayDuration}</span>}
             </div>
           </div>
           {features.length > 0 && (

@@ -33,12 +33,12 @@ const SEEDS: Record<string, any[]> = {
     { id: "h6", title: "Amazing Ngapali Resort",   destination: "Ngapali",priceMMK: 250000,priceUSD: 119, rating: 4.8, reviewCount: 90,  image: "/images_v2/hotel6-v2.jpg" },
   ],
   cars: [
-    { id: "c1", title: "Toyota Alphard",        type: "Luxury",   pricePerDayMMK: 150000, pricePerDayUSD: 71,  passengers: 7, image: "/images_v2/car1-v2.jpg" },
-    { id: "c2", title: "Toyota Wish",           type: "Standard", pricePerDayMMK: 80000,  pricePerDayUSD: 38,  passengers: 5, image: "/images_v2/car2-v2.jpg" },
-    { id: "c3", title: "Toyota Noah",           type: "Standard", pricePerDayMMK: 85000,  pricePerDayUSD: 40,  passengers: 7, image: "/images_v2/car3-v2.jpg" },
-    { id: "c4", title: "Alphard Executive",     type: "Premium",  pricePerDayMMK: 200000, pricePerDayUSD: 95,  passengers: 6, image: "/images_v2/car4-v2.jpg" },
-    { id: "c5", title: "Minibus 15-Seater",     type: "Group",    pricePerDayMMK: 120000, pricePerDayUSD: 57,  passengers: 15,image: "/images_v2/car5-v2.jpg" },
-    { id: "c6", title: "Probox Budget",         type: "Economy",  pricePerDayMMK: 50000,  pricePerDayUSD: 24,  passengers: 4, image: "/images_v2/car6-v2.jpg" },
+    { _id: "c1", slug: "toyota-alphard",        carType: "Toyota Alphard", capacity: 7, images: ["/images_v2/car1-v2.jpg"], features: ["AC", "Leather", "WiFi"],              pricingWithDriver: [{ duration: "Full Day", priceMMK: 150000, priceUSD: 71 }], description: "Luxury MPV with captain seats." },
+    { _id: "c2", slug: "toyota-wish",            carType: "Toyota Wish",    capacity: 5, images: ["/images_v2/car2-v2.jpg"], features: ["AC", "GPS", "Fuel Efficient"],       pricingWithDriver: [{ duration: "Full Day", priceMMK: 80000,  priceUSD: 38 }], description: "Affordable family wagon." },
+    { _id: "c3", slug: "toyota-noah",            carType: "Toyota Noah",    capacity: 7, images: ["/images_v2/car3-v2.jpg"], features: ["AC", "Luggage Space", "GPS"],         pricingWithDriver: [{ duration: "Full Day", priceMMK: 85000,  priceUSD: 40 }], description: "Spacious 7-seater for groups." },
+    { _id: "c4", slug: "alphard-executive",      carType: "Alphard Executive", capacity: 6, images: ["/images_v2/car4-v2.jpg"], features: ["AC", "Massage Seats", "Premium Sound"], pricingWithDriver: [{ duration: "Full Day", priceMMK: 200000, priceUSD: 95 }], description: "Executive-class travel experience." },
+    { _id: "c5", slug: "minibus-15-seater",      carType: "Minibus 15-Seater", capacity: 15, images: ["/images_v2/car5-v2.jpg"], features: ["AC", "Large Group", "Luggage"],       pricingWithDriver: [{ duration: "Full Day", priceMMK: 120000, priceUSD: 57 }], description: "Perfect for large group trips." },
+    { _id: "c6", slug: "probox-budget",          carType: "Probox Budget",   capacity: 4, images: ["/images_v2/car6-v2.jpg"], features: ["AC", "Budget", "Fuel Efficient"],     pricingWithDriver: [{ duration: "Full Day", priceMMK: 50000,  priceUSD: 24 }], description: "No-frills budget transport." },
   ],
   cruises: [],
   visas: [
