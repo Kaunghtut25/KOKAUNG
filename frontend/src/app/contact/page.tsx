@@ -321,11 +321,11 @@ export default function ContactPage() {
                 <p className="text-[#0A1628] font-semibold text-sm mb-2">📞 Contact Numbers</p>
                 <div className="space-y-1.5 text-sm">
                   {[
-                    {label:"Ticket Department",phone:"09 781 617 111"},
-                    {label:"Visa Department",phone:"09 781 617 333"},
-                    {label:"Hotel Department",phone:"09 694 202 111"},
-                    {label:"Outbound Department",phone:"09 756 348 222"},
-                    {label:"Inbound Department",phone:"09 694 320 111"},
+                    {label:"Ticket Department",phone:"959 781 617 111"},
+                    {label:"Visa Department",phone:"959 781 617 333"},
+                    {label:"Hotel Department",phone:"959 694 202 111"},
+                    {label:"Outbound Department",phone:"959 756 348 222"},
+                    {label:"Inbound Department",phone:"959 694 320 111"},
                   ].map(d=><div key={d.label} className="flex justify-between items-center"><span className="text-gray-500 text-xs">{d.label}</span><a href={`tel:${d.phone.replace(/\s/g,'')}`} className="text-gray-700 font-medium hover:text-[#D4AF37] transition-colors">{d.phone}</a></div>)}
                 </div>
               </div>

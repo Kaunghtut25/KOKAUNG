@@ -108,24 +108,16 @@ export default function Footer() {
               <div className="flex items-start space-x-3">
                 <span className="text-gold mt-0.5 flex-shrink-0">📞</span>
                 <div className="text-sm text-white/60 space-y-1">
-                  <a
-                    href="tel:+959781617333"
-                    className="block hover:text-gold transition-colors"
-                  >
-                    09 781 617333
-                  </a>
-                  <a
-                    href="tel:+959694320111"
-                    className="block hover:text-gold transition-colors"
-                  >
-                    09 694 320 111
-                  </a>
-                  <a
-                    href="tel:+959694202333"
-                    className="block hover:text-gold transition-colors"
-                  >
-                    09 694 202 333
-                  </a>
+                  <p className="block text-white/50">Ticket Department</p>
+                  <a href="tel:+959781617111" className="block hover:text-gold transition-colors">959 781 617 111</a>
+                  <p className="block text-white/50 mt-2">Visa Department</p>
+                  <a href="tel:+959781617333" className="block hover:text-gold transition-colors">959 781 617 333</a>
+                  <p className="block text-white/50 mt-2">Hotel Department</p>
+                  <a href="tel:+959694202111" className="block hover:text-gold transition-colors">959 694 202 111</a>
+                  <p className="block text-white/50 mt-2">Outbound Department</p>
+                  <a href="tel:+959756348222" className="block hover:text-gold transition-colors">959 756 348 222</a>
+                  <p className="block text-white/50 mt-2">Inbound Department</p>
+                  <a href="tel:+959694320111" className="block hover:text-gold transition-colors">959 694 320 111</a>
                 </div>
               </div>
               <div className="flex items-start space-x-3">
