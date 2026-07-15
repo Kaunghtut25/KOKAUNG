@@ -1,5 +1,5 @@
 import { getAll } from "@/lib/persistentStore";
-import ToursClient from "./ToursClient";
+import ToursClient from "./toursclient";
 
 export const dynamic = 'force-dynamic';
 
