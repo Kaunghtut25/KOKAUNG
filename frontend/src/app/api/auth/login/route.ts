@@ -7,7 +7,14 @@ const ADMIN_PASSWORD = "a9admin2026";
 
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.json();
+    const text = await request.text();
+    let body: any;
+    try {
+      body = JSON.parse(text);
+    } catch {
+      return NextResponse.json({ message: "Invalid JSON body received: " + text.substring(0, 100) }, { status: 400 });
+    }
+
     const email = body.email;
     const password = body.password;
 
@@ -26,7 +33,6 @@ export async function POST(request: NextRequest) {
       role: "admin",
     };
 
-    // Simple token: base64 of JSON payload
     const token = Buffer.from(JSON.stringify({ ...user, exp: Date.now() + 86400000 })).toString("base64");
 
     return NextResponse.json({ success: true, token, user });
