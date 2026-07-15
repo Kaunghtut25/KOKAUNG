@@ -33,8 +33,13 @@ export default function LoginPage() {
       // Store admin token
       localStorage.setItem('admin_token', data.token);
       localStorage.setItem('admin_user', JSON.stringify(data.user));
-      router.push('/admin');
-      router.refresh();
+      // Set cookie immediately for middleware
+      document.cookie = `a9_admin_token=${data.token}; path=/; max-age=86400; samesite=lax`;
+      // Small delay to ensure cookie is set
+      setTimeout(() => {
+        router.push('/admin');
+        router.refresh();
+      }, 100);
     } catch {
       setError('Network error. Please try again.');
     } finally {

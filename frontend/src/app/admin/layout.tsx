@@ -19,15 +19,28 @@ export default function AdminLayout({
       return;
     }
     try {
-      // Token is base64 JSON
-      const decoded = JSON.parse(atob(token));
+      // Decode base64 token — handle both atob and Buffer formats
+      let decoded: any;
+      try {
+        // Try browser's atob first
+        const binary = atob(token);
+        // Handle UTF-8 encoding
+        const bytes = new Uint8Array(binary.length);
+        for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+        const jsonStr = new TextDecoder("utf-8").decode(bytes);
+        decoded = JSON.parse(jsonStr);
+      } catch {
+        // Fallback: try direct JSON parse (in case token is already JSON)
+        decoded = JSON.parse(token);
+      }
+
       if (decoded.role !== "admin" || (decoded.exp && decoded.exp < Date.now())) {
         localStorage.removeItem("admin_token");
         localStorage.removeItem("admin_user");
         router.replace("/auth/login");
         return;
       }
-      // Set cookie for middleware (expires in 24h)
+      // Set cookie for middleware
       document.cookie = `a9_admin_token=${token}; path=/; max-age=86400; samesite=lax`;
       setAuthorized(true);
     } catch {
