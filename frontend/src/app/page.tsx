@@ -218,19 +218,6 @@ export default function HomePage() {
           ))}
         </div>
 
-        {/* Service Icons overlaid on hero */}
-        <div className="absolute left-0 right-0 bottom-6 z-20 px-1">
-          <div className="max-w-5xl mx-auto flex flex-wrap justify-center gap-1 md:gap-2">
-            {services.map((item:any) => (
-              <Link key={item.href} href={item.href}
-                className="flex flex-col items-center py-1.5 px-2 rounded-lg bg-white/90 backdrop-blur-sm border border-white/30 hover:border-[#D4AF37] hover:bg-white hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 group cursor-pointer text-center min-w-[52px]"
-              >
-                <span className="text-base md:text-lg group-hover:scale-110 transition-transform">{item.icon}</span>
-                <span className="text-[9px] md:text-[10px] font-semibold text-gray-800 group-hover:text-[#D4AF37] transition-colors mt-0.5">{item.label}</span>
-              </Link>
-            ))}
-          </div>
-        </div>
       </section>
 
       {/* ========== Sticky Icon Bar — appears under navbar on scroll ========== */}
