@@ -193,7 +193,7 @@ export default function HomePage() {
         </div>
 
         {/* Slide content — moved up */}
-        <div className="relative z-10 flex flex-col items-center px-4 text-center pt-16">
+        <div className="relative z-10 flex flex-col items-center px-4 text-center pt-24">
           {slides.map((slide:any, index:number) => (
             <div key={index} className={`transition-all duration-700 ${index === currentSlide ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8 absolute pointer-events-none"}`}>
               {slide.label && <span className="inline-block px-3 py-1 rounded-full bg-[#D4AF37]/20 text-[#D4AF37] text-xs font-semibold uppercase tracking-wider mb-4 border border-[#D4AF37]/30">{slide.label}</span>}
@@ -221,7 +221,7 @@ export default function HomePage() {
       </section>
 
       {/* ========== Search Engine ========== */}
-      <div className="relative -mt-12 md:-mt-16 z-40 px-4">
+      <div className="relative -mt-24 md:-mt-32 z-40 px-4">
         <div className="max-w-5xl mx-auto">
           <div className="bg-white rounded-2xl border-2 border-[#D4AF37]/30 shadow-xl p-5 md:p-7 overflow-visible">
             <div className="flex gap-1 mb-5 bg-gray-100 rounded-lg p-1 w-fit">
