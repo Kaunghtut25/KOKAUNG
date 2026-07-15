@@ -6,8 +6,8 @@ import { useRouter } from 'next/navigation';
 import { api } from '@/lib/api';
 import BookingModal from '@/components/BookingModal';
 
-const CARD_WIDTH = 260;
-const CARD_GAP = 16;
+const CARD_WIDTH = 340;
+const CARD_GAP = 20;
 const STEP = CARD_WIDTH + CARD_GAP;
 const AUTOPLAY_MS = 3500;
 
@@ -123,10 +123,10 @@ function VisaSliderCard({ visa }: { visa: VisaService }) {
   return (
     <div
       onClick={() => router.push(`/visas?apply=${visa.country}`)}
-      className="w-[260px] h-[300px] rounded-2xl overflow-hidden flex-shrink-0 snap-start group cursor-pointer border border-gray-100 hover:border-gold/40 transition-all duration-300 bg-white shadow-sm flex flex-col"
+      className="w-[340px] h-[380px] rounded-2xl overflow-hidden flex-shrink-0 snap-start group cursor-pointer border border-gray-100 hover:border-gold/40 transition-all duration-300 bg-white shadow-sm flex flex-col"
     >
       {imageUrl ? (
-        <div className="relative h-40 overflow-hidden">
+        <div className="relative h-52 overflow-hidden">
           <img src={imageUrl} alt={visa.country} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" loading="lazy" />
           <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
           <div className="absolute bottom-1.5 left-2 flex items-center gap-1.5">
@@ -135,15 +135,15 @@ function VisaSliderCard({ visa }: { visa: VisaService }) {
           </div>
         </div>
       ) : (
-        <div className="h-40 bg-gradient-to-br from-[#D4AF37]/20 to-[#F5A623]/20 flex items-center justify-center">
+        <div className="h-52 bg-gradient-to-br from-[#D4AF37]/20 to-[#F5A623]/20 flex items-center justify-center">
           <span className="text-4xl">{flag}</span>
         </div>
       )}
-      <div className="p-3 flex flex-col flex-1 justify-between">
-        <p className="text-[11px] text-gray-500">{visa.processingTime}</p>
-        <div className="flex flex-wrap gap-1 mt-1">
+      <div className="p-4 flex flex-col flex-1 justify-between">
+        <p className="text-xs text-gray-500">{visa.processingTime}</p>
+        <div className="flex flex-wrap gap-1.5 mt-1">
           {visa.requirements.slice(0, 2).map((r, i) => (
-            <span key={i} className="text-[10px] bg-[#D4AF37]/10 text-[#B8960F] px-1.5 py-0.5 rounded-full">{r}</span>
+            <span key={i} className="text-[11px] bg-[#D4AF37]/10 text-[#B8960F] px-2 py-1 rounded-full">{r}</span>
           ))}
         </div>
       </div>
