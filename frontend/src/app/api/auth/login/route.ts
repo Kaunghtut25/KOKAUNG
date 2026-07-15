@@ -2,18 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 
 export const runtime = "nodejs";
 
-// Use env var with fallback — env var name is ADMIN_PASSWORD
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL || "admin@a9global.com";
 const PASS = process.env.ADMIN_PASSWORD || "a9admin2026";
-
-function makeToken(user: Record<string, unknown>): string {
-  const payload = JSON.stringify({
-    ...user,
-    iat: Date.now(),
-    exp: Date.now() + 86400000,
-  });
-  return Buffer.from(payload).toString("base64");
-}
 
 export async function POST(request: NextRequest) {
   try {
@@ -43,7 +33,13 @@ export async function POST(request: NextRequest) {
       role: "admin",
     };
 
-    const token = makeToken(user);
+    // Create token — use Buffer (Node runtime, safe here)
+    const payload = JSON.stringify({
+      ...user,
+      iat: Date.now(),
+      exp: Date.now() + 86400000,
+    });
+    const token = Buffer.from(payload, "utf-8").toString("base64");
 
     return NextResponse.json({ success: true, token, user });
   } catch (err) {

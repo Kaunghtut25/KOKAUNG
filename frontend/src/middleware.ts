@@ -1,11 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 
-const PASS = process.env.ADMIN_PASSWORD || "a9admin2026";
-
 function isAdminToken(token: string | undefined): boolean {
   if (!token) return false;
   try {
-    const decoded = JSON.parse(Buffer.from(token, "base64").toString("utf-8"));
+    // Edge runtime doesn't have Buffer — use atob
+    const binary = atob(token);
+    const bytes = new Uint8Array(binary.length);
+    for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+    const jsonStr = new TextDecoder("utf-8").decode(bytes);
+    const decoded = JSON.parse(jsonStr);
     return decoded.role === "admin" && decoded.exp > Date.now();
   } catch {
     return false;
@@ -15,7 +18,7 @@ function isAdminToken(token: string | undefined): boolean {
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // Protect /admin pages (not /api/)
+  // Protect /admin pages
   if (pathname.startsWith("/admin") && !pathname.startsWith("/api/")) {
     const auth = request.cookies.get("a9_admin_token");
     const header = request.headers.get("authorization");
