@@ -46,11 +46,11 @@ export default function TourCard({ tour, currency = 'MMK' }: TourCardProps) {
       onClick={() => router.push(`/tours/${tour.slug}`)}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      className="group relative cursor-pointer w-full"
+      className="group relative cursor-pointer w-full h-full"
       style={{ perspective: '1200px' }}
     >
       <div
-        className={`relative rounded-2xl overflow-hidden bg-white transition-all duration-500 ease-out ${
+        className={`relative rounded-2xl overflow-hidden bg-white h-full flex flex-col transition-all duration-500 ease-out ${
           isHovered ? 'shadow-2xl shadow-black/30 -translate-y-2' : 'shadow-lg shadow-black/10'
         }`}
         style={{
@@ -105,7 +105,7 @@ export default function TourCard({ tour, currency = 'MMK' }: TourCardProps) {
         <div className="h-4 bg-gradient-to-b from-[#0A1628] to-white" />
 
         {/* Info */}
-        <div className="px-4 pt-2 pb-1 space-y-1.5">
+        <div className="px-4 pt-2 pb-1 space-y-1.5 flex-1">
           <h3
             className="text-[#0A1628] text-base font-bold leading-tight line-clamp-2 group-hover:text-[#D4AF37] transition-colors duration-300"
             style={{ fontFamily: "'Playfair Display', Georgia, serif" }}
