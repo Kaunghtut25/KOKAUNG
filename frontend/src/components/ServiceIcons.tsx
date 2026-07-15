@@ -27,10 +27,10 @@ export default function ServiceIcons() {
     }).catch(() => {});
   }, []);
 
-  // All pages: always-visible sticky bar under navbar
-  return (
-    <div className="sticky top-20 z-30 w-full bg-white border-b border-gray-200 shadow-sm">
-      <div className="max-w-6xl mx-auto flex flex-wrap justify-center gap-1 md:gap-2 py-2 px-2">
+  // Fixed bar always visible under navbar, plus a spacer to prevent content jump
+  const iconBar = (
+    <div className="w-full bg-white border-b border-gray-200 shadow-sm py-2 px-2">
+      <div className="max-w-6xl mx-auto flex flex-wrap justify-center gap-1 md:gap-2">
         {services.map((item) => {
           const isActive = item.href !== '/' && (pathname === item.href || pathname.startsWith(item.href + '/'));
           return (
@@ -60,5 +60,16 @@ export default function ServiceIcons() {
         })}
       </div>
     </div>
+  );
+
+  return (
+    <>
+      {/* Fixed bar — always visible at top */}
+      <div className="fixed top-20 left-0 right-0 z-30">
+        {iconBar}
+      </div>
+      {/* Spacer — pushes content down so nothing is hidden behind the fixed bar */}
+      <div className="h-[3.5rem]" aria-hidden="true" />
+    </>
   );
 }
