@@ -192,8 +192,8 @@ export default function HomePage() {
           <div className="absolute inset-0 bg-gradient-to-b from-[#0A1628]/70 via-[#0A1628]/40 to-transparent" />
         </div>
 
-        {/* Slide content — moved up */}
-        <div className="relative z-10 flex flex-col items-center h-full px-4 text-center" style={{ paddingTop: "50px" }}>
+        {/* Slide content */}
+        <div className="relative z-10 flex flex-col justify-center items-center h-full px-4 text-center" style={{ paddingTop: "60px" }}>
           {slides.map((slide:any, index:number) => (
             <div key={index} className={`transition-all duration-700 ${index === currentSlide ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8 absolute pointer-events-none"}`}>
               {slide.label && <span className="inline-block px-3 py-1 rounded-full bg-[#D4AF37]/20 text-[#D4AF37] text-xs font-semibold uppercase tracking-wider mb-4 border border-[#D4AF37]/30">{slide.label}</span>}
@@ -218,39 +218,25 @@ export default function HomePage() {
           ))}
         </div>
 
-        {/* Service Icons overlaid on hero bottom */}
-        <div className="absolute left-0 right-0 bottom-6 z-20 px-1">
-          <div className="max-w-5xl mx-auto flex flex-wrap justify-center gap-1 md:gap-2">
+        {/* Sticky Service Icon Bar — single source, appears under navbar when scrolling */}
+        <div className="sticky top-[64px] z-40 bg-white/95 backdrop-blur-md border-b border-gray-200 shadow-sm">
+          <div className="max-w-5xl mx-auto flex flex-wrap justify-center gap-1 md:gap-2 px-2 py-1.5">
             {services.map((item:any) => (
               <Link key={item.href} href={item.href}
-                className="flex flex-col items-center py-1 px-1.5 rounded-md bg-white/90 backdrop-blur-sm border border-white/30 hover:border-[#D4AF37] hover:bg-white hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 group cursor-pointer text-center min-w-[48px]"
+                className="flex flex-col items-center py-1 px-2 rounded-lg hover:bg-[#D4AF37]/10 hover:-translate-y-0.5 transition-all duration-200 group cursor-pointer text-center min-w-[48px]"
               >
-                <span className="text-sm md:text-base group-hover:scale-110 transition-transform">{item.icon}</span>
-                <span className="text-[9px] md:text-[10px] font-semibold text-gray-800 group-hover:text-[#D4AF37] transition-colors mt-0.5">{item.label}</span>
+                <span className="text-base md:text-lg group-hover:scale-110 transition-transform">{item.icon}</span>
+                <span className="text-[9px] md:text-[10px] font-semibold text-gray-600 group-hover:text-[#D4AF37] transition-colors mt-0.5">{item.label}</span>
               </Link>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ========== Sticky Service Icon Bar — appears under navbar when scrolling ========== */}
-      <div className="sticky top-[64px] z-40 bg-white/95 backdrop-blur-md border-b border-gray-200 shadow-sm">
-        <div className="max-w-5xl mx-auto flex flex-wrap justify-center gap-1 md:gap-2 px-2 py-1.5">
-          {services.map((item:any) => (
-            <Link key={item.href} href={item.href}
-              className="flex flex-col items-center py-0.5 px-1.5 rounded-md hover:bg-[#D4AF37]/10 hover:-translate-y-0.5 transition-all duration-200 group cursor-pointer text-center min-w-[44px]"
-            >
-              <span className="text-xs md:text-sm group-hover:scale-110 transition-transform">{item.icon}</span>
-              <span className="text-[8px] md:text-[9px] font-semibold text-gray-600 group-hover:text-[#D4AF37] transition-colors">{item.label}</span>
-            </Link>
-          ))}
-        </div>
-      </div>
-
       {/* ========== Search Engine ========== */}
       <div className="relative -mt-16 md:-mt-20 z-30 px-4">
         <div className="max-w-5xl mx-auto">
-          <div className="bg-white rounded-2xl border-2 border-[#2563EB] shadow-xl p-5 md:p-7 overflow-visible">
+          <div className="bg-white rounded-2xl border-2 border-[#D4AF37]/30 shadow-xl p-5 md:p-7 overflow-visible">
             <div className="flex gap-1 mb-5 bg-gray-100 rounded-lg p-1 w-fit">
               {(["oneway","roundtrip","multicity"] as TabType[]).map((tab)=><button key={tab} onClick={()=>{setActiveTab(tab);if(tab!=="roundtrip")setReturnDate("");if(tab==="multicity")setMultiCityLegs([{from:"",to:"",date:""},{from:"",to:"",date:""}]);}} className={"px-4 py-2 rounded-md text-sm font-medium transition-all duration-300 cursor-pointer "+(activeTab===tab?"bg-[#D4AF37] text-white shadow-md":"text-gray-500 hover:text-gray-900 hover:bg-gray-200")}>{tab==="oneway"?"✈ One Way":tab==="roundtrip"?"🔄 Round Trip":"🌐 Multi-City"}</button>)}
             </div>
