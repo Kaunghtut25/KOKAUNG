@@ -12,7 +12,7 @@
  * 2. Set env vars: UPSTASH_REDIS_REST_URL, UPSTASH_REDIS_REST_TOKEN
  */
 
-type Collection = "tours" | "hotels" | "cars" | "cruises" | "visas" | "insurances" | "blog" | "bookings" | "mingalar";
+type Collection = "tours" | "hotels" | "cars" | "cruises" | "visas" | "insurances" | "blog" | "bookings" | "mingalar" | "site-config" | "settings";
 
 // ── Seed data ─────────────────────────────────────────────
 const SEEDS: Record<string, any[]> = {
