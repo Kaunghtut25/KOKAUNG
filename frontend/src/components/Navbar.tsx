@@ -51,6 +51,11 @@ export default function Navbar() {
                 className={`px-4 py-2 text-sm font-semibold transition-all duration-200 rounded-lg [text-shadow:0_1px_3px_rgba(0,0,0,0.5)] ${
                   isActive('/') ? 'bg-[#D4AF37] text-[#0A1628] [text-shadow:none] shadow-sm' : 'text-white hover:text-[#D4AF37] hover:bg-white/10'
                 }`}>Home</Link>
+              {/* About Us */}
+              <Link href="/about"
+                className={`px-4 py-2 text-sm font-semibold transition-all duration-200 rounded-lg [text-shadow:0_1px_3px_rgba(0,0,0,0.5)] ${
+                  isActive('/about') ? 'bg-[#D4AF37] text-[#0A1628] [text-shadow:none] shadow-sm' : 'text-white hover:text-[#D4AF37] hover:bg-white/10'
+                }`}>About Us</Link>
               {/* Blog */}
               <Link href="/blog"
                 className={`px-4 py-2 text-sm font-semibold transition-all duration-200 rounded-lg [text-shadow:0_1px_3px_rgba(0,0,0,0.5)] ${
@@ -119,6 +124,10 @@ export default function Navbar() {
               className={`block py-3 px-4 text-base font-medium rounded-lg transition-all duration-200 ${
                 isActive('/') ? "bg-[#D4AF37] text-[#0A1628]" : "text-white hover:text-[#D4AF37] hover:bg-white/10"
               }`}>Home</Link>
+            <Link href="/about" onClick={() => setMobileOpen(false)}
+              className={`block py-3 px-4 text-base font-medium rounded-lg transition-all duration-200 ${
+                isActive('/about') ? "bg-[#D4AF37] text-[#0A1628]" : "text-white hover:text-[#D4AF37] hover:bg-white/10"
+              }`}>About Us</Link>
             <Link href="/blog" onClick={() => setMobileOpen(false)}
               className={`block py-3 px-4 text-base font-medium rounded-lg transition-all duration-200 ${
                 isActive('/blog') ? "bg-[#D4AF37] text-[#0A1628]" : "text-white hover:text-[#D4AF37] hover:bg-white/10"
