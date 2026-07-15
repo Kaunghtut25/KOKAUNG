@@ -98,16 +98,37 @@ function AirportInput({ label, value, onChange, placeholder, icon }: { label: st
 }
 
 function PassengerSelector({ passengers, onChange }: { passengers: PassengerCounts; onChange: (p: PassengerCounts) => void }) {
+  const [isOpen, setIsOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    function handleClick(e: MouseEvent) { if (ref.current && !ref.current.contains(e.target as Node)) setIsOpen(false); }
+    document.addEventListener("mousedown", handleClick);
+    return () => document.removeEventListener("mousedown", handleClick);
+  }, []);
+
   const update = (k: keyof PassengerCounts, delta: number) => {
     const next = { ...passengers, [k]: Math.max(k==="adults"?1:0, passengers[k]+delta) };
     onChange(next);
   };
+
+  const total = passengers.adults + passengers.children + passengers.infants;
+  const summary = `${total} ${total === 1 ? 'Passenger' : 'Passengers'}`;
+
   return (
-    <div className="flex-1 min-w-[140px]">
+    <div ref={ref} className="flex-1 min-w-[140px] relative">
       <label className="block text-gray-500 text-xs uppercase tracking-wider mb-1"><span className="text-[#D4AF37]">👥</span> Passengers</label>
-      <div className="bg-gray-50 border border-gray-200 rounded-lg px-3 py-2">
-        {(["adults","children","infants"] as const).map(k=><div key={k} className="flex items-center justify-between py-1"><span className="text-sm text-gray-700 capitalize">{k}</span><div className="flex items-center gap-2"><button type="button" onClick={()=>update(k,-1)} className="w-6 h-6 rounded-full bg-gray-200 text-gray-600 text-sm font-bold hover:bg-gray-300 flex items-center justify-center">−</button><span className="w-6 text-center text-gray-900 font-semibold">{passengers[k]}</span><button type="button" onClick={()=>update(k,1)} className="w-6 h-6 rounded-full bg-gray-200 text-gray-600 text-sm font-bold hover:bg-gray-300 flex items-center justify-center">+</button></div></div>)}
-      </div>
+      <button type="button" onClick={() => setIsOpen(!isOpen)}
+        className="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 text-left text-gray-900 outline-none focus:border-[#D4AF37] transition-all duration-200 flex items-center justify-between">
+        <span className="text-sm">{summary}</span>
+        <svg className={`w-4 h-4 text-gray-400 transition-transform ${isOpen ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+      </button>
+      {isOpen && (
+        <div className="absolute top-full left-0 right-0 z-50 bg-white border border-gray-200 rounded-lg shadow-xl mt-1 p-3">
+          {(["adults","children","infants"] as const).map(k=><div key={k} className="flex items-center justify-between py-1.5"><span className="text-sm text-gray-700 capitalize">{k}</span><div className="flex items-center gap-2"><button type="button" onClick={()=>update(k,-1)} className={`w-7 h-7 rounded-full flex items-center justify-center text-sm font-bold transition-colors ${passengers[k] <= (k==="adults"?1:0) ? 'bg-gray-100 text-gray-300 cursor-not-allowed' : 'bg-gray-200 text-gray-600 hover:bg-gray-300'}`} disabled={passengers[k] <= (k==="adults"?1:0)}>−</button><span className="w-6 text-center text-gray-900 font-semibold text-sm">{passengers[k]}</span><button type="button" onClick={()=>update(k,1)} className="w-7 h-7 rounded-full bg-gray-200 text-gray-600 text-sm font-bold hover:bg-gray-300 flex items-center justify-center transition-colors">+</button></div></div>)}
+          <button type="button" onClick={() => setIsOpen(false)} className="w-full mt-2 py-1.5 rounded-lg bg-[#D4AF37] text-white text-xs font-semibold hover:bg-[#C5A028] transition-colors">Done</button>
+        </div>
+      )}
     </div>
   );
 }
