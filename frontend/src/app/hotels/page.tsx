@@ -73,12 +73,12 @@ export default function HotelsPage() {
     } catch (err) {
       console.error('Failed to fetch hotels:', err);
       const fallbackHotels: Hotel[] = [
-        { _id: 'fh1', slug: 'fbh1', name: 'Sule Shangri-La Yangon', location: 'Yangon', rating: 4.7, pricePerNightMMK: 180000, pricePerNightUSD: 86, images: ['https://picsum.photos/seed/a9hotel1/600/400'], amenities: ['Restaurant', 'Bar', 'Butler Service', 'Spa', 'Pool'], availableRooms: 20, description: '', reviewCount: 320 },
-        { _id: 'fh2', slug: 'fbh2', name: 'The Strand Yangon', location: 'Yangon', rating: 4.9, pricePerNightMMK: 350000, pricePerNightUSD: 167, images: ['https://picsum.photos/seed/a9hotel2/600/400'], amenities: ['Restaurant', 'Bar', 'Butler Service', 'Spa', 'Fitness Center'], availableRooms: 8, description: '', reviewCount: 412 },
-        { _id: 'fh3', slug: 'fbh3', name: 'Aureum Palace Bagan', location: 'Bagan', rating: 4.8, pricePerNightMMK: 220000, pricePerNightUSD: 105, images: ['https://picsum.photos/seed/a9hotel3/600/400'], amenities: ['Restaurant', 'Bar', 'Butler Service', 'Spa', 'Garden'], availableRooms: 30, description: '', reviewCount: 225 },
-        { _id: 'fh4', slug: 'fbh4', name: 'Inle Princess Resort', location: 'Inle Lake', rating: 4.6, pricePerNightMMK: 160000, pricePerNightUSD: 76, images: ['https://picsum.photos/seed/a9hotel4/600/400'], amenities: ['Restaurant', 'Bar', 'Butler Service', 'Spa', 'Lake View'], availableRooms: 25, description: '', reviewCount: 178 },
-        { _id: 'fh5', slug: 'fbh5', name: 'Ngapali Bay Hotel', location: 'Ngapali Beach', rating: 4.7, pricePerNightMMK: 250000, pricePerNightUSD: 119, images: ['https://picsum.photos/seed/a9hotel5/600/400'], amenities: ['Restaurant', 'Bar', 'Butler Service', 'Spa', 'Beach Access'], availableRooms: 40, description: '', reviewCount: 168 },
-        { _id: 'fh6', slug: 'fbh6', name: 'Mandalay Hill Resort', location: 'Mandalay', rating: 4.3, pricePerNightMMK: 120000, pricePerNightUSD: 57, images: ['https://picsum.photos/seed/a9hotel6/600/400'], amenities: ['Restaurant', 'Bar', 'Butler Service', 'Spa', 'Hill View'], availableRooms: 55, description: '', reviewCount: 190 },
+        { _id: 'fh1', slug: 'fbh1', name: 'Sule Shangri-La Yangon', location: 'Yangon', rating: 4.7, pricePerNightMMK: 180000, pricePerNightUSD: 86, images: ['/images_v2/hotel1-v3.jpg'], amenities: ['Restaurant', 'Bar', 'Butler Service', 'Spa', 'Pool'], availableRooms: 20, description: '', reviewCount: 320 },
+        { _id: 'fh2', slug: 'fbh2', name: 'The Strand Yangon', location: 'Yangon', rating: 4.9, pricePerNightMMK: 350000, pricePerNightUSD: 167, images: ['/images_v2/hotel2-v3.jpg'], amenities: ['Restaurant', 'Bar', 'Butler Service', 'Spa', 'Fitness Center'], availableRooms: 8, description: '', reviewCount: 412 },
+        { _id: 'fh3', slug: 'fbh3', name: 'Aureum Palace Bagan', location: 'Bagan', rating: 4.8, pricePerNightMMK: 220000, pricePerNightUSD: 105, images: ['/images_v2/hotel3-v3.jpg'], amenities: ['Restaurant', 'Bar', 'Butler Service', 'Spa', 'Garden'], availableRooms: 30, description: '', reviewCount: 225 },
+        { _id: 'fh4', slug: 'fbh4', name: 'Inle Princess Resort', location: 'Inle Lake', rating: 4.6, pricePerNightMMK: 160000, pricePerNightUSD: 76, images: ['/images_v2/hotel4-v3.jpg'], amenities: ['Restaurant', 'Bar', 'Butler Service', 'Spa', 'Lake View'], availableRooms: 25, description: '', reviewCount: 178 },
+        { _id: 'fh5', slug: 'fbh5', name: 'Ngapali Bay Hotel', location: 'Ngapali Beach', rating: 4.7, pricePerNightMMK: 250000, pricePerNightUSD: 119, images: ['/images_v2/hotel5-v3.jpg'], amenities: ['Restaurant', 'Bar', 'Butler Service', 'Spa', 'Beach Access'], availableRooms: 40, description: '', reviewCount: 168 },
+        { _id: 'fh6', slug: 'fbh6', name: 'Mandalay Hill Resort', location: 'Mandalay', rating: 4.3, pricePerNightMMK: 120000, pricePerNightUSD: 57, images: ['/images_v2/hotel3-v3.jpg'], amenities: ['Restaurant', 'Bar', 'Butler Service', 'Spa', 'Hill View'], availableRooms: 55, description: '', reviewCount: 190 },
       ];
       setHotels(fallbackHotels);
       setTotal(fallbackHotels.length);
@@ -166,16 +166,16 @@ export default function HotelsPage() {
         </div>
         <ScrollingRow>
           {[
-            { name: 'Sule Shangri-La', location: 'Yangon', rating: 4.7, priceMMK: 180000, priceUSD: 86, image: 'https://picsum.photos/seed/a9hotel-scroll1/600/400' },
-            { name: 'The Strand Yangon', location: 'Yangon', rating: 4.9, priceMMK: 350000, priceUSD: 167, image: 'https://picsum.photos/seed/a9hotel-scroll2/600/400' },
-            { name: 'Aureum Palace Bagan', location: 'Bagan', rating: 4.8, priceMMK: 220000, priceUSD: 105, image: 'https://picsum.photos/seed/a9hotel-scroll3/600/400' },
-            { name: 'Inle Princess Resort', location: 'Inle Lake', rating: 4.6, priceMMK: 160000, priceUSD: 76, image: 'https://picsum.photos/seed/a9hotel-scroll4/600/400' },
-            { name: 'Ngapali Bay Hotel', location: 'Ngapali Beach', rating: 4.7, priceMMK: 250000, priceUSD: 119, image: 'https://picsum.photos/seed/a9hotel-scroll5/600/400' },
-            { name: 'Mandalay Hill Resort', location: 'Mandalay', rating: 4.3, priceMMK: 120000, priceUSD: 57, image: 'https://picsum.photos/seed/a9hotel-scroll6/600/400' },
-            { name: 'Kempinski Nay Pyi Taw', location: 'Nay Pyi Taw', rating: 4.8, priceMMK: 300000, priceUSD: 143, image: 'https://picsum.photos/seed/a9hotel-scroll7/600/400' },
-            { name: 'Sedona Hotel Yangon', location: 'Yangon', rating: 4.5, priceMMK: 155000, priceUSD: 74, image: 'https://picsum.photos/seed/a9hotel-scroll8/600/400' },
-            { name: 'Bagan Lodge', location: 'Bagan', rating: 4.6, priceMMK: 190000, priceUSD: 90, image: 'https://picsum.photos/seed/a9hotel-scroll9/600/400' },
-            { name: 'Novotel Inle Lake', location: 'Inle Lake', rating: 4.4, priceMMK: 140000, priceUSD: 67, image: 'https://picsum.photos/seed/a9hotel-scroll10/600/400' },
+            { name: 'Sule Shangri-La', location: 'Yangon', rating: 4.7, priceMMK: 180000, priceUSD: 86, image: '/images_v2/hotel1-v3.jpg' },
+            { name: 'The Strand Yangon', location: 'Yangon', rating: 4.9, priceMMK: 350000, priceUSD: 167, image: '/images_v2/hotel2-v3.jpg' },
+            { name: 'Aureum Palace Bagan', location: 'Bagan', rating: 4.8, priceMMK: 220000, priceUSD: 105, image: '/images_v2/hotel3-v3.jpg' },
+            { name: 'Inle Princess Resort', location: 'Inle Lake', rating: 4.6, priceMMK: 160000, priceUSD: 76, image: '/images_v2/hotel4-v3.jpg' },
+            { name: 'Ngapali Bay Hotel', location: 'Ngapali Beach', rating: 4.7, priceMMK: 250000, priceUSD: 119, image: '/images_v2/hotel5-v3.jpg' },
+            { name: 'Mandalay Hill Resort', location: 'Mandalay', rating: 4.3, priceMMK: 120000, priceUSD: 57, image: '/images_v2/hotel1-v3.jpg' },
+            { name: 'Kempinski Nay Pyi Taw', location: 'Nay Pyi Taw', rating: 4.8, priceMMK: 300000, priceUSD: 143, image: '/images_v2/hotel2-v3.jpg' },
+            { name: 'Sedona Hotel Yangon', location: 'Yangon', rating: 4.5, priceMMK: 155000, priceUSD: 74, image: '/images_v2/hotel3-v3.jpg' },
+            { name: 'Bagan Lodge', location: 'Bagan', rating: 4.6, priceMMK: 190000, priceUSD: 90, image: '/images_v2/hotel4-v3.jpg' },
+            { name: 'Novotel Inle Lake', location: 'Inle Lake', rating: 4.4, priceMMK: 140000, priceUSD: 67, image: '/images_v2/hotel5-v3.jpg' },
           ].map((item, i) => (
             <div key={`hrow1-${i}`} className="w-[300px] flex-shrink-0 snap-start">
               <div className="group relative rounded-2xl overflow-hidden cursor-pointer border border-gray-200 hover:border-[#D4AF37]/60 hover:shadow-xl hover:shadow-[#D4AF37]/10 hover:scale-[1.02] transition-all duration-300">
@@ -224,16 +224,16 @@ export default function HotelsPage() {
         </div>
         <ScrollingRow>
           {[
-            { name: 'Clover Hotel Yangon', location: 'Yangon', rating: 4.1, priceMMK: 45000, priceUSD: 21, image: 'https://picsum.photos/seed/a9hotel-scroll11/600/400' },
-            { name: 'Ostello Bello Bagan', location: 'Bagan', rating: 4.4, priceMMK: 35000, priceUSD: 17, image: 'https://picsum.photos/seed/a9hotel-scroll12/600/400' },
-            { name: 'Royal Inlay Hotel', location: 'Inle Lake', rating: 4.0, priceMMK: 50000, priceUSD: 24, image: 'https://picsum.photos/seed/a9hotel-scroll13/600/400' },
-            { name: 'Silver Oaks Mandalay', location: 'Mandalay', rating: 3.9, priceMMK: 38000, priceUSD: 18, image: 'https://picsum.photos/seed/a9hotel-scroll14/600/400' },
-            { name: 'Beachfront Inn Ngapali', location: 'Ngapali Beach', rating: 4.2, priceMMK: 65000, priceUSD: 31, image: 'https://picsum.photos/seed/a9hotel-scroll15/600/400' },
-            { name: 'Golden Guest House', location: 'Yangon', rating: 4.0, priceMMK: 25000, priceUSD: 12, image: 'https://picsum.photos/seed/a9hotel-scroll16/600/400' },
-            { name: 'Shwe Yee Win Bagan', location: 'Bagan', rating: 4.3, priceMMK: 42000, priceUSD: 20, image: 'https://picsum.photos/seed/a9hotel-scroll17/600/400' },
-            { name: 'Nyaung Shwe Haven', location: 'Inle Lake', rating: 4.1, priceMMK: 48000, priceUSD: 23, image: 'https://picsum.photos/seed/a9hotel-scroll18/600/400' },
-            { name: 'Taunggyi Comfort Inn', location: 'Taunggyi', rating: 3.8, priceMMK: 32000, priceUSD: 15, image: 'https://picsum.photos/seed/a9hotel-scroll19/600/400' },
-            { name: 'Pyay Riverside', location: 'Pyay', rating: 3.7, priceMMK: 28000, priceUSD: 13, image: 'https://picsum.photos/seed/a9hotel-scroll20/600/400' },
+            { name: 'Clover Hotel Yangon', location: 'Yangon', rating: 4.1, priceMMK: 45000, priceUSD: 21, image: '/images_v2/hotel1-v3.jpg' },
+            { name: 'Ostello Bello Bagan', location: 'Bagan', rating: 4.4, priceMMK: 35000, priceUSD: 17, image: '/images_v2/hotel2-v3.jpg' },
+            { name: 'Royal Inlay Hotel', location: 'Inle Lake', rating: 4.0, priceMMK: 50000, priceUSD: 24, image: '/images_v2/hotel3-v3.jpg' },
+            { name: 'Silver Oaks Mandalay', location: 'Mandalay', rating: 3.9, priceMMK: 38000, priceUSD: 18, image: '/images_v2/hotel4-v3.jpg' },
+            { name: 'Beachfront Inn Ngapali', location: 'Ngapali Beach', rating: 4.2, priceMMK: 65000, priceUSD: 31, image: '/images_v2/hotel5-v3.jpg' },
+            { name: 'Golden Guest House', location: 'Yangon', rating: 4.0, priceMMK: 25000, priceUSD: 12, image: '/images_v2/hotel1-v3.jpg' },
+            { name: 'Shwe Yee Win Bagan', location: 'Bagan', rating: 4.3, priceMMK: 42000, priceUSD: 20, image: '/images_v2/hotel2-v3.jpg' },
+            { name: 'Nyaung Shwe Haven', location: 'Inle Lake', rating: 4.1, priceMMK: 48000, priceUSD: 23, image: '/images_v2/hotel3-v3.jpg' },
+            { name: 'Taunggyi Comfort Inn', location: 'Taunggyi', rating: 3.8, priceMMK: 32000, priceUSD: 15, image: '/images_v2/hotel4-v3.jpg' },
+            { name: 'Pyay Riverside', location: 'Pyay', rating: 3.7, priceMMK: 28000, priceUSD: 13, image: '/images_v2/hotel5-v3.jpg' },
           ].map((item, i) => (
             <div key={`hrow2-${i}`} className="w-[300px] flex-shrink-0 snap-start">
               <div className="group relative rounded-2xl overflow-hidden cursor-pointer border border-gray-200 hover:border-[#D4AF37]/60 hover:shadow-xl hover:shadow-[#D4AF37]/10 hover:scale-[1.02] transition-all duration-300">
