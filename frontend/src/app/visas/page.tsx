@@ -1,15 +1,9 @@
 'use client';
 
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { api } from '@/lib/api';
 import BookingModal from '@/components/BookingModal';
-
-const CARD_WIDTH = 220;
-const CARD_GAP = 16;
-const STEP = CARD_WIDTH + CARD_GAP;
-const AUTOPLAY_MS = 3000;
 
 interface VisaService {
   _id: string;
@@ -31,7 +25,6 @@ const COUNTRY_FLAGS: Record<string, string> = {
   Brunei: '🇧🇳', Myanmar: '🇲🇲',
 };
 
-// LOCAL images — no external picsum dependency
 const COUNTRY_IMAGES: Record<string, string> = {
   Thailand: '/images_v2/visa1-v3.jpg',  Singapore: '/images_v2/visa2-v3.jpg',
   Malaysia: '/images_v2/visa3-v3.jpg',  China: '/images_v2/visa4-v3.jpg',
@@ -73,64 +66,48 @@ const FALLBACK_VISAS: VisaService[] = [
   { _id: 'v23', country: 'Myanmar', processingTime: '3-5 Business Days', visaFeeMMK: 90000, visaFeeUSD: 43, requirements: ['Passport (6 months)', '2 Passport Photos', 'Hotel Reservation'] },
 ];
 
-function VisaSliderCard({ visa, currency, onClick }: { visa: VisaService; currency: 'MMK' | 'USD'; onClick: () => void }) {
+function VisaCard({ visa, currency, onClick }: { visa: VisaService; currency: 'MMK' | 'USD'; onClick: () => void }) {
   const flag = COUNTRY_FLAGS[visa.country] || '🌏';
   const imageUrl = COUNTRY_IMAGES[visa.country];
   const fee = currency === 'MMK' ? visa.visaFeeMMK : visa.visaFeeUSD;
   const symbol = currency === 'MMK' ? 'Ks' : '$';
 
   return (
-    <div onClick={onClick} className="w-[220px] h-[280px] rounded-2xl overflow-hidden flex-shrink-0 snap-start group cursor-pointer border border-gray-100 hover:border-gold/40 transition-all duration-300 bg-white shadow-sm flex flex-col">
+    <div onClick={onClick} className="rounded-2xl overflow-hidden group cursor-pointer border border-gray-100 hover:border-gold/40 transition-all duration-300 bg-white shadow-sm hover:shadow-xl hover:-translate-y-1 flex flex-col">
       {imageUrl ? (
-        <div className="relative h-32 overflow-hidden">
+        <div className="relative h-36 overflow-hidden">
           <img src={imageUrl} alt={visa.country} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" loading="lazy" />
           <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
           <div className="absolute bottom-2 left-3 flex items-center gap-2">
             <span className="text-2xl">{flag}</span>
-            <h3 className="text-white font-semibold text-base drop-shadow-md" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>{visa.country}</h3>
+            <h3 className="text-white font-semibold text-lg drop-shadow-md" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>{visa.country}</h3>
           </div>
         </div>
       ) : (
-        <div className="h-32 bg-gradient-to-br from-[#D4AF37]/20 to-[#F5A623]/20 flex items-center justify-center">
+        <div className="h-36 bg-gradient-to-br from-[#D4AF37]/20 to-[#F5A623]/20 flex items-center justify-center">
           <span className="text-5xl">{flag}</span>
         </div>
       )}
-      <div className="p-3 flex flex-col flex-1 justify-between">
+      <div className="p-4 flex flex-col flex-1 justify-between gap-1.5">
         {!imageUrl && (
           <h3 className="text-gray-900 font-semibold text-sm" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>{visa.country}</h3>
         )}
         <p className="text-xs text-gray-500">{visa.processingTime}</p>
-        <div className="mt-1 text-gold font-semibold text-sm">{symbol} {fee.toLocaleString()}</div>
+        <p className="text-xs text-gray-400">{visa.requirements.slice(0, 2).join(' · ')}</p>
+        <div className="mt-auto pt-2">
+          <span className="text-gold font-bold text-base">{symbol} {fee.toLocaleString()}</span>
+        </div>
       </div>
     </div>
   );
 }
 
 export default function VisasPage() {
-  const router = useRouter();
   const [visas, setVisas] = useState<VisaService[]>(FALLBACK_VISAS);
   const [currency, setCurrency] = useState<'MMK' | 'USD'>('MMK');
-  const [scrollPos, setScrollPos] = useState(0);
-  const [maxScroll, setMaxScroll] = useState(0);
   const [selectedVisa, setSelectedVisa] = useState<VisaService | null>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => { api.get('/visas').then(r => { if (r.data?.data) setVisas(r.data.data); }).catch(() => {}); }, []);
-  useEffect(() => {
-    const el = containerRef.current;
-    if (!el) return;
-    const update = () => { setScrollPos(el.scrollLeft); setMaxScroll(el.scrollWidth - el.clientWidth); };
-    el.addEventListener('scroll', update, { passive: true });
-    update();
-    window.addEventListener('resize', update);
-    return () => { el.removeEventListener('scroll', update); window.removeEventListener('resize', update); };
-  }, [visas]);
-
-  const scroll = (dir: 1 | -1) => { containerRef.current?.scrollBy({ left: STEP * dir, behavior: 'smooth' }); };
-  useEffect(() => { const id = setInterval(() => { if (document.visibilityState === 'visible') scroll(1); }, AUTOPLAY_MS); return () => clearInterval(id); }, []);
-
-  const canScrollLeft = scrollPos > 4;
-  const canScrollRight = scrollPos < maxScroll - 4;
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -148,14 +125,10 @@ export default function VisasPage() {
         </div>
       </section>
 
-      {/* Slider */}
-      <section className="max-w-7xl mx-auto px-4 -mt-16 relative z-10 pb-12">
-        <div className="relative">
-          {canScrollLeft && <button onClick={() => scroll(-1)} className="absolute left-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full bg-white shadow-lg border border-gray-200 flex items-center justify-center hover:shadow-xl transition-shadow"><ChevronLeft className="w-5 h-5 text-gray-700" /></button>}
-          {canScrollRight && <button onClick={() => scroll(1)} className="absolute right-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full bg-white shadow-lg border border-gray-200 flex items-center justify-center hover:shadow-xl transition-shadow"><ChevronRight className="w-5 h-5 text-gray-700" /></button>}
-          <div ref={containerRef} className="flex gap-4 overflow-x-auto scrollbar-hide scroll-smooth pb-2" style={{ scrollSnapType: 'x mandatory' }}>
-            {visas.map(v => <VisaSliderCard key={v._id} visa={v} currency={currency} onClick={() => setSelectedVisa(v)} />)}
-          </div>
+      {/* 2-Row Grid */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 -mt-16 relative z-10 pb-12">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 sm:gap-4">
+          {visas.map(v => <VisaCard key={v._id} visa={v} currency={currency} onClick={() => setSelectedVisa(v)} />)}
         </div>
       </section>
 
