@@ -67,12 +67,12 @@ const SEEDS: Record<string, any[]> = {
     { id: "v23", country: "Australia",     visaType: "Student",       feeMMK: 320000, feeUSD: 152, processingTime: "15-20 days",notes: "COE required" },
   ],
   insurances: [
-    { id: "i1", title: "Basic Travel Shield",     coverage: "Medical + Trip Delay", priceMMK: 15000,  priceUSD: 7,   duration: "Per trip" },
-    { id: "i2", title: "Standard Travel Guard",   coverage: "Medical + Baggage",    priceMMK: 25000,  priceUSD: 12,  duration: "Per trip" },
-    { id: "i3", title: "Premium Travel Protect",  coverage: "Medical + Cancellation",priceMMK:45000,  priceUSD: 21,  duration: "Annual" },
-    { id: "i4", title: "Family Travel Plan",      coverage: "Family Medical + Trip",priceMMK: 60000,  priceUSD: 29,  duration: "Per trip" },
-    { id: "i5", title: "Business Travel Cover",   coverage: "Business + Medical",   priceMMK: 35000,  priceUSD: 17,  duration: "Per trip" },
-    { id: "i6", title: "Senior Travel Care",      coverage: "Medical + Evacuation",  priceMMK: 50000,  priceUSD: 24,  duration: "Per trip" },
+    { id: "i1", title: "Basic Travel Shield",     coverage: "Medical + Trip Delay", priceMMK: 15000,  priceUSD: 7,   duration: "Per trip", image: "/images_v2/ins1-v3.jpg" },
+    { id: "i2", title: "Standard Travel Guard",   coverage: "Medical + Baggage",    priceMMK: 25000,  priceUSD: 12,  duration: "Per trip", image: "/images_v2/ins2-v3.jpg" },
+    { id: "i3", title: "Premium Travel Protect",  coverage: "Medical + Cancellation",priceMMK:45000,  priceUSD: 21,  duration: "Annual",   image: "/images_v2/ins3-v3.jpg" },
+    { id: "i4", title: "Family Travel Plan",      coverage: "Family Medical + Trip",priceMMK: 60000,  priceUSD: 29,  duration: "Per trip", image: "/images_v2/ins-family-v2.jpg" },
+    { id: "i5", title: "Business Travel Cover",   coverage: "Business + Medical",   priceMMK: 35000,  priceUSD: 17,  duration: "Per trip", image: "/images_v2/ins-health-v2.jpg" },
+    { id: "i6", title: "Senior Travel Care",      coverage: "Medical + Evacuation",  priceMMK: 50000,  priceUSD: 24,  duration: "Per trip", image: "/images_v2/ins-marine-v2.jpg" },
   ],
   blog: [
     { _id: "b1", title: "Top 10 Temples in Bagan",           content: "Discover the most stunning temples in Bagan, from the majestic Ananda to the mysterious Dhammayangyi. This guide covers the top 10 must-visit temples with tips on the best sunrise spots.", image: "/images_v2/blog1-v2.jpg", author: "A9 Global Team", tags: ["Myanmar", "Bagan", "Temples", "Travel Guide"], createdAt: "2025-12-01T00:00:00.000Z" },
@@ -81,12 +81,12 @@ const SEEDS: Record<string, any[]> = {
     { _id: "b4", title: "Myanmar Visa Guide 2026",           content: "Everything you need to know about getting a Myanmar visa in 2026. Requirements, processing times, e-visa tips, and border crossing information.", image: "/images_v2/blog4-v2.jpg", author: "A9 Global Team", tags: ["Myanmar", "Visa", "Guide", "International"], createdAt: "2025-12-15T00:00:00.000Z" },
   ],
   mingalar: [
-    { id: "m1", title: "Fine Dining",          description: "Premium à la carte dining experience",               icon: "🍽️",  price: "Included" },
-    { id: "m2", title: "Open Bar",             description: "Premium spirits, wine & cocktails",                   icon: "🍸",  price: "Included" },
-    { id: "m3", title: "Private Suite",        description: "Spacious lie-flat seating with privacy",              icon: "🛋️",  price: "Included" },
-    { id: "m4", title: "Spa Service",          description: "Pre-flight massage & wellness treatments",             icon: "💆",  price: "From \$50" },
-    { id: "m5", title: "Business Center",      description: "Meeting rooms, printing & high-speed WiFi",            icon: "💼",  price: "Included" },
-    { id: "m6", title: "Personal Concierge",   description: "Dedicated concierge for all your travel needs",       icon: "🤵",  price: "Included" },
+    { id: "m1", title: "Fine Dining",          description: "Premium à la carte dining experience",               icon: "🍽️",  price: "Included", image: "/images_v2/sky1-v3.jpg" },
+    { id: "m2", title: "Open Bar",             description: "Premium spirits, wine & cocktails",                   icon: "🍸",  price: "Included", image: "/images_v2/sky2-v3.jpg" },
+    { id: "m3", title: "Private Suite",        description: "Spacious lie-flat seating with privacy",              icon: "🛋️",  price: "Included", image: "/images_v2/sky3-v3.jpg" },
+    { id: "m4", title: "Spa Service",          description: "Pre-flight massage & wellness treatments",             icon: "💆",  price: "From \$50", image: "/images_v2/sky-vip-v2.jpg" },
+    { id: "m5", title: "Business Center",      description: "Meeting rooms, printing & high-speed WiFi",            icon: "💼",  price: "Included", image: "/images_v2/sky-business-v2.jpg" },
+    { id: "m6", title: "Personal Concierge",   description: "Dedicated concierge for all your travel needs",       icon: "🤵",  price: "Included", image: "/images_v2/sky-main-v2.jpg" },
   ],
 };
 
