@@ -127,8 +127,12 @@ export default function AboutPage() {
       {/* MISSION & VISION */}
       <section className="px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto pb-16 sm:pb-20">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {[{title:missionTitle,text:missionText,svg:<path strokeLinecap="round" strokeLinejoin="round" d="M12 18v-5.25m0 0a6.01 6.01 0 001.5-.189m-1.5.189a6.01 6.01 0 01-1.5-.189m3.75 7.478a12.06 12.06 0 01-4.5 0m3.75 2.383a14.406 14.406 0 01-3 0M14.25 18v-.192c0-.983.658-1.823 1.508-2.316a7.5 7.5 0 10-7.517 0c.85.493 1.509 1.333 1.509 2.316V18"/>},
-           {title:visionTitle,text:visionText,svg:<path strokeLinecap="round" strokeLinejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"/><path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>}].map((item,i)=>
+          {(() => {
+            const items = [
+              { title: missionTitle, text: missionText, svg: (<path strokeLinecap="round" strokeLinejoin="round" d="M12 18v-5.25m0 0a6.01 6.01 0 001.5-.189m-1.5.189a6.01 6.01 0 01-1.5-.189m3.75 7.478a12.06 12.06 0 01-4.5 0m3.75 2.383a14.406 14.406 0 01-3 0M14.25 18v-.192c0-.983.658-1.823 1.508-2.316a7.5 7.5 0 10-7.517 0c.85.493 1.509 1.333 1.509 2.316V18" />) },
+              { title: visionTitle, text: visionText, svg: (<><path strokeLinecap="round" strokeLinejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" /><path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></>) },
+            ];
+            return items.map((item, i) => (
             <div key={i} className="bg-white rounded-2xl border border-gray-200 p-8 sm:p-10 hover:border-[#D4AF37]/40 hover:shadow-lg transition-all duration-300 group">
               <div className="w-16 h-16 mb-5 rounded-2xl bg-[#D4AF37]/10 flex items-center justify-center group-hover:bg-[#D4AF37]/20 transition-colors">
                 <svg className="w-8 h-8 text-[#D4AF37]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>{item.svg}</svg>
@@ -136,7 +140,7 @@ export default function AboutPage() {
               <h3 className="text-2xl font-bold text-[#0A1628] mb-4" style={{fontFamily:"'Playfair Display',serif"}}>{item.title}</h3>
               <p className="text-gray-600 leading-relaxed">{item.text}</p>
             </div>
-          )}
+          ))})()}
         </div>
       </section>
 
