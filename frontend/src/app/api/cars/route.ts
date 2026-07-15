@@ -3,14 +3,28 @@ import { getAll } from "@/lib/persistentStore";
 
 export const dynamic = 'force-dynamic';
 
+const CAR_IMAGES: Record<string, string> = {
+  c1: "/images_v2/car1-v2.jpg", c2: "/images_v2/car2-v2.jpg", c3: "/images_v2/car3-v2.jpg",
+  c4: "/images_v2/car4-v2.jpg", c5: "/images_v2/car5-v2.jpg", c6: "/images_v2/car6-v2.jpg",
+};
+const CAR_FALLBACK = "/images_v2/car1-v2.jpg";
+
+function getImages(c: Record<string, unknown>, id: string): string[] {
+  if (Array.isArray(c.images) && (c.images as string[]).length > 0) return c.images as string[];
+  if (typeof c.images === 'string' && c.images.trim()) return [c.images as string];
+  if (typeof c.image === 'string' && c.image.trim()) return [c.image as string];
+  return [CAR_IMAGES[id] || CAR_FALLBACK];
+}
+
 function transformCar(c: Record<string, unknown>) {
+  const cid = (c.id || c._id) as string;
   const pricingArr = Array.isArray(c.pricing) ? c.pricing as Record<string, unknown>[] : [];
   return {
-    _id: c.id || c._id,
+    _id: cid,
     slug: ((c.carType as string) || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, ''),
     carType: c.carType as string || '',
     capacity: Number(c.capacity) || 4,
-    images: typeof c.images === 'string' ? [c.images] : (Array.isArray(c.images) ? c.images as string[] : []),
+    images: getImages(c, cid),
     features: typeof c.features === 'string' ? (c.features as string).split(',').map(s => s.trim()).filter(Boolean) : (Array.isArray(c.features) ? c.features as string[] : []),
     pricingWithDriver: pricingArr.map((p: Record<string, unknown>) => ({
       duration: (p.duration as string) || 'Full Day',
