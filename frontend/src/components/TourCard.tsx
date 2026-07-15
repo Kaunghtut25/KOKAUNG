@@ -20,7 +20,13 @@ export default function TourCard({ tour, currency = 'MMK' }: TourCardProps) {
   const currencySymbol = currency === 'MMK' ? 'Ks' : '$';
 
   const tourId = (tour._id || (tour as any).id) as string;
-  const svgImage = generateTourSVG(tour.title || 'Tour');
+  const mainImage = getImageFallback(tourId, tour.images);
+  const svgFallback = generateTourSVG(tour.title || 'Tour');
+  const displayImage = imgError
+    ? svgFallback
+    : mainImage.startsWith('/images_v2/')
+      ? `/api/img?file=${mainImage.replace('/images_v2/', '')}`
+      : mainImage;
 
   const renderStars = (rating: number) => {
     return Array.from({ length: 5 }, (_, i) => (
@@ -68,7 +74,7 @@ export default function TourCard({ tour, currency = 'MMK' }: TourCardProps) {
         {/* Image Section */}
         <div className="relative h-[280px] w-full overflow-hidden bg-gray-200">
           <img
-            src={svgImage}
+            src={displayImage}
             alt={tour.title}
             className="w-full h-full object-cover transition-transform duration-700 ease-out"
             style={{ position: 'absolute', inset: 0, transform: isHovered ? 'scale(1.08)' : 'scale(1)' }}
