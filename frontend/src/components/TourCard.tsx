@@ -4,7 +4,6 @@ import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Tour } from '@/lib/api';
 import { getImageFallback } from '@/lib/imageFallback';
-import { generateTourSVG } from '@/lib/svgGenerator';
 
 interface TourCardProps {
   tour: Tour;
@@ -20,13 +19,7 @@ export default function TourCard({ tour, currency = 'MMK' }: TourCardProps) {
   const currencySymbol = currency === 'MMK' ? 'Ks' : '$';
 
   const tourId = (tour._id || (tour as any).id) as string;
-  const mainImage = getImageFallback(tourId, tour.images);
-  const svgFallback = generateTourSVG(tour.title || 'Tour');
-  const displayImage = imgError
-    ? svgFallback
-    : mainImage.startsWith('/images_v2/')
-      ? `/api/img?file=${mainImage.replace('/images_v2/', '')}`
-      : mainImage;
+  const displayImage = getImageFallback(tourId, tour.images);
 
   const renderStars = (rating: number) => {
     return Array.from({ length: 5 }, (_, i) => (
@@ -71,16 +64,25 @@ export default function TourCard({ tour, currency = 'MMK' }: TourCardProps) {
           <div className="absolute top-[1px] right-[1px] w-[7px] h-[7px] bg-[#F5A623] rounded-full shadow-[0_0_4px_rgba(245,166,35,0.6)]" />
         </div>
 
-        {/* Image Section */}
+        {/* Image Section — same pattern as cruises page that works */}
         <div className="relative h-[280px] w-full overflow-hidden bg-gray-200">
-          <img
-            src={displayImage}
-            alt={tour.title}
-            className="w-full h-full object-cover transition-transform duration-700 ease-out"
-            style={{ position: 'absolute', inset: 0, transform: isHovered ? 'scale(1.08)' : 'scale(1)' }}
-            onError={() => setImgError(true)}
-            loading="lazy"
-          />
+          {!imgError ? (
+            <img
+              src={displayImage}
+              alt={tour.title}
+              className="w-full h-full object-cover transition-transform duration-700 ease-out"
+              style={{ position: 'absolute', inset: 0, transform: isHovered ? 'scale(1.08)' : 'scale(1)' }}
+              onError={() => setImgError(true)}
+              loading="eager"
+            />
+          ) : (
+            <div className="absolute inset-0 bg-gradient-to-br from-[#0A1628] to-[#1a2744] flex items-center justify-center">
+              <div className="text-center">
+                <span className="text-3xl mb-2 block">🏛️</span>
+                <span className="text-[#D4AF37] text-sm font-semibold block">{tour.destination}</span>
+              </div>
+            </div>
+          )}
           <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/15 to-transparent" />
           <div className="absolute top-7 left-3 z-20">
             <span className="inline-block px-2.5 py-0.5 rounded-full bg-[#0A1628]/85 text-[#D4AF37] text-[11px] font-semibold backdrop-blur-sm border border-[#D4AF37]/40 shadow-lg shadow-black/30">

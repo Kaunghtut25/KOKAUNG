@@ -4,7 +4,6 @@ import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Car } from '@/lib/api';
 import { getImageFallback } from '@/lib/imageFallback';
-import { generateCarSVG } from '@/lib/svgGenerator';
 
 interface CarCardProps {
   car: Car;
@@ -18,13 +17,7 @@ export default function CarCard({ car, currency = 'MMK' }: CarCardProps) {
 
   const carType = car.carType || (car as any).title || '';
   const carId = (car._id || (car as any).id) as string;
-  const mainImage = getImageFallback(carId, car.images, (car as any).image);
-  const svgFallback = generateCarSVG(carType || 'Car');
-  const displayImage = imgError
-    ? svgFallback
-    : mainImage.startsWith('/images_v2/')
-      ? `/api/img?file=${mainImage.replace('/images_v2/', '')}`
-      : mainImage;
+  const displayImage = getImageFallback(carId, car.images, (car as any).image);
   const cheapestOption = (car.pricingWithDriver && car.pricingWithDriver.length > 0)
     ? car.pricingWithDriver.reduce((prev, curr) =>
         (currency === 'MMK' ? curr.priceMMK < prev.priceMMK : curr.priceUSD < prev.priceUSD) ? curr : prev)
@@ -70,7 +63,7 @@ export default function CarCard({ car, currency = 'MMK' }: CarCardProps) {
 
         {/* Image Section */}
         <div className="relative h-[280px] w-full overflow-hidden bg-gray-200">
-          <img src={displayImage} alt={carType} className="w-full h-full object-cover transition-transform duration-700 ease-out" style={{ position: 'absolute', inset: 0, transform: isHovered ? 'scale(1.08)' : 'scale(1)' }} />
+          <img src={displayImage} alt={carType} className="w-full h-full object-cover transition-transform duration-700 ease-out" style={{ position: 'absolute', inset: 0, transform: isHovered ? 'scale(1.08)' : 'scale(1)' }} onError={() => setImgError(true)} loading="eager" />
           <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/15 to-transparent" />
           {/* Car type badge */}
           <div className="absolute top-7 left-3 z-20">
