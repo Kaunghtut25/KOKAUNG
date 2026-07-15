@@ -3,22 +3,21 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState, useEffect } from 'react';
-import api from '@/lib/api';
+
+const defaultServices = [
+  { label: 'Flights', icon: '✈️', href: '/' },
+  { label: 'Tours', icon: '🏔️', href: '/tours' },
+  { label: 'Hotels', icon: '🏨', href: '/hotels' },
+  { label: 'Cars', icon: '🚗', href: '/cars' },
+  { label: 'Visas', icon: '🛂', href: '/visas' },
+  { label: 'Insurance', icon: '🛡️', href: '/insurance' },
+  { label: 'Cruises', icon: '🚢', href: '/cruises' },
+  { label: 'Sky Lounge', icon: '✨', href: '/mingalar' },
+];
 
 export default function ServiceIcons() {
   const pathname = usePathname();
-  const isHome = pathname === '/';
-  const [visible, setVisible] = useState(false);
-  const [services, setServices] = useState([
-    { label: 'Flights', icon: '✈️', href: '/' },
-    { label: 'Tours', icon: '🏔️', href: '/tours' },
-    { label: 'Hotels', icon: '🏨', href: '/hotels' },
-    { label: 'Cars', icon: '🚗', href: '/cars' },
-    { label: 'Visas', icon: '🛂', href: '/visas' },
-    { label: 'Insurance', icon: '🛡️', href: '/insurance' },
-    { label: 'Cruises', icon: '🚢', href: '/cruises' },
-    { label: 'Sky Lounge', icon: '✨', href: '/mingalar' },
-  ]);
+  const [services, setServices] = useState(defaultServices);
 
   useEffect(() => {
     fetch('/api/admin/site-config').then(r => r.json()).then(d => {
@@ -28,20 +27,7 @@ export default function ServiceIcons() {
     }).catch(() => {});
   }, []);
 
-  useEffect(() => {
-    if (!isHome) return;
-    const onScroll = () => {
-      setVisible(window.scrollY > 120);
-    };
-    window.addEventListener('scroll', onScroll, { passive: true });
-    onScroll();
-    return () => window.removeEventListener('scroll', onScroll);
-  }, [isHome]);
-
-  // Homepage: no extra bar (already in hero + sticky below)
-  if (isHome) return null;
-
-  // All other pages: always-visible sticky bar under navbar
+  // All pages: always-visible sticky bar under navbar
   return (
     <div className="sticky top-20 z-30 w-full bg-white border-b border-gray-200 shadow-sm">
       <div className="max-w-6xl mx-auto flex flex-wrap justify-center gap-1 md:gap-2 py-2 px-2">

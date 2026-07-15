@@ -220,20 +220,6 @@ export default function HomePage() {
 
       </section>
 
-      {/* ========== Sticky Icon Bar — appears under navbar on scroll ========== */}
-      <div className="sticky top-[64px] z-40 bg-white/95 backdrop-blur-md border-b border-gray-200 shadow-sm">
-        <div className="max-w-5xl mx-auto flex flex-wrap justify-center gap-1 md:gap-2 px-2 py-1.5">
-          {services.map((item:any) => (
-            <Link key={item.href} href={item.href}
-              className="flex flex-col items-center py-1 px-2 rounded-lg hover:bg-[#D4AF37]/10 hover:-translate-y-0.5 transition-all duration-200 group cursor-pointer text-center min-w-[48px]"
-            >
-              <span className="text-base md:text-lg group-hover:scale-110 transition-transform">{item.icon}</span>
-              <span className="text-[9px] md:text-[10px] font-semibold text-gray-600 group-hover:text-[#D4AF37] transition-colors mt-0.5">{item.label}</span>
-            </Link>
-          ))}
-        </div>
-      </div>
-
       {/* ========== Search Engine ========== */}
       <div className="relative -mt-16 md:-mt-20 z-30 px-4">
         <div className="max-w-5xl mx-auto">
