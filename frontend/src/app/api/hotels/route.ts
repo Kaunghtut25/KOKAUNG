@@ -4,8 +4,20 @@ import { getAll } from "@/lib/persistentStore";
 export const dynamic = 'force-dynamic';
 
 function transformHotel(h: Record<string, unknown>) {
+  const hid = (h.id || h._id) as string;
+  // Fallback images when Redis cache has empty arrays
+  const fallbackImages: Record<string, string[]> = {
+    h1: ["/images_v2/hotel1-v3.jpg"],
+    h2: ["/images_v2/hotel2-v3.jpg"],
+    h3: ["/images_v2/hotel3-v3.jpg"],
+    h4: ["/images_v2/hotel4-v3.jpg"],
+    h5: ["/images_v2/hotel5-v3.jpg"],
+    h6: ["/images_v2/hotel1-v3.jpg"],
+  };
+  const rawImages = typeof h.images === 'string' ? [h.images] : (Array.isArray(h.images) && h.images.length > 0 ? h.images as string[] : null);
+  const images = rawImages || fallbackImages[hid] || ["/images_v2/hotel1-v3.jpg"];
   return {
-    _id: h.id || h._id,
+    _id: hid,
     slug: ((h.name as string) || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, ''),
     name: h.name as string || '',
     location: h.location as string || '',
@@ -13,7 +25,7 @@ function transformHotel(h: Record<string, unknown>) {
     reviewCount: Number(h.reviewCount) || Math.floor(Math.random() * 30) + 5,
     pricePerNightMMK: Number(h.pricePerNightMMK) || 0,
     pricePerNightUSD: Number(h.pricePerNightUSD) || 0,
-    images: typeof h.images === 'string' ? [h.images] : (Array.isArray(h.images) ? h.images as string[] : []),
+    images,
     amenities: typeof h.amenities === 'string' ? (h.amenities as string).split(',').map(s => s.trim()).filter(Boolean) : (Array.isArray(h.amenities) ? h.amenities as string[] : []),
     availableRooms: Number(h.availableRooms) || 5,
     description: (h.description as string) || '',
