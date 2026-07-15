@@ -83,7 +83,6 @@ export default function Navbar() {
                 </button>
                 <div className="absolute left-1/2 -translate-x-1/2 top-full mt-1 w-52 bg-white rounded-xl border border-gray-200 shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-[60]">
                   <Link href="/book-now" className="block px-4 py-3 text-sm font-semibold text-gray-700 hover:bg-gray-50 hover:text-[#D4AF37] rounded-t-xl transition-colors">📋 Book Now</Link>
-                  <Link href="/mingalar" className="block px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 hover:text-[#D4AF37] border-t border-gray-100 transition-colors">📍 Sky Lounge</Link>
                   <Link href="/contact" className="block px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 hover:text-[#D4AF37] rounded-b-xl border-t border-gray-100 transition-colors">📞 Contact Us</Link>
                 </div>
               </div>
