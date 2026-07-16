@@ -38,7 +38,11 @@ export default function AdminVisasPage() {
   const [saving, setSaving] = useState(false);
   const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
 
-  const token = typeof window !== "undefined" ? localStorage.getItem("admin_token") : "";
+  const [token, setToken] = useState("");
+
+  useEffect(() => {
+    setToken(localStorage.getItem("admin_token") || "");
+  }, []);
 
   const fetchVisas = useCallback(async () => {
     try {
@@ -295,7 +299,7 @@ export default function AdminVisasPage() {
                     <td className="p-4 text-white/70">{visa.processingTime}</td>
                     <td className="p-4 text-white">{formatNumber(visa.visaFeeMMK)} Ks</td>
                     <td className="p-4">
-                      <span className={getStatusBadge(visa.status)}>{visa.status.charAt(0).toUpperCase() + visa.status.slice(1)}</span>
+                      <span className={getStatusBadge(visa.status)}>{(visa.status || "active").charAt(0).toUpperCase() + (visa.status || "active").slice(1)}</span>
                     </td>
                     <td className="p-4">
                       <div className="flex items-center gap-2">

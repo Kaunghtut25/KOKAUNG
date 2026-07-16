@@ -229,13 +229,14 @@ export default function AdminToursPage() {
     new Intl.NumberFormat("en-MM").format(n);
 
   const getStatusBadge = (status: string) => {
+    const s = status || "active";
     const map: Record<string, string> = {
       active: "bg-green-600 text-white font-medium border border-green-400",
       inactive: "bg-red-600 text-white font-medium border border-red-400",
       featured: "bg-[#D4AF37] text-[#0A1628] font-bold border border-[#D4AF37]",
     };
     return `px-2 py-0.5 rounded-full text-xs font-medium border ${
-      map[status] || "bg-gray-500/20 text-gray-400 border-gray-500/30"
+      map[s] || "bg-gray-500/20 text-gray-400 border-gray-500/30"
     }`;
   };
 
@@ -634,7 +635,7 @@ export default function AdminToursPage() {
                       <td className="p-4">
                         <div className="flex items-center gap-1.5">
                           <span className={getStatusBadge(tour.status)}>
-                            {tour.status.charAt(0).toUpperCase() + tour.status.slice(1)}
+                            {(tour.status || "active").charAt(0).toUpperCase() + (tour.status || "active").slice(1)}
                           </span>
                           {tour.featured && (
                             <span className="text-xs" title="Featured">⭐</span>

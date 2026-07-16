@@ -40,7 +40,11 @@ export default function AdminInsurancePage() {
   const [saving, setSaving] = useState(false);
   const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
 
-  const token = typeof window !== "undefined" ? localStorage.getItem("admin_token") : "";
+  const [token, setToken] = useState("");
+
+  useEffect(() => {
+    setToken(localStorage.getItem("admin_token") || "");
+  }, []);
 
   const fetchInsurances = useCallback(async () => {
     try {
@@ -306,7 +310,7 @@ export default function AdminInsurancePage() {
                     </td>
                     <td className="p-4">
                       <span className={getStatusBadge(insurance.status)}>
-                        {insurance.status.charAt(0).toUpperCase() + insurance.status.slice(1)}
+                        {(insurance.status || "active").charAt(0).toUpperCase() + (insurance.status || "active").slice(1)}
                       </span>
                     </td>
                     <td className="p-4">

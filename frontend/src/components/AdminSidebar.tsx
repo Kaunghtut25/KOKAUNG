@@ -11,7 +11,8 @@ interface NavItem {
 }
 
 const navItems: NavItem[] = [
-  { label: "Dashboard", icon: "📊", path: "/admin/dashboard" },{ label: "Site Manager", icon: "⚙️", path: "/admin/site-manager" },
+  { label: "Dashboard", icon: "📊", path: "/admin/dashboard" },
+  { label: "Site Manager", icon: "⚙️", path: "/admin/site-manager" },
   { label: "Manage Flights", icon: "✈️", path: "/admin/bookings" },
   { label: "Manage Tours", icon: "🏔️", path: "/admin/tours" },
   { label: "Manage Hotels", icon: "🏨", path: "/admin/hotels" },
@@ -20,7 +21,6 @@ const navItems: NavItem[] = [
   { label: "Manage Insurance", icon: "🛡️", path: "/admin/insurance" },
   { label: "Manage Cruises", icon: "🚢", path: "/admin/cruises" },
   { label: "Manage Blog", icon: "📝", path: "/admin/blog" },
-  { label: "Bookings", icon: "📋", path: "/admin/bookings" },
   { label: "Sky Lounge", icon: "✨", path: "/admin/sky-lounge" },
   { label: "Site Settings", icon: "⚙️", path: "/admin/settings" },
 ];

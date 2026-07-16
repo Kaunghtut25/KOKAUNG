@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getAll, create, updateById, deleteById } from "@/lib/persistentStore";
+import { getAll, updateById, deleteById } from "@/lib/persistentStore";
 
 export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
   try {
-    const items = getAll('cruises') as any[];
+    const items = await getAll('cruises');
     const item = items.find((i: any) => i._id === params.id || i.id === params.id);
     if (!item) return NextResponse.json({ success: false, message: "Not found" }, { status: 404 });
     return NextResponse.json({ success: true, data: item });
@@ -15,8 +15,9 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
 export async function PUT(req: NextRequest, { params }: { params: { id: string } }) {
   try {
     const body = await req.json();
-    updateById('cruises', params.id, body);
-    return NextResponse.json({ success: true });
+    const updated = await updateById('cruises', params.id, body);
+    if (!updated) return NextResponse.json({ success: false, message: "Not found" }, { status: 404 });
+    return NextResponse.json({ success: true, data: updated });
   } catch (err: any) {
     return NextResponse.json({ success: false, message: err.message }, { status: 500 });
   }
@@ -24,8 +25,9 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
 
 export async function DELETE(req: NextRequest, { params }: { params: { id: string } }) {
   try {
-    deleteById('cruises', params.id);
-    return NextResponse.json({ success: true });
+    const deleted = await deleteById('cruises', params.id);
+    if (!deleted) return NextResponse.json({ success: false, message: "Not found" }, { status: 404 });
+    return NextResponse.json({ success: true, message: "Deleted successfully" });
   } catch (err: any) {
     return NextResponse.json({ success: false, message: err.message }, { status: 500 });
   }

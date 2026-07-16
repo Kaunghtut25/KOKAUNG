@@ -1,9 +1,5 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  env: {
-    AMADEUS_API_KEY: process.env.AMADEUS_API_KEY,
-    AMADEUS_API_SECRET: process.env.AMADEUS_API_SECRET,
-  },
   typescript: { ignoreBuildErrors: true },
   eslint: { ignoreDuringBuilds: true },
   images: {

@@ -50,8 +50,11 @@ export default function AdminCarsPage() {
   const [imageUrlInput, setImageUrlInput] = useState("");
   const [imagePreviewUrl, setImagePreviewUrl] = useState("");
 
-  const token =
-    typeof window !== "undefined" ? localStorage.getItem("admin_token") : "";
+  const [token, setToken] = useState("");
+
+  useEffect(() => {
+    setToken(localStorage.getItem("admin_token") || "");
+  }, []);
 
   const fetchCars = useCallback(async () => {
     try {
@@ -73,19 +76,20 @@ export default function AdminCarsPage() {
     fetchCars();
   }, [fetchCars]);
 
-  const getFirstImage = (imagesStr: string): string => {
+  const getFirstImage = (imagesStr: any): string => {
     if (!imagesStr) return "";
+    // If it's already an array, return first element
+    if (Array.isArray(imagesStr)) return imagesStr[0] || "";
+    // If it's a string, try parsing as JSON first
     try {
       const parsed = JSON.parse(imagesStr);
       if (Array.isArray(parsed) && parsed.length > 0) return parsed[0];
-    } catch {
+    } catch { /* not JSON */ }
+    // Fallback: split by comma
+    if (typeof imagesStr === "string") {
       const parts = imagesStr.split(",");
       const first = parts[0]?.trim();
-      if (
-        first &&
-        (first.startsWith("http") || first.startsWith("/"))
-      )
-        return first;
+      if (first && (first.startsWith("http") || first.startsWith("/"))) return first;
     }
     return "";
   };
@@ -582,7 +586,7 @@ export default function AdminCarsPage() {
                       </td>
                       <td className="p-4">
                         <span className={getStatusBadge(car.status)}>
-                          {car.status.charAt(0).toUpperCase() + car.status.slice(1)}
+                          {(car.status || "active").charAt(0).toUpperCase() + (car.status || "active").slice(1)}
                         </span>
                       </td>
                       <td className="p-4">

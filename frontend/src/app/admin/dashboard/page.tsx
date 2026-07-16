@@ -73,7 +73,20 @@ export default function AdminDashboardPage() {
 
       if (statsRes.ok) {
         const statsData = await statsRes.json();
-        setStats(statsData);
+        // Map API field names to dashboard interface
+        setStats({
+          totalTours: statsData.totalTours ?? statsData.tours ?? 0,
+          totalHotels: statsData.totalHotels ?? statsData.hotels ?? 0,
+          totalCars: statsData.totalCars ?? statsData.cars ?? 0,
+          totalVisas: statsData.totalVisas ?? statsData.visas ?? 0,
+          totalInsurances: statsData.totalInsurances ?? statsData.insurances ?? 0,
+          totalCruises: statsData.totalCruises ?? statsData.cruises ?? 0,
+          totalBlogPosts: statsData.totalBlogPosts ?? statsData.blog ?? 0,
+          totalBookings: statsData.totalBookings ?? statsData.bookings ?? 0,
+          totalInquiries: statsData.totalInquiries ?? statsData.inquiries ?? 0,
+          revenueMMK: statsData.revenueMMK ?? 0,
+          pendingPayments: statsData.pendingPayments ?? 0,
+        });
       }
 
       if (bookingsRes.ok) {
