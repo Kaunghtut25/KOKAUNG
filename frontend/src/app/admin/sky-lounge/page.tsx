@@ -10,7 +10,7 @@ interface LoungeItem {
   img: string;
   icon: string;
   title: string;
-  desc: string;
+  description: string;
 }
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || "/api";
@@ -19,7 +19,7 @@ export default function AdminMingalarPage() {
   const [items, setItems] = useState<LoungeItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [editing, setEditing] = useState<LoungeItem | null>(null);
-  const [form, setForm] = useState<LoungeItem>({ img: "", icon: "✨", title: "", desc: "" });
+  const [form, setForm] = useState<LoungeItem>({ img: "", icon: "✨", title: "", description: "" });
   const [saving, setSaving] = useState(false);
 
   const getToken = () => {
@@ -31,12 +31,12 @@ export default function AdminMingalarPage() {
 
   const seedDefaults = async (token: string) => {
     const defaults = [
-      { img: "/images_v2/unsplash-22-v2.jpg", icon: "🍽️", title: "Fine Dining", desc: "Premium buffet & a la carte menu" },
-      { img: "/images_v2/unsplash-3-v2.jpg", icon: "🍸", title: "Open Bar", desc: "Complimentary drinks & cocktails" },
-      { img: "/images_v2/unsplash-6-v2.jpg", icon: "💻", title: "Workspace", desc: "High-speed WiFi & work stations" },
-      { img: "/images_v2/unsplash-37-v2.jpg", icon: "🚿", title: "Shower Suites", desc: "Refresh before your flight" },
-      { img: "/images_v2/unsplash-41-v2.jpg", icon: "😴", title: "Nap Pods", desc: "Rest in private sleeping pods" },
-      { img: "/images_v2/unsplash-33-v2.jpg", icon: "🛎️", title: "Concierge", desc: "Priority check-in & boarding" },
+      { img: "/images_v2/unsplash-22-v2.jpg", icon: "🍽️", title: "Fine Dining", description: "Premium buffet & a la carte menu" },
+      { img: "/images_v2/unsplash-3-v2.jpg", icon: "🍸", title: "Open Bar", description: "Complimentary drinks & cocktails" },
+      { img: "/images_v2/unsplash-6-v2.jpg", icon: "💻", title: "Workspace", description: "High-speed WiFi & work stations" },
+      { img: "/images_v2/unsplash-37-v2.jpg", icon: "🚿", title: "Shower Suites", description: "Refresh before your flight" },
+      { img: "/images_v2/unsplash-41-v2.jpg", icon: "😴", title: "Nap Pods", description: "Rest in private sleeping pods" },
+      { img: "/images_v2/unsplash-33-v2.jpg", icon: "🛎️", title: "Concierge", description: "Priority check-in & boarding" },
     ];
     for (const d of defaults) {
       try {
@@ -100,7 +100,7 @@ export default function AdminMingalarPage() {
       if (res.ok) {
         toast.success(editing?._id || editing?.id ? "Updated!" : "Created!");
         setEditing(null);
-        setForm({ img: "", icon: "✨", title: "", desc: "" });
+        setForm({ img: "", icon: "✨", title: "", description: "" });
         fetchItems();
       } else {
         toast.error("Save failed");
@@ -164,7 +164,7 @@ export default function AdminMingalarPage() {
           </div>
           <div>
             <label className="block text-gray-400 text-sm mb-1">Description</label>
-            <input value={form.desc} onChange={e => setForm({...form, desc: e.target.value})} className="w-full bg-gray-800 border border-gray-600 rounded-lg px-3 py-2 text-white text-sm" placeholder="Premium buffet & a la carte" />
+            <input value={form.description} onChange={e => setForm({...form, description: e.target.value})} className="w-full bg-gray-800 border border-gray-600 rounded-lg px-3 py-2 text-white text-sm" placeholder="Premium buffet & a la carte" />
           </div>
         </div>
         <div className="flex gap-3">
@@ -172,7 +172,7 @@ export default function AdminMingalarPage() {
             {saving ? "Saving..." : editing ? "Update" : "Add"} Card
           </button>
           {editing && (
-            <button onClick={() => { setEditing(null); setForm({ img: "", icon: "✨", title: "", desc: "" }); }} className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-500 transition-colors">
+            <button onClick={() => { setEditing(null); setForm({ img: "", icon: "✨", title: "", description: "" }); }} className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-500 transition-colors">
               Cancel
             </button>
           )}
@@ -193,7 +193,7 @@ export default function AdminMingalarPage() {
                 <h3 className="text-white font-semibold flex items-center gap-2">
                   <span>{item.icon}</span> {item.title}
                 </h3>
-                <p className="text-gray-400 text-sm mt-1">{item.desc}</p>
+                <p className="text-gray-400 text-sm mt-1">{item.description}</p>
                 <div className="flex gap-2 mt-3">
                   <button onClick={() => handleEdit(item)} className="text-xs px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-500">Edit</button>
                   <button onClick={() => handleDelete(item)} className="text-xs px-3 py-1 bg-red-600 text-white rounded hover:bg-red-500">Delete</button>
