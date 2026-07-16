@@ -1,0 +1,26 @@
+<!DOCTYPE html><html><head><title>A9 Image Diagnostic</title>
+<style>body{font-family:Arial;padding:20px;background:#111;color:#fff}.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:10px}.card{background:#222;border-radius:8px;overflow:hidden}.card img{width:100%;height:180px;object-fit:cover;display:block}.label{padding:8px;font-size:12px;text-align:center;color:#D4AF37}.ok{border:2px solid green}.fail{border:2px solid red;background:#400}</style></head><body>
+<h1>A9 Image Diagnostic</h1><div class="grid" id="grid"></div>
+<script>
+const BASE='https://frontend-6qlx18gun-a9-global.vercel.app';
+const imgs=[
+'hotel1-v3.jpg','hotel2-v3.jpg','hotel3-v3.jpg','hotel4-v3.jpg','hotel5-v3.jpg',
+'car1-v2.jpg','car2-v2.jpg','car3-v2.jpg','car4-v2.jpg','car5-v2.jpg','car6-v2.jpg',
+'visa1-v3.jpg','visa2-v3.jpg','visa3-v3.jpg','visa4-v3.jpg','visa5-v3.jpg','visa6-v3.jpg',
+'ins1-v3.jpg','ins2-v3.jpg','ins3-v3.jpg','ins4-v3.jpg',
+'sky1-v3.jpg','sky2-v3.jpg','sky3-v3.jpg',
+'hero-hotels-v2.jpg','hero-mingalar-v2.jpg','hero-cars-v2.jpg',
+'bagan-v2.jpg','yangon-v2.jpg','inle-v2.jpg','ngapali-v2.jpg','mandalay-v2.jpg','myanmar-v2.jpg',
+'unsplash-2-v2.jpg','unsplash-3-v2.jpg','iata-logo-real.png','umta-logo-real.png'
+];
+imgs.forEach(f=>{
+const d=document.createElement('div');d.className='card';
+const i=document.createElement('img');i.src=BASE+'/images_v2/'+f;
+i.onload=()=>d.classList.add('ok');
+i.onerror=()=>{d.classList.add('fail');d.querySelector('.label').textContent+=' FAILED';};
+d.appendChild(i);
+const l=document.createElement('div');l.className='label';l.textContent=f;
+d.appendChild(l);
+document.getElementById('grid').appendChild(d);
+});
+</script></body></html>

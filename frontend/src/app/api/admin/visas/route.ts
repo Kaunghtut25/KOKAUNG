@@ -5,13 +5,12 @@ export const dynamic = 'force-dynamic';
 
 export async function GET() {
   try {
-    const visas = await await getAll("visas");
+    const visas = await getAll("visas");
     return NextResponse.json(visas);
   } catch (err: any) {
     return NextResponse.json({ message: err.message || "Server error" }, { status: 500 });
   }
 }
-
 
 export async function PUT(request: NextRequest) {
   try {
@@ -25,6 +24,7 @@ export async function PUT(request: NextRequest) {
     return NextResponse.json({ message: err.message || "Server error" }, { status: 500 });
   }
 }
+
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();

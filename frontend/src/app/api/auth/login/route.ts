@@ -1,57 +1,48 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { seed, getAll, create } from '@/lib/adminStore';
+import { NextRequest, NextResponse } from "next/server";
 
-// Admin credentials (hardcoded — use proper auth + env vars in production)
-const ADMIN_EMAIL = 'admin@a9global.com';
-const ADMIN_PASSWORD = (process.env.ADMIN_PASSWORD || 'a9admin2026');
+export const runtime = "nodejs";
 
-seed();
+const ADMIN_EMAIL = process.env.ADMIN_EMAIL || "admin@a9global.com";
+const PASS = process.env.ADMIN_PASSWORD || "a9admin2026";
 
 export async function POST(request: NextRequest) {
   try {
-    const { email, password } = await request.json();
+    const text = await request.text();
+    let body: any;
+    try {
+      body = JSON.parse(text);
+    } catch {
+      return NextResponse.json({ message: "Invalid JSON body" }, { status: 400 });
+    }
+
+    const email = body.email;
+    const password = body.password;
 
     if (!email || !password) {
-      return NextResponse.json({ success: false, message: 'Email and password required' }, { status: 400 });
+      return NextResponse.json({ message: "Email and password are required" }, { status: 400 });
     }
 
-    // ── Admin login ──
-    if (email === ADMIN_EMAIL && password === ADMIN_PASSWORD) {
-      let adminUser: any = (getAll('users') as any[]).find((u: any) => u.email === ADMIN_EMAIL);
-      if (!adminUser) {
-        adminUser = create('users', { name: 'Admin', email: ADMIN_EMAIL, role: 'admin' });
-      }
-      const token = Buffer.from(JSON.stringify({ id: adminUser._id, email: adminUser.email, role: 'admin' })).toString('base64');
-      return NextResponse.json({
-        success: true,
-        token,
-        user: { id: adminUser._id, name: adminUser.name, email: adminUser.email, role: 'admin' },
-      });
+    if (email !== ADMIN_EMAIL || password !== PASS) {
+      return NextResponse.json({ message: "Invalid email or password" }, { status: 401 });
     }
 
-    // ── Client login ──
-    const users: any[] = getAll('users');
-    const user = users.find((u: any) => u.email === email);
-    if (!user) {
-      return NextResponse.json({ success: false, message: 'Account not found. Please register first.' }, { status: 401 });
-    }
+    const user = {
+      id: "admin-001",
+      email: ADMIN_EMAIL,
+      name: "A9 Admin",
+      role: "admin",
+    };
 
-    if (user.role !== 'user') {
-      return NextResponse.json({ success: false, message: 'Invalid credentials' }, { status: 401 });
-    }
-
-    // Verify password (plaintext comparison — use bcrypt in production)
-    if (user.password !== password) {
-      return NextResponse.json({ success: false, message: 'Incorrect password' }, { status: 401 });
-    }
-
-    const token = Buffer.from(JSON.stringify({ id: user._id, email: user.email, role: user.role })).toString('base64');
-    return NextResponse.json({
-      success: true,
-      token,
-      user: { id: user._id, name: user.name, email: user.email, role: user.role },
+    // Create token — use Buffer (Node runtime, safe here)
+    const payload = JSON.stringify({
+      ...user,
+      iat: Date.now(),
+      exp: Date.now() + 86400000,
     });
-  } catch (err: any) {
-    return NextResponse.json({ success: false, message: err.message }, { status: 500 });
+    const token = Buffer.from(payload, "utf-8").toString("base64");
+
+    return NextResponse.json({ success: true, token, user });
+  } catch (err) {
+    return NextResponse.json({ message: "Server error" }, { status: 500 });
   }
 }

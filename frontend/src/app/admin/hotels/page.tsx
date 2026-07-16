@@ -71,8 +71,11 @@ export default function AdminHotelsPage() {
   const [uploadError, setUploadError] = useState("");
   const fileInputRef = React.useRef<HTMLInputElement>(null);
 
-  const token =
-    typeof window !== "undefined" ? localStorage.getItem("admin_token") : "";
+  const [token, setToken] = useState("");
+
+  useEffect(() => {
+    setToken(localStorage.getItem("admin_token") || "");
+  }, []);
 
   const fetchHotels = useCallback(async () => {
     try {
@@ -94,19 +97,17 @@ export default function AdminHotelsPage() {
     fetchHotels();
   }, [fetchHotels]);
 
-  const getFirstImage = (imagesStr: string): string => {
+  const getFirstImage = (imagesStr: any): string => {
     if (!imagesStr) return "";
+    if (Array.isArray(imagesStr)) return imagesStr[0] || "";
     try {
       const parsed = JSON.parse(imagesStr);
       if (Array.isArray(parsed) && parsed.length > 0) return parsed[0];
-    } catch {
+    } catch { /* not JSON */ }
+    if (typeof imagesStr === "string") {
       const parts = imagesStr.split(",");
       const first = parts[0]?.trim();
-      if (
-        first &&
-        (first.startsWith("http") || first.startsWith("/"))
-      )
-        return first;
+      if (first && (first.startsWith("http") || first.startsWith("/"))) return first;
     }
     return "";
   };
@@ -257,13 +258,14 @@ export default function AdminHotelsPage() {
     new Intl.NumberFormat("en-MM").format(n);
 
   const getStatusBadge = (status: string) => {
+    const s = status || "active";
     const map: Record<string, string> = {
       active: "bg-green-600 text-white font-medium border border-green-400",
       inactive: "bg-red-600 text-white font-medium border border-red-400",
       featured: "bg-[#D4AF37] text-[#0A1628] font-bold border border-[#D4AF37]",
     };
     return `px-2 py-0.5 rounded-full text-xs font-medium border ${
-      map[status] || "bg-gray-500/20 text-gray-400 border-gray-500/30"
+      map[s] || "bg-gray-500/20 text-gray-400 border-gray-500/30"
     }`;
   };
 
@@ -770,7 +772,7 @@ export default function AdminHotelsPage() {
                           <span
                             className={getStatusBadge(hotel.status)}
                           >
-                            {hotel.status.charAt(0).toUpperCase() + hotel.status.slice(1)}
+                            {(hotel.status || "active").charAt(0).toUpperCase() + (hotel.status || "active").slice(1)}
                           </span>
                           {hotel.featured && (
                             <span className="text-xs" title="Featured">⭐</span>

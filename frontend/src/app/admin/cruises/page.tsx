@@ -52,8 +52,11 @@ export default function AdminCruisesPage() {
   const [imagePreviewUrl, setImagePreviewUrl] = useState("");
   const [imageList, setImageList] = useState<string[]>([]);
 
-  const token =
-    typeof window !== "undefined" ? localStorage.getItem("admin_token") : "";
+  const [token, setToken] = useState("");
+
+  useEffect(() => {
+    setToken(localStorage.getItem("admin_token") || "");
+  }, []);
 
   const fetchCruises = useCallback(async () => {
     try {
@@ -586,7 +589,7 @@ export default function AdminCruisesPage() {
                       <td className="p-4">
                         <div className="flex items-center gap-1.5">
                           <span className={getStatusBadge(cruise.status)}>
-                            {cruise.status.charAt(0).toUpperCase() + cruise.status.slice(1)}
+                            {(cruise.status || "active").charAt(0).toUpperCase() + (cruise.status || "active").slice(1)}
                           </span>
                           {cruise.featured && (
                             <span className="text-xs" title="Featured">⭐</span>

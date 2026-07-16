@@ -3,9 +3,47 @@ import { getAll } from "@/lib/persistentStore";
 
 export const dynamic = 'force-dynamic';
 
+const TOUR_IMAGES: Record<string, string> = {
+  t1: "/images_v2/tour-bagan-v2.jpg", t2: "/images_v2/tour-yangon-v2.jpg",
+  t3: "/images_v2/tour-inle-v2.jpg", t4: "/images_v2/tour-beach-v2.jpg",
+  t5: "/images_v2/tour-mandalay-v2.jpg", t6: "/images_v2/tour-grand-v2.jpg",
+};
+const TOUR_FALLBACK = "/images_v2/hotel1-v3.jpg";
+
+function parseImages(raw: unknown): string[] {
+  // Handle array — could be real array or array containing JSON string
+  if (Array.isArray(raw)) {
+    const out: string[] = [];
+    for (const item of raw) {
+      if (typeof item === 'string' && item.trim().startsWith('[')) {
+        try { const parsed = JSON.parse(item); if (Array.isArray(parsed)) { out.push(...parsed.filter((x: unknown) => typeof x === 'string' && x.trim())); continue; } } catch {}
+      }
+      if (typeof item === 'string' && item.trim()) out.push(item.trim());
+    }
+    return out;
+  }
+  // Handle string — could be JSON array string or single URL
+  if (typeof raw === 'string' && raw.trim()) {
+    const s = raw.trim();
+    if (s.startsWith('[')) {
+      try { const parsed = JSON.parse(s); if (Array.isArray(parsed)) return parsed.filter((x: unknown) => typeof x === 'string' && x.trim()); } catch {}
+    }
+    return [s];
+  }
+  return [];
+}
+
+function getImages(t: Record<string, unknown>, id: string): string[] {
+  const imgs = parseImages(t.images);
+  if (imgs.length > 0) return imgs;
+  if (typeof t.image === 'string' && t.image.trim()) return [t.image as string];
+  return [TOUR_IMAGES[id] || TOUR_FALLBACK];
+}
+
 function transformTour(t: Record<string, unknown>) {
+  const tid = (t.id || t._id) as string;
   return {
-    _id: t.id || t._id,
+    _id: tid,
     slug: ((t.title as string) || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, ''),
     title: t.title as string || '',
     destination: t.destination as string || '',
@@ -17,7 +55,7 @@ function transformTour(t: Record<string, unknown>) {
     groupSize: Number(t.maxGroupSize) || Number(t.capacity) || 10,
     rating: Number(t.rating) || 4.5,
     reviewCount: Number(t.reviewCount) || Math.floor(Math.random() * 50) + 10,
-    images: typeof t.images === 'string' ? [t.images] : (Array.isArray(t.images) ? t.images as string[] : []),
+    images: getImages(t, tid),
     amenities: typeof t.amenities === 'string' ? (t.amenities as string).split(',').map(s => s.trim()).filter(Boolean) : (Array.isArray(t.amenities) ? t.amenities as string[] : []),
     itinerary: [],
     included: typeof t.included === 'string' ? (t.included as string).split(',').map(s => s.trim()).filter(Boolean) : (Array.isArray(t.included) ? t.included as string[] : []),

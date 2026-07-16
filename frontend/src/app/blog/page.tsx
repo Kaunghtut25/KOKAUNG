@@ -19,12 +19,24 @@ export default function BlogPage() {
   const [posts, setPosts] = useState<BlogPost[]>([]);
   const [loading, setLoading] = useState(true);
 
+  // Normalize data from both old and new API formats
+  const normalizePost = (raw: any): BlogPost => ({
+    _id: raw._id || raw.id || '',
+    title: raw.title || '',
+    content: raw.content || raw.excerpt || '',
+    image: raw.image || '',
+    author: raw.author || 'A9 Global Team',
+    tags: Array.isArray(raw.tags) ? raw.tags : (raw.category ? [raw.category] : raw.tags ? [raw.tags] : []),
+    createdAt: raw.createdAt || raw.date || new Date().toISOString(),
+  });
+
   useEffect(() => {
     const fetchPosts = async () => {
       try {
         const res = await api.get<BlogPost[]>('/blog');
-        const data = res.data as unknown as BlogPost[];
-        setPosts(data);
+        const raw = res.data as unknown as any[];
+        const normalized = Array.isArray(raw) ? raw.map(normalizePost) : [];
+        setPosts(normalized);
       } catch {
         // Fallback data
         setPosts([
@@ -38,7 +50,7 @@ export default function BlogPage() {
           {
             _id: '2', title: 'Travel Tips: How to Get the Best Flight Deals',
             content: 'Booking flights can be expensive, but with these insider tips you can save hundreds on your next trip. Learn when to book, which days to fly, and how to use price alerts.',
-            image: '/images_v2/unsplash-1-v2.jpg',
+            image: '/images_v2/unsplash-2-v2.jpg',
             author: 'A9 Global Team', tags: ['Flights', 'Travel Tips', 'Budget'],
             createdAt: new Date(Date.now() - 86400000).toISOString(),
           },

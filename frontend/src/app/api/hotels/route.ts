@@ -3,17 +3,49 @@ import { getAll } from "@/lib/persistentStore";
 
 export const dynamic = 'force-dynamic';
 
+function parseImages(raw: unknown): string[] {
+  if (Array.isArray(raw)) {
+    const out: string[] = [];
+    for (const item of raw) {
+      if (typeof item === 'string' && item.trim().startsWith('[')) {
+        try { const parsed = JSON.parse(item); if (Array.isArray(parsed)) { out.push(...parsed.filter((x: unknown) => typeof x === 'string' && x.trim())); continue; } } catch {}
+      }
+      if (typeof item === 'string' && item.trim()) out.push(item.trim());
+    }
+    return out;
+  }
+  if (typeof raw === 'string' && raw.trim()) {
+    const s = raw.trim();
+    if (s.startsWith('[')) {
+      try { const parsed = JSON.parse(s); if (Array.isArray(parsed)) return parsed.filter((x: unknown) => typeof x === 'string' && x.trim()); } catch {}
+    }
+    return [s];
+  }
+  return [];
+}
+
 function transformHotel(h: Record<string, unknown>) {
+  const hid = (h.id || h._id) as string;
+  const hotelName = (h.name || h.title) as string || '';
+  const loc = (h.location || h.destination) as string || '';
+  const fallbackImages: Record<string, string[]> = {
+    h1: ["/images_v2/hotel1-v3.jpg"], h2: ["/images_v2/hotel2-v3.jpg"],
+    h3: ["/images_v2/hotel3-v3.jpg"], h4: ["/images_v2/hotel4-v3.jpg"],
+    h5: ["/images_v2/hotel5-v3.jpg"], h6: ["/images_v2/hotel5-v3.jpg"],
+  };
+  let images = parseImages(h.images);
+  if (images.length === 0 && typeof h.image === 'string' && (h.image as string).trim()) images = [(h.image as string).trim()];
+  if (images.length === 0) images = fallbackImages[hid] || ["/images_v2/hotel1-v3.jpg"];
   return {
-    _id: h.id || h._id,
-    slug: ((h.name as string) || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, ''),
-    name: h.name as string || '',
-    location: h.location as string || '',
+    _id: hid,
+    slug: hotelName.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, ''),
+    name: hotelName,
+    location: loc,
     rating: Number(h.rating) || 4.0,
     reviewCount: Number(h.reviewCount) || Math.floor(Math.random() * 30) + 5,
-    pricePerNightMMK: Number(h.pricePerNightMMK) || 0,
-    pricePerNightUSD: Number(h.pricePerNightUSD) || 0,
-    images: typeof h.images === 'string' ? [h.images] : (Array.isArray(h.images) ? h.images as string[] : []),
+    pricePerNightMMK: Number(h.pricePerNightMMK || h.priceMMK) || 0,
+    pricePerNightUSD: Number(h.pricePerNightUSD || h.priceUSD) || 0,
+    images,
     amenities: typeof h.amenities === 'string' ? (h.amenities as string).split(',').map(s => s.trim()).filter(Boolean) : (Array.isArray(h.amenities) ? h.amenities as string[] : []),
     availableRooms: Number(h.availableRooms) || 5,
     description: (h.description as string) || '',

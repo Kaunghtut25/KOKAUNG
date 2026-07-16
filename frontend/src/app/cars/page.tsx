@@ -51,7 +51,23 @@ export default function CarsPage() {
     try {
       const response = await api.get<Car[]>('/cars', { limit: 50 });
       const data = response.data as unknown as Car[];
-      setAllCars(Array.isArray(data) ? data : []);
+      const raw = Array.isArray(data) ? data : [];
+      // Fill in missing pricing (Redis cache may have empty arrays)
+      const defaultPrices: Record<string, { duration: string; priceMMK: number; priceUSD: number }> = {
+        'Toyota Alphard': { duration: 'Full Day', priceMMK: 150000, priceUSD: 71 },
+        'Toyota Wish': { duration: 'Full Day', priceMMK: 80000, priceUSD: 38 },
+        'Toyota Noah': { duration: 'Full Day', priceMMK: 85000, priceUSD: 40 },
+        'Alphard Executive': { duration: 'Full Day', priceMMK: 200000, priceUSD: 95 },
+        'Minibus 15-Seater': { duration: 'Full Day', priceMMK: 120000, priceUSD: 57 },
+        'Probox Budget': { duration: 'Full Day', priceMMK: 50000, priceUSD: 24 },
+      };
+      const withPricing = raw.map((c) => ({
+        ...c,
+        pricingWithDriver: (c.pricingWithDriver && c.pricingWithDriver.length > 0)
+          ? c.pricingWithDriver
+          : defaultPrices[c.carType || ''] ? [defaultPrices[c.carType || '']] : [{ duration: 'Full Day', priceMMK: 0, priceUSD: 0 }],
+      }));
+      setAllCars(withPricing);
     } catch (err) {
       console.error('Failed to fetch cars:', err);
       const fallbackCars: Car[] = [
@@ -59,7 +75,7 @@ export default function CarsPage() {
         { _id: 'fc2', slug: 'fbc2', carType: 'Toyota Vios', capacity: 4, images: ['/images_v2/unsplash-42-v2.jpg'], features: ['AC', 'GPS', 'Fuel'], pricingWithDriver: [{ duration: 'Full Day', priceMMK: 60000, priceUSD: 29 }], description: '' },
         { _id: 'fc3', slug: 'fbc3', carType: 'Toyota Hiace', capacity: 12, images: ['/images_v2/unsplash-23-v2.jpg'], features: ['AC', 'Luggage'], pricingWithDriver: [{ duration: 'Full Day', priceMMK: 140000, priceUSD: 67 }], description: '' },
         { _id: 'fc4', slug: 'fbc4', carType: 'Honda CR-V', capacity: 5, images: ['/images_v2/unsplash-16-v2.jpg'], features: ['AC', 'Sunroof'], pricingWithDriver: [{ duration: 'Full Day', priceMMK: 85000, priceUSD: 40 }], description: '' },
-        { _id: 'fc5', slug: 'fbc5', carType: 'Mercedes S-Class', capacity: 3, images: ['/images/unsplash-43.jpg'], features: ['AC', 'WiFi', 'Massage'], pricingWithDriver: [{ duration: 'Full Day', priceMMK: 250000, priceUSD: 119 }], description: '' },
+        { _id: 'fc5', slug: 'fbc5', carType: 'Mercedes S-Class', capacity: 3, images: ['/images_v2/unsplash-43-v2.jpg'], features: ['AC', 'WiFi', 'Massage'], pricingWithDriver: [{ duration: 'Full Day', priceMMK: 250000, priceUSD: 119 }], description: '' },
         { _id: 'fc6', slug: 'fbc6', carType: 'Toyota Land Cruiser Prado', capacity: 7, images: ['/images_v2/unsplash-31-v2.jpg'], features: ['AC', '4WD', 'Sunroof'], pricingWithDriver: [{ duration: 'Full Day', priceMMK: 180000, priceUSD: 86 }], description: '' },
       ];
       setAllCars(fallbackCars);

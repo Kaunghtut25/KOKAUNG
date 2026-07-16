@@ -3,18 +3,11 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Hotel } from '@/lib/api';
+import { getImageFallback } from '@/lib/imageFallback';
 
 interface HotelCardProps {
   hotel: Hotel;
   currency?: 'MMK' | 'USD';
-}
-
-const FALLBACK_IMAGE = '/images_v2/unsplash-2-v2.jpg';
-
-function getImages(images: string | string[] | undefined): string[] {
-  if (!images) return [];
-  if (Array.isArray(images)) return images;
-  return images.split(' ').filter(Boolean);
 }
 
 export default function HotelCard({ hotel, currency = 'MMK' }: HotelCardProps) {
@@ -24,8 +17,7 @@ export default function HotelCard({ hotel, currency = 'MMK' }: HotelCardProps) {
 
   const price = currency === 'MMK' ? hotel.pricePerNightMMK : hotel.pricePerNightUSD;
   const currencySymbol = currency === 'MMK' ? 'Ks' : '$';
-  const mainImage = getImages(hotel.images)[0] || FALLBACK_IMAGE;
-  const displayImage = imgError ? FALLBACK_IMAGE : mainImage;
+  const displayImage = getImageFallback(hotel._id as string, hotel.images);
   const roomsAvailable = hotel.availableRooms ?? 0;
   const roomsLabel = roomsAvailable === 0 ? 'Sold Out' : roomsAvailable <= 3 ? `Only ${roomsAvailable} left` : `${roomsAvailable} rooms`;
 
@@ -42,11 +34,11 @@ export default function HotelCard({ hotel, currency = 'MMK' }: HotelCardProps) {
       onClick={() => router.push(`/hotels/${hotel.slug}`)}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      className="group relative cursor-pointer w-full"
+      className="group relative cursor-pointer w-full h-full"
       style={{ perspective: '1200px' }}
     >
       <div
-        className={`relative rounded-2xl overflow-hidden bg-white transition-all duration-500 ease-out ${
+        className={`relative rounded-2xl overflow-hidden bg-white h-full flex flex-col transition-all duration-500 ease-out ${
           isHovered ? 'shadow-2xl shadow-black/30 -translate-y-2' : 'shadow-lg shadow-black/10'
         }`}
         style={{
@@ -69,7 +61,7 @@ export default function HotelCard({ hotel, currency = 'MMK' }: HotelCardProps) {
 
         {/* Image Section */}
         <div className="relative h-[280px] w-full overflow-hidden bg-gray-200">
-          <img src={displayImage} alt={hotel.name} className="w-full h-full object-cover transition-transform duration-700 ease-out" style={{ position: 'absolute', inset: 0, transform: isHovered ? 'scale(1.08)' : 'scale(1)' }} onError={() => setImgError(true)} loading="lazy" />
+          <img src={displayImage} alt={hotel.name} className="w-full h-full object-cover transition-transform duration-700 ease-out" style={{ position: 'absolute', inset: 0, transform: isHovered ? 'scale(1.08)' : 'scale(1)' }} onError={() => setImgError(true)} loading="eager" />
           <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/15 to-transparent" />
           {/* Location badge */}
           <div className="absolute top-7 left-3 z-20">
@@ -93,7 +85,7 @@ export default function HotelCard({ hotel, currency = 'MMK' }: HotelCardProps) {
         <div className="h-4 bg-gradient-to-b from-[#0A1628] to-white" />
 
         {/* Info */}
-        <div className="px-4 pt-2 pb-1 space-y-1.5">
+        <div className="px-4 pt-2 pb-1 space-y-1.5 flex-1">
           <h3 className="text-[#0A1628] text-base font-bold leading-tight line-clamp-2 group-hover:text-[#D4AF37] transition-colors duration-300" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
             {hotel.name}
           </h3>

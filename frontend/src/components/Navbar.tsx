@@ -26,7 +26,7 @@ export default function Navbar() {
 
   return (
     <>
-      <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
+      <nav className={`fixed top-0 left-0 right-0 z-[65] transition-all duration-500 ${
         scrolled ? "bg-[#0A1628] backdrop-blur-xl shadow-lg border-b-2 border-[#D4AF37]/40"
                  : "bg-[#0A1628] border-b-2 border-[#D4AF37]/20"
       }`}>
@@ -51,6 +51,11 @@ export default function Navbar() {
                 className={`px-4 py-2 text-sm font-semibold transition-all duration-200 rounded-lg [text-shadow:0_1px_3px_rgba(0,0,0,0.5)] ${
                   isActive('/') ? 'bg-[#D4AF37] text-[#0A1628] [text-shadow:none] shadow-sm' : 'text-white hover:text-[#D4AF37] hover:bg-white/10'
                 }`}>Home</Link>
+              {/* About Us */}
+              <Link href="/about"
+                className={`px-4 py-2 text-sm font-semibold transition-all duration-200 rounded-lg [text-shadow:0_1px_3px_rgba(0,0,0,0.5)] ${
+                  isActive('/about') ? 'bg-[#D4AF37] text-[#0A1628] [text-shadow:none] shadow-sm' : 'text-white hover:text-[#D4AF37] hover:bg-white/10'
+                }`}>About Us</Link>
               {/* Blog */}
               <Link href="/blog"
                 className={`px-4 py-2 text-sm font-semibold transition-all duration-200 rounded-lg [text-shadow:0_1px_3px_rgba(0,0,0,0.5)] ${
@@ -76,7 +81,7 @@ export default function Navbar() {
                   Contact & Book
                   <svg className="w-3 h-3 inline ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
                 </button>
-                <div className="absolute right-0 top-full mt-1 w-44 bg-white rounded-xl border border-gray-200 shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                <div className="absolute left-1/2 -translate-x-1/2 top-full mt-1 w-52 bg-white rounded-xl border border-gray-200 shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-[60]">
                   <Link href="/book-now" className="block px-4 py-3 text-sm font-semibold text-gray-700 hover:bg-gray-50 hover:text-[#D4AF37] rounded-t-xl transition-colors">📋 Book Now</Link>
                   <Link href="/contact" className="block px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 hover:text-[#D4AF37] rounded-b-xl border-t border-gray-100 transition-colors">📞 Contact Us</Link>
                 </div>
@@ -119,6 +124,10 @@ export default function Navbar() {
               className={`block py-3 px-4 text-base font-medium rounded-lg transition-all duration-200 ${
                 isActive('/') ? "bg-[#D4AF37] text-[#0A1628]" : "text-white hover:text-[#D4AF37] hover:bg-white/10"
               }`}>Home</Link>
+            <Link href="/about" onClick={() => setMobileOpen(false)}
+              className={`block py-3 px-4 text-base font-medium rounded-lg transition-all duration-200 ${
+                isActive('/about') ? "bg-[#D4AF37] text-[#0A1628]" : "text-white hover:text-[#D4AF37] hover:bg-white/10"
+              }`}>About Us</Link>
             <Link href="/blog" onClick={() => setMobileOpen(false)}
               className={`block py-3 px-4 text-base font-medium rounded-lg transition-all duration-200 ${
                 isActive('/blog') ? "bg-[#D4AF37] text-[#0A1628]" : "text-white hover:text-[#D4AF37] hover:bg-white/10"

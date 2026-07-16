@@ -312,32 +312,22 @@ export default function ContactPage() {
               </div>
             </div>
 
-            {/* Phone */}
+            {/* Phone - Department Numbers */}
             <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-5 flex gap-4 items-start hover:border-[#D4AF37]/30 transition-all duration-200">
               <div className="w-11 h-11 rounded-xl bg-[#D4AF37]/10 flex items-center justify-center shrink-0">
-                <svg
-                  className="w-5 h-5 text-[#D4AF37]"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  strokeWidth={2}
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z"
-                  />
-                </svg>
+                <svg className="w-5 h-5 text-[#D4AF37]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z" /></svg>
               </div>
-              <div>
-                <p className="text-[#0A1628] font-semibold text-sm mb-1">📞 Phone</p>
-                <p className="text-gray-600 text-sm leading-relaxed">
-                  +95 9 781 617333
-                  <br />
-                  09 694 320 111
-                  <br />
-                  09 694 202 333
-                </p>
+              <div className="flex-1">
+                <p className="text-[#0A1628] font-semibold text-sm mb-2">📞 Contact Numbers</p>
+                <div className="space-y-1.5 text-sm">
+                  {[
+                    {label:"Ticket Department",phone:"959 781 617 111"},
+                    {label:"Visa Department",phone:"959 781 617 333"},
+                    {label:"Hotel Department",phone:"959 694 202 111"},
+                    {label:"Outbound Department",phone:"959 756 348 222"},
+                    {label:"Inbound Department",phone:"959 694 320 111"},
+                  ].map(d=><div key={d.label} className="flex justify-between items-center"><span className="text-gray-500 text-xs">{d.label}</span><a href={`tel:${d.phone.replace(/\s/g,'')}`} className="text-gray-700 font-medium hover:text-[#D4AF37] transition-colors">{d.phone}</a></div>)}
+                </div>
               </div>
             </div>
 

@@ -1,6 +1,6 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { sendBookingEmail } from '@/lib/email';
-import { create as storeCreate, getAll } from '@/lib/persistentStore';
+import { NextRequest, NextResponse } from "next/server";
+import { sendBookingEmail } from "@/lib/email";
+import { create as storeCreate, getAll as storeGetAll } from "@/lib/persistentStore";
 
 export const dynamic = 'force-dynamic';
 
@@ -11,8 +11,21 @@ export async function GET(request: NextRequest) {
     const limit = parseInt(searchParams.get('limit') || '50', 10);
     const status = searchParams.get('status') || undefined;
 
-    const result = getInquiries(page, limit, status);
-    return NextResponse.json(result);
+    let bookings = await storeGetAll("bookings");
+
+    if (status) {
+      bookings = bookings.filter((b: any) => b.status === status);
+    }
+
+    const total = bookings.length;
+    const start = (page - 1) * limit;
+    const data = bookings.slice(start, start + limit);
+
+    return NextResponse.json({
+      success: true,
+      data,
+      pagination: { page, limit, total, totalPages: Math.max(1, Math.ceil(total / limit)) },
+    });
   } catch (err: any) {
     return NextResponse.json({ success: false, message: err.message || 'Server error' }, { status: 500 });
   }
@@ -49,32 +62,27 @@ export async function POST(request: NextRequest) {
       createdAt: new Date().toISOString(),
     };
 
-    // Store in admin store (in-memory / Vercel-compatible)
+    // Store in database
     try {
-      storeCreate('bookings', inquiryData);
+      await storeCreate('bookings', inquiryData);
     } catch (storeErr) {
       console.error('[Booking] Failed to store inquiry:', storeErr);
     }
 
     // Send email notification to admin
-    const emailSent = await sendBookingEmail(inquiryData);
-    console.log('[Email] Send result:', emailSent);
-
-    // Log booking for debugging
-    console.log('[Booking]', JSON.stringify(inquiryData));
+    let emailSent = false;
+    try {
+      emailSent = await sendBookingEmail(inquiryData);
+    } catch {
+      // Email not configured — booking still saved
+    }
 
     return NextResponse.json({
       success: true,
       message: 'Booking inquiry submitted successfully!',
       referenceNumber: ref,
-      data: {
-        fullName, email, phone, travelType, fromAirport, toAirport,
-        departDate: departDate || '', returnDate: returnDate || '',
-        passengers: passengers || 1, travelClass: travelClass || 'Economy',
-        specialRequests: specialRequests || '', contactPreference: contactPreference || 'email',
-        status: 'New', referenceNumber: ref,
-        createdAt: new Date().toISOString(),
-      },
+      emailSent,
+      data: inquiryData,
     });
   } catch (err: any) {
     return NextResponse.json({ success: false, message: err.message || 'Server error' }, { status: 500 });

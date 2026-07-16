@@ -3,7 +3,7 @@ import { create, delete_, getAll, getById, update } from "@/lib/persistentStore"
 
 export async function GET() {
   try {
-    const posts = await await getAll("blog");
+    const posts = await getAll("blog");
     return NextResponse.json({ success: true, data: posts });
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : "Server error";
