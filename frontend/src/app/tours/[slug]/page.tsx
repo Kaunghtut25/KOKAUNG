@@ -94,10 +94,18 @@ export default function TourDetailPage() {
   };
 
   const handleConfirmBooking = () => {
-    if (!tour) return;
-    router.push(
-      `/booking?type=tour&id=${tour._id}&quantity=1&travelers=${bookingForm.travelers}&date=${bookingForm.travelDate}`
-    );
+    const bookUrl = new URL('/book-now', window.location.origin);
+    bookUrl.searchParams.set('type', 'tour');
+    bookUrl.searchParams.set('tour', tour.slug || tour._id);
+    bookUrl.searchParams.set('title', tour.title);
+    bookUrl.searchParams.set('destination', tour.destination);
+    bookUrl.searchParams.set('duration', tour.duration + ' ' + tour.durationUnit);
+    bookUrl.searchParams.set('price', String(price));
+    bookUrl.searchParams.set('travelers', String(bookingForm.travelers));
+    bookUrl.searchParams.set('date', bookingForm.travelDate);
+    bookUrl.searchParams.set('currency', currency);
+    bookUrl.searchParams.set('requests', bookingForm.specialRequests);
+    router.push(bookUrl.toString());
   };
 
   const tabs: { key: TabKey; label: string }[] = [
@@ -110,7 +118,7 @@ export default function TourDetailPage() {
   // ─── Loading State ────────────────────────────────────────
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-gray-950 via-gray-900 to-gray-950">
+      <div className="min-h-screen bg-gradient-to-b from-white via-gray-50 to-white">
         <div className="h-[60vh] bg-white/5 animate-pulse" />
         <div className="max-w-7xl mx-auto px-4 py-12">
           <div className="h-8 bg-white/10 rounded w-1/3 mb-4 animate-pulse" />
@@ -131,13 +139,13 @@ export default function TourDetailPage() {
   // ─── Error State ─────────────────────────────────────────
   if (error || !tour) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-gray-950 via-gray-900 to-gray-950 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-b from-white via-gray-50 to-white flex items-center justify-center">
         <div className="text-center space-y-4">
           <svg className="w-16 h-16 mx-auto text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z" />
           </svg>
-          <h2 className="text-xl text-white font-semibold">Something went wrong</h2>
-          <p className="text-gray-400">{error || 'Tour not found'}</p>
+          <h2 className="text-xl text-[#0A1628] font-semibold">Something went wrong</h2>
+          <p className="text-gray-500">{error || 'Tour not found'}</p>
           <button
             onClick={() => router.push('/search')}
             className="px-6 py-2 rounded-xl bg-gradient-to-r from-[#D4AF37] to-[#C5A028] text-gray-900 font-semibold inline-block"
@@ -151,7 +159,7 @@ export default function TourDetailPage() {
 
   // ─── Main Content ───────────────────────────────────────
   return (
-    <main className="min-h-screen bg-gradient-to-b from-gray-950 via-gray-900 to-gray-950">
+    <main className="min-h-screen bg-gradient-to-b from-white via-gray-50 to-white">
       {/* Hero image */}
       <section className="relative w-full h-[60vh] overflow-hidden">
         <Image
@@ -171,7 +179,7 @@ export default function TourDetailPage() {
               {tour.destination}
             </span>
             <span className="flex items-center gap-1">{renderStars(tour.rating)}</span>
-            <span className="text-gray-400 text-sm">({tour.reviewCount} reviews)</span>
+            <span className="text-white/70 text-sm">({tour.reviewCount} reviews)</span>
           </div>
           <h1
             className="text-4xl md:text-5xl lg:text-6xl text-white font-bold mb-2"
@@ -179,7 +187,7 @@ export default function TourDetailPage() {
           >
             {tour.title}
           </h1>
-          <p className="text-gray-300 text-lg">
+          <p className="text-white/80 text-lg">
             {tour.duration} {tour.durationUnit} • Up to {tour.groupSize} people
           </p>
         </div>
@@ -199,7 +207,7 @@ export default function TourDetailPage() {
                   className={`px-5 py-3 text-sm font-medium whitespace-nowrap border-b-2 transition-all duration-200 ${
                     activeTab === tab.key
                       ? 'border-[#D4AF37] text-[#D4AF37]'
-                      : 'border-transparent text-gray-400 hover:text-gray-200'
+                      : 'border-transparent text-gray-500 hover:text-gray-900'
                   }`}
                 >
                   {tab.label}
@@ -211,32 +219,32 @@ export default function TourDetailPage() {
             {activeTab === 'overview' && (
               <div className="space-y-8">
                 <div>
-                  <h3 className="text-xl text-white font-semibold mb-4">About This Tour</h3>
-                  <p className="text-gray-300 leading-relaxed">{tour.description}</p>
+                  <h3 className="text-xl text-[#0A1628] font-semibold mb-4">About This Tour</h3>
+                  <p className="text-gray-700 leading-relaxed">{tour.description}</p>
                 </div>
 
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                  <div className="p-4 rounded-xl bg-white/5 border border-gold/10 text-center">
+                  <div className="p-4 rounded-xl bg-gray-50 border border-gray-200 text-center">
                     <p className="text-[#D4AF37] text-2xl font-bold">{tour.duration}</p>
-                    <p className="text-gray-400 text-sm">{tour.durationUnit}</p>
+                    <p className="text-gray-600 text-sm">{tour.durationUnit}</p>
                   </div>
-                  <div className="p-4 rounded-xl bg-white/5 border border-gold/10 text-center">
+                  <div className="p-4 rounded-xl bg-gray-50 border border-gray-200 text-center">
                     <p className="text-[#D4AF37] text-2xl font-bold">{tour.groupSize}</p>
-                    <p className="text-gray-400 text-sm">Max Group Size</p>
+                    <p className="text-gray-600 text-sm">Max Group Size</p>
                   </div>
-                  <div className="p-4 rounded-xl bg-white/5 border border-gold/10 text-center">
+                  <div className="p-4 rounded-xl bg-gray-50 border border-gray-200 text-center">
                     <p className="text-[#D4AF37] text-2xl font-bold">★ {tour.rating}</p>
-                    <p className="text-gray-400 text-sm">Rating</p>
+                    <p className="text-gray-600 text-sm">Rating</p>
                   </div>
-                  <div className="p-4 rounded-xl bg-white/5 border border-gold/10 text-center">
+                  <div className="p-4 rounded-xl bg-gray-50 border border-gray-200 text-center">
                     <p className="text-[#D4AF37] text-2xl font-bold">{tour.reviewCount}</p>
-                    <p className="text-gray-400 text-sm">Reviews</p>
+                    <p className="text-gray-600 text-sm">Reviews</p>
                   </div>
                 </div>
 
                 {tour.amenities && tour.amenities.length > 0 && (
                   <div>
-                    <h3 className="text-xl text-white font-semibold mb-4">Amenities</h3>
+                    <h3 className="text-xl text-[#0A1628] font-semibold mb-4">Amenities</h3>
                     <div className="flex flex-wrap gap-2">
                       {tour.amenities.map((amenity, idx) => (
                         <span
@@ -269,8 +277,8 @@ export default function TourDetailPage() {
 
                     {/* Content */}
                     <div className="flex-1 pt-1">
-                      <h4 className="text-white font-semibold text-lg mb-1">{day.title}</h4>
-                      <p className="text-gray-300 text-sm leading-relaxed">{day.description}</p>
+                      <h4 className="text-[#0A1628] font-semibold text-lg mb-1">{day.title}</h4>
+                      <p className="text-gray-600 text-sm leading-relaxed">{day.description}</p>
                       {day.meals && day.meals.length > 0 && (
                         <div className="flex gap-2 mt-2">
                           {day.meals.map((meal, mi) => (
@@ -294,7 +302,7 @@ export default function TourDetailPage() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 {/* Included */}
                 <div>
-                  <h3 className="text-xl text-white font-semibold mb-4 flex items-center gap-2">
+                  <h3 className="text-xl text-[#0A1628] font-semibold mb-4 flex items-center gap-2">
                     <svg className="w-5 h-5 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                       <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                     </svg>
@@ -302,7 +310,7 @@ export default function TourDetailPage() {
                   </h3>
                   <ul className="space-y-3">
                     {(tour.included || []).map((item, idx) => (
-                      <li key={idx} className="flex items-start gap-3 text-gray-300">
+                      <li key={idx} className="flex items-start gap-3 text-gray-700">
                         <svg className="w-5 h-5 text-green-400 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                           <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                         </svg>
@@ -317,7 +325,7 @@ export default function TourDetailPage() {
 
                 {/* Excluded */}
                 <div>
-                  <h3 className="text-xl text-white font-semibold mb-4 flex items-center gap-2">
+                  <h3 className="text-xl text-[#0A1628] font-semibold mb-4 flex items-center gap-2">
                     <svg className="w-5 h-5 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                       <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                     </svg>
@@ -325,7 +333,7 @@ export default function TourDetailPage() {
                   </h3>
                   <ul className="space-y-3">
                     {(tour.excluded || []).map((item, idx) => (
-                      <li key={idx} className="flex items-start gap-3 text-gray-300">
+                      <li key={idx} className="flex items-start gap-3 text-gray-700">
                         <svg className="w-5 h-5 text-red-400 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                           <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                         </svg>
@@ -346,7 +354,7 @@ export default function TourDetailPage() {
                 <svg className="w-16 h-16 mx-auto text-gold/30 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                 </svg>
-                <p className="text-gray-400 text-lg">Reviews coming soon</p>
+                <p className="text-gray-600 text-lg">Reviews coming soon</p>
                 <p className="text-gray-500 text-sm mt-1">We&apos;re working on collecting authentic reviews from our travelers.</p>
               </div>
             )}
@@ -361,7 +369,7 @@ export default function TourDetailPage() {
                   <span className="text-3xl font-bold text-[#D4AF37]">
                     {currencySymbol} {price.toLocaleString()}
                   </span>
-                  <span className="text-gray-400 text-sm ml-1">/ person</span>
+                  <span className="text-gray-500 text-sm ml-1">/ person</span>
                 </div>
                 <CurrencyToggle activeCurrency={currency} onToggle={setCurrency} />
               </div>
@@ -371,16 +379,16 @@ export default function TourDetailPage() {
               {/* Quick info */}
               <div className="space-y-2 text-sm">
                 <div className="flex justify-between">
-                  <span className="text-gray-400">Duration</span>
-                  <span className="text-white">{tour.duration} {tour.durationUnit}</span>
+                  <span className="text-gray-600">Duration</span>
+                  <span className="text-[#0A1628]">{tour.duration} {tour.durationUnit}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-400">Group Size</span>
-                  <span className="text-white">Up to {tour.groupSize} people</span>
+                  <span className="text-gray-600">Group Size</span>
+                  <span className="text-[#0A1628]">Up to {tour.groupSize} people</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-400">Rating</span>
-                  <span className="text-white flex items-center gap-1">★ {tour.rating}</span>
+                  <span className="text-gray-600">Rating</span>
+                  <span className="text-[#0A1628] flex items-center gap-1">★ {tour.rating}</span>
                 </div>
               </div>
 
@@ -389,16 +397,16 @@ export default function TourDetailPage() {
               {/* Booking form preview */}
               <div className="space-y-3">
                 <div>
-                  <label className="text-gray-400 text-xs mb-1 block">Travel Date</label>
+                  <label className="text-gray-600 text-xs mb-1 block">Travel Date</label>
                   <input
                     type="date"
                     value={bookingForm.travelDate}
                     onChange={(e) => setBookingForm((prev) => ({ ...prev, travelDate: e.target.value }))}
-                    className="w-full px-3 py-2 bg-white/10 border border-gold/20 rounded-lg text-white text-sm focus:outline-none focus:border-gold/50 [color-scheme:dark]"
+                    className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-gray-900 text-sm focus:outline-none focus:border-gold/50 [color-scheme:dark]"
                   />
                 </div>
                 <div>
-                  <label className="text-gray-400 text-xs mb-1 block">Travelers</label>
+                  <label className="text-gray-600 text-xs mb-1 block">Travelers</label>
                   <div className="flex items-center gap-2">
                     <button
                       type="button"
@@ -408,11 +416,11 @@ export default function TourDetailPage() {
                           travelers: Math.max(1, prev.travelers - 1),
                         }))
                       }
-                      className="w-8 h-8 rounded-lg border border-gold/30 text-[#D4AF37] hover:bg-[#D4AF37]/10 transition-colors flex items-center justify-center"
+                      className="w-8 h-8 rounded-lg border border-gray-300 text-gray-600 hover:bg-gray-100 transition-colors flex items-center justify-center"
                     >
                       −
                     </button>
-                    <span className="w-12 text-center text-white font-semibold">{bookingForm.travelers}</span>
+                    <span className="w-12 text-center text-[#0A1628] font-semibold">{bookingForm.travelers}</span>
                     <button
                       type="button"
                       onClick={() =>
@@ -421,7 +429,7 @@ export default function TourDetailPage() {
                           travelers: Math.min(tour.groupSize, prev.travelers + 1),
                         }))
                       }
-                      className="w-8 h-8 rounded-lg border border-gold/30 text-[#D4AF37] hover:bg-[#D4AF37]/10 transition-colors flex items-center justify-center"
+                      className="w-8 h-8 rounded-lg border border-gray-300 text-gray-600 hover:bg-gray-100 transition-colors flex items-center justify-center"
                     >
                       +
                     </button>
@@ -431,7 +439,7 @@ export default function TourDetailPage() {
 
               {/* Total */}
               <div className="flex justify-between items-center py-3 border-t border-gold/10">
-                <span className="text-gray-300 font-medium">Total</span>
+                <span className="text-gray-700 font-medium">Total</span>
                 <span className="text-2xl font-bold text-[#D4AF37]">
                   {currencySymbol} {totalPrice.toLocaleString()}
                 </span>
@@ -456,49 +464,49 @@ export default function TourDetailPage() {
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
           {/* Backdrop */}
           <div
-            className="absolute inset-0 bg-black/70 backdrop-blur-sm"
+            className="absolute inset-0 bg-black/30 backdrop-blur-sm"
             onClick={() => setShowBookingModal(false)}
           />
 
           {/* Modal */}
-          <div className="relative w-full max-w-lg bg-gray-900 border border-gold/20 rounded-2xl p-8 shadow-2xl max-h-[90vh] overflow-y-auto">
+          <div className="relative w-full max-w-lg bg-white border border-gray-200 shadow-xl rounded-2xl p-8 shadow-2xl max-h-[90vh] overflow-y-auto">
             {/* Close button */}
             <button
               onClick={() => setShowBookingModal(false)}
-              className="absolute top-4 right-4 w-8 h-8 rounded-full border border-gold/20 text-gray-400 hover:text-white hover:border-gold/50 transition-colors flex items-center justify-center"
+              className="absolute top-4 right-4 w-8 h-8 rounded-full border border-gray-200 text-gray-500 hover:text-gray-900 hover:border-gold/50 transition-colors flex items-center justify-center"
             >
               ✕
             </button>
 
             {bookingStep === 'form' ? (
               <>
-                <h2 className="text-2xl text-white font-bold mb-6" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
+                <h2 className="text-2xl text-[#0A1628] font-bold mb-6" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
                   Confirm Your Booking
                 </h2>
 
                 <div className="space-y-4">
-                  <div className="p-4 rounded-xl bg-white/5 border border-gold/10">
-                    <p className="text-white font-semibold">{tour.title}</p>
-                    <p className="text-gray-400 text-sm">{tour.destination} • {tour.duration} {tour.durationUnit}</p>
+                  <div className="p-4 rounded-xl bg-gray-50 border border-gray-200">
+                    <p className="text-[#0A1628] font-semibold">{tour.title}</p>
+                    <p className="text-gray-500 text-sm">{tour.destination} • {tour.duration} {tour.durationUnit}</p>
                   </div>
 
                   <div>
-                    <label className="text-gray-300 text-sm mb-1 block">Travel Date</label>
+                    <label className="text-gray-600 text-sm mb-1 block">Travel Date</label>
                     <input
                       type="date"
                       value={bookingForm.travelDate}
                       onChange={(e) => setBookingForm((prev) => ({ ...prev, travelDate: e.target.value }))}
-                      className="w-full px-3 py-2.5 bg-white/10 border border-gold/20 rounded-lg text-white text-sm focus:outline-none focus:border-gold/50 [color-scheme:dark]"
+                      className="w-full px-3 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-gray-900 text-sm focus:outline-none focus:border-gold/50 [color-scheme:dark]"
                     />
                   </div>
 
                   <div>
-                    <label className="text-gray-300 text-sm mb-1 block">Number of Travelers</label>
+                    <label className="text-gray-600 text-sm mb-1 block">Number of Travelers</label>
                     <div className="flex items-center gap-2">
                       <button
                         type="button"
                         onClick={() => setBookingForm((prev) => ({ ...prev, travelers: Math.max(1, prev.travelers - 1) }))}
-                        className="w-10 h-10 rounded-lg border border-gold/30 text-[#D4AF37] hover:bg-[#D4AF37]/10 transition-colors text-lg"
+                        className="w-10 h-10 rounded-lg border border-gray-300 text-gray-600 hover:bg-gray-100 transition-colors text-lg"
                       >
                         −
                       </button>
@@ -506,7 +514,7 @@ export default function TourDetailPage() {
                       <button
                         type="button"
                         onClick={() => setBookingForm((prev) => ({ ...prev, travelers: Math.min(tour.groupSize, prev.travelers + 1) }))}
-                        className="w-10 h-10 rounded-lg border border-gold/30 text-[#D4AF37] hover:bg-[#D4AF37]/10 transition-colors text-lg"
+                        className="w-10 h-10 rounded-lg border border-gray-300 text-gray-600 hover:bg-gray-100 transition-colors text-lg"
                       >
                         +
                       </button>
@@ -514,18 +522,18 @@ export default function TourDetailPage() {
                   </div>
 
                   <div>
-                    <label className="text-gray-300 text-sm mb-1 block">Special Requests</label>
+                    <label className="text-gray-600 text-sm mb-1 block">Special Requests</label>
                     <textarea
                       value={bookingForm.specialRequests}
                       onChange={(e) => setBookingForm((prev) => ({ ...prev, specialRequests: e.target.value }))}
                       placeholder="Any special requirements or preferences..."
                       rows={3}
-                      className="w-full px-3 py-2.5 bg-white/10 border border-gold/20 rounded-lg text-white placeholder-gray-500 text-sm focus:outline-none focus:border-gold/50 resize-none"
+                      className="w-full px-3 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-gray-900 placeholder-gray-400 text-sm focus:outline-none focus:border-gold/50 resize-none"
                     />
                   </div>
 
-                  <div className="p-3 rounded-xl bg-[#D4AF37]/5 border border-[#D4AF37]/10 flex justify-between items-center">
-                    <span className="text-gray-300">Total ({bookingForm.travelers} travelers)</span>
+                  <div className="p-3 rounded-xl bg-[#D4AF37]/10 border border-[#D4AF37]/20 flex justify-between items-center">
+                    <span className="text-gray-700">Total ({bookingForm.travelers} travelers)</span>
                     <span className="text-xl font-bold text-[#D4AF37]">
                       {currencySymbol} {totalPrice.toLocaleString()}
                     </span>
@@ -542,7 +550,7 @@ export default function TourDetailPage() {
               </>
             ) : (
               <>
-                <h2 className="text-2xl text-white font-bold mb-6" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
+                <h2 className="text-2xl text-[#0A1628] font-bold mb-6" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
                   Select Payment Method
                 </h2>
 
@@ -568,7 +576,7 @@ export default function TourDetailPage() {
                         )}
                       </div>
                       <div>
-                        <p className="text-white font-medium">
+                        <p className="text-[#0A1628] font-medium">
                           {method === 'kbzpay' ? 'KBZPay' : method === 'wavepay' ? 'WavePay' : 'Bank Transfer'}
                         </p>
                         <p className="text-gray-500 text-xs">
@@ -590,7 +598,7 @@ export default function TourDetailPage() {
 
                 <button
                   onClick={() => setBookingStep('form')}
-                  className="w-full py-2 mt-2 text-gray-400 hover:text-white text-sm transition-colors"
+                  className="w-full py-2 mt-2 text-gray-500 hover:text-gray-900 text-sm transition-colors"
                 >
                   ← Back
                 </button>

@@ -42,6 +42,7 @@ export default function PopularDestinations() {
       <section className="max-w-7xl mx-auto px-4 py-12">
         <div className="text-center mb-10"><h2 className="text-3xl md:text-4xl font-bold text-[#0A1628] mb-2" style={{fontFamily:"'Playfair Display', Georgia, serif"}}>Explore The World</h2><p className="text-gray-500">Popular Destinations</p></div>
         <ScrollingRow>{fallback.map((d,i)=><DestinationCard key={i} dest={d} />)}</ScrollingRow>
+        <ScrollingRow>{fallback.slice(3).concat(fallback.slice(0,3)).map((d,i)=><DestinationCard key={"r2-"+i} dest={d} />)}</ScrollingRow>
       </section>
     );
   }
@@ -50,6 +51,9 @@ export default function PopularDestinations() {
     <section className="max-w-7xl mx-auto px-4 py-12">
       <div className="text-center mb-10"><h2 className="text-3xl md:text-4xl font-bold text-[#0A1628] mb-2" style={{fontFamily:"'Playfair Display', Georgia, serif"}}>Explore The World</h2><p className="text-gray-500">Popular Destinations</p></div>
       <ScrollingRow>{dests.map((d,i)=><DestinationCard key={i} dest={d} />)}</ScrollingRow>
+      {dests.length > 3 && (
+        <ScrollingRow className="mt-4">{[...dests.slice(3), ...dests.slice(0, Math.min(3, dests.length))].map((d,i)=><DestinationCard key={"r2-"+i} dest={d} />)}</ScrollingRow>
+      )}
     </section>
   );
 }

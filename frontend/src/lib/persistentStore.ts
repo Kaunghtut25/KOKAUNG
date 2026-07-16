@@ -45,15 +45,24 @@ const SEEDS: Record<string, any[]> = {
     { id: "v5", country: "South Korea", countryCode: "KR", processingTime: "5-7 Working Days", visaFeeMMK: 70000, visaFeeUSD: 33, requirements: "Passport, Photos, Bank Statement", additionalInfo: "K-ETA available for some", status: "active" },
     { id: "v6", country: "China", countryCode: "CN", processingTime: "4-6 Working Days", visaFeeMMK: 55000, visaFeeUSD: 26, requirements: "Passport, Photos, Invitation Letter", additionalInfo: "Single/Double entry", status: "active" },
   ],
-  insurances: [
+    insurances: [
     { id: "i1", planName: "Basic Travel Shield", coverageAmountMMK: 5000000, coverageAmountUSD: 2380, premiumPriceMMK: 15000, premiumPriceUSD: 7, duration: "Per Trip", coverage: "Medical + Trip Delay", benefits: "Medical, Trip delay", exclusions: "Pre-existing conditions", description: "Essential coverage for short trips", status: "active" },
     { id: "i2", planName: "Standard Travel Guard", coverageAmountMMK: 10000000, coverageAmountUSD: 4760, premiumPriceMMK: 25000, premiumPriceUSD: 12, duration: "Per Trip", coverage: "Medical + Baggage Loss", benefits: "Medical, Baggage Loss, Flight Delay", exclusions: "Pre-existing conditions, Self-inflicted injury", description: "Comprehensive protection plan", status: "active" },
     { id: "i3", planName: "Premium Travel Protect", coverageAmountMMK: 50000000, coverageAmountUSD: 23800, premiumPriceMMK: 45000, premiumPriceUSD: 21, duration: "Annual", coverage: "Medical + Cancellation", benefits: "Unlimited Medical, Trip Cancellation, Concierge", exclusions: "Pre-existing conditions, War, Nuclear", description: "Premium travel coverage", status: "active" },
     { id: "i4", planName: "Family Travel Plan", coverageAmountMMK: 20000000, coverageAmountUSD: 9520, premiumPriceMMK: 60000, premiumPriceUSD: 29, duration: "Per Trip", coverage: "Family Medical + Trip", benefits: "Full Family Cover, Child Medical, Trip Cancellation", exclusions: "Pre-existing conditions, Self-inflicted", description: "Complete family protection", status: "active" },
+    { id: "i5", planName: "Senior Travel Cover", coverageAmountMMK: 30000000, coverageAmountUSD: 14280, premiumPriceMMK: 55000, premiumPriceUSD: 26, duration: "Per Trip", coverage: "Medical + Evacuation", benefits: "Medical Emergency, Emergency Evacuation, Repatriation", exclusions: "Pre-existing conditions, Age over 85", description: "Specialized coverage for senior travelers", status: "active" },
+    { id: "i6", planName: "Adventure Sports Pack", coverageAmountMMK: 35000000, coverageAmountUSD: 16660, premiumPriceMMK: 85000, premiumPriceUSD: 40, duration: "Per Trip", coverage: "Extreme Sports + Medical", benefits: "Sports Injury, Helicopter Rescue, Equipment Cover", exclusions: "Competitive sports, Base jumping", description: "Coverage for adventure activities", status: "active" },
+    { id: "i7", planName: "Business Travel Pro", coverageAmountMMK: 40000000, coverageAmountUSD: 19040, premiumPriceMMK: 75000, premiumPriceUSD: 36, duration: "Annual", coverage: "Medical + Productivity", benefits: "Medical Emergency, Trip Delay, Document Replacement", exclusions: "Pre-existing conditions, War zones", description: "For frequent business travelers", status: "active" },
+    { id: "i8", planName: "Student Travel Basic", coverageAmountMMK: 3000000, coverageAmountUSD: 1428, premiumPriceMMK: 12000, premiumPriceUSD: 6, duration: "Per Trip", coverage: "Medical + Baggage", benefits: "Medical Emergency, Baggage Loss, Trip Cancellation", exclusions: "Pre-existing conditions, Study abroad over 6 months", description: "Affordable coverage for students", status: "active" },
+    { id: "i9", planName: "Cruise Coverage", coverageAmountMMK: 60000000, coverageAmountUSD: 28560, premiumPriceMMK: 95000, premiumPriceUSD: 45, duration: "Per Trip", coverage: "Medical + Missed Port", benefits: "Medical Emergency, Missed Port, Cabin Cover", exclusions: "Pre-existing conditions, Crew members", description: "Specialized cruise travel insurance", status: "active" },
   ],
-  mingalar: [
-    { id: "m1", title: "Fine Dining", desc: "Premium dining", icon: "🍽️", img: "/images_v2/sky1-v3.jpg" },
-    { id: "m2", title: "Open Bar", desc: "Premium spirits", icon: "🍸", img: "/images_v2/sky2-v3.jpg" },
+    mingalar: [
+    { id: "m1", title: "Fine Dining", desc: "Premium buffet & a la carte menu", icon: "🍽️", img: "/images_v2/sky1-v3.jpg" },
+    { id: "m2", title: "Open Bar", desc: "Complimentary drinks & cocktails", icon: "🍸", img: "/images_v2/sky2-v3.jpg" },
+    { id: "m3", title: "Workspace", desc: "High-speed WiFi & work stations", icon: "💻", img: "/images_v2/sky3-v3.jpg" },
+    { id: "m4", title: "Shower Suites", desc: "Refresh before your flight", icon: "🚿", img: "/images_v2/sky1-v3.jpg" },
+    { id: "m5", title: "Nap Pods", desc: "Rest in private sleeping pods", icon: "😴", img: "/images_v2/sky2-v3.jpg" },
+    { id: "m6", title: "Concierge", desc: "Priority check-in & boarding", icon: "🛎️", img: "/images_v2/sky3-v3.jpg" },
   ],
   blog: [],
   bookings: [],

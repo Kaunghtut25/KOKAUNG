@@ -38,6 +38,36 @@ function BookNowContent() {
     const type = searchParams.get("type");
     if (!type) return;
 
+    // Tour booking from tour detail page
+    if (type === 'tour') {
+      const tourTitle = searchParams.get('title') || 'Tour Package';
+      const tourDest = searchParams.get('destination') || '';
+      const tourDuration = searchParams.get('duration') || '';
+      const tourPrice = searchParams.get('price') || '';
+      const tourDate = searchParams.get('date') || '';
+      const tourTravelers = searchParams.get('travelers') || '1';
+      const tourRequests = searchParams.get('requests') || '';
+
+      setSearchSummary({
+        type: 'Tour Package',
+        from: tourDest,
+        to: tourDuration,
+        departDate: tourDate,
+        returnDate: '',
+        passengers: tourTravelers + ' Traveler(s)',
+        travelClass: tourPrice ? (searchParams.get('currency') === 'USD' ? '$' : 'Ks ') + tourPrice + '/person' : '',
+      });
+      setFormData((prev) => ({
+        ...prev,
+        travelType: 'tour',
+        specialRequests: tourRequests ? tourRequests + '\n--- Tour: ' + tourTitle + ' (' + tourDest + ', ' + tourDuration + ')' : 'Tour: ' + tourTitle + ' (' + tourDest + ', ' + tourDuration + ')',
+        departDate: tourDate,
+        passengers: parseInt(tourTravelers) || 1,
+      }));
+      setTimeout(() => { messageBoxRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 300);
+      return;
+    }
+
     const from = searchParams.get("from") || "";
     const to = searchParams.get("to") || "";
     const departDate = searchParams.get("depart") || "";
