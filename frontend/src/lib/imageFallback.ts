@@ -33,13 +33,30 @@ export function getImageFallback(
   images: string | string[] | undefined,
   imageField?: string,
 ): string {
-  // 1) From images array
-  if (Array.isArray(images) && images.length > 0) return images[0];
-  if (typeof images === "string" && images.trim()) return images.trim();
-  // 2) From single image field
+  // 1) From images array — could contain JSON string elements
+  if (Array.isArray(images) && images.length > 0) {
+    const first = images[0];
+    if (typeof first === 'string') {
+      const s = first.trim();
+      if (s.startsWith('[')) {
+        try { const parsed = JSON.parse(s); if (Array.isArray(parsed) && parsed.length > 0) return parsed[0]; } catch {}
+      }
+      if (s) return s;
+    }
+    return first as string;
+  }
+  // 2) From string images — could be JSON array string or single URL
+  if (typeof images === "string" && images.trim()) {
+    const s = images.trim();
+    if (s.startsWith("[")) {
+      try { const parsed = JSON.parse(s); if (Array.isArray(parsed) && parsed.length > 0) return parsed[0]; } catch {}
+    }
+    return s;
+  }
+  // 3) From single image field
   if (imageField && imageField.trim()) return imageField.trim();
-  // 3) From ID-based fallback map
+  // 4) From ID-based fallback map
   if (id && FALLBACK_MAP[id]) return FALLBACK_MAP[id];
-  // 4) Universal fallback
+  // 5) Universal fallback
   return UNIVERAL_FALLBACK;
 }

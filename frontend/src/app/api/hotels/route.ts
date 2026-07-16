@@ -3,22 +3,39 @@ import { getAll } from "@/lib/persistentStore";
 
 export const dynamic = 'force-dynamic';
 
+function parseImages(raw: unknown): string[] {
+  if (Array.isArray(raw)) {
+    const out: string[] = [];
+    for (const item of raw) {
+      if (typeof item === 'string' && item.trim().startsWith('[')) {
+        try { const parsed = JSON.parse(item); if (Array.isArray(parsed)) { out.push(...parsed.filter((x: unknown) => typeof x === 'string' && x.trim())); continue; } } catch {}
+      }
+      if (typeof item === 'string' && item.trim()) out.push(item.trim());
+    }
+    return out;
+  }
+  if (typeof raw === 'string' && raw.trim()) {
+    const s = raw.trim();
+    if (s.startsWith('[')) {
+      try { const parsed = JSON.parse(s); if (Array.isArray(parsed)) return parsed.filter((x: unknown) => typeof x === 'string' && x.trim()); } catch {}
+    }
+    return [s];
+  }
+  return [];
+}
+
 function transformHotel(h: Record<string, unknown>) {
   const hid = (h.id || h._id) as string;
-  // Handle old seed format (title/destination/image) vs new format (name/location/images)
   const hotelName = (h.name || h.title) as string || '';
   const loc = (h.location || h.destination) as string || '';
-  // Images: single image field or images array
   const fallbackImages: Record<string, string[]> = {
     h1: ["/images_v2/hotel1-v3.jpg"], h2: ["/images_v2/hotel2-v3.jpg"],
     h3: ["/images_v2/hotel3-v3.jpg"], h4: ["/images_v2/hotel4-v3.jpg"],
     h5: ["/images_v2/hotel5-v3.jpg"], h6: ["/images_v2/hotel5-v3.jpg"],
   };
-  let rawImages: string[] | null = null;
-  if (Array.isArray(h.images) && h.images.length > 0) rawImages = h.images as string[];
-  else if (typeof h.image === 'string' && h.image.trim()) rawImages = [h.image as string];
-  else if (typeof h.images === 'string' && h.images.trim()) rawImages = [h.images as string];
-  const images = rawImages || fallbackImages[hid] || ["/images_v2/hotel1-v3.jpg"];
+  let images = parseImages(h.images);
+  if (images.length === 0 && typeof h.image === 'string' && (h.image as string).trim()) images = [(h.image as string).trim()];
+  if (images.length === 0) images = fallbackImages[hid] || ["/images_v2/hotel1-v3.jpg"];
   return {
     _id: hid,
     slug: hotelName.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, ''),

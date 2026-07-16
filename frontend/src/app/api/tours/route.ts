@@ -10,9 +10,32 @@ const TOUR_IMAGES: Record<string, string> = {
 };
 const TOUR_FALLBACK = "/images_v2/hotel1-v3.jpg";
 
+function parseImages(raw: unknown): string[] {
+  // Handle array — could be real array or array containing JSON string
+  if (Array.isArray(raw)) {
+    const out: string[] = [];
+    for (const item of raw) {
+      if (typeof item === 'string' && item.trim().startsWith('[')) {
+        try { const parsed = JSON.parse(item); if (Array.isArray(parsed)) { out.push(...parsed.filter((x: unknown) => typeof x === 'string' && x.trim())); continue; } } catch {}
+      }
+      if (typeof item === 'string' && item.trim()) out.push(item.trim());
+    }
+    return out;
+  }
+  // Handle string — could be JSON array string or single URL
+  if (typeof raw === 'string' && raw.trim()) {
+    const s = raw.trim();
+    if (s.startsWith('[')) {
+      try { const parsed = JSON.parse(s); if (Array.isArray(parsed)) return parsed.filter((x: unknown) => typeof x === 'string' && x.trim()); } catch {}
+    }
+    return [s];
+  }
+  return [];
+}
+
 function getImages(t: Record<string, unknown>, id: string): string[] {
-  if (Array.isArray(t.images) && (t.images as string[]).length > 0) return t.images as string[];
-  if (typeof t.images === 'string' && t.images.trim()) return [t.images as string];
+  const imgs = parseImages(t.images);
+  if (imgs.length > 0) return imgs;
   if (typeof t.image === 'string' && t.image.trim()) return [t.image as string];
   return [TOUR_IMAGES[id] || TOUR_FALLBACK];
 }

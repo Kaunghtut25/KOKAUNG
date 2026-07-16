@@ -32,11 +32,20 @@ async function getInitialTours(): Promise<Tour[]> {
     const rawTours = await getAll("tours") as any[];
     return rawTours.map((t: any) => {
       let images: string[] = [];
-      if (Array.isArray(t.images)) images = t.images;
-      else if (typeof t.images === 'string' && t.images.trim()) {
-        try { images = JSON.parse(t.images); } catch { images = [t.images]; }
+      if (Array.isArray(t.images)) {
+        // Could contain JSON string elements
+        for (const item of t.images) {
+          if (typeof item === 'string' && item.trim().startsWith('[')) {
+            try { const parsed = JSON.parse(item); if (Array.isArray(parsed)) { images.push(...parsed.filter((x: string) => x.trim())); continue; } } catch {}
+          }
+          if (typeof item === 'string' && item.trim()) images.push(item.trim());
+        }
+      } else if (typeof t.images === 'string' && t.images.trim()) {
+        const s = t.images.trim();
+        if (s.startsWith('[')) { try { const parsed = JSON.parse(s); if (Array.isArray(parsed)) images = parsed.filter((x: string) => x.trim()); } catch { images = [s]; } }
+        else images = [s];
       }
-      if (images.length === 0 && t.image) images = [t.image];
+      if (images.length === 0 && t.image) images = [t.image as string];
       if (images.length === 0) images = ['/images_v2/bagan-v2.jpg'];
 
       return {

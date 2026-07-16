@@ -30,8 +30,10 @@ apiClient.interceptors.response.use(
   (response: AxiosResponse) => response,
   (error) => {
     if (error.response?.status === 401 && typeof window !== 'undefined') {
-      // Only redirect if NOT already on login page
-      if (!window.location.pathname.includes('/auth/login') && !window.location.pathname.includes('/auth/register')) {
+      // Only redirect if NOT already on login page and NOT on public pages
+      const path = window.location.pathname;
+      const isPublicPage = path.startsWith('/tours') || path.startsWith('/hotels') || path.startsWith('/cars') || path.startsWith('/insurance') || path.startsWith('/visas') || path.startsWith('/cruises') || path === '/';
+      if (!path.includes('/auth/login') && !path.includes('/auth/register') && !isPublicPage) {
         localStorage.removeItem('a9token');
         window.location.href = '/auth/login';
       }
