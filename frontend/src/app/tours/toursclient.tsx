@@ -6,10 +6,13 @@ import ScrollingRow from '@/components/ScrollingRow';
 import CurrencyToggle from '@/components/CurrencyToggle';
 import type { Tour } from '@/lib/api';
 
+const ROW_TITLES = ['🌟 Featured Tours', '🌏 Popular Destinations', '🧭 Adventure & Beyond'];
+const CARDS_PER_ROW = 10;
+const ROW_COUNT = 3;
+
 export default function ToursClient({ initialTours, preloadMap }: { initialTours: Tour[]; preloadMap: Record<string, string> }) {
   const [apiTours, setApiTours] = useState<Tour[]>(initialTours);
   const [currency, setCurrency] = useState<'MMK' | 'USD'>('MMK');
-  const [page, setPage] = useState(1);
 
   const [destination, setDestination] = useState('');
   const [minPrice, setMinPrice] = useState('');
@@ -56,13 +59,16 @@ export default function ToursClient({ initialTours, preloadMap }: { initialTours
     return 0;
   });
 
-  const ITEMS_PER_PAGE = 6;
-  const computedTotal = Math.max(1, Math.ceil(sortedTours.length / ITEMS_PER_PAGE));
-  const displayTours = sortedTours.slice((page - 1) * ITEMS_PER_PAGE, page * ITEMS_PER_PAGE);
-
-  useEffect(() => { setPage(1); }, [destination, minPrice, maxPrice, durationFilter, sort]);
-
-  const featuredTours = apiTours.filter(t => t.featured).slice(0, 10);
+  // Split tours into 3 rows of 10 cards each (cycle through existing tours when fewer than 30)
+  const pool: Tour[] = [];
+  if (sortedTours.length > 0) {
+    for (let i = 0; i < CARDS_PER_ROW * ROW_COUNT; i++) pool.push(sortedTours[i % sortedTours.length]);
+  }
+  const tourRows: Tour[][] = [
+    pool.slice(0, CARDS_PER_ROW),
+    pool.slice(CARDS_PER_ROW, CARDS_PER_ROW * 2),
+    pool.slice(CARDS_PER_ROW * 2, CARDS_PER_ROW * 3),
+  ];
 
   return (
     <main className="min-h-screen bg-white">
@@ -82,39 +88,21 @@ export default function ToursClient({ initialTours, preloadMap }: { initialTours
         </div>
       </section>
 
-      {/* Featured Tours */}
-      {featuredTours.length > 0 && (
-        <section className="max-w-7xl mx-auto px-4 pt-4">
-          <div className="mb-4">
-            <h2 className="text-xl font-bold text-gray-900" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
-              🌟 Featured Tours
-            </h2>
-          </div>
-          <ScrollingRow>
-            {featuredTours.map((item) => (
-              <div key={item._id || item.id} className="w-[300px] flex-shrink-0 snap-start">
-                <TourCard tour={item} currency={currency} preloadedImage={preloadMap?.[item._id || item.slug]} />
-              </div>
-            ))}
-          </ScrollingRow>
-        </section>
-      )}
-
       {/* Filter Bar */}
-      <section className="sticky top-[72px] z-30 bg-white/95 backdrop-blur-md border-b border-gray-200 shadow-sm mt-8">
+      <section className="sticky top-[72px] z-30 bg-white/95 backdrop-blur-md border-b border-gray-200 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 py-4">
           <div className="flex flex-wrap items-center gap-3">
             <input type="text" value={destination} onChange={(e) => setDestination(e.target.value)} placeholder="Search tours..." className="flex-1 min-w-[180px] pl-3 pr-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-gray-900 text-sm focus:outline-none focus:border-[#D4AF37]" />
             <input type="number" value={minPrice} onChange={(e) => setMinPrice(e.target.value)} placeholder="Min MMK" className="w-[100px] px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-gray-900 text-sm focus:outline-none focus:border-[#D4AF37]" />
             <input type="number" value={maxPrice} onChange={(e) => setMaxPrice(e.target.value)} placeholder="Max MMK" className="w-[100px] px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-gray-900 text-sm focus:outline-none focus:border-[#D4AF37]" />
-            <select value={durationFilter} onChange={(e) => { setDurationFilter(e.target.value); setPage(1); }} className="px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-gray-900 text-sm">
+            <select value={durationFilter} onChange={(e) => setDurationFilter(e.target.value)} className="px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-gray-900 text-sm">
               <option value="">All Durations</option>
               <option value="1-3">1-3 Days</option>
               <option value="4-7">4-7 Days</option>
               <option value="8-14">8-14 Days</option>
               <option value="15+">15+ Days</option>
             </select>
-            <select value={sort} onChange={(e) => { setSort(e.target.value); setPage(1); }} className="px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-gray-900 text-sm">
+            <select value={sort} onChange={(e) => setSort(e.target.value)} className="px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-gray-900 text-sm">
               <option value="">Sort by</option>
               <option value="rating">Rating</option>
               <option value="price_asc">Price: Low to High</option>
@@ -125,9 +113,9 @@ export default function ToursClient({ initialTours, preloadMap }: { initialTours
         </div>
       </section>
 
-      {/* Tours Grid */}
+      {/* Tours — 3 Scrolling Rows of 10 */}
       <section className="max-w-7xl mx-auto px-4 py-8 pb-20">
-        {displayTours.length === 0 ? (
+        {sortedTours.length === 0 ? (
           <div className="text-center py-20 space-y-4">
             <span className="text-5xl block">✈️</span>
             <h3 className="text-xl font-semibold text-gray-900" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>No Tours Found</h3>
@@ -135,25 +123,24 @@ export default function ToursClient({ initialTours, preloadMap }: { initialTours
             <button onClick={() => { setDestination(''); setMinPrice(''); setMaxPrice(''); setDurationFilter(''); setSort(''); }} className="px-6 py-2 rounded-xl bg-gradient-to-r from-[#D4AF37] to-[#C5A028] text-gray-900 font-semibold">Clear Filters</button>
           </div>
         ) : (
-          <>
-            <div className="flex items-center justify-between mb-6">
-              <p className="text-gray-500 text-sm">Showing <span className="text-gray-900 font-medium">{displayTours.length}</span> of <span className="text-gray-900 font-medium">{sortedTours.length}</span> tours</p>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {displayTours.map((item) => (
-                <TourCard key={item._id || item.id} tour={item} currency={currency} preloadedImage={preloadMap?.[item._id || item.slug]} />
-              ))}
-            </div>
-            {computedTotal > 1 && (
-              <div className="flex items-center justify-center gap-2 mt-12">
-                <button onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page === 1} className="px-4 py-2 rounded-lg border border-gray-200 text-gray-500 hover:text-gray-900 hover:border-[#D4AF37] disabled:opacity-30">← Prev</button>
-                {Array.from({ length: computedTotal }, (_, i) => i + 1).map(p => (
-                  <button key={p} onClick={() => setPage(p)} className={`w-10 h-10 rounded-lg text-sm font-medium ${page === p ? 'bg-gradient-to-r from-[#D4AF37] to-[#C5A028] text-white' : 'border border-gray-200 text-gray-500 hover:text-gray-900'}`}>{p}</button>
-                ))}
-                <button onClick={() => setPage(p => Math.min(computedTotal, p + 1))} disabled={page === computedTotal} className="px-4 py-2 rounded-lg border border-gray-200 text-gray-500 hover:text-gray-900 hover:border-[#D4AF37] disabled:opacity-30">Next →</button>
+          <div className="space-y-10">
+            {tourRows.map((row, rowIdx) => (
+              <div key={`tour-row-${rowIdx}`}>
+                <div className="mb-4">
+                  <h2 className="text-xl font-bold text-gray-900" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
+                    {ROW_TITLES[rowIdx]}
+                  </h2>
+                </div>
+                <ScrollingRow>
+                  {row.map((item, i) => (
+                    <div key={`tour-row-${rowIdx}-card-${i}`} className="w-[300px] flex-shrink-0 snap-start">
+                      <TourCard tour={item} currency={currency} preloadedImage={preloadMap?.[item._id || item.slug]} />
+                    </div>
+                  ))}
+                </ScrollingRow>
               </div>
-            )}
-          </>
+            ))}
+          </div>
         )}
       </section>
     </main>

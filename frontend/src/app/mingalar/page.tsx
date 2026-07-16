@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
@@ -32,6 +32,26 @@ export default function MingalarPage() {
     }).catch(() => {});
   }, []);
 
+  const renderCard = (item: typeof defaultCards[number], i: number) => (
+    <div key={i} className="bg-white rounded-xl border border-gray-200 overflow-hidden hover:shadow-lg hover:border-[#D4AF37]/40 transition-all group">
+      <div className="relative h-48 w-full overflow-hidden">
+        <img
+          src={item.img}
+          alt={item.title}
+          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+          loading="lazy"
+          onError={(e) => { (e.target as HTMLImageElement).src = '/images_v2/sky1-v3.jpg'; }}
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
+        <div className="absolute bottom-3 left-4 text-3xl drop-shadow-lg">{item.icon}</div>
+      </div>
+      <div className="p-5 text-center">
+        <h3 className="font-semibold text-[#0A1628] mb-1" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>{item.title}</h3>
+        <p className="text-gray-500 text-sm">{item.desc}</p>
+      </div>
+    </div>
+  );
+
   return (
     <main className="min-h-screen bg-white">
       <section className="relative h-[400px] md:h-[500px] w-full overflow-hidden">
@@ -46,26 +66,13 @@ export default function MingalarPage() {
       </section>
 
       <section className="max-w-6xl mx-auto px-4 py-12">
+        {/* Row 1 */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+          {loungeCards.slice(0, 3).map((item, i) => renderCard(item, i))}
+        </div>
+        {/* Row 2 */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
-          {loungeCards.map((item, i) => (
-            <div key={i} className="bg-white rounded-xl border border-gray-200 overflow-hidden hover:shadow-lg hover:border-[#D4AF37]/40 transition-all group">
-              <div className="relative h-48 w-full overflow-hidden">
-                <img
-                  src={item.img}
-                  alt={item.title}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                  loading="lazy"
-                  onError={(e) => { (e.target as HTMLImageElement).src = '/images_v2/sky1-v3.jpg'; }}
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
-                <div className="absolute bottom-3 left-4 text-3xl drop-shadow-lg">{item.icon}</div>
-              </div>
-              <div className="p-5 text-center">
-                <h3 className="font-semibold text-[#0A1628] mb-1" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>{item.title}</h3>
-                <p className="text-gray-500 text-sm">{item.desc}</p>
-              </div>
-            </div>
-          ))}
+          {loungeCards.slice(3, 6).map((item, i) => renderCard(item, i + 3))}
         </div>
         <div className="text-center">
           <Link href="/contact" className="inline-block px-8 py-3 bg-gradient-to-r from-[#D4AF37] to-[#C5A028] text-gray-900 font-bold rounded-xl hover:shadow-lg transition-all">

@@ -7,6 +7,12 @@ import CarCard from '@/components/CarCard';
 import ScrollingRow from '@/components/ScrollingRow';
 import CurrencyToggle from '@/components/CurrencyToggle';
 
+const ROW_TITLES = ['🚗 Popular Cars', '🚙 SUVs & Family', '🏎️ Luxury & Sedans'];
+const CARDS_PER_ROW = 10;
+const ROW_COUNT = 3;
+
+const CAR_TYPES = ['All', 'SUV', 'Sedan', 'MPV', 'Hatchback', 'Pickup', 'Luxury'];
+
 function SkeletonCard() {
   return (
     <div className="rounded-2xl overflow-hidden border border-gray-200 animate-pulse">
@@ -23,8 +29,6 @@ function SkeletonCard() {
   );
 }
 
-const CAR_TYPES = ['All', 'SUV', 'Sedan', 'MPV', 'Hatchback', 'Pickup', 'Luxury'];
-
 export default function CarsPage() {
   // Fetch from admin database
   const [apiData, setApiData] = useState<any[]>([]);
@@ -40,9 +44,6 @@ export default function CarsPage() {
   const [cars, setCars] = useState<Car[]>([]);
   const [loading, setLoading] = useState(true);
   const [currency, setCurrency] = useState<'MMK' | 'USD'>('MMK');
-  const [page, setPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
-  const [total, setTotal] = useState(0);
   const [carType, setCarType] = useState('All');
   const [allCars, setAllCars] = useState<Car[]>([]);
 
@@ -77,6 +78,30 @@ export default function CarsPage() {
         { _id: 'fc4', slug: 'fbc4', carType: 'Honda CR-V', capacity: 5, images: ['/images_v2/unsplash-16-v2.jpg'], features: ['AC', 'Sunroof'], pricingWithDriver: [{ duration: 'Full Day', priceMMK: 85000, priceUSD: 40 }], description: '' },
         { _id: 'fc5', slug: 'fbc5', carType: 'Mercedes S-Class', capacity: 3, images: ['/images_v2/unsplash-43-v2.jpg'], features: ['AC', 'WiFi', 'Massage'], pricingWithDriver: [{ duration: 'Full Day', priceMMK: 250000, priceUSD: 119 }], description: '' },
         { _id: 'fc6', slug: 'fbc6', carType: 'Toyota Land Cruiser Prado', capacity: 7, images: ['/images_v2/unsplash-31-v2.jpg'], features: ['AC', '4WD', 'Sunroof'], pricingWithDriver: [{ duration: 'Full Day', priceMMK: 180000, priceUSD: 86 }], description: '' },
+        { _id: 'fc7', slug: 'fbc7', carType: 'Toyota Camry', capacity: 5, images: ['/images_v2/unsplash-25-v2.jpg'], features: ['AC', 'Leather', 'GPS'], pricingWithDriver: [{ duration: 'Full Day', priceMMK: 90000, priceUSD: 43 }], description: '' },
+        { _id: 'fc8', slug: 'fbc8', carType: 'Toyota Wish', capacity: 7, images: ['/images_v2/unsplash-42-v2.jpg'], features: ['AC', 'Spacious'], pricingWithDriver: [{ duration: 'Full Day', priceMMK: 80000, priceUSD: 38 }], description: '' },
+        { _id: 'fc9', slug: 'fbc9', carType: 'Mitsubishi Pajero', capacity: 7, images: ['/images_v2/unsplash-23-v2.jpg'], features: ['AC', '4WD', 'Luggage'], pricingWithDriver: [{ duration: 'Full Day', priceMMK: 160000, priceUSD: 76 }], description: '' },
+        { _id: 'fc10', slug: 'fbc10', carType: 'Toyota Noah', capacity: 8, images: ['/images_v2/unsplash-16-v2.jpg'], features: ['AC', 'Spacious', 'WiFi'], pricingWithDriver: [{ duration: 'Full Day', priceMMK: 85000, priceUSD: 40 }], description: '' },
+        { _id: 'fc11', slug: 'fbc11', carType: 'Honda Civic', capacity: 5, images: ['/images_v2/unsplash-43-v2.jpg'], features: ['AC', 'Fuel Efficient'], pricingWithDriver: [{ duration: 'Full Day', priceMMK: 55000, priceUSD: 26 }], description: '' },
+        { _id: 'fc12', slug: 'fbc12', carType: 'Toyota Corolla', capacity: 5, images: ['/images_v2/unsplash-31-v2.jpg'], features: ['AC', 'GPS', 'Fuel'], pricingWithDriver: [{ duration: 'Full Day', priceMMK: 50000, priceUSD: 24 }], description: '' },
+        { _id: 'fc13', slug: 'fbc13', carType: 'BMW 5 Series', capacity: 4, images: ['/images_v2/unsplash-25-v2.jpg'], features: ['AC', 'Leather', 'WiFi'], pricingWithDriver: [{ duration: 'Full Day', priceMMK: 220000, priceUSD: 105 }], description: '' },
+        { _id: 'fc14', slug: 'fbc14', carType: 'Toyota Hilux', capacity: 5, images: ['/images_v2/unsplash-42-v2.jpg'], features: ['AC', '4WD'], pricingWithDriver: [{ duration: 'Full Day', priceMMK: 95000, priceUSD: 45 }], description: '' },
+        { _id: 'fc15', slug: 'fbc15', carType: 'Suzuki Ertiga', capacity: 7, images: ['/images_v2/unsplash-23-v2.jpg'], features: ['AC', 'Spacious'], pricingWithDriver: [{ duration: 'Full Day', priceMMK: 45000, priceUSD: 21 }], description: '' },
+        { _id: 'fc16', slug: 'fbc16', carType: 'Honda HR-V', capacity: 5, images: ['/images_v2/unsplash-16-v2.jpg'], features: ['AC', 'Sunroof', 'Camera'], pricingWithDriver: [{ duration: 'Full Day', priceMMK: 75000, priceUSD: 36 }], description: '' },
+        { _id: 'fc17', slug: 'fbc17', carType: 'Toyota Innova', capacity: 8, images: ['/images_v2/unsplash-43-v2.jpg'], features: ['AC', 'Spacious', 'Luggage'], pricingWithDriver: [{ duration: 'Full Day', priceMMK: 90000, priceUSD: 43 }], description: '' },
+        { _id: 'fc18', slug: 'fbc18', carType: 'Nissan X-Trail', capacity: 5, images: ['/images_v2/unsplash-31-v2.jpg'], features: ['AC', '4WD', 'Camera'], pricingWithDriver: [{ duration: 'Full Day', priceMMK: 110000, priceUSD: 52 }], description: '' },
+        { _id: 'fc19', slug: 'fbc19', carType: 'Mercedes E-Class', capacity: 4, images: ['/images_v2/unsplash-25-v2.jpg'], features: ['AC', 'Leather', 'WiFi'], pricingWithDriver: [{ duration: 'Full Day', priceMMK: 200000, priceUSD: 95 }], description: '' },
+        { _id: 'fc20', slug: 'fbc20', carType: 'Toyota Probox', capacity: 5, images: ['/images_v2/unsplash-42-v2.jpg'], features: ['AC', 'Cargo'], pricingWithDriver: [{ duration: 'Full Day', priceMMK: 40000, priceUSD: 19 }], description: '' },
+        { _id: 'fc21', slug: 'fbc21', carType: 'Ford Ranger', capacity: 5, images: ['/images_v2/unsplash-23-v2.jpg'], features: ['AC', '4WD'], pricingWithDriver: [{ duration: 'Full Day', priceMMK: 100000, priceUSD: 48 }], description: '' },
+        { _id: 'fc22', slug: 'fbc22', carType: 'Mazda CX-5', capacity: 5, images: ['/images_v2/unsplash-16-v2.jpg'], features: ['AC', 'Camera'], pricingWithDriver: [{ duration: 'Full Day', priceMMK: 80000, priceUSD: 38 }], description: '' },
+        { _id: 'fc23', slug: 'fbc23', carType: 'Toyota Fortuner', capacity: 7, images: ['/images_v2/unsplash-43-v2.jpg'], features: ['AC', '4WD', 'Luggage'], pricingWithDriver: [{ duration: 'Full Day', priceMMK: 130000, priceUSD: 62 }], description: '' },
+        { _id: 'fc24', slug: 'fbc24', carType: 'Hyundai Tucson', capacity: 5, images: ['/images_v2/unsplash-31-v2.jpg'], features: ['AC', 'Camera'], pricingWithDriver: [{ duration: 'Full Day', priceMMK: 70000, priceUSD: 33 }], description: '' },
+        { _id: 'fc25', slug: 'fbc25', carType: 'Kia Sorento', capacity: 7, images: ['/images_v2/unsplash-25-v2.jpg'], features: ['AC', 'Spacious'], pricingWithDriver: [{ duration: 'Full Day', priceMMK: 110000, priceUSD: 52 }], description: '' },
+        { _id: 'fc26', slug: 'fbc26', carType: 'Suzuki Dzire', capacity: 4, images: ['/images_v2/unsplash-42-v2.jpg'], features: ['AC', 'Fuel Efficient'], pricingWithDriver: [{ duration: 'Full Day', priceMMK: 35000, priceUSD: 17 }], description: '' },
+        { _id: 'fc27', slug: 'fbc27', carType: 'Audi A6', capacity: 4, images: ['/images_v2/unsplash-23-v2.jpg'], features: ['AC', 'Leather', 'WiFi'], pricingWithDriver: [{ duration: 'Full Day', priceMMK: 240000, priceUSD: 114 }], description: '' },
+        { _id: 'fc28', slug: 'fbc28', carType: 'Toyota Rush', capacity: 5, images: ['/images_v2/unsplash-16-v2.jpg'], features: ['AC', 'Compact'], pricingWithDriver: [{ duration: 'Full Day', priceMMK: 65000, priceUSD: 31 }], description: '' },
+        { _id: 'fc29', slug: 'fbc29', carType: 'Honda Brio', capacity: 4, images: ['/images_v2/unsplash-43-v2.jpg'], features: ['AC', 'Compact'], pricingWithDriver: [{ duration: 'Full Day', priceMMK: 30000, priceUSD: 14 }], description: '' },
+        { _id: 'fc30', slug: 'fbc30', carType: 'Isuzu D-Max', capacity: 5, images: ['/images_v2/unsplash-31-v2.jpg'], features: ['AC', '4WD'], pricingWithDriver: [{ duration: 'Full Day', priceMMK: 90000, priceUSD: 43 }], description: '' },
       ];
       setAllCars(fallbackCars);
     } finally {
@@ -86,18 +111,16 @@ export default function CarsPage() {
 
   useEffect(() => { fetchCars(); }, [fetchCars]);
 
-  useEffect(() => {
-    let filtered = [...allCars];
-    if (carType !== 'All') {
-      filtered = filtered.filter((c) => c.carType && c.carType.toLowerCase().includes(carType.toLowerCase()));
-    }
-    const start = (page - 1) * 6;
-    setTotal(filtered.length);
-    setTotalPages(Math.max(1, Math.ceil(filtered.length / 6)));
-    setCars(filtered.slice(start, start + 6));
-  }, [allCars, carType, page]);
-
-  const handleTypeChange = (type: string) => { setCarType(type); setPage(1); };
+  // Build 3 rows × 10 cards
+  const pool: Car[] = [];
+  if (allCars.length > 0) {
+    for (let i = 0; i < CARDS_PER_ROW * ROW_COUNT; i++) pool.push(allCars[i % allCars.length]);
+  }
+  const carRows: Car[][] = [
+    pool.slice(0, CARDS_PER_ROW),
+    pool.slice(CARDS_PER_ROW, CARDS_PER_ROW * 2),
+    pool.slice(CARDS_PER_ROW * 2, CARDS_PER_ROW * 3),
+  ];
 
   return (
     <main className="min-h-screen bg-white">
@@ -122,7 +145,7 @@ export default function CarsPage() {
           <div className="flex flex-wrap items-center gap-3">
             <div className="flex gap-2 flex-wrap">
               {CAR_TYPES.map((type) => (
-                <button key={type} onClick={() => handleTypeChange(type)}
+                <button key={type} onClick={() => setCarType(type)}
                   className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
                     carType === type ? 'bg-[#D4AF37] text-white shadow-md' : 'bg-gray-50 border border-gray-200 text-gray-600 hover:text-gray-900 hover:border-[#D4AF37]'}`}>
                   {type}
@@ -134,61 +157,42 @@ export default function CarsPage() {
         </div>
       </section>
 
-      {/* Featured Scrolling Row */}
-      {!loading && allCars.length > 0 && (
-        <section className="max-w-7xl mx-auto px-4 pt-8">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-bold text-gray-900" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>🚗 Popular Cars</h2>
-          </div>
-          <ScrollingRow>
-            {allCars.slice(0, 6).map((car) => (
-              <div key={car._id} className="w-[300px] flex-shrink-0 snap-start">
-                <CarCard car={car} currency={currency} />
-              </div>
-            ))}
-          </ScrollingRow>
-        </section>
-      )}
-
-      <section className="max-w-7xl mx-auto px-4 py-10 pb-20">
+      {/* Cars — 3 Scrolling Rows of 10 */}
+      <section className="max-w-7xl mx-auto px-4 py-8 pb-20">
         {loading && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {Array.from({ length: 6 }).map((_, i) => <SkeletonCard key={i} />)}
           </div>
         )}
 
-        {!loading && cars.length === 0 && (
+        {!loading && allCars.length === 0 && (
           <div className="text-center py-20 space-y-4">
             <h3 className="text-xl font-semibold text-gray-900" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>No Cars Available</h3>
             <p className="text-gray-500 max-w-md mx-auto">We couldn't find any vehicles matching your criteria. Please try a different car type or contact us for custom arrangements.</p>
-            <button onClick={() => { setCarType('All'); setPage(1); }}
+            <button onClick={() => { setCarType('All'); }}
               className="px-6 py-2 rounded-xl bg-gradient-to-r from-[#D4AF37] to-[#C5A028] text-gray-900 font-semibold hover:shadow-lg transition-all">Show All Cars</button>
           </div>
         )}
 
-        {!loading && cars.length > 0 && (
-          <>
-            <div className="flex items-center justify-between mb-6">
-              <p className="text-gray-500 text-sm">Showing <span className="text-gray-900 font-medium">{cars.length}</span> of <span className="text-gray-900 font-medium">{total}</span> vehicles</p>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {cars.map((car) => <CarCard key={car._id} car={car} currency={currency} />)}
-            </div>
-            {totalPages > 1 && (
-              <div className="flex items-center justify-center gap-2 mt-12">
-                <button onClick={() => setPage((prev) => Math.max(1, prev - 1))} disabled={page === 1}
-                  className="px-4 py-2 rounded-lg border border-gray-200 text-gray-500 hover:text-gray-900 hover:border-[#D4AF37] disabled:opacity-30 disabled:cursor-not-allowed transition-colors">← Prev</button>
-                {Array.from({ length: totalPages }, (_, i) => i + 1)
-                  .filter((p) => { if (totalPages <= 7) return true; if (p === 1 || p === totalPages) return true; if (Math.abs(p - page) <= 2) return true; return false; })
-                  .map((p, idx, arr) => {
-                    const showEllipsis = idx > 0 && arr[idx - 1] !== p - 1;
-                    return (<React.Fragment key={p}>{showEllipsis && <span className="px-2 text-gray-400">...</span>}<button onClick={() => setPage(p)} className={`w-10 h-10 rounded-lg text-sm font-medium transition-all ${page === p ? 'bg-gradient-to-r from-[#D4AF37] to-[#C5A028] text-white shadow-sm' : 'border border-gray-200 text-gray-500 hover:text-gray-900 hover:border-[#D4AF37]'}`}>{p}</button></React.Fragment>);
-                  })}
-                <button onClick={() => setPage((prev) => Math.min(totalPages, prev + 1))} disabled={page === totalPages}
-                  className="px-4 py-2 rounded-lg border border-gray-200 text-gray-500 hover:text-gray-900 hover:border-[#D4AF37] disabled:opacity-30 disabled:cursor-not-allowed transition-colors">Next →</button>
+        {!loading && allCars.length > 0 && (
+          <div className="space-y-10">
+            {carRows.map((row, rowIdx) => (
+              <div key={`car-row-${rowIdx}`}>
+                <div className="flex items-center justify-between mb-4">
+                  <h2 className="text-xl font-bold text-gray-900" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
+                    {ROW_TITLES[rowIdx]}
+                  </h2>
+                </div>
+                <ScrollingRow>
+                  {row.map((car) => (
+                    <div key={car._id + '-' + rowIdx} className="w-[300px] flex-shrink-0 snap-start">
+                      <CarCard car={car} currency={currency} />
+                    </div>
+                  ))}
+                </ScrollingRow>
               </div>
-            )}
-          </>
+            ))}
+          </div>
         )}
       </section>
     </main>

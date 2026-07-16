@@ -1,15 +1,9 @@
 'use client';
 
-import React, { useState, useEffect, useRef } from 'react';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { api } from '@/lib/api';
 import BookingModal from '@/components/BookingModal';
-
-const CARD_WIDTH = 340;
-const CARD_GAP = 20;
-const STEP = CARD_WIDTH + CARD_GAP;
-const AUTOPLAY_MS = 3500;
 
 interface VisaService {
   _id: string;
@@ -74,45 +68,14 @@ const FALLBACK_VISAS: VisaService[] = [
   { _id: 'v23', country: 'Myanmar', processingTime: '3-5 Days', visaFeeMMK: 90000, visaFeeUSD: 43, requirements: ['Passport 6m','Hotel'] },
 ];
 
-/** Row slider with left/right buttons + autoplay */
+/** Static row — no slider, no scroll buttons, no autoplay (up to 10 cards per line) */
 function VisaRow({ row }: { row: VisaService[] }) {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [scrollPos, setScrollPos] = useState(0);
-  const [maxScroll, setMaxScroll] = useState(0);
-
-  useEffect(() => {
-    const el = containerRef.current;
-    if (!el) return;
-    const upd = () => { setScrollPos(el.scrollLeft); setMaxScroll(el.scrollWidth - el.clientWidth); };
-    el.addEventListener('scroll', upd, { passive: true });
-    upd();
-    window.addEventListener('resize', upd);
-    return () => { el.removeEventListener('scroll', upd); window.removeEventListener('resize', upd); };
-  }, [row]);
-
-  const scroll = (dir: 1 | -1) => containerRef.current?.scrollBy({ left: STEP * dir, behavior: 'smooth' });
-  useEffect(() => { const id = setInterval(() => { if (document.visibilityState === 'visible') scroll(1); }, AUTOPLAY_MS); return () => clearInterval(id); }, []);
-
-  const canLeft = scrollPos > 4;
-  const canRight = scrollPos < maxScroll - 4;
-
+  if (row.length === 0) return null;
   return (
-    <div className="relative">
-      {canLeft && (
-        <button onClick={() => scroll(-1)} className="absolute left-0 top-1/2 -translate-y-1/2 z-10 w-9 h-9 rounded-full bg-white shadow-lg border border-gray-200 flex items-center justify-center hover:shadow-xl transition-shadow">
-          <ChevronLeft className="w-4 h-4 text-gray-700" />
-        </button>
-      )}
-      {canRight && (
-        <button onClick={() => scroll(1)} className="absolute right-0 top-1/2 -translate-y-1/2 z-10 w-9 h-9 rounded-full bg-white shadow-lg border border-gray-200 flex items-center justify-center hover:shadow-xl transition-shadow">
-          <ChevronRight className="w-4 h-4 text-gray-700" />
-        </button>
-      )}
-      <div ref={containerRef} className="flex gap-4 overflow-x-auto scrollbar-hide scroll-smooth pb-2" style={{ scrollSnapType: 'x mandatory' }}>
-        {row.map(v => (
-          <VisaSliderCard key={v._id} visa={v} />
-        ))}
-      </div>
+    <div className="flex gap-4 pb-2">
+      {row.map(v => (
+        <VisaSliderCard key={v._id} visa={v} />
+      ))}
     </div>
   );
 }
@@ -180,10 +143,12 @@ export default function VisasPage() {
     }).catch(() => {});
   }, []);
 
-  // Split into 2 rows
-  const mid = Math.ceil(visas.length / 2);
-  const row1 = visas.slice(0, mid);
-  const row2 = visas.slice(mid);
+  // Split into 3 static rows — up to 10 cards per row (max 30 shown)
+  const display = visas.slice(0, 30);
+  const rowSize = Math.min(10, Math.ceil(display.length / 3));
+  const row1 = display.slice(0, rowSize);
+  const row2 = display.slice(rowSize, rowSize * 2);
+  const row3 = display.slice(rowSize * 2, rowSize * 3);
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -201,10 +166,11 @@ export default function VisasPage() {
         </div>
       </section>
 
-      {/* 2 Slider Rows */}
+      {/* 3 Static Rows (no slide) */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 pt-4 pb-10 space-y-4">
         <VisaRow row={row1} />
         <VisaRow row={row2} />
+        <VisaRow row={row3} />
       </section>
 
       {/* Modal */}
