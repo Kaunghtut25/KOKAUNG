@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 
 const defaultCards = [
   { img: '/images_v2/sky1-v3.jpg', icon: '🍽️', title: 'Fine Dining', desc: 'Premium buffet & a la carte menu' },
@@ -17,15 +16,26 @@ export default function MingalarPage() {
   const [loungeCards, setLoungeCards] = useState(defaultCards);
 
   useEffect(() => {
-    fetch('/api/admin/mingalar').then(r => r.json()).then(data => {
-      if (data?.data?.length > 0) setLoungeCards(data.data);
+    fetch('/api/admin/mingalar').then(r => {
+      if (!r.ok) throw new Error('Not authed');
+      return r.json();
+    }).then(data => {
+      if (data?.data?.length > 0) {
+        const mapped = data.data.map((item: any) => ({
+          img: item.img || item.image || '/images_v2/sky1-v3.jpg',
+          icon: item.icon || '✨',
+          title: item.title || 'Sky Lounge',
+          desc: item.desc || item.description || '',
+        }));
+        setLoungeCards(mapped);
+      }
     }).catch(() => {});
   }, []);
 
   return (
     <main className="min-h-screen bg-white">
       <section className="relative h-[400px] md:h-[500px] w-full overflow-hidden">
-        <Image src="/images_v2/hero-mingalar-v2.jpg" alt="Airport Lounge" fill className="object-cover" priority />
+        <img src="/images_v2/hero-mingalar-v2.jpg" alt="Airport Lounge" className="w-full h-full object-cover" />
         <div className="absolute inset-0 bg-gradient-to-t from-[#0A1628]/90 via-[#0A1628]/40 to-[#0A1628]/30" />
         <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4">
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
@@ -40,12 +50,18 @@ export default function MingalarPage() {
           {loungeCards.map((item, i) => (
             <div key={i} className="bg-white rounded-xl border border-gray-200 overflow-hidden hover:shadow-lg hover:border-[#D4AF37]/40 transition-all group">
               <div className="relative h-48 w-full overflow-hidden">
-                <Image src={item.img} alt={item.title} fill className="object-cover group-hover:scale-105 transition-transform duration-500" />
+                <img
+                  src={item.img}
+                  alt={item.title}
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  loading="lazy"
+                  onError={(e) => { (e.target as HTMLImageElement).src = '/images_v2/sky1-v3.jpg'; }}
+                />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
                 <div className="absolute bottom-3 left-4 text-3xl drop-shadow-lg">{item.icon}</div>
               </div>
               <div className="p-5 text-center">
-                <h3 className="font-semibold text-[#0A1628] mb-1">{item.title}</h3>
+                <h3 className="font-semibold text-[#0A1628] mb-1" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>{item.title}</h3>
                 <p className="text-gray-500 text-sm">{item.desc}</p>
               </div>
             </div>

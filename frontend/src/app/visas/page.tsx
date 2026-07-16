@@ -14,11 +14,13 @@ const AUTOPLAY_MS = 3500;
 interface VisaService {
   _id: string;
   country: string;
+  countryCode?: string;
   processingTime: string;
   visaFeeMMK: number;
   visaFeeUSD: number;
   requirements: string[];
   additionalInfo?: string;
+  image?: string;
 }
 
 const COUNTRY_FLAGS: Record<string, string> = {
@@ -118,7 +120,7 @@ function VisaRow({ row }: { row: VisaService[] }) {
 function VisaSliderCard({ visa }: { visa: VisaService }) {
   const router = useRouter();
   const flag = COUNTRY_FLAGS[visa.country] || '🌏';
-  const imageUrl = COUNTRY_IMAGES[visa.country];
+  const imageUrl = visa.image || COUNTRY_IMAGES[visa.country];
 
   return (
     <div
@@ -156,7 +158,27 @@ export default function VisasPage() {
   const [currency, setCurrency] = useState<'MMK' | 'USD'>('MMK');
   const [selectedVisa, setSelectedVisa] = useState<VisaService | null>(null);
 
-  useEffect(() => { api.get('/visas').then(r => { if (r.data?.data) setVisas(r.data.data); }).catch(() => {}); }, []);
+  useEffect(() => {
+    api.get('/visas').then(r => {
+      const items = r.data as unknown as any[];
+      if (Array.isArray(items) && items.length > 0) {
+        const mapped: VisaService[] = items.map((v: any) => ({
+          _id: v._id || v.id || '',
+          country: v.country || '',
+          countryCode: v.countryCode || '',
+          processingTime: v.processingTime || '3-5 Days',
+          visaFeeMMK: Number(v.visaFeeMMK) || 0,
+          visaFeeUSD: Number(v.visaFeeUSD) || 0,
+          requirements: typeof v.requirements === 'string'
+            ? v.requirements.split(',').map((s: string) => s.trim()).filter(Boolean)
+            : Array.isArray(v.requirements) ? v.requirements : [],
+          additionalInfo: v.additionalInfo || '',
+          image: v.image || COUNTRY_IMAGES[v.country],
+        }));
+        setVisas(mapped);
+      }
+    }).catch(() => {});
+  }, []);
 
   // Split into 2 rows
   const mid = Math.ceil(visas.length / 2);

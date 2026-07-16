@@ -54,18 +54,19 @@ const shieldIcon = (
 
 /** Normalize API data or fallback — handles both old & new field names */
 function normalizePlan(raw: any): InsurancePlan {
+  const rawImages = Array.isArray(raw.images) ? raw.images : (typeof raw.images === 'string' ? [raw.images] : undefined);
   return {
     _id: raw._id || raw.id || '',
     planName: raw.title || raw.planName || raw.name || '',
     coverage: raw.coverage || '',
-    duration: raw.duration || '',
-    priceMMK: Number(raw.priceMMK || raw.premiumMMK || raw.price || 0),
-    priceUSD: Number(raw.priceUSD || raw.premiumUSD || 0),
+    duration: raw.duration || 'Per Trip',
+    priceMMK: Number(raw.priceMMK || raw.premiumPriceMMK || raw.premiumMMK || raw.price || 0),
+    priceUSD: Number(raw.priceUSD || raw.premiumPriceUSD || raw.premiumUSD || 0),
     coverageAmountMMK: Number(raw.coverageAmountMMK || 0),
     coverageAmountUSD: Number(raw.coverageAmountUSD || 0),
-    benefits: Array.isArray(raw.benefits) ? raw.benefits : (typeof raw.benefits === 'string' ? raw.benefits.split(',').map((s:string) => s.trim()) : []),
+    benefits: Array.isArray(raw.benefits) ? raw.benefits : (typeof raw.benefits === 'string' ? raw.benefits.split(',').map((s:string) => s.trim()).filter(Boolean) : []),
     description: raw.description || '',
-    image: raw.image || raw.images?.[0] || getImageFallback(raw._id || raw.id, raw.images),
+    image: raw.image || getImageFallback(raw._id || raw.id, rawImages),
   };
 }
 
