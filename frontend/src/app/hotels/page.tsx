@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
@@ -29,16 +29,6 @@ function SkeletonCard() {
 }
 
 export default function HotelsPage() {
-  // Fetch from admin database
-  const [apiData, setApiData] = useState<any[]>([]);
-  const [dataLoaded, setDataLoaded] = useState(false);
-  useEffect(() => {
-    fetch('/api/hotels').then(r => r.json()).then(data => {
-      const items = data?.data || data || [];
-      if (items.length > 0) { setApiData(items); setDataLoaded(true); }
-    }).catch(() => {});
-  }, []);
-
   const router = useRouter();
   const [hotels, setHotels] = useState<Hotel[]>([]);
   const [loading, setLoading] = useState(true);
@@ -192,8 +182,8 @@ export default function HotelsPage() {
       {/* Hotels — 3 Scrolling Rows of 10 */}
       <section className="max-w-7xl mx-auto px-4 py-10 pb-20">
         {loading && (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {Array.from({ length: 6 }).map((_, i) => <SkeletonCard key={i} />)}
+          <div className="flex gap-4 overflow-hidden">
+            {Array.from({ length: 4 }).map((_, i) => <div key={i} className="w-[300px] flex-shrink-0"><SkeletonCard /></div>)}
           </div>
         )}
 
