@@ -1,0 +1,7 @@
+﻿.git
+*.log
+.env*
+.vercel
+.env.vercel-temp
+test-blob.txt
+.next

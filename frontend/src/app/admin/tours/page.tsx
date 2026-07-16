@@ -51,6 +51,9 @@ export default function AdminToursPage() {
   const [imageUrlInput, setImageUrlInput] = useState("");
   const [imagePreviewUrl, setImagePreviewUrl] = useState("");
   const [imageList, setImageList] = useState<string[]>([]);
+  const [uploading, setUploading] = useState(false);
+  const [uploadError, setUploadError] = useState("");
+  const fileInputRef = React.useRef<HTMLInputElement>(null);
 
   const token =
     typeof window !== "undefined" ? localStorage.getItem("admin_token") : "";
@@ -94,6 +97,7 @@ export default function AdminToursPage() {
     setImageUrlInput("");
     setImagePreviewUrl("");
     setImageList([]);
+    setUploadError("");
     setIsNew(true);
     setModalOpen(true);
   };
@@ -104,6 +108,7 @@ export default function AdminToursPage() {
     setImageList(imgs);
     setImageUrlInput(imgs[0] || "");
     setImagePreviewUrl(imgs[0] || "");
+    setUploadError("");
     setIsNew(false);
     setModalOpen(true);
   };
@@ -139,6 +144,49 @@ export default function AdminToursPage() {
   const handleImageUrlChange = (value: string) => {
     setImageUrlInput(value);
     setImagePreviewUrl(value);
+    setUploadError("");
+  };
+
+  const uploadFile = async (file: File) => {
+    if (!file.type.startsWith("image/")) {
+      setUploadError("Only image files are accepted.");
+      return;
+    }
+    setUploading(true);
+    setUploadError("");
+    const formData = new FormData();
+    formData.append("file", file);
+    try {
+      const res = await fetch("/api/upload", { method: "POST", body: formData });
+      const data = await res.json();
+      if (data.success && data.uploads?.[0]) {
+        const newUrl = `/api/upload?id=${data.uploads[0].id}`;
+        const newList = [...imageList, newUrl];
+        setImageList(newList);
+        setEditingTour((prev) => ({ ...prev, images: JSON.stringify(newList) }));
+        setImageUrlInput("");
+        setImagePreviewUrl("");
+      } else {
+        setUploadError(data.error || "Upload failed. Please try again.");
+      }
+    } catch {
+      setUploadError("Upload failed. Check your connection and try again.");
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const handleFileInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) uploadFile(file);
+    e.target.value = "";
+  };
+
+  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.currentTarget.style.borderColor = "";
+    const file = e.dataTransfer?.files?.[0];
+    if (file) uploadFile(file);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -309,30 +357,37 @@ export default function AdminToursPage() {
       {/* ─── Multi-Image Management ─── */}
       <div>
         <label className="block text-white/70 text-sm mb-1">
-          Images (drag & drop, paste from clipboard, or type URL)
+          Images (upload file or type URL)
         </label>
         <div
-            className="flex gap-2 mb-3"
-            onDragOver={(e) => { e.preventDefault(); (e.currentTarget as HTMLDivElement).style.borderColor = '#D4AF37'; }}
-            onDragLeave={(e) => { (e.currentTarget as HTMLDivElement).style.borderColor = ''; }}
-            onDrop={(e) => {
-              e.preventDefault();
-              (e.currentTarget as HTMLDivElement).style.borderColor = '';
-              const file = e.dataTransfer?.files?.[0];
-              if (file && file.type.startsWith('image/')) {
-                const reader = new FileReader();
-                reader.onload = () => { setImageUrlInput(reader.result as string); handleImageUrlChange(reader.result as string); };
-                reader.readAsDataURL(file);
-              }
-            }}>
+          className="flex gap-2 mb-3 flex-wrap"
+          onDragOver={(e) => { e.preventDefault(); (e.currentTarget as HTMLDivElement).style.borderColor = '#D4AF37'; }}
+          onDragLeave={(e) => { (e.currentTarget as HTMLDivElement).style.borderColor = ''; }}
+          onDrop={handleDrop}
+        >
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/*"
+            onChange={handleFileInputChange}
+            className="hidden"
+          />
+          <button
+            type="button"
+            onClick={() => fileInputRef.current?.click()}
+            disabled={uploading}
+            className="px-4 py-2 rounded-lg bg-gold/10 text-gold text-sm font-medium hover:bg-gold/20 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+          >
+            {uploading ? "Uploading..." : "📁 Upload Image"}
+          </button>
           <input
             type="text"
             value={imageUrlInput}
             onChange={(e) => {
               handleImageUrlChange(e.target.value);
             }}
-            placeholder="Drag, paste, or type image URL..."
-            className="flex-1 bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-gold/50 transition-colors"
+            placeholder="Or type image URL..."
+            className="flex-1 min-w-[200px] bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-gold/50 transition-colors"
             onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); addImage(); } }}
           />
           <button
@@ -344,6 +399,9 @@ export default function AdminToursPage() {
             + Add
           </button>
         </div>
+        {uploadError && (
+          <p className="text-red-400 text-xs mb-2">{uploadError}</p>
+        )}
 
         {/* Image Preview & List */}
         {imageList.length > 0 ? (

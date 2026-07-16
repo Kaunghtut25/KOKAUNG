@@ -49,6 +49,9 @@ export default function AdminCarsPage() {
   const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
   const [imageUrlInput, setImageUrlInput] = useState("");
   const [imagePreviewUrl, setImagePreviewUrl] = useState("");
+  const [uploading, setUploading] = useState(false);
+  const [uploadError, setUploadError] = useState("");
+  const fileInputRef = React.useRef<HTMLInputElement>(null);
 
   const token =
     typeof window !== "undefined" ? localStorage.getItem("admin_token") : "";
@@ -94,6 +97,7 @@ export default function AdminCarsPage() {
     setEditingCar(emptyCar);
     setImageUrlInput("");
     setImagePreviewUrl("");
+    setUploadError("");
     setIsNew(true);
     setModalOpen(true);
   };
@@ -106,6 +110,7 @@ export default function AdminCarsPage() {
     const firstImg = getFirstImage(car.images);
     setImageUrlInput(firstImg);
     setImagePreviewUrl(firstImg);
+    setUploadError("");
     setIsNew(false);
     setModalOpen(true);
   };
@@ -117,6 +122,40 @@ export default function AdminCarsPage() {
   const handleImageUrlChange = (value: string) => {
     setImageUrlInput(value);
     setImagePreviewUrl(value);
+    setUploadError("");
+  };
+
+  const uploadFile = async (file: File) => {
+    if (!file.type.startsWith("image/")) {
+      setUploadError("Only image files are accepted.");
+      return;
+    }
+    setUploading(true);
+    setUploadError("");
+    const formData = new FormData();
+    formData.append("file", file);
+    try {
+      const res = await fetch("/api/upload", { method: "POST", body: formData });
+      const data = await res.json();
+      if (data.success && data.uploads?.[0]) {
+        const newUrl = `/api/upload?id=${data.uploads[0].id}`;
+        setImageUrlInput(newUrl);
+        setImagePreviewUrl(newUrl);
+        handleFieldChange("images", JSON.stringify([newUrl]));
+      } else {
+        setUploadError(data.error || "Upload failed. Please try again.");
+      }
+    } catch {
+      setUploadError("Upload failed. Check your connection and try again.");
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const handleFileInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) uploadFile(file);
+    e.target.value = "";
   };
 
   const handlePricingChange = (
@@ -158,8 +197,7 @@ export default function AdminCarsPage() {
         method,
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
+          Authorization: `Bearer ${token}` },
         body: JSON.stringify(editingCar),
       });
 
@@ -306,49 +344,65 @@ export default function AdminCarsPage() {
       {/* ─── Image URL with Preview ─── */}
       <div>
         <label className="block text-white/70 text-sm mb-1">
-          Images (comma-separated URLs)
+          Images (upload file or enter URL)
         </label>
-        <div className="flex gap-4">
-          <div className="flex-1">
-            <input
-              type="text"
-              value={imageUrlInput}
-              onChange={(e) => {
-                handleImageUrlChange(e.target.value);
-                handleFieldChange("images", e.target.value);
+        <div className="flex gap-2 mb-3">
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/*"
+            onChange={handleFileInputChange}
+            className="hidden"
+          />
+          <button
+            type="button"
+            onClick={() => fileInputRef.current?.click()}
+            disabled={uploading}
+            className="px-4 py-2 rounded-lg bg-gold/10 text-gold text-sm font-medium hover:bg-gold/20 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+          >
+            {uploading ? "Uploading..." : "📁 Upload Image"}
+          </button>
+          <input
+            type="text"
+            value={imageUrlInput}
+            onChange={(e) => {
+              handleImageUrlChange(e.target.value);
+              handleFieldChange("images", e.target.value);
+            }}
+            placeholder="https://..."
+            className="flex-1 bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-gold/50 transition-colors"
+          />
+        </div>
+        {uploadError && (
+          <p className="text-red-400 text-xs mb-2">{uploadError}</p>
+        )}
+        <div className="w-[200px] h-[150px] rounded-lg border border-white/10 bg-white/5 flex-shrink-0 overflow-hidden flex items-center justify-center">
+          {imagePreviewUrl ? (
+            <img
+              src={imagePreviewUrl}
+              alt="Preview"
+              className="w-full h-full object-cover"
+              onError={(e) => {
+                (e.target as HTMLImageElement).style.display = "none";
+                const parent = (e.target as HTMLImageElement)
+                  .parentElement;
+                if (parent) {
+                  const fallback =
+                    parent.querySelector(".img-fallback");
+                  if (fallback)
+                    (fallback as HTMLElement).style.display =
+                      "flex";
+                }
               }}
-              placeholder="https://..."
-              className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-gold/50 transition-colors"
             />
-          </div>
-          <div className="w-[200px] h-[150px] rounded-lg border border-white/10 bg-white/5 flex-shrink-0 overflow-hidden flex items-center justify-center">
-            {imagePreviewUrl ? (
-              <img
-                src={imagePreviewUrl}
-                alt="Preview"
-                className="w-full h-full object-cover"
-                onError={(e) => {
-                  (e.target as HTMLImageElement).style.display = "none";
-                  const parent = (e.target as HTMLImageElement)
-                    .parentElement;
-                  if (parent) {
-                    const fallback =
-                      parent.querySelector(".img-fallback");
-                    if (fallback)
-                      (fallback as HTMLElement).style.display =
-                        "flex";
-                  }
-                }}
-              />
-            ) : null}
-            <span
-              className={`img-fallback text-white/20 text-xs text-center px-2 ${
-                imagePreviewUrl ? "hidden" : "flex"
-              } items-center justify-center w-full h-full`}
-            >
-              Image Preview
-            </span>
-          </div>
+          ) : null}
+          <span
+            className={`img-fallback text-white/20 text-xs text-center px-2 ${
+              imagePreviewUrl ? "hidden" : "flex"
+            } items-center justify-center w-full h-full`}
+          >
+            Image Preview
+          </span>
         </div>
       </div>
 

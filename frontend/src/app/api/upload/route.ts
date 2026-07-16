@@ -1,131 +1,173 @@
-export const dynamic = 'force-dynamic';
+﻿export const dynamic = 'force-dynamic';
 
-import { NextRequest, NextResponse } from "next/server";
+import { put, list, del } from '@vercel/blob';
+import { NextRequest, NextResponse } from 'next/server';
 
-function getRedisClient() {
-  const url = process.env.UPSTASH_REDIS_REST_URL;
-  const token = process.env.UPSTASH_REDIS_REST_TOKEN;
-  if (!url || !token) return null;
+const INDEX_PATHNAME = 'uploads/index.json';
+
+// -- Helpers --
+
+async function getNameIndex(): Promise<Record<string, BlobEntry>> {
   try {
-    const { Redis } = require("@upstash/redis");
-    return new Redis({ url, token });
-  } catch { return null; }
+    const { blobs } = await list({ prefix: INDEX_PATHNAME });
+    if (blobs.length > 0) {
+      const res = await fetch(blobs[0].url);
+      if (res.ok) return await res.json();
+    }
+  } catch { /* fall through */ }
+  return {};
 }
 
-const UPLOADS_KEY = "***";
-const NAME_INDEX_KEY = "***"; // filename → upload_id
-
-// In-memory fallback
-let memoryUploads: any[] = [];
-let memoryNameIndex: Record<string, string> = {};
-
-async function getAllUploads(): Promise<any[]> {
-  const redis = getRedisClient();
-  if (redis) {
-    try {
-      const raw = await redis.get(UPLOADS_KEY);
-      if (raw && Array.isArray(raw) && raw.length > 0) return raw;
-    } catch {}
-  }
-  return memoryUploads;
+async function saveNameIndex(index: Record<string, BlobEntry>) {
+  await put(INDEX_PATHNAME, JSON.stringify(index), {
+    access: 'public',
+    contentType: 'application/json',
+  });
 }
 
-async function getNameIndex(): Promise<Record<string, string>> {
-  const redis = getRedisClient();
-  if (redis) {
-    try {
-      const raw = await redis.get(NAME_INDEX_KEY);
-      if (raw) return raw as Record<string, string>;
-    } catch {}
-  }
-  return memoryNameIndex;
+interface BlobEntry {
+  id: string;
+  name: string;
+  url: string;
+  pathname: string;
+  mimeType: string;
+  size: number;
+  createdAt: string;
 }
 
-async function saveUploads(data: any[]) {
-  memoryUploads = data;
-  const redis = getRedisClient();
-  if (redis) {
-    try { await redis.set(UPLOADS_KEY, data); } catch {}
-  }
-}
+// -- POST /api/upload -- upload images to Vercel Blob --
 
-async function saveNameIndex(idx: Record<string, string>) {
-  memoryNameIndex = idx;
-  const redis = getRedisClient();
-  if (redis) {
-    try { await redis.set(NAME_INDEX_KEY, idx); } catch {}
-  }
-}
-
-// POST /api/upload — upload image(s)
 export async function POST(request: NextRequest) {
   try {
     const formData = await request.formData();
-    const uploads = await getAllUploads();
     const nameIndex = await getNameIndex();
-    const results: any[] = [];
+    const results: UploadResult[] = [];
 
     for (const [, value] of formData.entries()) {
-      if (value instanceof File) {
-        const buffer = Buffer.from(await value.arrayBuffer());
-        const base64 = buffer.toString("base64");
-        const mimeType = value.type || "image/jpeg";
-        const id = `img_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
+      if (!(value instanceof File)) continue;
 
-        // Replace existing entry with same name
-        const existingIdx = uploads.findIndex((u: any) => u.name === value.name);
-        if (existingIdx >= 0) {
-          uploads[existingIdx] = { ...uploads[existingIdx], base64, size: buffer.length, mimeType, updatedAt: new Date().toISOString() };
-        } else {
-          uploads.push({ id, name: value.name, mimeType, base64, size: buffer.length, createdAt: new Date().toISOString() });
-        }
-        nameIndex[value.name] = existingIdx >= 0 ? uploads[existingIdx].id : id;
-        results.push({ id: existingIdx >= 0 ? uploads[existingIdx].id : id, name: value.name, size: buffer.length });
+      const buffer = Buffer.from(await value.arrayBuffer());
+      const mimeType = value.type || 'image/jpeg';
+      const id = `img_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
+      const safeName = value.name.replace(/[^a-zA-Z0-9._-]/g, '_');
+      const pathname = `uploads/${id}-${safeName}`;
+
+      // Purge old blob for the same name
+      const old = nameIndex[value.name];
+      if (old) {
+        try { await del(old.url); } catch { /* best-effort */ }
       }
+
+      const blob = await put(pathname, buffer, {
+        access: 'public',
+        contentType: mimeType,
+      });
+
+      const entry: BlobEntry = {
+        id,
+        name: value.name,
+        url: blob.url,
+        pathname: blob.pathname,
+        mimeType,
+        size: buffer.length,
+        createdAt: new Date().toISOString(),
+      };
+      nameIndex[value.name] = entry;
+
+      results.push({ id, name: value.name, url: blob.url, size: buffer.length });
     }
 
-    await saveUploads(uploads);
     await saveNameIndex(nameIndex);
-    return NextResponse.json({ success: true, uploads: results, total: uploads.length });
+
+    return NextResponse.json({ success: true, uploads: results, total: Object.keys(nameIndex).length });
   } catch (e: any) {
     return NextResponse.json({ success: false, error: e.message }, { status: 500 });
   }
 }
 
-// GET /api/upload?id=xxx OR /api/upload?name=hero-bagan.jpg
+// -- GET /api/upload?name=... | ?id=... | (no params -> list) --
+
 export async function GET(request: NextRequest) {
-  const id = request.nextUrl.searchParams.get("id");
-  const name = request.nextUrl.searchParams.get("name");
+  const name = request.nextUrl.searchParams.get('name');
+  const id = request.nextUrl.searchParams.get('id');
 
-  // List all uploads (without base64)
+  const nameIndex = await getNameIndex();
+
+  // List all (metadata only, no base64)
   if (!id && !name) {
-    const uploads = await getAllUploads();
-    const list = uploads.map(({ base64, ...rest }: any) => rest);
-    return NextResponse.json({ uploads: list });
+    const items = Object.values(nameIndex).map(({ url, ...rest }) => rest);
+    return NextResponse.json({ uploads: items });
   }
 
-  // Lookup by name
-  let resolvedId = id;
-  if (name && !id) {
+  // Resolve entry by id or name
+  let entry: BlobEntry | undefined;
+  if (id) {
+    entry = Object.values(nameIndex).find((v) => v.id === id);
+  } else if (name) {
+    entry = nameIndex[name];
+  }
+
+  if (!entry) {
+    return NextResponse.json({ error: 'Not found' }, { status: 404 });
+  }
+
+  // Proxy the blob bytes with correct Content-Type
+  try {
+    const imageRes = await fetch(entry.url);
+    if (!imageRes.ok) throw new Error('Blob fetch failed');
+    const buffer = Buffer.from(await imageRes.arrayBuffer());
+
+    return new NextResponse(buffer, {
+      headers: {
+        'Content-Type': entry.mimeType || 'image/jpeg',
+        'Cache-Control': 'public, max-age=31536000, immutable',
+      },
+    });
+  } catch {
+    return NextResponse.json({ error: 'Blob not accessible' }, { status: 404 });
+  }
+}
+
+// -- DELETE /api/upload?url=... | ?name=... --
+
+export async function DELETE(request: NextRequest) {
+  try {
+    const url = request.nextUrl.searchParams.get('url');
+    const name = request.nextUrl.searchParams.get('name');
+
+    if (!url && !name) {
+      return NextResponse.json({ success: false, error: 'Provide ?url= or ?name=' }, { status: 400 });
+    }
+
     const nameIndex = await getNameIndex();
-    resolvedId = nameIndex[name];
-  }
 
-  if (!resolvedId) {
-    return NextResponse.json({ error: "Not found" }, { status: 404 });
-  }
+    if (url) {
+      await del(url);
+      for (const [key, entry] of Object.entries(nameIndex)) {
+        if (entry.url === url) {
+          delete nameIndex[key];
+          break;
+        }
+      }
+    } else if (name) {
+      const entry = nameIndex[name];
+      if (!entry) {
+        return NextResponse.json({ success: false, error: 'Not found' }, { status: 404 });
+      }
+      await del(entry.url);
+      delete nameIndex[name];
+    }
 
-  const uploads = await getAllUploads();
-  const found = uploads.find((u: any) => u.id === resolvedId);
-  if (!found) {
-    return NextResponse.json({ error: "Not found" }, { status: 404 });
+    await saveNameIndex(nameIndex);
+    return NextResponse.json({ success: true });
+  } catch (e: any) {
+    return NextResponse.json({ success: false, error: e.message }, { status: 500 });
   }
+}
 
-  const buffer = Buffer.from(found.base64, "base64");
-  return new NextResponse(buffer, {
-    headers: {
-      "Content-Type": found.mimeType || "image/jpeg",
-      "Cache-Control": "public, max-age=31536000, immutable",
-    },
-  });
+interface UploadResult {
+  id: string;
+  name: string;
+  url: string;
+  size: number;
 }
