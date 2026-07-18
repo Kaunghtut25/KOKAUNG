@@ -1,15 +1,93 @@
 'use client';
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Image from 'next/image';
 import CurrencyToggle from '@/components/CurrencyToggle';
+import SocialShare from '@/components/SocialShare';
 import { getTour, Tour, ItineraryDay } from '@/lib/api';
-
+import RelatedItems from '@/components/RelatedItems';
 type TabKey = 'overview' | 'itinerary' | 'included' | 'reviews';
 
 const PLACEHOLDER_IMG =
   'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIwMCIgaGVpZ2h0PSI2MDAiIHZpZXdCb3g9IjAgMCAxMjAwIDYwMCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTIwMCIgaGVpZ2h0PSI2MDAiIGZpbGw9IiMxQTFBMkUiLz48dGV4dCB4PSI2MDAiIHk9IjMwMCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iIzY2NiIgZm9udC1mYW1pbHk9Ikdlb3JnaWEiIGZvbnQtc2l6ZT0iMjQiPkE5IEdsb2JhbCAmIzE4MzsgVG91cnM8L3RleHQ+PC9zdmc+';
+
+// ─── Itinerary generator helpers ─────────────────────────
+function parseDays(durationStr: string): number {
+  const match = durationStr.match(/(\d+)/);
+  return match ? parseInt(match[1], 10) : 0;
+}
+
+interface GeneratedDay {
+  day: number;
+  title: string;
+  description: string;
+  meals: string[];
+}
+
+function generateItinerary(days: number, destination: string): GeneratedDay[] {
+  if (days <= 0) return [];
+
+  const middleTemplates: { title: string; description: string; meals: string[] }[] = [
+    {
+      title: 'Exploration',
+      description: `Discover the highlights of ${destination} with a guided tour of the most iconic landmarks and attractions. Immerse yourself in the rich history and vibrant atmosphere of this incredible destination.`,
+      meals: ['Breakfast', 'Lunch'],
+    },
+    {
+      title: 'Cultural Experience',
+      description: `Dive deep into the local culture with visits to traditional markets, artisan workshops, and historic sites. Interact with local communities and learn about their way of life in ${destination}.`,
+      meals: ['Breakfast'],
+    },
+    {
+      title: 'Leisure & Relaxation',
+      description: `Enjoy a free day at your own pace. Explore the surroundings, relax at the hotel, or opt for optional excursions. This is your day to create your own adventure in ${destination}.`,
+      meals: ['Breakfast'],
+    },
+    {
+      title: 'Nature & Adventure',
+      description: `Venture into the natural wonders surrounding ${destination}. Experience breathtaking landscapes, scenic trails, and outdoor activities that showcase the region's natural beauty.`,
+      meals: ['Breakfast', 'Lunch'],
+    },
+    {
+      title: 'Hidden Gems',
+      description: `Go off the beaten path to discover ${destination}'s hidden treasures. Visit lesser-known spots, secret viewpoints, and local favorites that most tourists miss.`,
+      meals: ['Breakfast'],
+    },
+    {
+      title: 'Gastronomic Journey',
+      description: `Embark on a culinary adventure through ${destination}. Visit local food markets, participate in a cooking class, and savor authentic dishes at handpicked restaurants.`,
+      meals: ['Breakfast', 'Lunch', 'Dinner'],
+    },
+  ];
+
+  const itinerary: GeneratedDay[] = [];
+
+  for (let d = 1; d <= days; d++) {
+    let dayPlan: { title: string; description: string; meals: string[] };
+
+    if (d === 1) {
+      dayPlan = {
+        title: 'Arrival',
+        description: `Welcome to ${destination}! Upon arrival, you will be greeted by our representative and transferred to your hotel. Take the rest of the day to relax and settle in. In the evening, enjoy a welcome dinner featuring local cuisine.`,
+        meals: ['Dinner'],
+      };
+    } else if (d === days) {
+      dayPlan = {
+        title: 'Departure',
+        description: `After breakfast, check out from the hotel. Our representative will transfer you to the airport for your onward journey. Take home unforgettable memories of ${destination}!`,
+        meals: ['Breakfast'],
+      };
+    } else {
+      const templateIndex = (d - 2) % middleTemplates.length;
+      dayPlan = middleTemplates[templateIndex];
+    }
+
+    itinerary.push({ day: d, ...dayPlan });
+  }
+
+  return itinerary;
+}
 
 interface BookingFormData {
   travelDate: string;
@@ -79,13 +157,15 @@ export default function TourDetailPage() {
   };
 
   const handleBookNow = () => {
-    const token = typeof window !== 'undefined' ? localStorage.getItem('a9token') : null;
-    if (!token) {
-      router.push('/auth/login');
-      return;
-    }
-    setBookingStep('form');
-    setShowBookingModal(true);
+    const bookUrl = new URL('/book-now', window.location.origin);
+    bookUrl.searchParams.set('type', 'tour');
+    bookUrl.searchParams.set('tour', tour.slug || tour._id);
+    bookUrl.searchParams.set('title', tour.title);
+    bookUrl.searchParams.set('destination', tour.destination);
+    bookUrl.searchParams.set('duration', tour.duration + ' ' + tour.durationUnit);
+    bookUrl.searchParams.set('price', String(price));
+    bookUrl.searchParams.set('currency', currency);
+    router.push(bookUrl.toString());
   };
 
   const handleProceedToPayment = () => {
@@ -107,6 +187,11 @@ export default function TourDetailPage() {
     bookUrl.searchParams.set('requests', bookingForm.specialRequests);
     router.push(bookUrl.toString());
   };
+
+  const generatedItinerary = useMemo(
+    () => generateItinerary(parseDays(tour?.duration || ''), tour?.destination || ''),
+    [tour?.duration, tour?.destination]
+  );
 
   const tabs: { key: TabKey; label: string }[] = [
     { key: 'overview', label: 'Overview' },
@@ -257,16 +342,68 @@ export default function TourDetailPage() {
                     </div>
                   </div>
                 )}
+
+                {/* Tour Itinerary */}
+                {generatedItinerary.length > 0 && (
+                  <div>
+                    <h3
+                      className="text-xl text-[#0A1628] font-semibold mb-6"
+                      style={{ fontFamily: "'Playfair Display', Georgia, serif" }}
+                    >
+                      Tour Itinerary
+                    </h3>
+                    <div className="space-y-4">
+                      {generatedItinerary.map((day) => (
+                        <div
+                          key={day.day}
+                          className="relative overflow-hidden rounded-2xl border border-[#D4AF37]/20 bg-gradient-to-br from-[#0A1628] to-[#0F2035] p-5 transition-all duration-300 hover:border-[#D4AF37]/40 hover:shadow-lg hover:shadow-[#D4AF37]/10"
+                        >
+                          <div className="flex items-start gap-4">
+                            {/* Gold day number badge */}
+                            <div className="flex-shrink-0 w-14 h-14 rounded-xl bg-gradient-to-br from-[#D4AF37] to-[#C5A028] flex items-center justify-center shadow-lg shadow-[#D4AF37]/30">
+                              <div className="text-center">
+                                <span className="block text-xs text-gray-900/70 font-medium leading-tight">Day</span>
+                                <span className="block text-gray-900 text-xl font-bold leading-tight">{day.day}</span>
+                              </div>
+                            </div>
+
+                            {/* Day content */}
+                            <div className="flex-1 min-w-0">
+                              <h4 className="text-white font-semibold text-base mb-1.5">
+                                {day.title}
+                              </h4>
+                              <p className="text-gray-400 text-sm leading-relaxed">
+                                {day.description}
+                              </p>
+                              {day.meals.length > 0 && (
+                                <div className="flex flex-wrap gap-1.5 mt-3">
+                                  {day.meals.map((meal) => (
+                                    <span
+                                      key={meal}
+                                      className="px-2.5 py-1 rounded-full bg-[#D4AF37]/10 text-[#D4AF37] text-xs font-medium border border-[#D4AF37]/20"
+                                    >
+                                      🍽 {meal}
+                                    </span>
+                                  ))}
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
             )}
 
             {/* Tab: Itinerary */}
             {activeTab === 'itinerary' && (
               <div className="space-y-0">
-                {(tour.itinerary || []).map((day: ItineraryDay, idx: number) => (
+                {(generatedItinerary).map((day: GeneratedDay, idx: number) => (
                   <div key={idx} className="relative flex gap-4 pb-8">
                     {/* Timeline accent line */}
-                    {idx < (tour.itinerary || []).length - 1 && (
+                    {idx < generatedItinerary.length - 1 && (
                       <div className="absolute left-[19px] top-10 bottom-0 w-0.5 bg-gradient-to-b from-[#D4AF37]/50 to-transparent" />
                     )}
 
@@ -607,6 +744,7 @@ export default function TourDetailPage() {
           </div>
         </div>
       )}
-    </main>
+      <RelatedItems section="tours" />
+</main>
   );
 }

@@ -5,7 +5,9 @@ import { useRouter } from 'next/navigation';
 import { api } from '@/lib/api';
 import BookingModal from '@/components/BookingModal';
 import { getImageFallback } from '@/lib/imageFallback';
-
+import DealsBanner from '@/components/DealsBanner';
+import FAQAccordion from '@/components/FAQAccordion';
+import TestimonialSlider from '@/components/TestimonialSlider';
 interface InsurancePlan {
   _id: string;
   planName?: string;
@@ -75,6 +77,7 @@ function normalizePlan(raw: any): InsurancePlan {
 }
 
 function InsuranceCard({ plan, currency, onSelect }: { plan: InsurancePlan; currency: 'MMK' | 'USD'; onSelect: () => void }) {
+  const router = useRouter();
   const name = plan.planName || plan.title || '';
   const coverage = plan.coverage || '';
   const duration = plan.duration || 'Per Trip';
@@ -103,7 +106,14 @@ function InsuranceCard({ plan, currency, onSelect }: { plan: InsurancePlan; curr
         <div className="mt-auto pt-1">
           <span className="text-gold font-bold text-sm">{symbol} {price.toLocaleString()}</span>
         </div>
-        <button onClick={onSelect} className="w-full mt-1 py-2 bg-gradient-to-r from-[#D4AF37] to-[#F5A623] text-[#0A1628] font-bold rounded-xl text-xs hover:shadow-lg hover:shadow-[#D4AF37]/30 transition-all">Get Quote</button>
+        <button onClick={() => router.push('/book-now?type=insurance&plan=' + encodeURIComponent(plan.planName||name||'') + '&id=' + encodeURIComponent(plan._id||plan.id||'') + '&priceMMK=' + ((plan.priceMMK||plan.premiumPriceMMK||0)) + '&priceUSD=' + ((plan.priceUSD||plan.premiumPriceUSD||0)) + '&coverage=' + encodeURIComponent(plan.coverage||''))} className="w-full mt-1 py-2 bg-gradient-to-r from-[#D4AF37] to-[#F5A623] text-[#0A1628] font-bold rounded-xl text-xs hover:shadow-lg hover:shadow-[#D4AF37]/30 transition-all">Book Now</button>
+        <button
+          onClick={(e: any) => { e.stopPropagation(); router.push("/insurance/" + (plan._id || plan.id)); }}
+          className="w-full mt-1 py-2 rounded-xl text-center font-semibold text-xs transition-all duration-300 bg-white text-[#0A1628] border border-gray-200 hover:bg-[#0A1628] hover:text-[#D4AF37] hover:border-[#D4AF37] hover:shadow-lg"
+        >
+          View Details &rarr;
+        </button>
+        {coverage && <p className="text-[10px] text-gray-500 mt-1 leading-tight">{coverage}</p>}
       </div>
     </div>
   );
@@ -114,6 +124,15 @@ interface InsuranceClientProps {
 }
 
 export default function InsuranceClient({ initialPlans }: InsuranceClientProps) {
+  const [layout, setLayout] = useState({ desktop: 3, tablet: 2, mobile: 1 });
+  useEffect(() => {
+    fetch("/api/admin/site-config")
+      .then(r => r.json())
+      .then(d => {
+        if (d?.sectionLayouts?.insurance) setLayout(d.sectionLayouts.insurance);
+      })
+      .catch(() => {});
+  }, []);
   const [plans, setPlans] = useState<InsurancePlan[]>(initialPlans.length > 0 ? initialPlans : FALLBACK_PLANS);
   const [loading, setLoading] = useState(initialPlans.length === 0);
   const [currency, setCurrency] = useState<'MMK' | 'USD'>('MMK');
@@ -139,7 +158,7 @@ export default function InsuranceClient({ initialPlans }: InsuranceClientProps) 
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <section className="relative w-full h-64 sm:h-80 overflow-hidden">
+<section className="relative w-full h-64 sm:h-80 overflow-hidden">
         <img src="/images_v2/ins1-v3.jpg" alt="Insurance" className="w-full h-full object-cover" />
         <div className="absolute inset-0 bg-gradient-to-b from-[#0A1628]/70 to-[#0A1628]/40" />
         <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4">
@@ -151,24 +170,25 @@ export default function InsuranceClient({ initialPlans }: InsuranceClientProps) 
           </div>
         </div>
       </section>
-
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 pt-20 pb-12">
+<section className="max-w-7xl mx-auto px-4 sm:px-6 pt-20 pb-12">
         {loading ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className={`grid grid-cols-${layout.mobile} sm:grid-cols-${layout.tablet} lg:grid-cols-${layout.desktop} gap-4`}>
             {[1,2,3,4,5,6,7,8,9].map(i => <SkeletonCard key={i} />)}
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
+          <div className={`grid grid-cols-${layout.mobile} sm:grid-cols-${layout.tablet} lg:grid-cols-${layout.desktop} gap-4 sm:gap-5`}>
             {displayPlans.map(plan => (
               <InsuranceCard key={plan._id} plan={plan} currency={currency} onSelect={() => setSelectedPlan(plan)} />
             ))}
           </div>
         )}
       </section>
-
-      {selectedPlan && (
-        <BookingModal isOpen={!!selectedPlan} onClose={() => setSelectedPlan(null)} title={`Get Quote: ${selectedPlan.planName || selectedPlan.title}`} fields={['Name', 'Email', 'Phone', 'Travel Date']} />
+{selectedPlan && (
+        <BookingModal isOpen={!!selectedPlan} onClose={() => setSelectedPlan(null)} title={`Book Now: ${selectedPlan.planName || selectedPlan.title}`} fields={['Name', 'Email', 'Phone', 'Travel Date']} />
       )}
-    </div>
+          <DealsBanner />
+      <FAQAccordion section="insurance" />
+      <TestimonialSlider />
+</div>
   );
 }

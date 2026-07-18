@@ -29,13 +29,13 @@ function transformHotel(h: Record<string, unknown>) {
   const hotelName = (h.name || h.title) as string || '';
   const loc = (h.location || h.destination) as string || '';
   const fallbackImages: Record<string, string[]> = {
-    h1: ["/images_v2/hotel1-v3.jpg"], h2: ["/images_v2/hotel2-v3.jpg"],
-    h3: ["/images_v2/hotel3-v3.jpg"], h4: ["/images_v2/hotel4-v3.jpg"],
-    h5: ["/images_v2/hotel5-v3.jpg"], h6: ["/images_v2/hotel5-v3.jpg"],
+    h1: ["/images_v2/hotel1-v2.jpg"], h2: ["/images_v2/hotel2-v2.jpg"],
+    h3: ["/images_v2/hotel3-v2.jpg"], h4: ["/images_v2/hotel4-v2.jpg"],
+    h5: ["/images_v2/hotel5-v2.jpg"], h6: ["/images_v2/hotel5-v2.jpg"],
   };
   let images = parseImages(h.images);
   if (images.length === 0 && typeof h.image === 'string' && (h.image as string).trim()) images = [(h.image as string).trim()];
-  if (images.length === 0) images = fallbackImages[hid] || ["/images_v2/hotel1-v3.jpg"];
+  if (images.length === 0) images = fallbackImages[hid] || ["/images_v2/hotel1-v2.jpg"];
   return {
     _id: hid,
     slug: hotelName.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, ''),

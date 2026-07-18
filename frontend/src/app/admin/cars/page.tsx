@@ -20,6 +20,9 @@ interface Car {
   transmission: string;
   seats: number;
   status: string;
+  phone: string;
+  email: string;
+  pickupLocation: string;
 }
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || "/api";
@@ -37,6 +40,9 @@ const emptyCar: Car = {
   transmission: "Automatic",
   seats: 4,
   status: "active",
+  phone: "",
+  email: "",
+  pickupLocation: "",
 };
 
 export default function AdminCarsPage() {
@@ -345,12 +351,54 @@ export default function AdminCarsPage() {
         />
       </div>
 
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div>
+          <label className="block text-white/70 text-sm mb-1">Phone</label>
+          <input
+            type="tel"
+            name="phone"
+            value={editingCar.phone}
+            onChange={(e) => handleFieldChange("phone", e.target.value)}
+            placeholder="Contact phone"
+            className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-gold/50 transition-colors"
+          />
+        </div>
+        <div>
+          <label className="block text-white/70 text-sm mb-1">Email</label>
+          <input
+            type="email"
+            name="email"
+            value={editingCar.email}
+            onChange={(e) => handleFieldChange("email", e.target.value)}
+            placeholder="Contact email"
+            className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-gold/50 transition-colors"
+          />
+        </div>
+        <div>
+          <label className="block text-white/70 text-sm mb-1">Pickup Location</label>
+          <input
+            type="text"
+            name="pickupLocation"
+            value={editingCar.pickupLocation}
+            onChange={(e) => handleFieldChange("pickupLocation", e.target.value)}
+            placeholder="Pickup location"
+            className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-gold/50 transition-colors"
+          />
+        </div>
+      </div>
+
       {/* ─── Image URL with Preview ─── */}
       <div>
         <label className="block text-white/70 text-sm mb-1">
           Images (upload file or enter URL)
         </label>
         <div className="flex gap-2 mb-3">
+          <div
+          className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center"
+          onDrop={(e) => { e.preventDefault(); const file = e.dataTransfer.files[0]; if (file) { const reader = new FileReader(); reader.onload = (ev) => setEditing({...editing, image: ev.target?.result}); reader.readAsDataURL(file); } }}
+          onDragOver={(e) => e.preventDefault()}
+        >
+          <p className="text-sm text-gray-500 mb-2">Drag & drop image here</p>
           <input
             ref={fileInputRef}
             type="file"
@@ -358,6 +406,7 @@ export default function AdminCarsPage() {
             onChange={handleFileInputChange}
             className="hidden"
           />
+        </div>
           <button
             type="button"
             onClick={() => fileInputRef.current?.click()}
@@ -380,6 +429,17 @@ export default function AdminCarsPage() {
         {uploadError && (
           <p className="text-red-400 text-xs mb-2">{uploadError}</p>
         )}
+        <input
+          type="text"
+          name="imageUrl"
+          value={imageUrlInput}
+          onChange={(e) => {
+            handleImageUrlChange(e.target.value);
+            handleFieldChange("images", e.target.value);
+          }}
+          placeholder="Or paste image URL"
+          className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-gold/50 transition-colors mt-2"
+        />
         <div className="w-[200px] h-[150px] rounded-lg border border-white/10 bg-white/5 flex-shrink-0 overflow-hidden flex items-center justify-center">
           {imagePreviewUrl ? (
             <img
@@ -408,6 +468,7 @@ export default function AdminCarsPage() {
             Image Preview
           </span>
         </div>
+        <p className="text-xs text-gray-400 mt-1">Recommended: 1200x630px (JPEG, max 2MB)</p>
       </div>
 
       {/* ─── Pricing (Dynamic) ─── */}
@@ -603,7 +664,7 @@ export default function AdminCarsPage() {
                     >
                       <td className="p-4">
                         <div className="flex items-center gap-3">
-                          <div className="w-[60px] h-[60px] rounded-lg border border-white/10 bg-white/5 overflow-hidden flex-shrink-0 flex items-center justify-center">
+                          <div className="w-10 h-10 rounded-lg border border-white/10 bg-white/5 overflow-hidden flex-shrink-0 flex items-center justify-center">
                             {thumb ? (
                               <img
                                 src={thumb}

@@ -38,11 +38,24 @@ interface BookingInquiry {
   status: string;
   referenceNumber: string;
   createdAt: string;
+  airline?: string;
+  airlineCode?: string;
+  flightNo?: string;
+  departTime?: string;
+  arriveTime?: string;
+  stops?: string;
+  offerId?: string;
+  clientType?: string;
+  tripType?: string;
+  itemName?: string;
+  amount?: number;
+  currency?: string;
 }
 
 type ActiveTab = "bookings" | "inquiries";
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+// Use the Next.js API routes directly (relative URLs work in dev & production)
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || "";
 
 type StatusFilter = "all" | "pending" | "paid" | "cancelled" | "completed";
 type InquiryStatusFilter = "all" | "New" | "Contacted" | "Confirmed" | "Cancelled";
@@ -59,7 +72,7 @@ export default function AdminBookingsPage() {
   const [totalPages, setTotalPages] = useState(1);
   const limit = 10;
 
-  // ─── Inquiries state (new) ───
+  // ─── Inquiries state ───
   const [inquiries, setInquiries] = useState<BookingInquiry[]>([]);
   const [inquiryLoading, setInquiryLoading] = useState(true);
   const [inquiryFilter, setInquiryFilter] = useState<InquiryStatusFilter>("all");
@@ -93,7 +106,7 @@ export default function AdminBookingsPage() {
     }
   }, [token, page, statusFilter]);
 
-  // ─── Fetch inquiries ───
+  // ─── Fetch inquiries from Next.js API route ───
   const fetchInquiries = useCallback(async () => {
     setInquiryLoading(true);
     try {
@@ -343,7 +356,9 @@ export default function AdminBookingsPage() {
                     <h3 className="text-white/50 text-xs uppercase tracking-wider mb-2">Travel Details</h3>
                     <div className="grid grid-cols-2 gap-4">
                       <div><span className="text-white/40 text-xs">Travel Type</span><p className="text-white capitalize">{inquiryModal.travelType}</p></div>
+                      <div><span className="text-white/40 text-xs">Trip Type</span><p className="text-white capitalize">{inquiryModal.tripType || "\u2014"}</p></div>
                       <div><span className="text-white/40 text-xs">Travel Class</span><p className="text-white">{inquiryModal.travelClass || "\u2014"}</p></div>
+                      <div><span className="text-white/40 text-xs">Client Type</span><p className="text-white capitalize">{inquiryModal.clientType || "local"}</p></div>
                       {inquiryModal.fromAirport && <div><span className="text-white/40 text-xs">From</span><p className="text-white">{inquiryModal.fromAirport}</p></div>}
                       {inquiryModal.toAirport && <div><span className="text-white/40 text-xs">To</span><p className="text-white">{inquiryModal.toAirport}</p></div>}
                       {inquiryModal.departDate && <div><span className="text-white/40 text-xs">Departure Date</span><p className="text-white">{inquiryModal.departDate}</p></div>}
@@ -351,6 +366,21 @@ export default function AdminBookingsPage() {
                       <div><span className="text-white/40 text-xs">Passengers</span><p className="text-white">{inquiryModal.passengers}</p></div>
                     </div>
                   </div>
+
+                  {(inquiryModal.airline || inquiryModal.flightNo || inquiryModal.departTime) && (
+                  <div className="border-t border-white/10 pt-4">
+                    <h3 className="text-white/50 text-xs uppercase tracking-wider mb-2">Flight Details</h3>
+                    <div className="grid grid-cols-2 gap-4">
+                      {inquiryModal.airline && <div><span className="text-white/40 text-xs">Airline</span><p className="text-white">{inquiryModal.airline}</p></div>}
+                      {inquiryModal.flightNo && <div><span className="text-white/40 text-xs">Flight No</span><p className="text-white font-mono">{inquiryModal.flightNo}</p></div>}
+                      {inquiryModal.departTime && <div><span className="text-white/40 text-xs">Departure Time</span><p className="text-white">{inquiryModal.departTime}</p></div>}
+                      {inquiryModal.arriveTime && <div><span className="text-white/40 text-xs">Arrival Time</span><p className="text-white">{inquiryModal.arriveTime}</p></div>}
+                      {inquiryModal.stops !== undefined && inquiryModal.stops !== "" && <div><span className="text-white/40 text-xs">Stops</span><p className="text-white">{inquiryModal.stops === "0" ? "Nonstop" : inquiryModal.stops + " stop(s)"}</p></div>}
+                      {inquiryModal.offerId && <div><span className="text-white/40 text-xs">Offer ID</span><p className="text-white font-mono text-xs">{inquiryModal.offerId}</p></div>}
+                      {inquiryModal.amount > 0 && <div><span className="text-white/40 text-xs">Price</span><p className="text-gold font-bold">{inquiryModal.amount} {inquiryModal.currency}</p></div>}
+                    </div>
+                  </div>
+                  )}
                   {inquiryModal.specialRequests && (
                     <div className="border-t border-white/10 pt-4">
                       <span className="text-white/40 text-xs uppercase tracking-wider">Special Requests</span>

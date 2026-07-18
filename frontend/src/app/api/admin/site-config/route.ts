@@ -12,6 +12,22 @@ export async function GET() {
   }
 }
 
+export async function PUT(request: NextRequest) {
+  try {
+    const body = await request.json();
+    const store = await import("@/lib/persistentStore");
+    const items = await store.getAll("site-config" as any);
+    const record = { ...body, id: "site-config", updatedAt: new Date().toISOString() };
+    for (const item of items) {
+      try { await store.delete_("site-config" as any, item.id || item._id); } catch {}
+    }
+    await store.create("site-config" as any, record);
+    return NextResponse.json({ success: true, message: "Site configuration saved successfully!" });
+  } catch {
+    return NextResponse.json({ success: false, message: "Invalid JSON" }, { status: 400 });
+  }
+}
+
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
@@ -130,8 +146,51 @@ const defaultConfig = {
     },
   ],
 
+  sectionLayouts: {
+    hotels: { desktop: 4, tablet: 2, mobile: 1 },
+    tours: { desktop: 3, tablet: 2, mobile: 1 },
+    cars: { desktop: 3, tablet: 2, mobile: 1 },
+    cruises: { desktop: 3, tablet: 2, mobile: 1 },
+    visas: { desktop: 4, tablet: 3, mobile: 2 },
+    insurance: { desktop: 3, tablet: 2, mobile: 1 },
+    skyLounge: { desktop: 3, tablet: 2, mobile: 1 },
+  },
+
+  sectionRows: {
+    hotels: ["Featured Hotels", "Budget Friendly", "Popular Hotels", "Row 4", "Row 5"],
+    tours: ["Featured Tours", "Popular Destinations", "Adventure", "Row 4", "Row 5"],
+    cars: ["Popular Cars", "SUVs & Family", "Luxury & Sedans", "Row 4", "Row 5"],
+  },
+
   // Company info in footer
   footerCompanyInfo: "Your premier IATA-accredited luxury travel partner in Myanmar. Since our founding, we have been dedicated to crafting extraordinary travel experiences.",
   footerTagline: "Where every journey is a story waiting to be told!",
   footerRegNumbers: "Company Reg: 126395248 | IATA: 05301026 | T/I(YGN)-2889 | T/O(YGN)-0946",
+
+  faqs: [
+    { id: "1", q: "How do I book a tour?", a: "Simply browse our Tours page, select your preferred tour, click 'Book Now', fill in your details and submit. Our team will contact you within 24 hours to confirm your booking." },
+    { id: "2", q: "What documents do I need for a visa application?", a: "Required documents vary by country. Typically you need: a valid passport (6+ months), passport-size photos, flight itinerary, hotel booking confirmation, and proof of funds. Check each visa's detail page for specific requirements." },
+    { id: "3", q: "Can I cancel or modify my booking?", a: "Yes, bookings can be modified or cancelled. Cancellation fees may apply depending on how close to the departure date. Contact us at info@a9globaltravel.com for assistance." },
+    { id: "4", q: "What payment methods do you accept?", a: "We accept bank transfers, cash payments at our office, and major credit cards. Online payment integration is coming soon." },
+    { id: "5", q: "Do you offer travel insurance?", a: "Yes! We offer 9 different insurance plans ranging from basic travel shields to comprehensive annual coverage. Visit our Insurance page to find the right plan for you." },
+    { id: "6", q: "How long does visa processing take?", a: "Processing times vary by country. Most visas take 3-5 business days, but some may take up to 2 weeks. Check each visa's detail page for estimated processing time." },
+    { id: "7", q: "Do you provide airport transfers?", a: "Yes, we offer airport transfer services with our fleet of vehicles. Book through our Cars section or add it to your tour package." },
+    { id: "8", q: "What is included in the Sky Lounge access?", a: "Sky Lounge access includes premium buffet dining, complimentary drinks, WiFi, work stations, shower facilities, and flight information displays." },
+    { id: "9", q: "Are cruise prices per person or per cabin?", a: "Cruise prices are typically per person based on double occupancy. Single supplements may apply. Contact us for detailed pricing." },
+    { id: "10", q: "Can I customize a tour package?", a: "Absolutely! We specialize in custom itineraries. Contact us with your preferences and our travel experts will create a personalized package for you." },
+  ],
+  terms: [
+    { id: "t1", title: "1. Bookings and Reservations", content: "All bookings are subject to availability and confirmation by A9 Global Travel and Tours. A booking is only confirmed once full payment or deposit is received." },
+    { id: "t2", title: "2. Cancellation Policy", content: "Cancellations made 7+ days before departure: full refund minus processing fee. Cancellations within 7 days: 50% refund. No-show: no refund." },
+    { id: "t3", title: "3. Travel Documents", content: "Passengers are responsible for ensuring they have valid passports, visas, and other required travel documents. A9 Global Travel is not liable for denied boarding due to incomplete documents." },
+    { id: "t4", title: "4. Pricing", content: "All prices are in Myanmar Kyat (MMK) or US Dollars (USD). Prices are subject to change without notice due to currency fluctuations, fuel surcharges, or other factors beyond our control." },
+    { id: "t5", title: "5. Privacy", content: "We respect your privacy. Personal information collected during bookings is used solely for processing your reservation and will not be shared with third parties without your consent." },
+    { id: "t6", title: "6. Liability", content: "A9 Global Travel and Tours acts as an agent for various service providers. We are not liable for accidents, injuries, delays, or losses caused by third-party providers." },
+  ],
+  privacy: [
+    { id: "p1", title: "Information We Collect", content: "We collect personal information including name, email, phone number, and travel preferences when you make a booking or contact us." },
+    { id: "p2", title: "How We Use Your Information", content: "Your information is used to process bookings, provide customer support, send travel updates, and improve our services. We do not sell or rent your personal data." },
+    { id: "p3", title: "Data Security", content: "We implement appropriate security measures to protect your personal information from unauthorized access, alteration, or disclosure." },
+    { id: "p4", title: "Contact Us", content: "For privacy concerns, contact us at info@a9globaltravel.com or +95 9 123 456 789." },
+  ],
 };

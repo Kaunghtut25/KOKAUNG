@@ -1,9 +1,9 @@
-"use client";
+﻿"use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import toast from "react-hot-toast";
 import api from "@/lib/api";
-
+import Newsletter from '@/components/Newsletter';
 const subjectOptions = [
   "General Inquiry",
   "Tour Booking",
@@ -13,9 +13,9 @@ const subjectOptions = [
   "Insurance",
 ];
 
-
-
 export default function ContactPage() {
+  const [heroImage, setHeroImage] = useState("/images_v2/contact-bg-v2.jpg");
+  const [siteConfig, setSiteConfig] = useState<any>(null);
   const [form, setForm] = useState({
     name: "",
     email: "",
@@ -24,6 +24,23 @@ export default function ContactPage() {
     message: "",
   });
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    fetch("/api/admin/settings").then(r => r.json()).then(d => {
+      if (d?.heroImages?.contact) setHeroImage(d.heroImages.contact);
+    }).catch(() => {});
+  }, []);
+
+  useEffect(() => {
+    fetch("/api/admin/site-config")
+      .then((res) => res.json())
+      .then((data) => setSiteConfig(data))
+      .catch(() => {});
+  }, []);
+
+  const phone = siteConfig?.contact?.phone || "+95 9 781 617 111";
+  const email = siteConfig?.contact?.email || "a9ticketing@a9globaltravel.com.mm";
+  const address = siteConfig?.contact?.address || "Yangon, Myanmar";
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
@@ -74,7 +91,7 @@ export default function ContactPage() {
   return (
     <div className="min-h-screen bg-white">
       {/* ========== HERO ========== */}
-      <section className="relative py-20 sm:py-28 px-4 text-center overflow-hidden">
+<section className="relative py-20 sm:py-28 px-4 text-center overflow-hidden">
         {/* Hero background image */}
         <div
           className="absolute inset-0 bg-cover bg-center"
@@ -105,9 +122,8 @@ export default function ContactPage() {
           </p>
         </div>
       </section>
-
-      {/* ========== 2-COLUMN LAYOUT ========== */}
-      <section className="px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto pb-20">
+{/* ========== 2-COLUMN LAYOUT ========== */}
+<section className="px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto pb-20">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
           {/* LEFT: Contact Form */}
           <div>
@@ -351,10 +367,10 @@ export default function ContactPage() {
               <div>
                 <p className="text-[#0A1628] font-semibold text-sm mb-1">✉️ Email</p>
                 <a
-                  href="mailto:a9globaltravel@gmail.com"
+                  href={`mailto:${email}`}
                   className="text-[#D4AF37] text-sm hover:text-[#F5A623] transition-colors"
                 >
-                  a9globaltravel@gmail.com
+                  {email}
                 </a>
               </div>
             </div>
@@ -409,8 +425,7 @@ export default function ContactPage() {
           </div>
         </div>
       </section>
-
-      {/* ========== LICENSE INFO BAR ========== */}
+{/* ========== LICENSE INFO BAR ========== */}
       <section className="border-t border-gray-200 bg-gray-50">
         <div className="px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto py-8">
           <div className="flex flex-wrap gap-x-8 gap-y-3 justify-center text-center text-gray-500 text-xs sm:text-sm">
@@ -436,6 +451,34 @@ export default function ContactPage() {
           </div>
         </div>
       </section>
-    </div>
+    
+      {/* Business Hours + Map */}
+      <section style={{ maxWidth: 800, margin: "40px auto 0", padding: "0 20px" }}>
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20 }}>
+          <div style={{ background: "white", borderRadius: 16, padding: 24, boxShadow: "0 1px 3px rgba(0,0,0,0.1)" }}>
+            <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 20, color: "#0A1628", marginBottom: 12 }}>Business Hours</h2>
+            <p style={{ color: "#555", padding: "4px 0" }}>Monday - Friday: 9:00 AM - 5:00 PM</p>
+            <p style={{ color: "#555", padding: "4px 0" }}>Saturday: 9:00 AM - 12:00 PM</p>
+            <p style={{ color: "#555", padding: "4px 0" }}>Sunday: Closed</p>
+            <div style={{ marginTop: 16, paddingTop: 16, borderTop: "1px solid #eee" }}>
+              <p style={{ color: "#555" }}>&#9742; {phone}</p>
+              <p style={{ color: "#555" }}>&#9993; {email}</p>
+              <p style={{ color: "#555" }}>&#9873; {address}</p>
+            </div>
+          </div>
+          <div style={{ borderRadius: 16, overflow: "hidden", boxShadow: "0 1px 3px rgba(0,0,0,0.1)" }}>
+            <iframe
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d15276.78203238526!2d96.195!3d16.8409!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x30c194d3cb9fffff%3A0x0!2sYangon!5e0!3m2!1sen!2smm!4v1700000000000"
+              width="100%"
+              height="100%"
+              style={{ border: 0, minHeight: 250 }}
+              allowFullScreen
+              loading="lazy"
+            />
+          </div>
+        </div>
+      </section>
+      <Newsletter />
+</div>
   );
 }

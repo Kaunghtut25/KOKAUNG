@@ -8,7 +8,7 @@ const TOUR_IMAGES: Record<string, string> = {
   t3: "/images_v2/tour-inle-v2.jpg", t4: "/images_v2/tour-beach-v2.jpg",
   t5: "/images_v2/tour-mandalay-v2.jpg", t6: "/images_v2/tour-grand-v2.jpg",
 };
-const TOUR_FALLBACK = "/images_v2/hotel1-v3.jpg";
+const TOUR_FALLBACK = "/images_v2/hotel1-v2.jpg";
 
 function parseImages(raw: unknown): string[] {
   // Handle array — could be real array or array containing JSON string

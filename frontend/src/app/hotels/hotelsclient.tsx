@@ -1,14 +1,14 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Hotel } from '@/lib/api';
 import HotelCard from '@/components/HotelCard';
 import ScrollingRow from '@/components/ScrollingRow';
-import CurrencyToggle from '@/components/CurrencyToggle';
+import CurrencyToggle from "@/components/CurrencyToggle";
+import DealsBanner from '@/components/DealsBanner';
+import FAQAccordion from '@/components/FAQAccordion';
+import TestimonialSlider from '@/components/TestimonialSlider';
 
-const ROW_TITLES = ['👑 Luxury Stays', '💎 Budget Friendly', '🏨 Popular Hotels'];
-const CARDS_PER_ROW = 10;
-const ROW_COUNT = 3;
 
 function SkeletonCard() {
   return (
@@ -32,33 +32,58 @@ interface HotelsClientProps {
 }
 
 export default function HotelsClient({ initialHotels }: HotelsClientProps) {
+  const [heroImage, setHeroImage] = useState("/images_v2/hero-hotels-v2.jpg");
   const [currency, setCurrency] = useState<'MMK' | 'USD'>('MMK');
+  const [layout, setLayout] = useState({ desktop: 4, tablet: 2, mobile: 1 });
+  useEffect(() => {
+    fetch("/api/admin/site-config")
+      .then(r => r.json())
+      .then(d => {
+        if (d?.sectionLayouts?.hotels) setLayout(d.sectionLayouts.hotels);
+      })
+      .catch(() => {});
+  }, []);
+  const [rowTitles, setRowTitles] = useState(["Featured Hotels", "More Hotels", "Additional Hotels"]);
+  useEffect(() => {
+    fetch("/api/admin/site-config")
+      .then(r => r.json())
+      .then(d => {
+        if (d?.sectionRows?.hotels) setRowTitles(d.sectionRows.hotels);
+      })
+      .catch(() => {});
+  }, []);
   const [location, setLocation] = useState('');
   const [rating, setRating] = useState('');
   const [minPrice, setMinPrice] = useState('');
   const [maxPrice, setMaxPrice] = useState('');
   const [sort, setSort] = useState('');
 
+  useEffect(() => { fetch("/api/admin/settings").then(r => r.json()).then(d => { if (d?.heroImages?.hotels) setHeroImage(d.heroImages.hotels); }).catch(() => {}); }, []);
+
   const handleFilterChange = (setter: React.Dispatch<React.SetStateAction<string>>, value: string) => {
     setter(value);
   };
 
-  const pool: Hotel[] = [];
-  const hotels = initialHotels;
-  if (hotels.length > 0) {
-    for (let i = 0; i < CARDS_PER_ROW * ROW_COUNT; i++) pool.push(hotels[i % hotels.length]);
+  // Apply sort
+  const sortedHotels = [...initialHotels].sort((a, b) => {
+    if (sort === 'rating') return (b.rating || 0) - (a.rating || 0);
+    if (sort === 'price_asc') return (a.priceMMK || 0) - (b.priceMMK || 0);
+    if (sort === 'price_desc') return (b.priceMMK || 0) - (a.priceMMK || 0);
+    return 0;
+  });
+
+  const ITEMS_PER_ROW = 6;
+  const pool: Hotel[] = [...sortedHotels];
+  const hotelRows: Hotel[][] = [];
+  for (let i = 0; i < pool.length; i += ITEMS_PER_ROW) {
+    hotelRows.push(pool.slice(i, i + ITEMS_PER_ROW));
   }
-  const hotelRows: Hotel[][] = [
-    pool.slice(0, CARDS_PER_ROW),
-    pool.slice(CARDS_PER_ROW, CARDS_PER_ROW * 2),
-    pool.slice(CARDS_PER_ROW * 2, CARDS_PER_ROW * 3),
-  ];
 
   return (
     <main className="min-h-screen bg-white">
-      <section className="relative pt-24 pb-12 px-4 overflow-hidden">
+<section className="relative pt-24 pb-12 px-4 overflow-hidden">
         <div className="absolute inset-0">
-          <img src="/images_v2/hero-hotels-v2.jpg" alt="A9 Global Hotels" className="w-full h-full object-cover" />
+          <img src={heroImage} alt="A9 Global Hotels" className="w-full h-full object-cover" onError={(e) => { (e.target as HTMLImageElement).src = "/images_v2/hero-hotels-v2.jpg"; }} />
           <div className="absolute inset-0 bg-white/75" />
         </div>
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(212,175,55,0.08),transparent_70%)]" />
@@ -71,8 +96,7 @@ export default function HotelsClient({ initialHotels }: HotelsClientProps) {
           </p>
         </div>
       </section>
-
-      <section className="sticky top-[72px] z-30 bg-white/95 backdrop-blur-md border-b border-gray-200 shadow-sm">
+<section className="sticky top-[72px] z-30 bg-white/95 backdrop-blur-md border-b border-gray-200 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 py-4">
           <div className="flex flex-wrap items-center gap-3">
             <div className="relative flex-1 min-w-[180px]">
@@ -101,9 +125,9 @@ export default function HotelsClient({ initialHotels }: HotelsClientProps) {
             </div>
             <div className="relative">
               <select value={sort} onChange={(e) => handleFilterChange(setSort, e.target.value)}
-                className="px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-gray-900 text-sm focus:outline-none focus:border-[#D4AF37] transition-colors appearance-none cursor-pointer pr-8">
+                className="px-4 py-2 rounded-xl border border-[#D4AF37]/30 bg-white text-[#0A1628] text-sm font-medium">
                 <option value="">Sort by</option>
-                <option value="rating">Rating</option>
+                <option value="rating">Rating: High to Low</option>
                 <option value="price_asc">Price: Low to High</option>
                 <option value="price_desc">Price: High to Low</option>
               </select>
@@ -112,28 +136,27 @@ export default function HotelsClient({ initialHotels }: HotelsClientProps) {
           </div>
         </div>
       </section>
-
-      <section className="max-w-7xl mx-auto px-4 py-10 pb-20">
-        {hotels.length === 0 && (
+<section className="max-w-7xl mx-auto px-4 py-10 pb-20">
+        {sortedHotels.length === 0 && (
           <div className="flex gap-4 overflow-hidden">
             {Array.from({ length: 4 }).map((_, i) => <div key={i} className="w-[300px] flex-shrink-0"><SkeletonCard /></div>)}
           </div>
         )}
 
-        {hotels.length > 0 && (
+        {sortedHotels.length > 0 && (
           <div className="space-y-10">
             {hotelRows.map((row, rowIdx) => (
               <div key={`hotel-row-${rowIdx}`}>
                 <div className="flex items-center justify-between mb-4">
                   <h2 className="text-xl font-bold text-gray-900" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
-                    {ROW_TITLES[rowIdx]}
+                    {rowTitles[rowIdx] || `Row ${rowIdx + 1}`}
                   </h2>
                 </div>
                 <ScrollingRow>
                   {row.map((hotel, i) => (
                     <div key={`hotel-row-${rowIdx}-card-${i}`} className="w-[300px] flex-shrink-0 snap-start">
-                      <HotelCard hotel={hotel} currency={currency} />
-                    </div>
+<HotelCard hotel={hotel} currency={currency} />
+</div>
                   ))}
                 </ScrollingRow>
               </div>
@@ -141,6 +164,10 @@ export default function HotelsClient({ initialHotels }: HotelsClientProps) {
           </div>
         )}
       </section>
-    </main>
+{/* ========== Testimonial Slider ========== */}
+      <DealsBanner />
+      <FAQAccordion section="hotels" />
+      <TestimonialSlider />
+</main>
   );
 }

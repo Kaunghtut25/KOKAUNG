@@ -1,70 +1,41 @@
-'use client';
-import React, { useState, useEffect } from 'react';
-import Link from 'next/link';
-import Image from 'next/image';
+import { getAll } from "@/lib/persistentStore";
+import CruisesClient from "./cruisesclient";
+
+export const dynamic = 'force-dynamic';
+
+interface Cruise {
+  _id: string;
+  id?: string;
+  slug?: string;
+  title?: string;
+  name?: string;
+  destination?: string;
+  description?: string;
+  priceMMK?: number;
+  priceUSD?: number;
+  duration?: string;
+  images?: string[];
+  image?: string;
+  amenities?: string;
+  included?: string;
+  excluded?: string;
+}
+
+const DEFAULT_CRUISES: Cruise[] = [
+  { _id: 'cr1', id: 'cr1', title: 'Halong Bay Cruise', destination: 'Vietnam', description: 'Sail through emerald waters among limestone karsts.', priceMMK: 650000, priceUSD: 310, duration: '3 Days / 2 Nights', images: ['/images_v2/hero-cruises-v2.jpg'], amenities: 'Cabin, All Meals, Kayaking', included: 'Cabin, Meals, Excursions', excluded: 'Flights, Tips' },
+  { _id: 'cr2', id: 'cr2', title: 'Mekong River Cruise', destination: 'Cambodia', description: 'Journey along the legendary Mekong River.', priceMMK: 920000, priceUSD: 440, duration: '5 Days / 4 Nights', images: ['/images_v2/dest-vietnam-v2.jpg'], amenities: 'Deluxe Cabin, River View', included: 'Cabin, Meals, Tours', excluded: 'Flights, Insurance' },
+  { _id: 'cr3', id: 'cr3', title: 'Andaman Sea Cruise', destination: 'Thailand', description: 'Island hopping in the Andaman Sea.', priceMMK: 580000, priceUSD: 276, duration: '4 Days / 3 Nights', images: ['/images_v2/dest-thailand-v2.jpg'], amenities: 'Beach Cabins, Snorkeling', included: 'Cabin, Meals, Snorkeling', excluded: 'Flights, Tips' },
+  { _id: 'cr4', id: 'cr4', title: 'Singapore Strait Cruise', destination: 'Singapore', description: 'Luxury cruise around Singapore.', priceMMK: 1200000, priceUSD: 571, duration: '3 Days / 2 Nights', images: ['/images_v2/dest-singapore-v2.jpg'], amenities: 'Suite, Fine Dining, Pool', included: 'Suite, All Meals', excluded: 'Flights, Alcohol' },
+  { _id: 'cr5', id: 'cr5', title: 'Maldives Atoll Cruise', destination: 'Maldives', description: 'Sail through pristine atolls and lagoons.', priceMMK: 2500000, priceUSD: 1190, duration: '7 Days / 6 Nights', images: ['/images_v2/dest-maldives-v2.jpg'], amenities: 'Overwater Suite, Diving', included: 'Suite, Meals, Diving', excluded: 'Flights, Spa' },
+  { _id: 'cr6', id: 'cr6', title: 'Dubai Marina Cruise', destination: 'UAE', description: 'Evening dinner cruise along Dubai Marina.', priceMMK: 180000, priceUSD: 85, duration: 'Evening', images: ['/images_v2/dest-dubai-v2.jpg'], amenities: 'Dinner Buffet, Live Music', included: 'Dinner, Drinks', excluded: 'Transfers' },
+  { _id: 'cr7', id: 'cr7', title: 'Alaska Glacier Cruise', destination: 'Alaska, USA', description: 'Witness towering glaciers and whales.', priceMMK: 4200000, priceUSD: 2000, duration: '7 Days / 6 Nights', images: ['/images_v2/dest-japan-v2.jpg'], amenities: 'Balcony Cabin, Wildlife Guide', included: 'Cabin, Meals, Excursions', excluded: 'Flights, Tips' },
+  { _id: 'cr8', id: 'cr8', title: 'Norwegian Fjords Cruise', destination: 'Norway', description: 'Sail through dramatic fjords.', priceMMK: 3800000, priceUSD: 1810, duration: '7 Days / 6 Nights', images: ['/images_v2/dest-korea-v2.jpg'], amenities: 'Ocean View Cabin, Nordic Spa', included: 'Cabin, Meals, Tours', excluded: 'Flights, Insurance' },
+  { _id: 'cr9', id: 'cr9', title: 'Greek Isles Cruise', destination: 'Greece', description: 'Island-hop through Santorini and Mykonos.', priceMMK: 2800000, priceUSD: 1333, duration: '8 Days / 7 Nights', images: ['/images_v2/dest-paris-v2.jpg'], amenities: 'Suite, Pool Deck, Greek Cuisine', included: 'Cabin, Meals, Tours', excluded: 'Flights, Tips' },
+  { _id: 'cr10', id: 'cr10', title: 'Antarctic Expedition', destination: 'Antarctica', description: 'The ultimate adventure to the last wilderness.', priceMMK: 8500000, priceUSD: 4050, duration: '12 Days / 11 Nights', images: ['/images_v2/hero-cruises-v2.jpg'], amenities: 'Expedition Suite, Zodiac Boats', included: 'Cabin, Meals, Gear', excluded: 'Flights, Insurance' },
+];
 
 export default function CruisesPage() {
-  // Fetch from admin database
-  const [apiData, setApiData] = useState<any[]>([]);
-  const [dataLoaded, setDataLoaded] = useState(false);
-  useEffect(() => {
-    fetch('/api/cruises').then(r => r.json()).then(data => {
-      const items = data?.data || data || [];
-      if (items.length > 0) { setApiData(items); setDataLoaded(true); }
-    }).catch(() => {});
-  }, []);
-
-  return (
-    <main className="min-h-screen bg-white">
-      <section className="relative h-[400px] md:h-[500px] w-full overflow-hidden">
-        <Image
-          src="/images_v2/unsplash-24-v2.jpg"
-          alt="Luxury Cruise Ship"
-          fill
-          className="object-cover"
-          priority
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#0A1628]/90 via-[#0A1628]/40 to-[#0A1628]/30" />
-        <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4">
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
-            🚢 Cruises
-          </h1>
-          <p className="text-gray-300 text-lg max-w-2xl">
-            Luxury cruise packages to world-class destinations
-          </p>
-        </div>
-      </section>
-
-      {/* Info Cards with Images */}
-      <section className="max-w-6xl mx-auto px-4 py-16">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
-          {[
-            { icon: '🛳️', img: '/images_v2/unsplash-24-v2.jpg', title: 'Luxury Liners', desc: 'World-class cruise ships with premium amenities' },
-            { icon: '🏝️', img: '/images_v2/unsplash-20-v2.jpg', title: 'Exotic Routes', desc: 'Mediterranean, Caribbean, Alaska & more' },
-            { icon: '🍽️', img: '/images_v2/unsplash-32-v2.jpg', title: 'All-Inclusive', desc: 'Fine dining, drinks, entertainment included' },
-            { icon: '🎭', img: '/images_v2/unsplash-13-v2.jpg', title: 'Entertainment', desc: 'Live shows, casinos, pools & theatre' },
-            { icon: '👨‍👩‍👧‍👦', img: '/images_v2/unsplash-8-v2.jpg', title: 'Family Friendly', desc: 'Kids clubs, family suites & activities' },
-            { icon: '🌊', img: '/images_v2/unsplash-29-v2.jpg', title: 'Shore Excursions', desc: 'Curated tours at every port of call' },
-          ].map((item, i) => (
-            <div key={i} className="bg-white rounded-xl border border-gray-200 overflow-hidden hover:shadow-md hover:border-[#D4AF37]/40 transition-all group">
-              <div className="relative h-40 overflow-hidden">
-                <Image src={item.img} alt={item.title} fill className="object-cover group-hover:scale-105 transition-transform duration-500" />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
-              </div>
-              <div className="p-5 text-center">
-                <div className="text-3xl mb-2">{item.icon}</div>
-                <h3 className="font-semibold text-[#0A1628] mb-1">{item.title}</h3>
-                <p className="text-gray-500 text-sm">{item.desc}</p>
-              </div>
-            </div>
-          ))}
-        </div>
-        <div className="text-center">
-          <Link href="/contact" className="inline-block px-8 py-3 bg-gradient-to-r from-[#D4AF37] to-[#C5A028] text-gray-900 font-bold rounded-xl hover:shadow-lg transition-all">
-            Book Your Cruise
-          </Link>
-        </div>
-      </section>
-    </main>
-  );
+  const dbCruises = getAll('cruises') as Cruise[];
+  const cruises = dbCruises.length > 0 ? dbCruises : DEFAULT_CRUISES;
+  return <CruisesClient initialCruises={cruises} />;
 }

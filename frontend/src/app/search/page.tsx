@@ -1,259 +1,87 @@
-﻿'use client';
-
-import React, { useState, useEffect, useCallback, Suspense } from 'react';
-import { useSearchParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
-import SearchBar from '@/components/SearchBar';
-import CurrencyToggle from '@/components/CurrencyToggle';
-import TourCard from '@/components/TourCard';
-import HotelCard from '@/components/HotelCard';
-import CarCard from '@/components/CarCard';
-import { SearchResults, Tour, Hotel, Car, searchAll, SearchParams } from '@/lib/api';
+import { getAll } from '@/lib/persistentStore';
 
-type TabType = 'all' | 'tours' | 'hotels' | 'cars';
+export const dynamic = 'force-dynamic';
 
-const serviceLinks = [
-  { label: 'Flights', icon: '✈️', href: '/' },
-  { label: 'Tours', icon: '🏔️', href: '/tours' },
-  { label: 'Hotels', icon: '🏨', href: '/hotels' },
-  { label: 'Cars', icon: '🚗', href: '/cars' },
-  { label: 'Visas', icon: '🛂', href: '/visas' },
-  { label: 'Insurance', icon: '🛡️', href: '/insurance' },
-  { label: 'Cruises', icon: '🚢', href: '/cruises' },
-  { label: 'Sky Lounge', icon: '✨', href: '/mingalar' },
-];
+interface SearchPageProps {
+  searchParams: { q?: string };
+}
 
-function SkeletonCard() {
-  return (
-    <div className="rounded-2xl overflow-hidden border border-gold/20 animate-pulse">
-      <div className="h-[300px] bg-white/5" />
-      <div className="p-4 space-y-3">
-        <div className="h-4 bg-white/10 rounded w-3/4" />
-        <div className="h-3 bg-white/10 rounded w-1/2" />
-        <div className="flex gap-2">
-          <div className="h-6 bg-white/10 rounded-full w-16" />
-          <div className="h-6 bg-white/10 rounded-full w-16" />
-          <div className="h-6 bg-white/10 rounded-full w-16" />
+export default async function SearchPage({ searchParams }: SearchPageProps) {
+  const query = (searchParams.q || '').toLowerCase().trim();
+
+  if (!query) {
+    return (
+      <main style={{ minHeight: '100vh', background: '#f8f9fa', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <div style={{ textAlign: 'center' }}>
+          <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: 32, color: '#0A1628' }}>Search A9 Global Travel</h1>
+          <p style={{ color: '#666', marginTop: 8 }}>Use the search bar above to find tours, hotels, cars, visas and more.</p>
         </div>
-      </div>
-    </div>
-  );
-}
+      </main>
+    );
+  }
 
-function EmptyState() {
-  return (
-    <div className="text-center py-16 space-y-4">
-      <svg className="w-20 h-20 mx-auto text-gold/30" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1}>
-        <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-      </svg>
-      <h3 className="text-xl font-semibold text-white" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
-        No results found
-      </h3>
-      <p className="text-gray-400 max-w-md mx-auto">
-        We couldn&apos;t find anything matching your search. Try adjusting your filters or searching for a different destination.
-      </p>
-    </div>
-  );
-}
+  // Fetch all data
+  const [tours, hotels, cars, visas, cruises] = await Promise.all([
+    getAll('tours').catch(() => []),
+    getAll('hotels').catch(() => []),
+    getAll('cars').catch(() => []),
+    getAll('visas').catch(() => []),
+    getAll('cruises').catch(() => []),
+  ]);
 
-function SearchPageContent() {
-  const searchParams = useSearchParams();
-  const router = useRouter();
+  const results: { type: string; title: string; desc: string; href: string }[] = [];
 
-  const [results, setResults] = useState<SearchResults | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [activeTab, setActiveTab] = useState<TabType>('all');
-  const [currency, setCurrency] = useState<'MMK' | 'USD'>('MMK');
-  const [hasSearched, setHasSearched] = useState(false);
-
-  const handleSearch = useCallback((data: SearchResults | null, isLoading: boolean) => {
-    setResults(data);
-    setLoading(isLoading);
-    if (!isLoading) setHasSearched(true);
-  }, []);
-
-  // Auto-search when arriving with URL params
-  useEffect(() => {
-    const q = searchParams.get('q');
-    const dest = searchParams.get('dest');
-    const typeParam = searchParams.get('type');
-    if (!q && !dest) return;
-
-    const doSearch = async () => {
-      setLoading(true);
-      try {
-        const params: Record<string, unknown> = {};
-        if (typeParam) params.type = typeParam;
-        if (q) params.query = q;
-        if (dest) params.destination = dest;
-        const response = await searchAll(params as SearchParams);
-        setResults(response.data);
-      } catch (err) {
-        console.error('Auto-search failed:', err);
-      } finally {
-        setLoading(false);
-      }
-    };
-    doSearch();
-  }, [searchParams]);
-
-  // Parse initial query from URL if present
-  const initialParams = {
-    query: searchParams.get('q') || undefined,
-    type: (searchParams.get('type') as TabType) || undefined,
-    destination: searchParams.get('dest') || undefined,
-  };
-
-  const tabs: { key: TabType; label: string; count?: number }[] = [
-    { key: 'all', label: 'All', count: results ? results.tours.length + results.hotels.length + results.cars.length : undefined },
-    { key: 'tours', label: 'Tours', count: results?.tours.length },
-    { key: 'hotels', label: 'Hotels', count: results?.hotels.length },
-    { key: 'cars', label: 'Cars', count: results?.cars.length },
-  ];
-
-  const getFilteredItems = () => {
-    if (!results) return { tours: [], hotels: [], cars: [] };
-    if (activeTab === 'tours') return { tours: results.tours, hotels: [], cars: [] };
-    if (activeTab === 'hotels') return { tours: [], hotels: results.hotels, cars: [] };
-    if (activeTab === 'cars') return { tours: [], hotels: [], cars: results.cars };
-    return results;
-  };
-
-  const filtered = getFilteredItems();
-  const totalItems = filtered.tours.length + filtered.hotels.length + filtered.cars.length;
+  for (const t of tours as any[]) {
+    if ((t.title||'').toLowerCase().includes(query) || (t.destination||'').toLowerCase().includes(query) || (t.description||'').toLowerCase().includes(query)) {
+      results.push({ type: 'Tour', title: t.title || '', desc: t.destination || '', href: '/tours/' + (t.slug || t.id || t._id) });
+    }
+  }
+  for (const h of hotels as any[]) {
+    if ((h.name||'').toLowerCase().includes(query) || (h.location||'').toLowerCase().includes(query)) {
+      results.push({ type: 'Hotel', title: h.name || '', desc: h.location || '', href: '/hotels/' + (h.slug || h.id || h._id) });
+    }
+  }
+  for (const c of cars as any[]) {
+    if ((c.carType||'').toLowerCase().includes(query) || (c.name||'').toLowerCase().includes(query)) {
+      results.push({ type: 'Car', title: c.carType || c.name || '', desc: c.transmission || '', href: '/cars/' + (c.slug || c.id || c._id) });
+    }
+  }
+  for (const v of visas as any[]) {
+    if ((v.country||'').toLowerCase().includes(query)) {
+      results.push({ type: 'Visa', title: 'Visa to ' + (v.country || ''), desc: v.processingTime || '', href: '/visas/' + (v._id || v.id) });
+    }
+  }
+  for (const cr of cruises as any[]) {
+    if ((cr.title||'').toLowerCase().includes(query) || (cr.destination||'').toLowerCase().includes(query)) {
+      results.push({ type: 'Cruise', title: cr.title || '', desc: cr.destination || '', href: '/cruises/' + (cr.slug || cr.id || cr._id) });
+    }
+  }
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-gray-950 via-gray-900 to-gray-950">
-      {/* Hero search section */}
-      <section className="relative pt-24 pb-12 px-4">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(212,175,55,0.08),transparent_70%)]" />
-        <div className="relative">
-          <h1
-            className="text-4xl md:text-5xl text-center text-white font-bold mb-3"
-            style={{ fontFamily: "'Playfair Display', Georgia, serif" }}
-          >
-            Discover Your Journey
-          </h1>
-          <p className="text-gray-400 text-center mb-6 text-lg">
-            Search tours, hotels, and car rentals across Myanmar
-          </p>
-
-          {/* Service Navigation Icons */}
-          <div className="flex flex-wrap justify-center gap-1.5 mb-8">
-            {serviceLinks.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className="flex flex-col items-center py-2 px-3 rounded-xl bg-white/10 backdrop-blur-sm border border-white/10 hover:border-[#D4AF37] hover:bg-white/15 hover:shadow-lg hover:shadow-[#D4AF37]/10 hover:-translate-y-0.5 transition-all duration-200 group cursor-pointer min-w-[64px]"
-              >
-                <span className="text-lg md:text-xl group-hover:scale-110 transition-transform">{item.icon}</span>
-                <span className="text-[10px] md:text-[11px] font-semibold text-gray-300 group-hover:text-[#D4AF37] transition-colors mt-1">{item.label}</span>
+    <main style={{ minHeight: '100vh', background: '#f8f9fa' }}>
+      <section style={{ background: '#0A1628', padding: '60px 20px', textAlign: 'center' }}>
+        <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: 32, color: 'white' }}>Search Results</h1>
+        <p style={{ color: '#D4AF37', fontSize: 16, marginTop: 8 }}>Found {results.length} results for "{query}"</p>
+      </section>
+      <section style={{ maxWidth: 800, margin: '0 auto', padding: '40px 20px' }}>
+        {results.length === 0 ? (
+          <div style={{ textAlign: 'center', padding: 60 }}>
+            <p style={{ color: '#666', fontSize: 18 }}>No results found. Try a different search term.</p>
+            <Link href="/" style={{ display: 'inline-block', marginTop: 16, color: '#D4AF37', textDecoration: 'none' }}>Back to Home</Link>
+          </div>
+        ) : (
+          <div style={{ display: 'grid', gap: 12 }}>
+            {results.map((r, i) => (
+              <Link key={i} href={r.href} style={{ display: 'block', background: 'white', borderRadius: 12, padding: 20, textDecoration: 'none', boxShadow: '0 1px 3px rgba(0,0,0,0.1)', borderLeft: '4px solid #D4AF37' }}>
+                <span style={{ display: 'inline-block', padding: '2px 10px', borderRadius: 12, background: 'rgba(212,175,55,0.1)', color: '#B8960F', fontSize: 12, fontWeight: 600, marginBottom: 6 }}>{r.type}</span>
+                <h3 style={{ color: '#0A1628', fontSize: 18, fontWeight: 600, margin: '4px 0' }}>{r.title}</h3>
+                <p style={{ color: '#666', fontSize: 14 }}>{r.desc}</p>
               </Link>
             ))}
-          </div>
-
-          <SearchBar onSearch={handleSearch} initialParams={initialParams} />
-        </div>
-      </section>
-
-      {/* Results section */}
-      <section className="max-w-7xl mx-auto px-4 pb-20">
-        {/* Tabs + Currency */}
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
-          <div className="flex bg-white/5 rounded-xl p-1 border border-gold/10">
-            {tabs.map((tab) => (
-              <button
-                key={tab.key}
-                onClick={() => setActiveTab(tab.key)}
-                className={`px-5 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
-                  activeTab === tab.key
-                    ? 'bg-gradient-to-r from-[#D4AF37] to-[#C5A028] text-gray-900 shadow-sm'
-                    : 'text-gray-400 hover:text-white'
-                }`}
-              >
-                {tab.label}
-                {tab.count !== undefined && (
-                  <span className="ml-1.5 text-xs opacity-75">({tab.count})</span>
-                )}
-              </button>
-            ))}
-          </div>
-          <CurrencyToggle activeCurrency={currency} onToggle={setCurrency} />
-        </div>
-
-        {/* Loading state */}
-        {loading && (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {Array.from({ length: 6 }).map((_, i) => (
-              <SkeletonCard key={i} />
-            ))}
-          </div>
-        )}
-
-        {/* Empty state */}
-        {!loading && hasSearched && results && totalItems === 0 && <EmptyState />}
-
-        {/* Error state - search triggered but API returned null/error */}
-        {!loading && hasSearched && !results && (
-          <div className="text-center py-16 space-y-4">
-            <svg className="w-20 h-20 mx-auto text-red-400/50" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z" />
-            </svg>
-            <h3 className="text-xl font-semibold text-white" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
-              Search error
-            </h3>
-            <p className="text-gray-400 max-w-md mx-auto">
-              Something went wrong with the search. Please try again or contact support.
-            </p>
-          </div>
-        )}
-
-        {/* Results grid */}
-        {!loading && totalItems > 0 && (
-          <>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {filtered.tours.map((tour: Tour) => (
-                <TourCard key={tour._id} tour={tour} currency={currency} />
-              ))}
-              {filtered.hotels.map((hotel: Hotel) => (
-                <HotelCard key={hotel._id} hotel={hotel} currency={currency} />
-              ))}
-              {filtered.cars.map((car: Car) => (
-                <CarCard key={car._id} car={car} currency={currency} />
-              ))}
-            </div>
-
-            {/* Result count */}
-            <p className="text-center text-gray-500 text-sm mt-8">
-              Showing {totalItems} result{totalItems !== 1 ? 's' : ''}
-            </p>
-          </>
-        )}
-
-        {/* Initial state - no search performed yet */}
-        {!loading && !hasSearched && (
-          <div className="text-center py-20">
-            <svg className="w-24 h-24 mx-auto text-gold/20 mb-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={0.5}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-            <p className="text-gray-500 text-lg">Use the search bar above to find your perfect trip</p>
           </div>
         )}
       </section>
     </main>
-  );
-}
-
-export default function SearchPage() {
-  return (
-    <Suspense
-      fallback={
-        <div className="min-h-screen bg-gradient-to-b from-gray-950 via-gray-900 to-gray-950 flex items-center justify-center">
-          <div className="animate-spin w-10 h-10 border-2 border-[#D4AF37] border-t-transparent rounded-full" />
-        </div>
-      }
-    >
-      <SearchPageContent />
-    </Suspense>
   );
 }

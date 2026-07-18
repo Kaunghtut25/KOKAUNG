@@ -37,13 +37,21 @@ export function middleware(request: NextRequest) {
     }
   }
 
-  // Protect /api/admin/* routes
+  // Protect /api/admin/* routes — EXCEPT public GET on site-config and settings
   if (pathname.startsWith("/api/admin/")) {
-    const header = request.headers.get("authorization");
-    const token = header?.startsWith("Bearer ") ? header.slice(7) : undefined;
+    // Allow public GET on site-config and settings (needed for Footer, Navbar, Contact, etc.)
+    const isPublicRead = request.method === "GET" && (
+      pathname === "/api/admin/site-config" ||
+      pathname === "/api/admin/settings"
+    );
 
-    if (!isAdminToken(token)) {
-      return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+    if (!isPublicRead) {
+      const header = request.headers.get("authorization");
+      const token = header?.startsWith("Bearer ") ? header.slice(7) : undefined;
+
+      if (!isAdminToken(token)) {
+        return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+      }
     }
   }
 

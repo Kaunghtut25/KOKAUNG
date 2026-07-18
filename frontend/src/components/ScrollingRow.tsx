@@ -18,6 +18,15 @@ export default function ScrollingRow({ children, visible = true }: ScrollingRowP
   const [canScrollRight, setCanScrollRight] = useState(true);
   const [isPaused, setIsPaused] = useState(false);
 
+  // Touch/drag gesture refs
+  const isDragging = useRef(false);
+  const startX = useRef(0);
+  const scrollStartX = useRef(0);
+  const velocity = useRef(0);
+  const lastX = useRef(0);
+  const lastTime = useRef(0);
+  const momentumFrame = useRef<ReturnType<typeof requestAnimationFrame> | null>(null);
+
   const updateArrows = useCallback(() => {
     const el = scrollRef.current; if (!el) return;
     setCanScrollLeft(el.scrollLeft > 4);
@@ -37,6 +46,70 @@ export default function ScrollingRow({ children, visible = true }: ScrollingRowP
       scroll('right');
     }
   }, [scroll]);
+
+  // ── Touch handlers ──
+
+  const onTouchStart = useCallback((e: React.TouchEvent) => {
+    const el = scrollRef.current; if (!el) return;
+    setIsPaused(true);
+    if (momentumFrame.current) cancelAnimationFrame(momentumFrame.current);
+    isDragging.current = true;
+    startX.current = e.touches[0].clientX;
+    scrollStartX.current = el.scrollLeft;
+    lastX.current = e.touches[0].clientX;
+    lastTime.current = Date.now();
+  }, []);
+
+  const onTouchMove = useCallback((e: React.TouchEvent) => {
+    if (!isDragging.current) return;
+    const el = scrollRef.current; if (!el) return;
+    const x = e.touches[0].clientX;
+    const dx = startX.current - x;
+    el.scrollLeft = scrollStartX.current + dx;
+
+    const now = Date.now();
+    const dt = now - lastTime.current;
+    if (dt > 0) {
+      velocity.current = (lastX.current - x) / dt;
+    }
+    lastX.current = x;
+    lastTime.current = now;
+  }, []);
+
+  const onTouchEnd = useCallback(() => {
+    isDragging.current = false;
+
+    const absVel = Math.abs(velocity.current);
+    if (absVel > 0.05) {
+      const el = scrollRef.current;
+      if (!el) { setIsPaused(false); return; }
+
+      const friction = 0.95;
+      const minVelocity = 0.05;
+
+      const applyMomentum = () => {
+        const el = scrollRef.current;
+        if (!el || isDragging.current) return;
+
+        velocity.current *= friction;
+        el.scrollLeft += velocity.current * 16;
+
+        if (Math.abs(velocity.current) > minVelocity) {
+          momentumFrame.current = requestAnimationFrame(applyMomentum);
+        } else {
+          velocity.current = 0;
+        }
+      };
+
+      momentumFrame.current = requestAnimationFrame(applyMomentum);
+    }
+
+    setTimeout(() => {
+      if (!isDragging.current) setIsPaused(false);
+    }, 500);
+  }, []);
+
+  // ── Auto-scroll timer ──
 
   useEffect(() => {
     if (isPaused) return;
@@ -71,7 +144,15 @@ export default function ScrollingRow({ children, visible = true }: ScrollingRowP
       <div
         ref={scrollRef}
         className="flex gap-4 overflow-x-auto scrollbar-hide snap-x snap-mandatory scroll-smooth px-1"
-        style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+        style={{
+          scrollbarWidth: 'none',
+          msOverflowStyle: 'none',
+          touchAction: 'pan-y',
+          WebkitOverflowScrolling: 'touch',
+        }}
+        onTouchStart={onTouchStart}
+        onTouchMove={onTouchMove}
+        onTouchEnd={onTouchEnd}
       >
         {children}
       </div>

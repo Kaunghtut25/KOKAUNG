@@ -106,11 +106,21 @@ export default function CarCard({ car, currency = 'MMK' }: CarCardProps) {
         </div>
 
         {/* Button */}
-        <div className="px-4 pb-4 pt-1.5">
-          <div className={`w-full py-2.5 rounded-xl text-center font-bold text-sm transition-all duration-400 ${
+        <div className="px-4 pb-4 pt-1.5 space-y-2">
+          <div
+            onClick={(e) => { e.stopPropagation(); router.push('/book-now?type=car&name=' + encodeURIComponent(car.name||car.carType||carType||'') + '&id=' + encodeURIComponent(car._id||car.id||'') + '&priceMMK=' + (car.priceMMK||car.price||0) + '&priceUSD=' + (car.priceUSD||0)); }}
+            className={`w-full py-2.5 rounded-xl text-center font-bold text-sm transition-all duration-400 cursor-pointer ${
             isHovered ? 'bg-gradient-to-r from-[#D4AF37] to-[#F5A623] text-[#0A1628] shadow-lg shadow-[#D4AF37]/40 scale-[1.02]' : 'bg-gradient-to-r from-[#D4AF37] to-[#C5A028] text-[#0A1628] shadow-md shadow-[#D4AF37]/20'
           }`}>
             Book Now
+          </div>
+
+          {/* View Details */}
+          <div
+            onClick={(e) => { e.stopPropagation(); router.push("/cars/" + (car.slug || car._id || car.id)); }}
+            className="w-full py-2.5 rounded-xl text-center font-semibold text-sm transition-all duration-300 bg-white text-[#0A1628] border border-gray-200 hover:bg-[#0A1628] hover:text-[#D4AF37] hover:border-[#D4AF37] hover:shadow-lg cursor-pointer"
+          >
+            View Details →
           </div>
         </div>
       </div>

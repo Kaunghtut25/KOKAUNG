@@ -2,7 +2,7 @@
 
 import { useState, useEffect, Suspense, useRef } from "react";
 import { useSearchParams } from "next/navigation";
-import { FaPaperPlane, FaCheckCircle, FaUser, FaEnvelope, FaPhone } from "react-icons/fa";
+import { FaPaperPlane, FaCheckCircle, FaUser, FaEnvelope, FaPhone, FaExclamationTriangle } from "react-icons/fa";
 
 interface FormData {
   fullName: string; email: string; phone: string; travelType: string;
@@ -13,6 +13,8 @@ interface FormData {
 interface SearchSummary {
   type: string; from: string; to: string; departDate: string; returnDate: string;
   passengers: string; travelClass: string; legs?: { from: string; to: string; date: string }[];
+  // raw data for API submission
+  itemName?: string; amount?: number; currency?: string;
 }
 
 function BookNowContent() {
@@ -30,284 +32,309 @@ function BookNowContent() {
   const [referenceNumber, setReferenceNumber] = useState("");
   const [submittedName, setSubmittedName] = useState("");
   const [searchSummary, setSearchSummary] = useState<SearchSummary | null>(null);
+  const [apiError, setApiError] = useState("");
 
-  const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
-
-  // Read search params on mount
   useEffect(() => {
     const type = searchParams.get("type");
     if (!type) return;
 
-    // Tour booking from tour detail page
-    if (type === 'tour') {
-      const tourTitle = searchParams.get('title') || 'Tour Package';
-      const tourDest = searchParams.get('destination') || '';
-      const tourDuration = searchParams.get('duration') || '';
-      const tourPrice = searchParams.get('price') || '';
-      const tourDate = searchParams.get('date') || '';
-      const tourTravelers = searchParams.get('travelers') || '1';
-      const tourRequests = searchParams.get('requests') || '';
+    const bookingTypes: Record<string, string> = {
+      tour: "Tour Package", hotel: "Hotel Booking", car: "Car Rental",
+      visa: "Visa Service", insurance: "Insurance", cruise: "Cruise", lounge: "Sky Lounge", blog: "Blog Inquiry",
+    };
+    if (type in bookingTypes) {
+      const title = searchParams.get("title") || searchParams.get("name") || searchParams.get("plan") || searchParams.get("country") || "";
+      const dest = searchParams.get("destination") || searchParams.get("location") || "";
+      const dur = searchParams.get("duration") || searchParams.get("processingTime") || "";
+      const price = searchParams.get("price") || searchParams.get("priceMMK") || "";
+      const date = searchParams.get("date") || "";
+      const travelers = searchParams.get("travelers") || "1";
+      const requests = searchParams.get("requests") || "";
+      const cur = searchParams.get("currency") || "MMK";
+      const priceUSD = searchParams.get("priceUSD") || "";
+      const coverage = searchParams.get("coverage") || "";
+      const feeMMK = searchParams.get("feeMMK") || "";
+      const feeUSD = searchParams.get("feeUSD") || "";
+
+      let priceDisplay = "";
+      const amt = parseInt(price || feeMMK) || 0;
+      const amtUSD = parseInt(priceUSD || searchParams.get("priceUSD") || searchParams.get("feeUSD") || "0") || 0;
+      if (amt) {
+        priceDisplay = "Ks " + amt.toLocaleString();
+        if (amtUSD) {
+          priceDisplay += " / $" + amtUSD.toLocaleString();
+        }
+      }
 
       setSearchSummary({
-        type: 'Tour Package',
-        from: tourDest,
-        to: tourDuration,
-        departDate: tourDate,
-        returnDate: '',
-        passengers: tourTravelers + ' Traveler(s)',
-        travelClass: tourPrice ? (searchParams.get('currency') === 'USD' ? '$' : 'Ks ') + tourPrice + '/person' : '',
+        type: bookingTypes[type],
+        from: title,
+        to: dest + (dur ? " \u2022 " + dur : "") + (coverage ? " \u2022 " + coverage : ""),
+        departDate: date || "Flexible",
+        returnDate: priceDisplay,
+        passengers: travelers + " Traveler(s)",
+        travelClass: "",
+        itemName: title,
+        amount: amt,
+        currency: cur,
       });
       setFormData((prev) => ({
         ...prev,
-        travelType: 'tour',
-        specialRequests: tourRequests ? tourRequests + '\n--- Tour: ' + tourTitle + ' (' + tourDest + ', ' + tourDuration + ')' : 'Tour: ' + tourTitle + ' (' + tourDest + ', ' + tourDuration + ')',
-        departDate: tourDate,
-        passengers: parseInt(tourTravelers) || 1,
+        travelType: type,
+        specialRequests: requests || "Booking: " + title + (dest ? " | " + dest : ""),
+        departDate: date,
+        passengers: parseInt(travelers) || 1,
       }));
-      setTimeout(() => { messageBoxRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 300);
+      setTimeout(() => { messageBoxRef.current?.scrollIntoView({ behavior: "smooth", block: "center" }); }, 300);
       return;
     }
 
     const from = searchParams.get("from") || "";
     const to = searchParams.get("to") || "";
+    const fromCity = searchParams.get("fromCity") || "";
+    const toCity = searchParams.get("toCity") || "";
+    const fromCountry = searchParams.get("fromCountry") || "";
+    const toCountry = searchParams.get("toCountry") || "";
     const departDate = searchParams.get("depart") || "";
     const returnDate = searchParams.get("return") || "";
     const adults = searchParams.get("adults") || "1";
     const children = searchParams.get("children") || "0";
     const infants = searchParams.get("infants") || "0";
     const travelClass = searchParams.get("class") || "Economy";
-
     const totalPax = parseInt(adults) + parseInt(children) + parseInt(infants);
-    const paxLabel = `${totalPax} Passenger${totalPax > 1 ? "s" : ""} (${adults} Adult${adults !== "1" ? "s" : ""}${children !== "0" ? `, ${children} Child${children !== "1" ? "ren" : ""}` : ""}${infants !== "0" ? `, ${infants} Infant${infants !== "1" ? "s" : ""}` : ""})`;
+    const paxLabel = totalPax + " Passenger" + (totalPax > 1 ? "s" : "");
+    const clientType = searchParams.get("clientType") || "local";
+    const tripType = searchParams.get("tripType") || "oneway";
+    const legsJson = searchParams.get("legs") || "";
 
+    // Flight result data (from flights results page)
+    const airline = searchParams.get("airline") || "";
+    const airlineCode = searchParams.get("airlineCode") || "";
+    const flightNo = searchParams.get("flightNo") || "";
+    const price = searchParams.get("price") || "";
+    const currency = searchParams.get("currency") || "USD";
+    const departTime = searchParams.get("departTime") || "";
+    const arriveTime = searchParams.get("arriveTime") || "";
+    const stops = searchParams.get("stops") || "0";
+    const offerId = searchParams.get("offerId") || "";
+
+    const isFlightSearch = type === "flight" && from && to;
+
+    const tripTypeLabel = tripType === "roundtrip" ? "Round Trip Flight" : tripType === "multicity" ? "Multi-City Flight" : "One Way Flight";
+    const typeLabel = isFlightSearch ? tripTypeLabel : type === "oneway" ? "One Way" : type === "roundtrip" ? "Round Trip" : "Multi-City";
+
+    const fromLabel = isFlightSearch && fromCity ? fromCity + " (" + from + ")" + (fromCountry ? ", " + fromCountry : "") : from;
+    const toLabel = isFlightSearch && toCity ? toCity + " (" + to + ")" + (toCountry ? ", " + toCountry : "") : to;
+
+    const classLabel = travelClass === "ECONOMY" ? "Economy" : travelClass === "PREMIUM_ECONOMY" ? "Premium Economy" : travelClass === "BUSINESS" ? "Business" : travelClass === "FIRST" ? "First" : travelClass;
+    const clientLabel = clientType === "foreigner" ? "Foreigner" : "Local (Myanmar)";
+
+    // Build rich summary for flight search
     let summary: SearchSummary = {
-      type: type === "oneway" ? "One Way" : type === "roundtrip" ? "Round Trip" : "Multi-City",
-      from, to, departDate, returnDate,
-      passengers: paxLabel, travelClass,
+      type: typeLabel,
+      from: fromLabel,
+      to: toLabel,
+      departDate: departDate || "Flexible",
+      returnDate: returnDate || "",
+      passengers: paxLabel,
+      travelClass: classLabel,
     };
 
-    if (type === "multicity") {
-      const legs: { from: string; to: string; date: string }[] = [];
-      const numLegs = parseInt(searchParams.get("legs") || "0");
-      for (let i = 0; i < numLegs; i++) {
-        legs.push({
-          from: searchParams.get(`from${i}`) || "",
-          to: searchParams.get(`to${i}`) || "",
-          date: searchParams.get(`date${i}`) || "",
-        });
+    // Add flight-specific details
+    if (isFlightSearch) {
+      const flightInfo = [
+        airline ? airline + " (" + flightNo + ")" : "",
+        departTime ? "Depart: " + departTime : "",
+        arriveTime ? "Arrive: " + arriveTime : "",
+        stops === "0" ? "Nonstop" : stops + " stop" + (stops !== "1" ? "s" : ""),
+        price ? currency + " " + parseFloat(price).toLocaleString("en-US", { minimumFractionDigits: 2 }) : "",
+      ].filter(Boolean).join(" | ");
+      summary.to = toLabel + (flightInfo ? " - " + flightInfo : "");
+      summary.itemName = "Flight " + from + " to " + to + (airline ? " | " + airline + " " + flightNo : "");
+      summary.amount = parseFloat(price) || 0;
+      summary.currency = currency;
+
+      // Multi-city legs
+      let legsDisplay = "";
+      if (legsJson) {
+        try {
+          const legs = JSON.parse(legsJson);
+          legsDisplay = legs.map((l: any, i: number) => "Leg " + (i+1) + ": " + (l.from || "?") + " to " + (l.to || "?") + " on " + (l.date || "?")).join(" | ");
+        } catch {}
       }
-      summary.legs = legs;
-      if (legs.length > 0) {
-        summary.from = legs[0].from;
-        summary.to = legs[legs.length - 1].to;
-        summary.departDate = legs[0].date;
-        summary.returnDate = "";
-      }
+
+      setSearchSummary(summary);
+      setFormData((prev) => ({
+        ...prev,
+        travelType: "flight",
+        fromAirport: from,
+        toAirport: to,
+        departDate: departDate,
+        returnDate: returnDate,
+        passengers: totalPax,
+        travelClass: classLabel,
+        specialRequests: "Flight Booking: " + tripTypeLabel + " | " + from + " to " + to + " | Depart: " + (departDate || "TBD") + (returnDate ? " | Return: " + returnDate : "") + " | " + paxLabel + " (" + adults + " adults, " + children + " children, " + infants + " infants)" + " | Class: " + classLabel + " | Client: " + clientLabel + (airline ? " | Airline: " + airline + " " + flightNo : "") + (price ? " | Price: " + currency + " " + price : "") + (offerId ? " | Offer ID: " + offerId : "") + (legsDisplay ? " | Multi-city: " + legsDisplay : ""),
+      }));
+    } else {
+      setSearchSummary(summary);
+      setFormData((prev) => ({
+        ...prev,
+        travelType: type || "flight",
+        fromAirport: from,
+        toAirport: to,
+        departDate: departDate,
+        returnDate: returnDate,
+        passengers: totalPax,
+        travelClass: classLabel,
+      }));
     }
-
-    setSearchSummary(summary);
-    setFormData((prev) => ({
-      ...prev,
-      fromAirport: summary.from,
-      toAirport: summary.to,
-      departDate: summary.departDate,
-      returnDate: type === "roundtrip" ? summary.returnDate : "",
-      passengers: totalPax,
-      travelClass: summary.travelClass,
-      travelType: "flight",
-    }));
-
-    // Auto-scroll to message box after render
-    setTimeout(() => {
-      messageBoxRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
-    }, 300);
+    setTimeout(() => { messageBoxRef.current?.scrollIntoView({ behavior: "smooth", block: "center" }); }, 300);
   }, [searchParams]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: name === "passengers" ? parseInt(value) || 1 : value }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const validate = (): boolean => {
     const errs: string[] = [];
     if (!formData.fullName.trim()) errs.push("Full name is required");
-    if (!formData.email.trim()) errs.push("Email is required");
-    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) errs.push("Enter a valid email address");
+    if (!formData.email.trim() || !/\S+@\S+\.\S+/.test(formData.email)) errs.push("Valid email is required");
     if (!formData.phone.trim()) errs.push("Phone number is required");
-    if (!formData.departDate && formData.travelType === "flight" && searchSummary) errs.push("Travel date is required");
     setErrors(errs);
     return errs.length === 0;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setErrors([]);
+    setApiError("");
     if (!validate()) return;
+
     setLoading(true);
     try {
       const payload = {
-        fullName: formData.fullName,
-        email: formData.email,
-        phone: formData.phone,
-        travelType: formData.travelType,
-        fromAirport: formData.fromAirport,
-        toAirport: formData.toAirport,
-        departDate: formData.departDate,
-        returnDate: formData.returnDate,
-        passengers: formData.passengers,
-        travelClass: formData.travelClass,
-        specialRequests: searchSummary
-          ? `[Search: ${searchSummary.type} | ${searchSummary.from} → ${searchSummary.to} | ${searchSummary.departDate}${searchSummary.returnDate ? " - " + searchSummary.returnDate : ""} | ${searchSummary.passengers} | ${searchSummary.travelClass}]\n${formData.specialRequests}`
-          : formData.specialRequests,
-        contactPreference: formData.contactPreference,
+        ...formData,
+        // Include search summary data for richer booking records
+        itemName: searchSummary?.itemName || searchSummary?.from || "",
+        amount: searchSummary?.amount || 0,
+        currency: searchSummary?.currency || "MMK",
       };
-      const res = await fetch(`/api/booking-receiver`, {
+
+      const res = await fetch("/api/booking-receiver", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
-      const data = await res.json();
-      if (data.success) {
-        setReferenceNumber(data.referenceNumber);
-        setSubmittedName(formData.fullName);
-        setSuccessModal(true);
-      } else {
-        setErrors(data.errors || [data.message || "Failed to send. Please try again."]);
+
+      const json = await res.json();
+
+      if (!res.ok || !json.success) {
+        const msg = json.message || "Failed to submit booking";
+        const errs = json.errors || [msg];
+        setErrors(errs);
+        setApiError(msg);
+        setLoading(false);
+        return;
       }
-    } catch {
+
+      // Success — use real reference number from API
+      setReferenceNumber(json.referenceNumber);
+      setSubmittedName(formData.fullName);
+      setSuccessModal(true);
+    } catch (err: any) {
+      console.error("Booking submission error:", err);
+      setApiError("Network error. Please check your connection and try again.");
       setErrors(["Network error. Please try again."]);
     } finally {
       setLoading(false);
     }
   };
 
-  const inputClass = "w-full bg-white border border-gray-300 rounded-lg px-4 py-3 text-gray-900 outline-none focus:border-[#D4AF37] focus:ring-2 focus:ring-[#D4AF37]/20 transition-all text-sm";
-  const labelClass = "block text-gray-700 text-sm font-medium mb-1";
-
   return (
-    <main className="min-h-screen bg-gray-50 pt-24 pb-16">
-      {/* Hero Banner */}
-      <div
-        className="relative w-full h-48 md:h-64 mb-8 bg-cover bg-center rounded-b-3xl overflow-hidden"
-        style={{ backgroundImage: 'url(/images_v2/hero-book-now-v2.jpg)' }}
-      >
-        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
-        <div className="absolute bottom-0 left-0 right-0 p-6 md:p-8">
-          <h1 className="text-2xl md:text-4xl font-bold text-white mb-1" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
-            Book Your Journey
-          </h1>
-          <p className="text-white/70 text-xs md:text-sm">
-            Fill in your details and our travel experts will get back to you within 24 hours.
-          </p>
+    <main style={{ minHeight: "100vh", background: "#f8f9fa" }}>
+      <section style={{ position: "relative", height: 300, overflow: "hidden" }}>
+        <img src="/images_v2/hero-book-now-v2.jpg" alt="Book Now" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+        <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(10,22,40,0.9), rgba(10,22,40,0.3))" }} />
+        <div style={{ position: "absolute", bottom: 40, left: 0, right: 0, textAlign: "center", padding: "0 20px" }}>
+          <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: 42, color: "white", marginBottom: 8 }}>Book Now</h1>
+          <p style={{ color: "#D4AF37", fontSize: 18 }}>Complete your reservation</p>
         </div>
-      </div>
+      </section>
 
-      <div className="max-w-4xl mx-auto px-4">
-
-        {/* Search Summary Message Box */}
+      <section style={{ maxWidth: 800, margin: "0 auto", padding: "40px 20px" }}>
         {searchSummary && (
-          <div ref={messageBoxRef} className="bg-[#0A1628] text-white rounded-2xl p-6 mb-8 shadow-lg">
-            <h2 className="text-lg font-bold text-[#D4AF37] mb-4 flex items-center gap-2">
-              <FaPaperPlane className="text-sm" /> Your Search
+          <div ref={messageBoxRef} style={{ background: "white", borderRadius: 16, padding: 24, marginBottom: 24, boxShadow: "0 2px 8px rgba(0,0,0,0.1)", borderLeft: "4px solid #D4AF37" }}>
+            <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 20, color: "#0A1628", marginBottom: 8 }}>
+              {searchSummary.type}
             </h2>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
-              <div>
-                <p className="text-gray-400 text-xs uppercase tracking-wider">Trip Type</p>
-                <p className="font-semibold text-white mt-1">{searchSummary.type}</p>
-              </div>
-              <div>
-                <p className="text-gray-400 text-xs uppercase tracking-wider">Route</p>
-                <p className="font-semibold text-white mt-1">{searchSummary.from} → {searchSummary.to}</p>
-              </div>
-              <div>
-                <p className="text-gray-400 text-xs uppercase tracking-wider">Date</p>
-                <p className="font-semibold text-white mt-1">{searchSummary.departDate}{searchSummary.returnDate ? ` - ${searchSummary.returnDate}` : ""}</p>
-              </div>
-              <div>
-                <p className="text-gray-400 text-xs uppercase tracking-wider">Passengers</p>
-                <p className="font-semibold text-white mt-1">{searchSummary.passengers} | {searchSummary.travelClass}</p>
-              </div>
+            {searchSummary.from && <p style={{ fontSize: 16, fontWeight: 600, color: "#0A1628" }}>{searchSummary.from}</p>}
+            {searchSummary.to && <p style={{ fontSize: 14, color: "#666", marginTop: 4 }}>{searchSummary.to}</p>}
+            <div style={{ display: "flex", flexWrap: "wrap", gap: 12, marginTop: 8 }}>
+              {searchSummary.departDate && searchSummary.departDate !== "Flexible" && (
+                <span style={{ fontSize: 13, color: "#555", background: "#f0f0f0", padding: "4px 10px", borderRadius: 6 }}>📅 {searchSummary.departDate}</span>
+              )}
+              {searchSummary.returnDate && (
+                <span style={{ fontSize: 13, color: "#555", background: "#f0f0f0", padding: "4px 10px", borderRadius: 6 }}>↩ {searchSummary.returnDate}</span>
+              )}
+              {searchSummary.passengers && (
+                <span style={{ fontSize: 13, color: "#555", background: "#f0f0f0", padding: "4px 10px", borderRadius: 6 }}>👥 {searchSummary.passengers}</span>
+              )}
+              {searchSummary.travelClass && (
+                <span style={{ fontSize: 13, color: "#555", background: "#f0f0f0", padding: "4px 10px", borderRadius: 6 }}>💼 {searchSummary.travelClass}</span>
+              )}
             </div>
-            {searchSummary.legs && searchSummary.legs.length > 0 && (
-              <div className="mt-4 pt-4 border-t border-gray-700">
-                <p className="text-gray-400 text-xs uppercase tracking-wider mb-2">Multi-City Route</p>
-                {searchSummary.legs.map((leg, i) => (
-                  <div key={i} className="flex items-center gap-2 text-sm mb-1">
-                    <span className="text-[#D4AF37] font-bold">Flight {i + 1}:</span>
-                    <span className="text-white">{leg.from} → {leg.to}</span>
-                    <span className="text-gray-400">| {leg.date}</span>
-                  </div>
-                ))}
-              </div>
-            )}
-            <p className="text-gray-400 text-xs mt-4">Complete the form below and we&apos;ll email you a personalized quote. 👇</p>
           </div>
         )}
 
-        {/* Form */}
-        <form onSubmit={handleSubmit} className="bg-white rounded-2xl shadow-lg border border-gray-200 p-6 md:p-8 space-y-6">
-          {errors.length > 0 && (
-            <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-              <p className="text-red-600 text-sm font-medium mb-1">Please fix the following:</p>
-              <ul className="list-disc list-inside text-red-500 text-sm">
-                {errors.map((err, i) => <li key={i}>{err}</li>)}
-              </ul>
+        <form onSubmit={handleSubmit} style={{ background: "white", borderRadius: 16, padding: 24, boxShadow: "0 2px 8px rgba(0,0,0,0.1)" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
+            <div><label style={{ fontSize: 14, color: "#555", marginBottom: 4, display: "block" }}>Full Name</label><div style={{ display: "flex", alignItems: "center", border: "1px solid #ddd", borderRadius: 10, padding: "8px 12px" }}><FaUser style={{ color: "#999", marginRight: 8 }} /><input name="fullName" value={formData.fullName} onChange={handleChange} placeholder="Your full name" style={{ border: "none", outline: "none", width: "100%", fontSize: 14 }} /></div></div>
+            <div><label style={{ fontSize: 14, color: "#555", marginBottom: 4, display: "block" }}>Email</label><div style={{ display: "flex", alignItems: "center", border: "1px solid #ddd", borderRadius: 10, padding: "8px 12px" }}><FaEnvelope style={{ color: "#999", marginRight: 8 }} /><input name="email" value={formData.email} onChange={handleChange} placeholder="your@email.com" type="email" style={{ border: "none", outline: "none", width: "100%", fontSize: 14 }} /></div></div>
+            <div><label style={{ fontSize: 14, color: "#555", marginBottom: 4, display: "block" }}>Phone</label><div style={{ display: "flex", alignItems: "center", border: "1px solid #ddd", borderRadius: 10, padding: "8px 12px" }}><FaPhone style={{ color: "#999", marginRight: 8 }} /><input name="phone" value={formData.phone} onChange={handleChange} placeholder="+95 9xxxxxxxxx" type="tel" style={{ border: "none", outline: "none", width: "100%", fontSize: 14 }} /></div></div>
+          </div>
+          <div style={{ marginTop: 16 }}>
+            <label style={{ fontSize: 14, color: "#555", marginBottom: 4, display: "block" }}>Special Requests</label>
+            <textarea name="specialRequests" value={formData.specialRequests} onChange={handleChange} rows={3} placeholder="Any special requirements..." style={{ width: "100%", border: "1px solid #ddd", borderRadius: 10, padding: "8px 12px", fontSize: 14, resize: "vertical" }} />
+          </div>
+
+          {/* API Error Banner */}
+          {apiError && (
+            <div style={{ marginTop: 12, background: "#FFF3F3", padding: 12, borderRadius: 8, display: "flex", alignItems: "center", gap: 8 }}>
+              <FaExclamationTriangle style={{ color: "#D32F2F", flexShrink: 0 }} />
+              <p style={{ color: "#D32F2F", fontSize: 13, margin: 0 }}>{apiError}</p>
             </div>
           )}
 
-          {/* Personal Info */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div>
-              <label className={labelClass}><FaUser className="inline mr-1 text-[#D4AF37]" /> Full Name *</label>
-              <input type="text" name="fullName" value={formData.fullName} onChange={handleChange} placeholder="John Doe" className={inputClass} />
-            </div>
-            <div>
-              <label className={labelClass}><FaEnvelope className="inline mr-1 text-[#D4AF37]" /> Email *</label>
-              <input type="email" name="email" value={formData.email} onChange={handleChange} placeholder="john@example.com" className={inputClass} />
-            </div>
-            <div>
-              <label className={labelClass}><FaPhone className="inline mr-1 text-[#D4AF37]" /> Phone *</label>
-              <input type="tel" name="phone" value={formData.phone} onChange={handleChange} placeholder="+95 9 xxx xxx xxx" className={inputClass} />
-            </div>
-          </div>
+          {/* Validation Errors */}
+          {errors.length > 0 && !apiError && (
+            <div style={{ marginTop: 12, background: "#FFF3F3", padding: 12, borderRadius: 8 }}>{errors.map((err, i) => <p key={i} style={{ color: "#D32F2F", fontSize: 13 }}>{err}</p>)}</div>
+          )}
 
-          {/* Message / Note */}
-          <div>
-            <label className={labelClass}>Message / Note</label>
-            <textarea name="specialRequests" value={formData.specialRequests} onChange={handleChange} rows={4}
-              placeholder="Any specific requirements, dietary needs, accessibility requests, etc."
-              className={inputClass + " resize-none"} />
-          </div>
-
-          {/* Submit */}
-          <div className="flex flex-col sm:flex-row gap-4 items-center justify-between pt-4 border-t border-gray-100">
-            <p className="text-xs text-gray-400">We&apos;ll email you a detailed quote within 24 hours. No payment required now.</p>
-            <button type="submit" disabled={loading}
-              className="bg-[#D4AF37] text-[#0A1628] font-bold px-10 py-3.5 rounded-lg hover:bg-[#C5A028] hover:shadow-lg disabled:opacity-50 transition-all cursor-pointer whitespace-nowrap flex items-center gap-2">
-              <FaPaperPlane /> {loading ? "Sending..." : "Send Booking Request"}
-            </button>
-          </div>
+          <button type="submit" disabled={loading} style={{ marginTop: 20, width: "100%", padding: "14px", borderRadius: 12, background: loading ? "#999" : "linear-gradient(to right, #D4AF37, #F5A623)", color: "#0A1628", fontWeight: "bold", fontSize: 16, border: "none", cursor: loading ? "not-allowed" : "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
+            {loading ? (
+              <>⏳ Submitting...</>
+            ) : (
+              <><FaPaperPlane /> Submit Booking</>
+            )}
+          </button>
         </form>
-      </div>
+      </section>
 
-      {/* Success Modal */}
+      {/* Success Modal — uses real API data */}
       {successModal && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-8 text-center">
-            <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-green-100 flex items-center justify-center">
-              <FaCheckCircle className="text-3xl text-green-500" />
+        <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.5)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 100 }}>
+          <div style={{ background: "white", borderRadius: 20, padding: 40, textAlign: "center", maxWidth: 420, margin: "0 20px", boxShadow: "0 20px 60px rgba(0,0,0,0.3)" }}>
+            <FaCheckCircle style={{ color: "#4CAF50", fontSize: 64, marginBottom: 16 }} />
+            <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 24, color: "#0A1628" }}>Booking Submitted!</h2>
+            <p style={{ color: "#666", marginTop: 8 }}>Thank you, {submittedName}!</p>
+            <p style={{ color: "#888", fontSize: 13, marginTop: 4 }}>A confirmation email has been sent to your inbox.</p>
+            <div style={{ background: "#f0f0f0", padding: "12px 16px", borderRadius: 10, marginTop: 16, border: "1px dashed #D4AF37" }}>
+              <span style={{ fontSize: 11, color: "#888", display: "block", marginBottom: 4 }}>REFERENCE NUMBER</span>
+              <span style={{ fontSize: 18, fontFamily: "monospace", fontWeight: "bold", color: "#D4AF37", letterSpacing: 1 }}>{referenceNumber}</span>
             </div>
-            <h2 className="text-2xl font-bold text-gray-900 mb-2">Request Sent!</h2>
-            <p className="text-gray-600 text-sm mb-2">
-              Thank you <span className="font-semibold text-gray-900">{submittedName}</span>!
-            </p>
-            <p className="text-gray-500 text-sm mb-6">
-              Your reference: <span className="font-mono font-bold text-[#D4AF37] bg-gray-100 px-2 py-1 rounded">{referenceNumber}</span>
-            </p>
-            <p className="text-gray-400 text-xs mb-6">We will review your request and email you a personalized quote within 24 hours.</p>
-            <button onClick={() => setSuccessModal(false)}
-              className="bg-[#D4AF37] text-[#0A1628] font-bold px-8 py-3 rounded-lg hover:bg-[#C5A028] transition-all cursor-pointer">
-              Done
-            </button>
+            <p style={{ color: "#aaa", fontSize: 12, marginTop: 12 }}>We'll contact you within 24 hours</p>
+            <button onClick={() => setSuccessModal(false)} style={{ marginTop: 20, padding: "12px 36px", borderRadius: 10, background: "#0A1628", color: "#D4AF37", border: "none", fontWeight: "bold", fontSize: 15, cursor: "pointer" }}>Close</button>
           </div>
         </div>
       )}
@@ -316,9 +343,5 @@ function BookNowContent() {
 }
 
 export default function BookNowPage() {
-  return (
-    <Suspense fallback={<div className="min-h-screen bg-gray-50 pt-24 pb-16"><div className="text-center text-gray-500">Loading...</div></div>}>
-      <BookNowContent />
-    </Suspense>
-  );
+  return <Suspense fallback={<div style={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: "100vh" }}><p>Loading...</p></div>}><BookNowContent /></Suspense>;
 }

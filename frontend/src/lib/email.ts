@@ -1,6 +1,7 @@
 import { Resend } from "resend";
 
-const ADMIN_EMAIL = process.env.ADMIN_EMAIL || "a9ticketing@a9globaltravel.com.mm";
+const ADMIN_EMAIL = process.env.ADMIN_EMAIL || "dadkaunghtut@gmail.com";
+const FROM_EMAIL = process.env.FROM_EMAIL || "bookings@a9travel.com";
 const RESEND_API_KEY = process.env.RESEND_API_KEY || "";
 
 function getResend(): Resend | null {
@@ -15,6 +16,9 @@ export function getAdminEmail(): string {
   return ADMIN_EMAIL;
 }
 
+/**
+ * Send admin notification email when a new booking is submitted
+ */
 export async function sendBookingEmail(data: {
   fullName: string;
   email: string;
@@ -67,16 +71,101 @@ export async function sendBookingEmail(data: {
 
   try {
     const result = await resend.emails.send({
-      from: "A9 Global Travel <booking@a9travel.com>",
+      from: `A9 Global Travel <${FROM_EMAIL}>`,
       to: [ADMIN_EMAIL],
       reply_to: data.email,
       subject,
       html,
     });
-    console.log(`[Email] Sent ${data.referenceNumber} — Resend ID: ${result.data?.id}`);
+    console.log(`[Email] Admin notification sent ${data.referenceNumber} — Resend ID: ${result.data?.id}`);
     return true;
   } catch (err) {
     console.error("[Email] Resend failed:", (err as any)?.message || err);
+    return false;
+  }
+}
+
+/**
+ * Send customer confirmation email with booking reference
+ */
+export async function sendCustomerConfirmationEmail(data: {
+  fullName: string;
+  email: string;
+  travelType: string;
+  referenceNumber: string;
+  fromAirport?: string;
+  toAirport?: string;
+  departDate?: string;
+  returnDate?: string;
+  passengers?: number;
+  travelClass?: string;
+  specialRequests?: string;
+  itemName?: string;
+  amount?: number;
+  currency?: string;
+}): Promise<boolean> {
+  const resend = getResend();
+  if (!resend) return false;
+
+  const bookingTypeLabel = data.travelType.charAt(0).toUpperCase() + data.travelType.slice(1);
+  const subject = `Booking Confirmed — ${data.referenceNumber} | A9 Global Travel`;
+
+  const html = `
+    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+      <div style="background: #0A1628; padding: 30px; border-radius: 12px 12px 0 0; text-align: center;">
+        <h1 style="color: #D4AF37; font-family: 'Playfair Display', Georgia, serif; margin: 0; font-size: 28px;">A9 Global Travels</h1>
+        <p style="color: #fff; opacity: 0.8; margin: 5px 0 0; font-size: 14px;">Booking Confirmation</p>
+      </div>
+      <div style="background: #f9f9f9; padding: 30px; border-radius: 0 0 12px 12px; border: 1px solid #eee; border-top: none;">
+        <h2 style="color: #0A1628; font-family: 'Playfair Display', Georgia, serif;">Dear ${data.fullName},</h2>
+        <p style="color: #333; line-height: 1.6;">Thank you for choosing <strong>A9 Global Travels</strong>! Your booking request has been received and is being processed. Our team will contact you within <strong>24 hours</strong> to confirm the details and finalize your reservation.</p>
+        
+        <div style="background: #fff; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #D4AF37; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+          <p style="margin: 0 0 12px; font-size: 13px; color: #888; text-transform: uppercase; letter-spacing: 1px;">Your Reference Number</p>
+          <p style="margin: 0 0 16px; font-size: 22px; font-weight: bold; color: #D4AF37; font-family: monospace; letter-spacing: 1px;">${data.referenceNumber}</p>
+          <div style="border-top: 1px solid #eee; padding-top: 12px;">
+            <p style="margin: 0 0 6px; font-size: 14px;"><strong style="color: #0A1628;">Booking Type:</strong> <span style="color: #555;">${bookingTypeLabel}</span></p>
+            ${data.itemName ? `<p style="margin: 0 0 6px; font-size: 14px;"><strong style="color: #0A1628;">Item:</strong> <span style="color: #555;">${data.itemName}</span></p>` : ""}
+            ${data.fromAirport ? `<p style="margin: 0 0 6px; font-size: 14px;"><strong style="color: #0A1628;">From:</strong> <span style="color: #555;">${data.fromAirport}</span></p>` : ""}
+            ${data.toAirport ? `<p style="margin: 0 0 6px; font-size: 14px;"><strong style="color: #0A1628;">To:</strong> <span style="color: #555;">${data.toAirport}</span></p>` : ""}
+            ${data.departDate ? `<p style="margin: 0 0 6px; font-size: 14px;"><strong style="color: #0A1628;">Date:</strong> <span style="color: #555;">${data.departDate}</span></p>` : ""}
+            ${data.passengers ? `<p style="margin: 0 0 6px; font-size: 14px;"><strong style="color: #0A1628;">Passengers:</strong> <span style="color: #555;">${data.passengers}</span></p>` : ""}
+            ${data.travelClass ? `<p style="margin: 0 0 6px; font-size: 14px;"><strong style="color: #0A1628;">Class:</strong> <span style="color: #555;">${data.travelClass}</span></p>` : ""}
+            ${data.amount ? `<p style="margin: 0 0 6px; font-size: 14px;"><strong style="color: #0A1628;">Amount:</strong> <span style="color: #D4AF37; font-weight: bold;">${data.amount} ${data.currency || "MMK"}</span></p>` : ""}
+          </div>
+        </div>
+        
+        ${data.specialRequests ? `
+        <div style="background: #FFF8E1; padding: 16px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #FFE082;">
+          <p style="margin: 0; font-size: 13px; color: #F57F17;"><strong>📝 Your Special Requests:</strong> ${data.specialRequests}</p>
+        </div>` : ""}
+
+        <p style="color: #333; margin-top: 20px;">If you have any questions or need to modify your booking, please don't hesitate to contact us:</p>
+        <div style="background: #fff; padding: 16px; border-radius: 8px; margin: 16px 0; border: 1px solid #eee;">
+          <p style="margin: 0 0 6px; font-size: 14px;">📞 <strong>Phone:</strong> <a href="tel:+959781617111" style="color: #0A1628;">+95 978 161 7111</a></p>
+          <p style="margin: 0 0 6px; font-size: 14px;">✉️ <strong>Email:</strong> <a href="mailto:dadkaunghtut@gmail.com" style="color: #0A1628;">dadkaunghtut@gmail.com</a></p>
+          <p style="margin: 0; font-size: 14px;">🌐 <strong>Website:</strong> <a href="https://a9travel.com" style="color: #D4AF37;">a9travel.com</a></p>
+        </div>
+        
+        <p style="color: #888; font-size: 12px; margin-top: 30px; border-top: 1px solid #eee; padding-top: 20px; text-align: center;">
+          This is an automated confirmation from A9 Global Travels. Please do not reply directly to this email.<br/>
+          Our team will contact you shortly at the phone number or email you provided.
+        </p>
+      </div>
+    </div>
+  `;
+
+  try {
+    const result = await resend.emails.send({
+      from: `A9 Global Travel <${FROM_EMAIL}>`,
+      to: [data.email],
+      subject,
+      html,
+    });
+    console.log(`[Email] Customer confirmation sent to ${data.email} — Ref: ${data.referenceNumber} — Resend ID: ${result.data?.id}`);
+    return true;
+  } catch (err) {
+    console.error("[Email] Customer confirmation failed:", (err as any)?.message || err);
     return false;
   }
 }

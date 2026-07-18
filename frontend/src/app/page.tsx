@@ -4,10 +4,17 @@ import Link from "next/link";
 import { useState, useEffect, useCallback, useRef } from "react";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
-import PopularDestinations from "@/components/PopularDestinations";
+import PopularDestinations from "@/components/PopularDestinations"
 import { Airport, airports } from '@/data/airports';
 import Image from 'next/image';
-
+import TrustBadges from '@/components/TrustBadges';
+import DealsBanner from '@/components/DealsBanner';
+import WhyChooseUs from '@/components/WhyChooseUs';
+import StatsCounter from '@/components/StatsCounter';
+import TestimonialSlider from '@/components/TestimonialSlider';
+import SocialFeed from '@/components/SocialFeed';
+import PartnerLogos from '@/components/PartnerLogos';
+import Newsletter from '@/components/Newsletter';
 type TabType = "oneway" | "roundtrip" | "multicity";
 
 interface FlightLeg { from: string; to: string; date: string; }
@@ -146,11 +153,15 @@ export default function HomePage() {
   const [passengers, setPassengers] = useState<PassengerCounts>({ adults: 1, children: 0, infants: 0 });
   const [travelClass, setTravelClass] = useState("Economy");
   const [clientType, setClientType] = useState<'local' | 'foreigner'>('local');
+  const [ctaBgImage, setCtaBgImage] = useState('/images_v2/cta-bg-v2.jpg');
 
   // Fetch dynamic site config
   useEffect(() => {
     fetch('/api/admin/site-config').then(r=>r.json()).then(d=>{
       if (d && d.heroSlides) setSiteConfig(d);
+    }).catch(()=>{});
+    fetch('/api/admin/settings').then(r=>r.json()).then(d=>{
+      if (d?.heroImages?.flights) setCtaBgImage(d.heroImages.flights);
     }).catch(()=>{});
   }, []);
 
@@ -171,7 +182,30 @@ export default function HomePage() {
   const updateMultiCityLeg = (idx:number, f:"from"|"to"|"date", v:string) => { const legs=[...multiCityLegs]; legs[idx]={...legs[idx],[f]:v}; setMultiCityLegs(legs); };
   const handleAddLeg = () => setMultiCityLegs([...multiCityLegs, { from:"", to:"", date:"" }]);
   const handleRemoveLeg = (idx:number) => setMultiCityLegs(multiCityLegs.filter((_,i)=>i!==idx));
-  const handleSearch = (e: React.FormEvent) => { e.preventDefault(); toast.success("Searching flights..."); };
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    const totalPax = passengers.adults + passengers.children + passengers.infants;
+    const params = new URLSearchParams();
+    params.set("type", activeTab === "oneway" ? "flight" : activeTab === "roundtrip" ? "flight" : "flight");
+    params.set("from", from);
+    params.set("to", to);
+    const fromAirport = airports.find(a => a.code === from);
+    const toAirport = airports.find(a => a.code === to);
+    if (fromAirport) { params.set("fromCity", fromAirport.city); params.set("fromCountry", fromAirport.country); }
+    if (toAirport) { params.set("toCity", toAirport.city); params.set("toCountry", toAirport.country); }
+    if (departDate) params.set("depart", departDate);
+    if (returnDate) params.set("return", returnDate);
+    params.set("adults", String(passengers.adults));
+    params.set("children", String(passengers.children));
+    params.set("infants", String(passengers.infants));
+    params.set("class", travelClass);
+    params.set("clientType", clientType);
+    params.set("tripType", activeTab);
+    if (activeTab === "multicity") {
+      params.set("legs", JSON.stringify(multiCityLegs));
+    }
+    router.push("/book-now?" + params.toString());
+  };
 
   const heroHeight = siteConfig?.heroHeightDesktop || 460;
   const heroHeightMobile = siteConfig?.heroHeightMobile || 340;
@@ -180,9 +214,7 @@ export default function HomePage() {
 
   return (
     <main className="min-h-screen bg-white">
-      {/* ========== Hero Section ========== */}
       <section className="relative w-full overflow-hidden" style={{ height: `${siteConfig?.heroHeightDesktop || 460}px`, maxHeight: "100vh" }}>
-        {/* Gradient overlay */}
         <div className="absolute inset-0 overflow-hidden">
           {slides.map((slide:any, index:number) => (
             <div key={index} className={`absolute inset-0 transition-opacity duration-1000 ${index === currentSlide ? "opacity-100" : "opacity-0"}`}>
@@ -192,7 +224,6 @@ export default function HomePage() {
           <div className="absolute inset-0 bg-gradient-to-b from-[#1B2A4A]/60 via-[#1B2A4A]/30 to-transparent" />
         </div>
 
-        {/* Slide content — moved up */}
         <div className="relative z-10 flex flex-col items-center px-4 text-center pt-24">
           {slides.map((slide:any, index:number) => (
             <div key={index} className={`transition-all duration-700 ${index === currentSlide ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8 absolute pointer-events-none"}`}>
@@ -203,7 +234,6 @@ export default function HomePage() {
           ))}
         </div>
 
-        {/* Nav arrows */}
         <button onClick={prevSlideHandler} className="absolute left-4 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center text-white hover:bg-white/20 transition-all cursor-pointer">
           <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg>
         </button>
@@ -219,8 +249,6 @@ export default function HomePage() {
         </div>
 
       </section>
-
-      {/* ========== Search Engine ========== */}
       <div className="relative -mt-24 md:-mt-32 z-40 px-4">
         <div className="max-w-5xl mx-auto">
           <div className="bg-white rounded-2xl border-2 border-[#D4AF37]/30 shadow-xl p-5 md:p-7 overflow-visible">
@@ -264,23 +292,20 @@ export default function HomePage() {
         </div>
       </div>
 
-      {/* ========== Popular Destinations ========== */}
+      {/* ========== Trust Badges ========== */}
       <PopularDestinations />
-
-      {/* ========== Stats Section (Dynamic) ========== */}
       {statsCards.length > 0 && (
-        <section className="py-16 bg-[#FFFDF5]">
+      <section className="py-16 bg-[#FFFDF5]">
           <div className="max-w-6xl mx-auto px-4">
             <div className={`grid grid-cols-2 md:grid-cols-${statsCards.length > 3 ? 4 : statsCards.length} gap-6`}>
               {statsCards.map((s:any,i:number) => <StatsCard key={i} {...s} />)}
             </div>
           </div>
         </section>
-      )}
+)}
 
-      {/* ========== Why Choose Us (Dynamic) ========== */}
       {whyCards.length > 0 && (
-        <section className="py-20 bg-white">
+      <section className="py-20 bg-white">
           <div className="max-w-6xl mx-auto px-4">
             <div className="text-center mb-14">
               <p className="text-[#D4AF37] uppercase tracking-[0.3em] text-sm font-medium mb-3">Why Choose Us</p>
@@ -291,23 +316,29 @@ export default function HomePage() {
             </div>
           </div>
         </section>
-      )}
+)}
 
-      {/* ========== CTA Section ========== */}
       <section className="py-24 bg-[#0A1628] relative overflow-hidden">
-        <div className="absolute inset-0 opacity-10 bg-cover bg-center" style={{ backgroundImage: "url(/images_v2/cta-bg-v2.jpg)" }} />
+        <div className="absolute inset-0 opacity-10 bg-cover bg-center" style={{ backgroundImage: `url(${ctaBgImage})` }} />
         <div className="relative z-10 max-w-3xl mx-auto text-center px-4">
           <h2 className="text-3xl md:text-5xl font-bold text-white font-['Playfair_Display',serif] mb-6">{siteConfig?.ctaTitle || "Ready to Start Your Journey?"}</h2>
           <p className="text-white/70 text-lg mb-10 max-w-xl mx-auto">{siteConfig?.ctaDescription || "Let us craft your perfect getaway."}</p>
           <Link href={siteConfig?.ctaButtonHref || "/book-now"} className="bg-gradient-to-r from-[#D4AF37] to-[#F5A623] text-[#0A1628] font-bold px-10 py-4 rounded-full text-lg hover:shadow-xl hover:shadow-[#D4AF37]/40 transition-all duration-300 transform hover:scale-105 cursor-pointer inline-block">{siteConfig?.ctaButtonLabel || "Book Now"}</Link>
         </div>
       </section>
-
       <footer className="bg-gray-50 border-t border-gray-200 py-10">
         <div className="max-w-6xl mx-auto px-4 text-center text-gray-500 text-sm">
           <p>{siteConfig?.footerCopyright || `© ${new Date().getFullYear()} A9 Global Travels & Tours. All rights reserved.`}</p>
         </div>
       </footer>
-    </main>
+          <TrustBadges />
+      <DealsBanner />
+      <WhyChooseUs />
+      <StatsCounter />
+      <TestimonialSlider />
+      <SocialFeed />
+      <PartnerLogos />
+      <Newsletter />
+</main>
   );
 }

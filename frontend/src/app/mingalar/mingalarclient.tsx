@@ -1,8 +1,11 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-
+import DealsBanner from '@/components/DealsBanner';
+import FAQAccordion from '@/components/FAQAccordion';
+import TestimonialSlider from '@/components/TestimonialSlider';
 interface LoungeItem {
   img: string;
   icon: string;
@@ -14,11 +17,22 @@ interface MingalarClientProps {
   initialCards: LoungeItem[];
 }
 
-export default function MingalarClient({ initialCards }: MingalarClientProps) {
+  export default function MingalarClient({ initialCards }: MingalarClientProps) {
+    const router = useRouter();
+  const [layout, setLayout] = useState({ desktop: 3, tablet: 2, mobile: 1 });
   const [loungeCards, setLoungeCards] = useState<LoungeItem[]>(initialCards);
 
   useEffect(() => {
-    fetch('/api/admin/mingalar').then(r => {
+    fetch("/api/admin/site-config")
+      .then(r => r.json())
+      .then(d => {
+        if (d?.sectionLayouts?.skyLounge) setLayout(d.sectionLayouts.skyLounge);
+      })
+      .catch(() => {});
+  }, []);
+
+  useEffect(() => {
+    fetch('/api/mingalar').then(r => {
       if (!r.ok) throw new Error('Not authed');
       return r.json();
     }).then(data => {
@@ -34,7 +48,9 @@ export default function MingalarClient({ initialCards }: MingalarClientProps) {
     }).catch(() => {});
   }, []);
 
-  const renderCard = (item: LoungeItem, i: number) => (
+  const renderCard = (item: LoungeItem, i: number) => {
+    const slug = item.slug || item.id || ('m' + (i + 1));
+    return (
     <div key={i} className="bg-white rounded-xl border border-gray-200 overflow-hidden hover:shadow-lg hover:border-[#D4AF37]/40 transition-all group">
       <div className="relative h-48 w-full overflow-hidden">
         <img
@@ -49,14 +65,35 @@ export default function MingalarClient({ initialCards }: MingalarClientProps) {
       </div>
       <div className="p-5 text-center">
         <h3 className="font-semibold text-[#0A1628] mb-1" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>{item.title}</h3>
-        <p className="text-gray-500 text-sm">{item.desc}</p>
+        <p className="text-gray-500 text-sm mb-4">{item.desc}</p>
+        <div className="flex gap-2">
+          <Link
+            href={'/mingalar/' + slug}
+            className="flex-1 px-3 py-2 border border-[#D4AF37] text-[#D4AF37] text-sm font-semibold rounded-full text-center hover:bg-[#D4AF37] hover:text-white transition-colors"
+          >
+            View Details
+          </Link>
+          <button
+            onClick={() => router.push('/book-now?type=lounge&name=' + encodeURIComponent(item.title) + '&id=' + slug)}
+            className="flex-1 px-3 py-2 bg-[#D4AF37] text-white text-sm font-semibold rounded-full hover:bg-[#C19B2F] transition-colors"
+          >
+            Book Now
+          </button>
+        </div>
+        <button
+          onClick={() => router.push('/contact?subject=' + encodeURIComponent('Sky Lounge Inquiry') + '&item=' + encodeURIComponent(item.title))}
+          className="w-full mt-2 py-2 text-sm text-gray-600 hover:text-[#D4AF37] transition-colors"
+        >
+          Contact Us
+        </button>
       </div>
     </div>
-  );
+    );
+  };
 
   return (
     <main className="min-h-screen bg-white">
-      <section className="relative h-[400px] md:h-[500px] w-full overflow-hidden">
+<section className="relative h-[400px] md:h-[500px] w-full overflow-hidden">
         <img src="/images_v2/hero-mingalar-v2.jpg" alt="Airport Lounge" className="w-full h-full object-cover" />
         <div className="absolute inset-0 bg-gradient-to-t from-[#0A1628]/90 via-[#0A1628]/40 to-[#0A1628]/30" />
         <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4">
@@ -66,14 +103,13 @@ export default function MingalarClient({ initialCards }: MingalarClientProps) {
           <p className="text-gray-300 text-lg max-w-2xl">Premium airport lounge experience at Yangon International</p>
         </div>
       </section>
-
-      <section className="max-w-6xl mx-auto px-4 py-12">
+<section className="max-w-6xl mx-auto px-4 py-12">
         {/* Row 1 */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+        <div className={`grid grid-cols-${layout.mobile} md:grid-cols-${layout.tablet} gap-6 mb-6`}>
           {loungeCards.slice(0, 3).map((item, i) => renderCard(item, i))}
         </div>
         {/* Row 2 */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+        <div className={`grid grid-cols-${layout.mobile} md:grid-cols-${layout.tablet} gap-6 mb-10`}>
           {loungeCards.slice(3, 6).map((item, i) => renderCard(item, i + 3))}
         </div>
         <div className="text-center">
@@ -82,6 +118,9 @@ export default function MingalarClient({ initialCards }: MingalarClientProps) {
           </Link>
         </div>
       </section>
-    </main>
+      <DealsBanner />
+      <FAQAccordion section="mingalar" />
+      <TestimonialSlider />
+</main>
   );
 }

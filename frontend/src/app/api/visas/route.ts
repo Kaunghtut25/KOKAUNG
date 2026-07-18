@@ -4,21 +4,21 @@ import { getAll } from "@/lib/persistentStore";
 export const dynamic = 'force-dynamic';
 
 const fallbackImages: Record<string, string> = {
-  v1: "/images_v2/visa1-v3.jpg",
-  v2: "/images_v2/visa2-v3.jpg",
-  v3: "/images_v2/visa3-v3.jpg",
-  v4: "/images_v2/visa4-v3.jpg",
-  v5: "/images_v2/visa5-v3.jpg",
-  v6: "/images_v2/visa6-v3.jpg",
-  v7: "/images_v2/visa5-v3.jpg",
-  v8: "/images_v2/visa1-v3.jpg",
-  v9: "/images_v2/visa2-v3.jpg",
-  v10: "/images_v2/visa4-v3.jpg",
-  v11: "/images_v2/visa1-v3.jpg",
-  v12: "/images_v2/visa2-v3.jpg",
-  v13: "/images_v2/visa3-v3.jpg",
-  v14: "/images_v2/visa6-v3.jpg",
-  v15: "/images_v2/visa1-v3.jpg",
+  v1: "/images_v2/visa1-v2.jpg",
+  v2: "/images_v2/visa2-v2.jpg",
+  v3: "/images_v2/visa3-v2.jpg",
+  v4: "/images_v2/visa4-v2.jpg",
+  v5: "/images_v2/visa5-v2.jpg",
+  v6: "/images_v2/visa6-v2.jpg",
+  v7: "/images_v2/visa5-v2.jpg",
+  v8: "/images_v2/visa1-v2.jpg",
+  v9: "/images_v2/visa2-v2.jpg",
+  v10: "/images_v2/visa4-v2.jpg",
+  v11: "/images_v2/visa1-v2.jpg",
+  v12: "/images_v2/visa2-v2.jpg",
+  v13: "/images_v2/visa3-v2.jpg",
+  v14: "/images_v2/visa6-v2.jpg",
+  v15: "/images_v2/visa1-v2.jpg",
 };
 
 export async function GET() {
@@ -29,7 +29,7 @@ export async function GET() {
       return {
         ...v,
         _id: vid,
-        image: v.image || fallbackImages[vid] || "/images_v2/visa1-v3.jpg",
+        image: v.image || fallbackImages[vid] || "/images_v2/visa1-v2.jpg",
       };
     });
     return NextResponse.json({ success: true, data });

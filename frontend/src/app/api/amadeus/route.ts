@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-const AMADEUS_BASE = 'https://test.api.amadeus.com';
+const AMADEUS_BASE = process.env.AMADEUS_BASE_URL || 'https://test.api.amadeus.com';
 
 let cachedToken: { token: string; expires: number } | null = null;
 
@@ -13,7 +13,7 @@ async function getAmadeusToken(): Promise<string> {
   const secret = process.env.AMADEUS_API_SECRET || '';
 
   if (!key || !secret) {
-    throw new Error('Amadeus API credentials not configured');
+    throw new Error('Amadeus API credentials not configured. Please set AMADEUS_API_KEY and AMADEUS_API_SECRET in your environment.');
   }
 
   const res = await fetch(`${AMADEUS_BASE}/v1/security/oauth2/token`, {
@@ -23,7 +23,8 @@ async function getAmadeusToken(): Promise<string> {
   });
 
   if (!res.ok) {
-    throw new Error(`Amadeus auth failed: ${res.status}`);
+    const errorText = await res.text();
+    throw new Error(`Amadeus auth failed: ${res.status} - ${errorText}`);
   }
 
   const data = await res.json();
@@ -34,6 +35,17 @@ async function getAmadeusToken(): Promise<string> {
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const action = searchParams.get('action');
+
+  // Check credentials early for helpful error messages
+  const key = process.env.AMADEUS_API_KEY || '';
+  const secret = process.env.AMADEUS_API_SECRET || '';
+  if (!key || !secret) {
+    return NextResponse.json({
+      error: 'Amadeus API is not configured yet.',
+      message: 'Please visit https://developers.amadeus.com/register to get your free API key and secret, then add them to your .env.local file.',
+      help: 'Set AMADEUS_API_KEY and AMADEUS_API_SECRET in .env.local',
+    }, { status: 503 });
+  }
 
   try {
     const token = await getAmadeusToken();
@@ -63,6 +75,14 @@ export async function GET(req: NextRequest) {
         const departDate = searchParams.get('departDate') || '';
         const returnDate = searchParams.get('returnDate') || '';
         const adults = searchParams.get('adults') || '1';
+        const travelClass = searchParams.get('travelClass') || 'ECONOMY';
+
+        if (!origin || !destination || !departDate) {
+          return NextResponse.json({
+            error: 'Missing required parameters.',
+            message: 'origin, destination, and departDate are required.',
+          }, { status: 400 });
+        }
 
         const params = new URLSearchParams({
           originLocationCode: origin,
@@ -71,6 +91,7 @@ export async function GET(req: NextRequest) {
           adults,
           max: '10',
           currencyCode: 'USD',
+          travelClass,
         });
         if (returnDate) params.set('returnDate', returnDate);
 
@@ -80,6 +101,13 @@ export async function GET(req: NextRequest) {
         );
         const data = await res.json();
 
+        if (!res.ok) {
+          return NextResponse.json({
+            error: `Amadeus API error: ${res.status}`,
+            details: data,
+          }, { status: res.status });
+        }
+
         return NextResponse.json({
           offers: data.data || [],
           dictionaries: data.dictionaries || {},
@@ -87,10 +115,10 @@ export async function GET(req: NextRequest) {
       }
 
       default:
-        return NextResponse.json({ error: 'Invalid action' }, { status: 400 });
+        return NextResponse.json({ error: 'Invalid action. Use "airports" or "search".' }, { status: 400 });
     }
   } catch (err: any) {
     console.error('Amadeus API error:', err);
-    return NextResponse.json({ error: err.message || 'Internal error' }, { status: 500 });
+    return NextResponse.json({ error: err.message || 'Internal server error' }, { status: 500 });
   }
 }

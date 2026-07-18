@@ -2,7 +2,7 @@
 // Sign up at: https://developers.amadeus.com/register
 // Documentation: https://developers.amadeus.com/self-service
 
-const AMADEUS_BASE = 'https://test.api.amadeus.com';
+const AMADEUS_BASE = process.env.AMADEUS_BASE_URL || 'https://test.api.amadeus.com';
 
 interface TokenCache {
   token: string;

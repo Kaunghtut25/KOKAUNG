@@ -72,12 +72,22 @@ export default function AdminSidebar() {
     <div className="flex flex-col h-full">
       {/* Logo */}
       <div className="px-6 py-6 border-b border-gold/20">
-        <h1
-          className="text-2xl font-bold text-gold tracking-wider"
-          style={{ fontFamily: "'Playfair Display', serif" }}
-        >
-          A9 ADMIN
-        </h1>
+        <Link href="/admin/dashboard" className="flex items-center gap-3">
+          <img
+            src="/logo.jpeg"
+            alt="A9 Travel"
+            className="w-10 h-10 rounded-lg object-cover border border-gold/30 flex-shrink-0"
+          />
+          <div className={`${collapsed && !mobileOpen ? "hidden" : "block"}`}>
+            <h1
+              className="text-xl font-bold text-gold tracking-wider leading-tight"
+              style={{ fontFamily: "'Playfair Display', serif" }}
+            >
+              A9 Travel
+            </h1>
+            <p className="text-white/30 text-[10px] tracking-wider">ADMIN PANEL</p>
+          </div>
+        </Link>
       </div>
 
       {/* Navigation */}

@@ -1,14 +1,18 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import ScrollingRow from "./ScrollingRow";
 
 const FALLBACK_IMG = "/images_v2/cta-bg-v2.jpg";
 
 function DestinationCard({ dest }: { dest: { city: string; country: string; image: string; minPrice: string } }) {
   const [imgError, setImgError] = useState(false);
+  const router = useRouter();
   return (
-    <div className="flex-shrink-0 w-[300px] rounded-xl overflow-hidden border border-gray-200 shadow-sm hover:shadow-md hover:border-[#D4AF37]/40 transition-all group cursor-pointer">
+    <div
+      onClick={() => router.push('/destinations/' + encodeURIComponent(dest.city.toLowerCase().replace(/\s+/g, '-')))}
+      className="flex-shrink-0 w-[300px] rounded-xl overflow-hidden border border-gray-200 shadow-sm hover:shadow-md hover:border-[#D4AF37]/40 transition-all group cursor-pointer">
       <img src={imgError ? FALLBACK_IMG : dest.image} alt={dest.city} className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-500" onError={()=>setImgError(true)} loading="lazy" />
       <div className="p-3 text-center bg-white">
         <p className="text-lg font-semibold text-[#0A1628] group-hover:text-[#D4AF37] transition-colors">{dest.city}</p>

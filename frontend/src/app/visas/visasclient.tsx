@@ -4,9 +4,12 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { api } from '@/lib/api';
 import BookingModal from '@/components/BookingModal';
-
+import DealsBanner from '@/components/DealsBanner';
+import FAQAccordion from '@/components/FAQAccordion';
+import TestimonialSlider from '@/components/TestimonialSlider';
 interface VisaService {
   _id: string;
+  id?: string;
   country: string;
   countryCode?: string;
   processingTime: string;
@@ -77,11 +80,10 @@ function VisaGridCard({ visa }: { visa: VisaService }) {
 
   return (
     <div
-      onClick={() => router.push(`/visas?apply=${visa.country}`)}
-      className="h-[380px] rounded-2xl overflow-hidden group cursor-pointer border border-gray-100 hover:border-gold/40 transition-all duration-300 bg-white shadow-sm flex flex-col"
+      className="h-[430px] rounded-2xl overflow-hidden group cursor-pointer border border-gray-100 hover:border-gold/40 transition-all duration-300 bg-white shadow-sm flex flex-col"
     >
       {imageUrl ? (
-        <div className="relative h-52 overflow-hidden">
+        <div className="relative h-44 overflow-hidden">
           <img src={imageUrl} alt={visa.country} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" loading="lazy" />
           <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
           <div className="absolute bottom-1.5 left-2 flex items-center gap-1.5">
@@ -97,16 +99,30 @@ function VisaGridCard({ visa }: { visa: VisaService }) {
       <div className="p-4 flex flex-col flex-1 justify-between">
         <p className="text-xs text-gray-500">{visa.processingTime}</p>
         <div className="flex flex-wrap gap-1.5 mt-1">
-          {visa.requirements.slice(0, 2).map((r, i) => (
+          {visa.requirements.slice(0, 3).map((r, i) => (
             <span key={i} className="text-[11px] bg-[#D4AF37]/10 text-[#B8960F] px-2 py-1 rounded-full">{r}</span>
           ))}
         </div>
         {(visa.visaFeeMMK > 0 || visa.visaFeeUSD > 0) && (
-          <div className="mt-auto pt-2 flex gap-3 text-xs">
+          <div className="pt-2 flex gap-3 text-xs">
             {visa.visaFeeMMK > 0 && <span className="text-gold font-bold">Ks {visa.visaFeeMMK.toLocaleString()}</span>}
             {visa.visaFeeUSD > 0 && <span className="text-gold font-bold">${visa.visaFeeUSD}</span>}
           </div>
         )}
+        <div className="mt-auto pt-3 flex flex-col gap-2">
+          <button
+            onClick={(e) => { e.stopPropagation(); router.push('/book-now?type=visa&country=' + encodeURIComponent(visa.country||'') + '&id=' + encodeURIComponent(visa._id||visa.id||'') + '&feeMMK=' + (visa.visaFeeMMK||0) + '&feeUSD=' + (visa.visaFeeUSD||0) + '&processingTime=' + encodeURIComponent(visa.processingTime||'')); }}
+            className="w-full py-2.5 rounded-xl text-center font-semibold text-sm transition-all duration-300 bg-gradient-to-r from-[#D4AF37] to-[#F5A623] text-[#0A1628] hover:shadow-lg cursor-pointer"
+          >
+            Book Now
+          </button>
+          <div
+            onClick={(e) => { e.stopPropagation(); router.push("/visas/" + (visa._id||visa.id)); }}
+            className="w-full py-2.5 rounded-xl text-center font-semibold text-sm transition-all duration-300 bg-white text-[#0A1628] border border-gray-200 hover:bg-[#0A1628] hover:text-[#D4AF37] hover:border-[#D4AF37] hover:shadow-lg cursor-pointer"
+          >
+            View Details →
+          </div>
+        </div>
       </div>
     </div>
   );
@@ -117,6 +133,15 @@ interface VisasClientProps {
 }
 
 export default function VisasClient({ initialVisas }: VisasClientProps) {
+  const [layout, setLayout] = useState({ desktop: 4, tablet: 3, mobile: 2 });
+  useEffect(() => {
+    fetch("/api/admin/site-config")
+      .then(r => r.json())
+      .then(d => {
+        if (d?.sectionLayouts?.visas) setLayout(d.sectionLayouts.visas);
+      })
+      .catch(() => {});
+  }, []);
   const [visas, setVisas] = useState<VisaService[]>(initialVisas.length > 0 ? initialVisas : FALLBACK_VISAS);
   const [currency, setCurrency] = useState<'MMK' | 'USD'>('MMK');
   const [selectedVisa, setSelectedVisa] = useState<VisaService | null>(null);
@@ -147,16 +172,12 @@ export default function VisasClient({ initialVisas }: VisasClientProps) {
   // Cycle through existing visas to fill 3 rows × 10 cards (like Tours)
   const CARDS_PER_ROW = 4;
   const ROW_COUNT = 3;
-  const pool: VisaService[] = [];
-  if (visas.length > 0) {
-    // 3 rows x 4 cards = 12
-    for (let i = 0; i < 12; i++) pool.push(visas[i % visas.length]);
-  }
+  const pool: VisaService[] = [...visas];
 
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <section className="relative w-full h-64 sm:h-80 overflow-hidden">
+<section className="relative w-full h-64 sm:h-80 overflow-hidden">
         <img src="/images_v2/visa1-v3.jpg" alt="Visa Services" className="w-full h-full object-cover" />
         <div className="absolute inset-0 bg-gradient-to-b from-[#0A1628]/70 to-[#0A1628]/40" />
         <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4 mb-8">
@@ -168,14 +189,15 @@ export default function VisasClient({ initialVisas }: VisasClientProps) {
           </div>
         </div>
       </section>
-
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 pt-20 pb-20">
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+<section className="max-w-7xl mx-auto px-4 sm:px-6 pt-20 pb-20">
+        <div className={`grid grid-cols-${layout.mobile} md:grid-cols-${layout.tablet} lg:grid-cols-${layout.desktop} gap-4`}>
           {pool.map(v => <VisaGridCard key={v._id + '-' + v._id} visa={v} />)}
         </div>
       </section>
-
-      {selectedVisa && <BookingModal isOpen={!!selectedVisa} onClose={() => setSelectedVisa(null)} title={`Apply for ${selectedVisa.country} Visa`} fields={['Name','Passport No','Travel Date']} />}
-    </div>
+{selectedVisa && <BookingModal isOpen={!!selectedVisa} onClose={() => setSelectedVisa(null)} title={`Apply for ${selectedVisa.country} Visa`} fields={['Name','Passport No','Travel Date']} />}
+          <DealsBanner />
+      <FAQAccordion section="visas" />
+      <TestimonialSlider />
+</div>
   );
 }

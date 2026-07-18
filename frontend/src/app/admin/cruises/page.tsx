@@ -15,6 +15,9 @@ interface cruise {
   amenities: string;
   included: string;
   excluded: string;
+  phone: string;
+  email: string;
+  address: string;
   maxGroupSize: number;
   status: string;
   featured: boolean;
@@ -35,6 +38,9 @@ const emptyCruise: cruise = {
   amenities: "",
   included: "",
   excluded: "",
+  phone: "",
+  email: "",
+  address: "",
   maxGroupSize: 0,
   status: "active",
   featured: false,
@@ -48,6 +54,9 @@ export default function AdminCruisesPage() {
   const [isNew, setIsNew] = useState(true);
   const [saving, setSaving] = useState(false);
   const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
+  const [uploading, setUploading] = useState(false);
+  const [uploadError, setUploadError] = useState("");
+  const fileInputRef = React.useRef<HTMLInputElement>(null);
   const [imageUrlInput, setImageUrlInput] = useState("");
   const [imagePreviewUrl, setImagePreviewUrl] = useState("");
   const [imageList, setImageList] = useState<string[]>([]);
@@ -97,6 +106,7 @@ export default function AdminCruisesPage() {
     setImageUrlInput("");
     setImagePreviewUrl("");
     setImageList([]);
+    setUploadError("");
     setIsNew(true);
     setModalOpen(true);
   };
@@ -107,6 +117,7 @@ export default function AdminCruisesPage() {
     setImageList(imgs);
     setImageUrlInput(imgs[0] || "");
     setImagePreviewUrl(imgs[0] || "");
+    setUploadError("");
     setIsNew(false);
     setModalOpen(true);
   };
@@ -142,6 +153,49 @@ export default function AdminCruisesPage() {
   const handleImageUrlChange = (value: string) => {
     setImageUrlInput(value);
     setImagePreviewUrl(value);
+    setUploadError("");
+  };
+
+  const uploadFile = async (file: File) => {
+    if (!file.type.startsWith("image/")) {
+      setUploadError("Only image files are accepted.");
+      return;
+    }
+    setUploading(true);
+    setUploadError("");
+    const formData = new FormData();
+    formData.append("file", file);
+    try {
+      const res = await fetch("/api/upload", { method: "POST", body: formData });
+      const data = await res.json();
+      if (data.success && data.uploads?.[0]) {
+        const newUrl = `/api/upload?id=${data.uploads[0].id}`;
+        const newList = [...imageList, newUrl];
+        setImageList(newList);
+        setEditingCruise((prev) => ({ ...prev, images: JSON.stringify(newList) }));
+        setImageUrlInput("");
+        setImagePreviewUrl("");
+      } else {
+        setUploadError(data.error || "Upload failed. Please try again.");
+      }
+    } catch {
+      setUploadError("Upload failed. Check your connection and try again.");
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const handleFileInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) uploadFile(file);
+    e.target.value = "";
+  };
+
+  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.currentTarget.style.borderColor = "";
+    const file = e.dataTransfer?.files?.[0];
+    if (file) uploadFile(file);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -309,20 +363,76 @@ export default function AdminCruisesPage() {
         </div>
       </div>
 
-      {/* ─── Multi-Image Management ─── */}
-      <div>
-        <label className="block text-white/70 text-sm mb-1">
-          Images (add by URL, then click Add)
-        </label>
-        <div className="flex gap-2 mb-3">
+      {/* Contact Information */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div>
+          <label className="block text-white/70 text-sm mb-1">Phone</label>
+          <input
+            type="tel"
+            name="phone"
+            placeholder="Contact phone"
+            className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-gold/50 transition-colors"
+            value={editingCruise.phone}
+            onChange={(e) => handleFieldChange("phone", e.target.value)}
+          />
+        </div>
+        <div>
+          <label className="block text-white/70 text-sm mb-1">Email</label>
+          <input
+            type="email"
+            name="email"
+            placeholder="Contact email"
+            className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-gold/50 transition-colors"
+            value={editingCruise.email}
+            onChange={(e) => handleFieldChange("email", e.target.value)}
+          />
+        </div>
+        <div>
+          <label className="block text-white/70 text-sm mb-1">Meeting Point / Address</label>
           <input
             type="text"
-            value={imageUrlInput}
+            name="address"
+            placeholder="Meeting point or address"
+            className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-gold/50 transition-colors"
+            value={editingCruise.address}
+            onChange={(e) => handleFieldChange("address", e.target.value)}
+          />
+        </div>
+      </div>
+
+      {/* Multi-Image Management */}
+      <div>
+        <label className="block text-white/70 text-sm mb-1">
+          Images (upload file or type URL)
+        </label>
+        <div
+          className="flex gap-2 mb-3 flex-wrap"
+          onDragOver={(e) => { e.preventDefault(); (e.currentTarget as HTMLDivElement).style.borderColor = '#D4AF37'; }}
+          onDragLeave={(e) => { (e.currentTarget as HTMLDivElement).style.borderColor = ''; }}
+          onDrop={handleDrop}
+        >
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/*"
+            onChange={handleFileInputChange}
+            className="hidden"
+          />
+          <button
+            type="button"
+            onClick={() => fileInputRef.current?.click()}
+            disabled={uploading}
+            className="px-4 py-2 rounded-lg bg-gold/10 text-gold text-sm font-medium hover:bg-gold/20 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+          >
+            {uploading ? "Uploading..." : "📁 Upload Image"}
+          </button>
+          <input
+            type="text" name="imageUrl" value={imageUrlInput}
             onChange={(e) => {
               handleImageUrlChange(e.target.value);
             }}
-            placeholder="https://..."
-            className="flex-1 bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-gold/50 transition-colors"
+            placeholder="https://... or pick a file below"
+            className="flex-1 min-w-[200px] bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-gold/50 transition-colors"
             onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); addImage(); } }}
           />
           <button
@@ -334,6 +444,10 @@ export default function AdminCruisesPage() {
             + Add
           </button>
         </div>
+        {uploadError && (
+          <p className="text-red-400 text-xs mb-2">{uploadError}</p>
+        )}
+        <p className="text-xs text-gray-400 mt-1">Recommended: 1200x630px (JPEG, max 2MB)</p>
 
         {/* Image Preview & List */}
         {imageList.length > 0 ? (
@@ -483,14 +597,14 @@ export default function AdminCruisesPage() {
 
   return (
     <div className="space-y-6">
-      {/* ─── Header ─── */}
+      {/* Header */}
       <div className="flex items-center justify-between flex-wrap gap-4">
         <div>
           <h1
             className="text-3xl md:text-4xl font-bold text-[#D4AF37]"
             style={{ fontFamily: "'Playfair Display', Georgia, serif" }}
           >
-            Manage cruise Packages
+            Manage Cruise Packages
           </h1>
           <p className="text-white/40 text-sm mt-1">
             Create and manage your cruise offerings
@@ -500,18 +614,18 @@ export default function AdminCruisesPage() {
           onClick={openCreateModal}
           className="px-5 py-2.5 rounded-lg bg-gold text-deepblue-dark font-semibold text-sm hover:bg-gold/90 transition-all flex items-center gap-2"
         >
-          <span>✈️</span> Add New cruise
+          <span>🚢</span> Add New Cruise
         </button>
       </div>
 
-      {/* ─── cruises Table ─── */}
+      {/* Cruises Table */}
       <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-white/10 bg-white/[0.02]">
                 <th className="text-left p-4 text-white/40 font-semibold uppercase tracking-wider text-[11px]">
-                  cruise
+                  Cruise
                 </th>
                 <th className="text-left p-4 text-white/40 font-semibold uppercase tracking-wider text-[11px]">
                   Destination
@@ -540,8 +654,8 @@ export default function AdminCruisesPage() {
                     colSpan={7}
                     className="p-10 text-center text-white/30"
                   >
-                    <span className="text-3xl block mb-2">✈️</span>
-                    No cruises found. Click &quot;Add New cruise&quot; to create
+                    <span className="text-3xl block mb-2">🚢</span>
+                    No cruises found. Click &quot;Add New Cruise&quot; to create
                     one.
                   </td>
                 </tr>
@@ -555,7 +669,7 @@ export default function AdminCruisesPage() {
                     >
                       <td className="p-4">
                         <div className="flex items-center gap-3">
-                          <div className="w-[60px] h-[60px] rounded-lg border border-white/10 bg-white/5 overflow-hidden flex-shrink-0 flex items-center justify-center">
+                          <div className="w-10 h-10 rounded-lg border border-white/10 bg-white/5 overflow-hidden flex-shrink-0 flex items-center justify-center">
                             {thumb ? (
                               <img
                                 src={thumb}
@@ -568,7 +682,7 @@ export default function AdminCruisesPage() {
                               />
                             ) : null}
                             {!thumb && (
-                              <span className="text-white/20 text-lg">✈️</span>
+                              <span className="text-white/20 text-lg">🚢</span>
                             )}
                           </div>
                           <span className="text-white font-medium">
@@ -621,19 +735,19 @@ export default function AdminCruisesPage() {
         </div>
       </div>
 
-      {/* ─── Add/Edit Modal ─── */}
+      {/* Add/Edit Modal */}
       <AdminFormModal
         isOpen={modalOpen}
         onClose={() => setModalOpen(false)}
-        title={isNew ? "Add New cruise" : "Edit cruise"}
+        title={isNew ? "Add New Cruise" : "Edit Cruise"}
         onSubmit={handleSubmit}
-        submitLabel={isNew ? "Create cruise" : "Update cruise"}
+        submitLabel={isNew ? "Create Cruise" : "Update Cruise"}
         isLoading={saving}
       >
         {renderFormFields()}
       </AdminFormModal>
 
-      {/* ─── Delete Confirmation ─── */}
+      {/* Delete Confirmation */}
       {deleteConfirm && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
           <div

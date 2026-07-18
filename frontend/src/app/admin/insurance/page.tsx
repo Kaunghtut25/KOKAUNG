@@ -6,6 +6,7 @@ import AdminFormModal from "@/components/AdminFormModal";
 interface Insurance {
   id: string;
   planName: string;
+  image: string;
   coverageAmountMMK: number;
   coverageAmountUSD: number;
   premiumPriceMMK: number;
@@ -13,6 +14,9 @@ interface Insurance {
   duration: string;
   benefits: string;
   exclusions: string;
+  phone: string;
+  email: string;
+  officeAddress: string;
   status: string;
 }
 
@@ -21,6 +25,7 @@ const API_BASE = process.env.NEXT_PUBLIC_API_URL || "/api";
 const emptyInsurance: Insurance = {
   id: "",
   planName: "",
+  image: "",
   coverageAmountMMK: 0,
   coverageAmountUSD: 0,
   premiumPriceMMK: 0,
@@ -28,6 +33,9 @@ const emptyInsurance: Insurance = {
   duration: "",
   benefits: "",
   exclusions: "",
+  phone: "",
+  email: "",
+  officeAddress: "",
   status: "active",
 };
 
@@ -39,6 +47,11 @@ export default function AdminInsurancePage() {
   const [isNew, setIsNew] = useState(true);
   const [saving, setSaving] = useState(false);
   const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
+  const [imageUrlInput, setImageUrlInput] = useState("");
+  const [imagePreviewUrl, setImagePreviewUrl] = useState("");
+  const [uploading, setUploading] = useState(false);
+  const [uploadError, setUploadError] = useState("");
+  const fileInputRef = React.useRef<HTMLInputElement>(null);
 
   const [token, setToken] = useState("");
 
@@ -68,18 +81,63 @@ export default function AdminInsurancePage() {
 
   const openCreateModal = () => {
     setEditingInsurance(emptyInsurance);
+    setImageUrlInput("");
+    setImagePreviewUrl("");
+    setUploadError("");
     setIsNew(true);
     setModalOpen(true);
   };
 
   const openEditModal = (insurance: Insurance) => {
     setEditingInsurance({ ...insurance });
+    setImageUrlInput(insurance.image || "");
+    setImagePreviewUrl(insurance.image || "");
+    setUploadError("");
     setIsNew(false);
     setModalOpen(true);
   };
 
   const handleFieldChange = (field: keyof Insurance, value: string | number) => {
     setEditingInsurance((prev) => ({ ...prev, [field]: value }));
+  };
+
+  const handleImageUrlChange = (value: string) => {
+    setImageUrlInput(value);
+    setImagePreviewUrl(value);
+    setUploadError("");
+  };
+
+  const uploadFile = async (file: File) => {
+    if (!file.type.startsWith("image/")) {
+      setUploadError("Only image files are accepted.");
+      return;
+    }
+    setUploading(true);
+    setUploadError("");
+    const formData = new FormData();
+    formData.append("file", file);
+    try {
+      const res = await fetch("/api/upload", { method: "POST", body: formData });
+      const data = await res.json();
+      if (data.success && data.uploads?.[0]) {
+        const newUrl = `/api/upload?id=${data.uploads[0].id}`;
+        setImageUrlInput(newUrl);
+        setImagePreviewUrl(newUrl);
+        handleFieldChange("image", newUrl);
+      } else {
+        setUploadError(data.error || "Upload failed. Please try again.");
+      }
+    } catch {
+      setUploadError("Upload failed. Check your connection and try again.");
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const handleFileInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) uploadFile(file);
+    e.target.value = "";
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -157,6 +215,40 @@ export default function AdminInsurancePage() {
         />
       </div>
 
+      <div>
+        <label className="block text-white/70 text-sm mb-1">Image (upload file or enter URL)</label>
+        <div
+          className="border-2 border-dashed border-white/10 rounded-lg p-6 text-center cursor-pointer hover:border-gold/50 transition-colors"
+          onDrop={(e) => { e.preventDefault(); const file = e.dataTransfer.files[0]; if (file) uploadFile(file); }}
+          onDragOver={(e) => e.preventDefault()}
+          onClick={() => fileInputRef.current?.click()}
+        >
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/*"
+            onChange={handleFileInputChange}
+            className="hidden"
+          />
+          <p className="text-sm text-white/40 mb-2">
+            {uploading ? "Uploading..." : "Drag &amp; drop image here or click to upload"}
+          </p>
+          {uploadError && <p className="text-red-400 text-xs mt-1">{uploadError}</p>}
+        </div>
+        <input
+          type="text"
+          name="imageUrl"
+          value={editingInsurance.image}
+          onChange={(e) => { handleFieldChange("image", e.target.value); handleImageUrlChange(e.target.value); }}
+          placeholder="Or paste image URL"
+          className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm mt-2 focus:outline-none focus:border-gold/50 transition-colors"
+        />
+        {editingInsurance.image && (
+          <img src={editingInsurance.image} alt="Preview" className="w-20 h-20 object-cover rounded-lg mt-2" />
+        )}
+        <p className="text-xs text-gray-400 mt-1">Recommended: 800x600px (JPEG, max 1MB)</p>
+      </div>
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
           <label className="block text-white/70 text-sm mb-1">Coverage Amount MMK</label>
@@ -232,6 +324,40 @@ export default function AdminInsurancePage() {
         />
       </div>
 
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label className="block text-white/70 text-sm mb-1">Phone</label>
+          <input
+            type="text"
+            value={editingInsurance.phone}
+            onChange={(e) => handleFieldChange("phone", e.target.value)}
+            placeholder="e.g. +95 9 123 456 789"
+            className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-gold/50 transition-colors"
+          />
+        </div>
+        <div>
+          <label className="block text-white/70 text-sm mb-1">Email</label>
+          <input
+            type="email"
+            value={editingInsurance.email}
+            onChange={(e) => handleFieldChange("email", e.target.value)}
+            placeholder="e.g. insurance@a9.com"
+            className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-gold/50 transition-colors"
+          />
+        </div>
+      </div>
+
+      <div>
+        <label className="block text-white/70 text-sm mb-1">Office Address</label>
+        <input
+          type="text"
+          value={editingInsurance.officeAddress}
+          onChange={(e) => handleFieldChange("officeAddress", e.target.value)}
+          placeholder="e.g. No. 123, Main Street, Yangon"
+          className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-gold/50 transition-colors"
+        />
+      </div>
+
       <div>
         <label className="block text-white/70 text-sm mb-1">Status</label>
         <select
@@ -281,6 +407,7 @@ export default function AdminInsurancePage() {
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-white/10 bg-white/[0.02]">
+                <th className="text-left p-4 text-white/40 font-semibold uppercase tracking-wider text-[11px]">Image</th>
                 <th className="text-left p-4 text-white/40 font-semibold uppercase tracking-wider text-[11px]">Plan Name</th>
                 <th className="text-left p-4 text-white/40 font-semibold uppercase tracking-wider text-[11px]">Coverage</th>
                 <th className="text-left p-4 text-white/40 font-semibold uppercase tracking-wider text-[11px]">Premium</th>
@@ -291,7 +418,7 @@ export default function AdminInsurancePage() {
             <tbody>
               {insurances.length === 0 ? (
                 <tr>
-                  <td colSpan={5} className="p-8 text-center text-white/30">
+                  <td colSpan={6} className="p-8 text-center text-white/30">
                     No insurance plans found. Click &quot;Add New Plan&quot; to create one.
                   </td>
                 </tr>
@@ -301,6 +428,13 @@ export default function AdminInsurancePage() {
                     key={insurance.id}
                     className="border-b border-white/5 hover:bg-white/5 transition-colors"
                   >
+                    <td className="p-4">
+                      {insurance.image ? (
+                        <img src={insurance.image} alt={insurance.planName} className="w-10 h-10 object-cover rounded" />
+                      ) : (
+                        <div className="w-10 h-10 rounded bg-white/5 flex items-center justify-center text-white/20 text-xs">N/A</div>
+                      )}
+                    </td>
                     <td className="p-4 text-white font-medium">{insurance.planName}</td>
                     <td className="p-4 text-white">
                       {formatNumber(insurance.coverageAmountMMK)} Ks

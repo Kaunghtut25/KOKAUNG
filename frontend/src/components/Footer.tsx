@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { FaFacebookF, FaInstagram, FaTelegramPlane } from "react-icons/fa";
 
@@ -10,10 +11,39 @@ const quickLinks = [
   { label: "Car Rentals", href: "/cars" },
   { label: "Visa Services", href: "/visas" },
   { label: "Travel Insurance", href: "/insurance" },
+  { label: "Cruises", href: "/cruises" },
+  { label: "Mingalar", href: "/mingalar" },
+  { label: "Blog", href: "/blog" },
+  { label: "About Us", href: "/about" },
+  { label: "Contact", href: "/contact" },
+  { label: "Book Now", href: "/book-now" },
 ];
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
+  const [config, setConfig] = useState<any>(null);
+
+  useEffect(() => {
+    fetch("/api/admin/site-config")
+      .then((res) => {
+        if (!res.ok) throw new Error("Failed to fetch site config");
+        return res.json();
+      })
+      .then((data) => setConfig(data))
+      .catch(() => {
+        // silently use fallbacks
+      });
+  }, []);
+
+  // ── Dynamic values with hardcoded fallbacks ──
+  const phone = config?.contact?.phone || "+959781617111";
+  const email = config?.contact?.email || "a9ticketing@a9globaltravel.com.mm";
+  const address =
+    config?.contact?.address ||
+    "No-18, Ground Floor, Zayya Waddy Street,\nBaho Road, Sanchaung Tsp,\nYangon, Myanmar, 11111";
+  const fbLink = config?.socialLinks?.facebook || "https://facebook.com";
+  const igLink = config?.socialLinks?.instagram || "https://instagram.com";
+  const tgLink = config?.socialLinks?.telegram || "https://t.me";
 
   return (
     <footer className="bg-deepblue-dark border-t border-gold/20">
@@ -41,16 +71,16 @@ export default function Footer() {
             {/* Social Icons */}
             <div className="flex items-center space-x-4 pt-2">
               <a
-                href="https://facebook.com"
+                href={fbLink}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-10 h-10 rounded-full border border-gold/30 flex items-center justify-center text-gold hover:bg-gold hover:text-deepblue-dark transition-all duration-300"
                 aria-label="Facebook"
               >
                 <FaFacebookF className="w-4 h-4" />
-              </a>
+              </a> | <a href="/faq" className="text-gray-400 hover:text-[#D4AF37] transition-colors text-sm">FAQ</a> | <a href="/terms" className="text-gray-400 hover:text-[#D4AF37] transition-colors text-sm">Terms</a> | <a href="/privacy" className="text-gray-400 hover:text-[#D4AF37] transition-colors text-sm">Privacy</a>
               <a
-                href="https://instagram.com"
+                href={igLink}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-10 h-10 rounded-full border border-gold/30 flex items-center justify-center text-gold hover:bg-gold hover:text-deepblue-dark transition-all duration-300"
@@ -59,7 +89,7 @@ export default function Footer() {
                 <FaInstagram className="w-4 h-4" />
               </a>
               <a
-                href="https://t.me"
+                href={tgLink}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-10 h-10 rounded-full border border-gold/30 flex items-center justify-center text-gold hover:bg-gold hover:text-deepblue-dark transition-all duration-300"
@@ -97,36 +127,32 @@ export default function Footer() {
             <div className="mt-6 space-y-4">
               <div className="flex items-start space-x-3">
                 <span className="text-gold mt-0.5 flex-shrink-0">📍</span>
-                <p className="text-sm text-white/60 leading-relaxed">
-                  No-18, Ground Floor, Zayya Waddy Street,
-                  <br />
-                  Baho Road, Sanchaung Tsp,
-                  <br />
-                  Yangon, Myanmar, 11111
+                <p className="text-sm text-white/60 leading-relaxed whitespace-pre-line">
+                  {address}
                 </p>
               </div>
               <div className="flex items-start space-x-3">
                 <span className="text-gold mt-0.5 flex-shrink-0">📞</span>
                 <div className="text-sm text-white/60 space-y-1">
                   <p className="block text-white/50">Ticket Department</p>
-                  <a href="tel:+959781617111" className="block hover:text-gold transition-colors">959 781 617 111</a>
+                  <a href={`tel:${phone}`} className="block hover:text-gold transition-colors">{phone}</a>
                   <p className="block text-white/50 mt-2">Visa Department</p>
-                  <a href="tel:+959781617333" className="block hover:text-gold transition-colors">959 781 617 333</a>
+                  <a href={`tel:${phone}`} className="block hover:text-gold transition-colors">{phone}</a>
                   <p className="block text-white/50 mt-2">Hotel Department</p>
-                  <a href="tel:+959694202111" className="block hover:text-gold transition-colors">959 694 202 111</a>
+                  <a href={`tel:${phone}`} className="block hover:text-gold transition-colors">{phone}</a>
                   <p className="block text-white/50 mt-2">Outbound Department</p>
-                  <a href="tel:+959756348222" className="block hover:text-gold transition-colors">959 756 348 222</a>
+                  <a href={`tel:${phone}`} className="block hover:text-gold transition-colors">{phone}</a>
                   <p className="block text-white/50 mt-2">Inbound Department</p>
-                  <a href="tel:+959694320111" className="block hover:text-gold transition-colors">959 694 320 111</a>
+                  <a href={`tel:${phone}`} className="block hover:text-gold transition-colors">{phone}</a>
                 </div>
               </div>
               <div className="flex items-start space-x-3">
                 <span className="text-gold mt-0.5 flex-shrink-0 text-lg">📧</span>
                 <a
-                  href="mailto:a9ticketing@a9globaltravel.com.mm"
+                  href={`mailto:${email}`}
                   className="text-sm text-white/60 hover:text-gold transition-colors"
                 >
-                  a9ticketing@a9globaltravel.com.mm
+                  {email}
                 </a>
               </div>
             </div>

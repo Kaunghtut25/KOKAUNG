@@ -2440,7 +2440,7 @@ export const airports: Airport[] = [
   { code: "PKG", city: "Pangkor Island", country: "Malaysia", name: "Pulau Pangkor Airport", lat: 4.2447, lon: 100.5530 },
   { code: "PEN", city: "Penang", country: "Malaysia", name: "Penang International Airport", lat: 5.2963, lon: 100.2762 },
   { code: "SDK", city: "Sandakan", country: "Malaysia", name: "Sandakan Airport", lat: 5.9009, lon: 118.0590 },
-  { code: "KUL", city: "Sepang", country: "Malaysia", name: "Kuala Lumpur International Airport", lat: 2.7456, lon: 101.7100 },
+  { code: "KUL", city: "Kuala Lumpur", country: "Malaysia", name: "Kuala Lumpur International Airport", lat: 2.7456, lon: 101.7100 },
   { code: "SBW", city: "Sibu", country: "Malaysia", name: "Sibu Airport", lat: 2.2616, lon: 111.9850 },
   { code: "SZB", city: "Subang", country: "Malaysia", name: "Sultan Abdul Aziz Shah International Airport", lat: 3.1306, lon: 101.5490 },
   { code: "TWU", city: "Tawau", country: "Malaysia", name: "Tawau Airport", lat: 4.3134, lon: 118.1215 },

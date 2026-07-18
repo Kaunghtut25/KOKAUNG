@@ -1,9 +1,13 @@
 "use client";
 
 import React from "react";
-import Link from "next/link";
+import Link from "next/link"
 import { useState, useEffect } from "react";
-
+import TrustBadges from '@/components/TrustBadges';
+import WhyChooseUs from '@/components/WhyChooseUs';
+import CompanyTimeline from '@/components/CompanyTimeline';
+import PartnerLogos from '@/components/PartnerLogos';
+import Newsletter from '@/components/Newsletter';
 const FALLBACK_IMG = "/images_v2/about-hero-v2.jpg";
 
 interface AboutConfig {
@@ -80,6 +84,9 @@ export default function AboutPage() {
       if (d?.about) setConfig({ ...defaultAbout, ...d.about });
       else setConfig(defaultAbout);
     }).catch(() => setConfig(defaultAbout));
+    fetch("/api/admin/settings").then(r => r.json()).then(d => {
+      if (d?.heroImages?.about) setConfig(prev => ({ ...prev, heroImage: d.heroImages.about }));
+    }).catch(() => {});
   }, []);
 
   if (!config) return <div className="min-h-screen bg-gray-50 flex items-center justify-center"><div className="text-gray-400 animate-pulse">Loading...</div></div>;
@@ -104,7 +111,8 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* WHO WE ARE */}
+      {/* ========== Trust Badges ========== */}
+{/* WHO WE ARE */}
       <section className="px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto py-16 sm:py-20">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
           <div>
@@ -169,7 +177,8 @@ export default function AboutPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-3xl mx-auto">{whyChooseUs.map((item,i)=><div key={i} className="flex items-start gap-3 p-4 rounded-xl bg-white border border-gray-200 hover:border-[#D4AF37]/30 hover:shadow-sm transition-all"><svg className="w-5 h-5 text-[#D4AF37] flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><span className="text-gray-700 text-sm">{item}</span></div>)}</div>
       </section>}
 
-      {/* CREDENTIALS */}
+      {/* ========== Why Choose Us (Feature Cards) ========== */}
+{/* CREDENTIALS */}
       <section className="px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto pb-16 sm:pb-20">
         <div className="text-center mb-10">
           <h2 className="text-3xl font-bold mb-3 text-[#0A1628]" style={{fontFamily:"'Playfair Display',serif"}}><span className="bg-gradient-to-r from-[#D4AF37] to-[#F5A623] bg-clip-text text-transparent">Accreditations &amp; Licenses</span></h2>
@@ -202,7 +211,12 @@ export default function AboutPage() {
             <Link href={commitmentButtonHref} className="inline-block px-8 py-3.5 rounded-xl font-semibold text-[#0A1628] bg-gradient-to-r from-[#D4AF37] to-[#F5A623] hover:from-[#C4A037] hover:to-[#E59620] transition-all duration-200 shadow-lg shadow-[#D4AF37]/20">{commitmentButtonLabel}</Link>
           </div>
         </div>
-      </section>
-    </div>
+      </section>      {/* ========== Newsletter Signup ========== */}
+      <TrustBadges />
+      <WhyChooseUs />
+      <CompanyTimeline />
+      <PartnerLogos />
+      <Newsletter />
+</div>
   );
 }

@@ -15,6 +15,9 @@ interface Tour {
   amenities: string;
   included: string;
   excluded: string;
+  phone: string;
+  email: string;
+  address: string;
   maxGroupSize: number;
   status: string;
   featured: boolean;
@@ -35,6 +38,9 @@ const emptyTour: Tour = {
   amenities: "",
   included: "",
   excluded: "",
+  phone: "",
+  email: "",
+  address: "",
   maxGroupSize: 0,
   status: "active",
   featured: false,
@@ -354,7 +360,44 @@ export default function AdminToursPage() {
         </div>
       </div>
 
-      {/* ─── Multi-Image Management ─── */}
+      
+      {/* ─── Contact Information ─── */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div>
+          <label className="block text-white/70 text-sm mb-1">Phone</label>
+          <input
+            type="tel"
+            name="phone"
+            placeholder="Contact phone"
+            className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-gold/50 transition-colors"
+            value={editingTour.phone}
+            onChange={(e) => handleFieldChange("phone", e.target.value)}
+          />
+        </div>
+        <div>
+          <label className="block text-white/70 text-sm mb-1">Email</label>
+          <input
+            type="email"
+            name="email"
+            placeholder="Contact email"
+            className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-gold/50 transition-colors"
+            value={editingTour.email}
+            onChange={(e) => handleFieldChange("email", e.target.value)}
+          />
+        </div>
+        <div>
+          <label className="block text-white/70 text-sm mb-1">Meeting Point / Address</label>
+          <input
+            type="text"
+            name="address"
+            placeholder="Meeting point or address"
+            className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-gold/50 transition-colors"
+            value={editingTour.address}
+            onChange={(e) => handleFieldChange("address", e.target.value)}
+          />
+        </div>
+      </div>
+{/* ─── Multi-Image Management ─── */}
       <div>
         <label className="block text-white/70 text-sm mb-1">
           Images (upload file or type URL)
@@ -379,6 +422,7 @@ export default function AdminToursPage() {
             className="px-4 py-2 rounded-lg bg-gold/10 text-gold text-sm font-medium hover:bg-gold/20 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
           >
             {uploading ? "Uploading..." : "📁 Upload Image"}
+          <p className="text-xs text-gray-400 mt-1">Recommended: 1200x630px (JPEG, max 2MB)</p>
           </button>
           <input
             type="text"
@@ -403,7 +447,21 @@ export default function AdminToursPage() {
           <p className="text-red-400 text-xs mb-2">{uploadError}</p>
         )}
 
-        {/* Image Preview & List */}
+        
+        <div className="mt-3">
+          <input
+            type="text"
+            name="imageUrl"
+            placeholder="Or paste image URL"
+            className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-gold/50 transition-colors"
+            value={imageUrlInput}
+            onChange={(e) => {
+              handleImageUrlChange(e.target.value);
+            }}
+            onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); addImage(); } }}
+          />
+        </div>
+{/* Image Preview & List */}
         {imageList.length > 0 ? (
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
             {imageList.map((url, index) => (
@@ -623,7 +681,7 @@ export default function AdminToursPage() {
                     >
                       <td className="p-4">
                         <div className="flex items-center gap-3">
-                          <div className="w-[60px] h-[60px] rounded-lg border border-white/10 bg-white/5 overflow-hidden flex-shrink-0 flex items-center justify-center">
+                          <div className="w-10 h-10 rounded-lg border border-white/10 bg-white/5 overflow-hidden flex-shrink-0 flex items-center justify-center">
                             {thumb ? (
                               <img
                                 src={thumb}

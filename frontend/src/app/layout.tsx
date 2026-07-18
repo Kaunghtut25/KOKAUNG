@@ -1,11 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import Navbar from "@/components/Navbar";
-import ServiceIcons from "@/components/ServiceIcons";
-import Footer from "@/components/Footer";
-import LiveChatButton from "@/components/LiveChatButton";
-import { Toaster } from "react-hot-toast";
+import RootClient from "@/components/RootClient";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -58,6 +54,7 @@ export const metadata: Metadata = {
     ],
   },
 };
+
 const jsonLd = {
   "@context": "https://schema.org",
   "@type": "TravelAgency",
@@ -94,30 +91,12 @@ export default function RootLayout({
         />
       </head>
       <body className={`${inter.className} min-h-screen bg-white text-gray-900`}>
-        <Navbar />
-        <ServiceIcons />
-        <main>{children}</main>
-        <Footer />
-        <LiveChatButton />
-        <Toaster
-          position="top-center"
-          toastOptions={{
-            duration: 4000,
-            style: {
-              background: "#1B2A4A",
-              color: "#FFFFFF",
-              border: "1px solid rgba(212, 175, 55, 0.3)",
-              borderRadius: "12px",
-            },
-            success: {
-              iconTheme: {
-                primary: "#D4AF37",
-                secondary: "#0A1628",
-              },
-            },
-          }}
-        />
+        <RootClient>{children}</RootClient>
+        <GoogleAnalytics />
       </body>
     </html>
   );
 }
+
+// Need to import GoogleAnalytics separately for server component
+import GoogleAnalytics from "@/components/GoogleAnalytics";

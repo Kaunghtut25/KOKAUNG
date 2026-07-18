@@ -1,6 +1,7 @@
-﻿"use client";
+"use client";
 
 import React, { useEffect, useState, useCallback, useRef } from "react";
+import { put } from "@vercel/blob";
 
 interface HeroImages {
   flights: string;
@@ -95,6 +96,9 @@ export default function AdminSettingsPage() {
   const [toast, setToast] = useState<{ message: string; type: "success" | "error" } | null>(null);
   const logoInputRef = useRef<HTMLInputElement>(null);
   const fileInputRefs = useRef<(HTMLInputElement | null)[]>([]);
+  const [uploading, setUploading] = useState(false);
+  const [uploadError, setUploadError] = useState("");
+  const [logoUrlInput, setLogoUrlInput] = useState("");
 
   const token = typeof window !== "undefined" ? localStorage.getItem("admin_token") : "";
 
@@ -128,6 +132,88 @@ export default function AdminSettingsPage() {
     setTimeout(() => setToast(null), 3000);
   };
 
+  const uploadFileToUrl = async (file: File): Promise<string> => {
+    if (!file.type.startsWith("image/")) {
+      showToast("Only image files are accepted.", "error");
+      return "";
+    }
+    try {
+      const blob = await put(file.name, file, { access: "public" });
+      return blob.url;
+    } catch {
+      showToast("Upload failed. Check connection.", "error");
+      return "";
+    }
+  };
+
+  const uploadFile = async (file: File, target: "logo" | keyof HeroImages) => {
+    if (!file.type.startsWith("image/")) {
+      setUploadError("Only image files are accepted.");
+      showToast("Only image files are accepted.", "error");
+      return;
+    }
+    setUploading(true);
+    setUploadError("");
+    try {
+      const blob = await put(file.name, file, { access: "public" });
+      const url = blob.url;
+      if (target === "logo") {
+        setSettings((prev) => ({ ...prev, logo: url }));
+      } else {
+        setSettings((prev) => ({
+          ...prev,
+          heroImages: { ...prev.heroImages, [target]: url },
+        }));
+      }
+    } catch {
+      setUploadError("Upload failed. Try URL paste instead.");
+      showToast("Upload failed. Try URL paste instead.", "error");
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const handleDragOver = (e: React.DragEvent) => { e.preventDefault(); };
+
+  const handleLogoDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    const file = e.dataTransfer.files[0];
+    if (!file) return;
+    if (file.size > 5 * 1024 * 1024) {
+      showToast("Image must be under 5MB", "error");
+      return;
+    }
+    // Show local preview first
+    const reader = new FileReader();
+    reader.onload = () => {
+      setSettings((prev) => ({ ...prev, logo: reader.result as string }));
+    };
+    reader.readAsDataURL(file);
+    // Upload to server
+    uploadFile(file, "logo");
+  };
+
+  const handleHeroDrop = (page: keyof HeroImages, e: React.DragEvent) => {
+    e.preventDefault();
+    const file = e.dataTransfer.files[0];
+    if (!file) return;
+    if (file.size > 5 * 1024 * 1024) {
+      showToast("Image must be under 5MB", "error");
+      return;
+    }
+    // Show local preview first
+    const reader = new FileReader();
+    reader.onload = () => {
+      setSettings((prev) => ({
+        ...prev,
+        heroImages: { ...prev.heroImages, [page]: reader.result as string },
+      }));
+    };
+    reader.readAsDataURL(file);
+    // Upload to server
+    uploadFile(file, page);
+  };
+
   const handleSave = async () => {
     setSaving(true);
     try {
@@ -154,19 +240,21 @@ export default function AdminSettingsPage() {
     }
   };
 
-  const handleLogoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleLogoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
     if (file.size > 5 * 1024 * 1024) {
       showToast("Image must be under 5MB", "error");
       return;
     }
+    // Show local preview first
     const reader = new FileReader();
     reader.onload = () => {
       setSettings((prev) => ({ ...prev, logo: reader.result as string }));
     };
-    reader.onerror = () => showToast("Failed to read image", "error");
     reader.readAsDataURL(file);
+    // Upload to server
+    await uploadFile(file, "logo");
   };
 
   const handleHeroImageChange = (page: keyof HeroImages, value: string) => {
@@ -176,18 +264,24 @@ export default function AdminSettingsPage() {
     }));
   };
 
-  const handleHeroImageUpload = (page: keyof HeroImages, e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleHeroImageUpload = async (page: keyof HeroImages, e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
     if (file.size > 5 * 1024 * 1024) {
       showToast("Image must be under 5MB", "error");
       return;
     }
+    // Show local preview first
     const reader = new FileReader();
     reader.onload = () => {
-      handleHeroImageChange(page, reader.result as string);
+      setSettings((prev) => ({
+        ...prev,
+        heroImages: { ...prev.heroImages, [page]: reader.result as string },
+      }));
     };
     reader.readAsDataURL(file);
+    // Upload to server
+    await uploadFile(file, page);
   };
 
   const renderGeneralTab = () => (
@@ -196,7 +290,7 @@ export default function AdminSettingsPage() {
       <div className="bg-white/5 border border-white/10 rounded-xl p-6">
         <h3 className="text-lg font-semibold text-gold mb-4">Site Logo</h3>
         <div className="flex items-start gap-6">
-          <div className="w-[180px] h-[80px] rounded-lg border border-white/20 bg-white/5 flex items-center justify-center overflow-hidden flex-shrink-0">
+          <div className="w-[180px] h-[80px] rounded-lg border border-white/20 bg-white/5 flex items-center justify-center overflow-hidden flex-shrink-0" onDragOver={handleDragOver} onDrop={handleLogoDrop}>
             {settings.logo ? (
               <img src={settings.logo} alt="Logo" className="max-w-full max-h-full object-contain p-2" />
             ) : (
@@ -207,7 +301,7 @@ export default function AdminSettingsPage() {
             )}
           </div>
           <div className="flex-1 space-y-3">
-            <p className="text-white/50 text-sm">Upload a logo for your site. Recommended size: 200×80px, max 5MB.</p>
+            <p className="text-white/50 text-sm">Upload a logo for your site. Recommended: 200x60px, max 5MB.</p>
             <input
               ref={logoInputRef}
               type="file"
@@ -223,6 +317,16 @@ export default function AdminSettingsPage() {
               >
                 📁 Upload Logo
               </label>
+              <input
+                type="text"
+                value={logoUrlInput}
+                onChange={(e) => {
+                  setLogoUrlInput(e.target.value);
+                  setSettings((prev) => ({ ...prev, logo: e.target.value }));
+                }}
+                placeholder="Or paste logo URL"
+                className="flex-1 bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-gold/50 transition-colors"
+              />
               {settings.logo && (
                 <button
                   onClick={() => setSettings((prev) => ({ ...prev, logo: "" }))}
@@ -232,6 +336,14 @@ export default function AdminSettingsPage() {
                 </button>
               )}
             </div>
+            {uploading && (
+              <p className="text-white/40 text-xs flex items-center gap-2">
+                <span className="animate-spin">⏳</span> Uploading...
+              </p>
+            )}
+            {uploadError && (
+              <p className="text-red-400 text-xs">{uploadError}</p>
+            )}
           </div>
         </div>
       </div>
@@ -310,13 +422,13 @@ export default function AdminSettingsPage() {
     <div className="bg-white/5 border border-white/10 rounded-xl p-6">
       <h3 className="text-lg font-semibold text-gold mb-4">Hero Section Images</h3>
       <p className="text-white/40 text-sm mb-6">
-        Set hero background images for each page. Provide a URL or upload an image (max 5MB).
+        Set hero background images for each page. Provide a URL or upload an image. Recommended: 1920×600px, max 5MB.
       </p>
       <div className="space-y-6">
         {(Object.keys(settings.heroImages) as (keyof HeroImages)[]).map((page) => (
           <div key={page} className="bg-white/[0.03] border border-white/5 rounded-lg p-4">
             <div className="flex items-start gap-4">
-              <div className="w-[200px] h-[100px] rounded-lg border border-white/10 bg-white/5 overflow-hidden flex-shrink-0 flex items-center justify-center">
+              <div className="w-[200px] h-[100px] rounded-lg border border-white/10 bg-white/5 overflow-hidden flex-shrink-0 flex items-center justify-center" onDragOver={handleDragOver} onDrop={(e) => handleHeroDrop(page, e)}>
                 {settings.heroImages[page] ? (
                   <img
                     src={settings.heroImages[page]}
@@ -346,7 +458,7 @@ export default function AdminSettingsPage() {
                     type="text"
                     value={settings.heroImages[page]}
                     onChange={(e) => handleHeroImageChange(page, e.target.value)}
-                    placeholder="https://... or pick a file below"
+                    placeholder="Or paste image URL"
                     className="flex-1 bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-gold/50 transition-colors"
                   />
                   <input
@@ -371,6 +483,14 @@ export default function AdminSettingsPage() {
                     </button>
                   )}
                 </div>
+                {uploading && (
+                  <p className="text-white/40 text-xs flex items-center gap-2">
+                    <span className="animate-spin">⏳</span> Uploading...
+                  </p>
+                )}
+                {uploadError && (
+                  <p className="text-red-400 text-xs">{uploadError}</p>
+                )}
               </div>
             </div>
           </div>
@@ -498,18 +618,13 @@ export default function AdminSettingsPage() {
                     onChange={async (e) => {
                       const file = e.target.files?.[0];
                       if (!file) return;
-                      const formData = new FormData();
-                      formData.append("file", file);
-                      try {
-                        const res = await fetch(`${API_BASE}/upload`, { method: "POST", body: formData });
-                        const data = await res.json();
-                        if (data.url) {
-                          showToast("Image uploaded!", "success");
-                          const updated = [...settings.certifications];
-                          updated[idx] = { ...updated[idx], image: data.url };
-                          setSettings((prev) => ({ ...prev, certifications: updated }));
-                        }
-                      } catch { showToast("Upload failed", "error"); }
+                      const url = await uploadFileToUrl(file);
+                      if (url) {
+                        showToast("Image uploaded!", "success");
+                        const updated = [...settings.certifications];
+                        updated[idx] = { ...updated[idx], image: url };
+                        setSettings((prev) => ({ ...prev, certifications: updated }));
+                      }
                     }}
                   />
                   <button

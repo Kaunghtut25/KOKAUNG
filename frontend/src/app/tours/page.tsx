@@ -46,7 +46,7 @@ async function getInitialTours(): Promise<Tour[]> {
         else images = [s];
       }
       if (images.length === 0 && t.image) images = [t.image as string];
-      if (images.length === 0) images = ['/images_v2/bagan-v2.jpg'];
+      if (images.length === 0) images = ['/images_v2/tour-bagan-v2.jpg'];
 
       return {
         _id: t.id || t._id || '',

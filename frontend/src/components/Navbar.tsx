@@ -6,9 +6,32 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { HiMenuAlt3, HiX } from "react-icons/hi";
 
+interface NavLink {
+  label: string;
+  href: string;
+}
+
+interface SiteConfig {
+  logoUrl?: string;
+  siteName?: string;
+  navLinks?: NavLink[];
+}
+
+const DEFAULT_LOGO = "/logo.jpeg";
+const DEFAULT_SITE_NAME = "𝐀𝟗 𝐆𝐥𝐨𝐛𝐚𝐥 𝐓𝐫𝐚𝐯𝐞𝐥𝐬 & 𝐓𝐨𝐮𝐫𝐬";
+const DEFAULT_TAGLINE = "Where every journey is a story waiting to be told!";
+const DEFAULT_NAV_LINKS: NavLink[] = [
+  { label: "Home", href: "/" },
+  { label: "About Us", href: "/about" },
+  { label: "Blog", href: "/blog" },
+];
+
 export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [logoUrl, setLogoUrl] = useState(DEFAULT_LOGO);
+  const [siteName, setSiteName] = useState(DEFAULT_SITE_NAME);
+  const [navLinks, setNavLinks] = useState<NavLink[]>(DEFAULT_NAV_LINKS);
   const pathname = usePathname();
 
   useEffect(() => {
@@ -22,6 +45,20 @@ export default function Navbar() {
     return () => { document.body.style.overflow = ""; };
   }, [mobileOpen]);
 
+  useEffect(() => {
+    let cancelled = false;
+    fetch("/api/admin/site-config")
+      .then((res) => res.json())
+      .then((cfg: SiteConfig) => {
+        if (cancelled) return;
+        if (cfg.logoUrl) setLogoUrl(cfg.logoUrl);
+        if (cfg.siteName) setSiteName(cfg.siteName);
+        if (cfg.navLinks && cfg.navLinks.length > 0) setNavLinks(cfg.navLinks);
+      })
+      .catch(() => { /* fall back to defaults */ });
+    return () => { cancelled = true; };
+  }, []);
+
   const isActive = (href: string) => pathname === href;
 
   return (
@@ -34,33 +71,25 @@ export default function Navbar() {
           <div className="flex items-center justify-between h-20">
             <Link href="/" className="flex-shrink-0 group flex items-center gap-3">
               <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-[#D4AF37] flex-shrink-0 shadow-md shadow-[#D4AF37]/20 group-hover:shadow-lg group-hover:shadow-[#D4AF37]/30 transition-all">
-                <Image src="/logo.jpeg" alt="𝐀𝟗 𝐆𝐥𝐨𝐛𝐚𝐥 𝐓𝐫𝐚𝐯𝐞𝐥𝐬 & 𝐓𝐨𝐮𝐫𝐬" width={48} height={48} className="w-full h-full object-cover" />
+                <Image src={logoUrl} alt={siteName} width={48} height={48} className="w-full h-full object-cover" />
               </div>
               <div>
                 <h1 className="font-display text-lg md:text-xl font-bold text-white tracking-wide leading-tight">
-                  𝐀𝟗 𝐆𝐥𝐨𝐛𝐚𝐥 𝐓𝐫𝐚𝐯𝐞𝐥𝐬 & 𝐓𝐨𝐮𝐫𝐬
+                  {siteName}
                 </h1>
                 <p className="text-[10px] md:text-xs italic text-[#D4AF37] tracking-wide group-hover:text-[#F5A623] transition-colors">
-                  Where every journey is a story waiting to be told!
+                  {DEFAULT_TAGLINE}
                 </p>
               </div>
             </Link>
 
             <div className="hidden lg:flex items-center space-x-3">
-              <Link href="/"
-                className={`px-4 py-2 text-sm font-semibold transition-all duration-200 rounded-lg [text-shadow:0_1px_3px_rgba(0,0,0,0.5)] ${
-                  isActive('/') ? 'bg-[#D4AF37] text-[#0A1628] [text-shadow:none] shadow-sm' : 'text-white hover:text-[#D4AF37] hover:bg-white/10'
-                }`}>Home</Link>
-              {/* About Us */}
-              <Link href="/about"
-                className={`px-4 py-2 text-sm font-semibold transition-all duration-200 rounded-lg [text-shadow:0_1px_3px_rgba(0,0,0,0.5)] ${
-                  isActive('/about') ? 'bg-[#D4AF37] text-[#0A1628] [text-shadow:none] shadow-sm' : 'text-white hover:text-[#D4AF37] hover:bg-white/10'
-                }`}>About Us</Link>
-              {/* Blog */}
-              <Link href="/blog"
-                className={`px-4 py-2 text-sm font-semibold transition-all duration-200 rounded-lg [text-shadow:0_1px_3px_rgba(0,0,0,0.5)] ${
-                  isActive('/blog') ? 'bg-[#D4AF37] text-[#0A1628] [text-shadow:none] shadow-sm' : 'text-white hover:text-[#D4AF37] hover:bg-white/10'
-                }`}>Blog</Link>
+              {navLinks.map((link) => (
+                <Link key={link.href} href={link.href}
+                  className={`px-4 py-2 text-sm font-semibold transition-all duration-200 rounded-lg [text-shadow:0_1px_3px_rgba(0,0,0,0.5)] ${
+                    isActive(link.href) ? 'bg-[#D4AF37] text-[#0A1628] [text-shadow:none] shadow-sm' : 'text-white hover:text-[#D4AF37] hover:bg-white/10'
+                  }`}>{link.label}</Link>
+              ))}
 
               <div className="relative group">
                 <button className="flex items-center gap-1 text-sm font-medium text-white hover:text-[#D4AF37] transition-colors px-3 py-2 rounded-lg hover:bg-white/10">
@@ -110,28 +139,22 @@ export default function Navbar() {
             </button>
             <Link href="/" onClick={() => setMobileOpen(false)} className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-[#D4AF37] flex-shrink-0">
-                <Image src="/logo.jpeg" alt="𝐀𝟗 𝐆𝐥𝐨𝐛𝐚𝐥" width={40} height={40} className="w-full h-full object-cover" />
+                <Image src={logoUrl} alt={siteName} width={40} height={40} className="w-full h-full object-cover" />
               </div>
               <div>
-                <h2 className="font-display text-base font-bold text-white tracking-wide">𝐀𝟗 𝐆𝐥𝐨𝐛𝐚𝐥 𝐓𝐫𝐚𝐯𝐞𝐥𝐬 & 𝐓𝐨𝐮𝐫𝐬</h2>
-                <p className="text-[10px] italic text-[#D4AF37]/70">Where every journey is a story waiting to be told!</p>
+                <h2 className="font-display text-base font-bold text-white tracking-wide">{siteName}</h2>
+                <p className="text-[10px] italic text-[#D4AF37]/70">{DEFAULT_TAGLINE}</p>
               </div>
             </Link>
           </div>
 
           <div className="flex-1 px-6 py-6 space-y-1 overflow-y-auto">
-            <Link href="/" onClick={() => setMobileOpen(false)}
-              className={`block py-3 px-4 text-base font-medium rounded-lg transition-all duration-200 ${
-                isActive('/') ? "bg-[#D4AF37] text-[#0A1628]" : "text-white hover:text-[#D4AF37] hover:bg-white/10"
-              }`}>Home</Link>
-            <Link href="/about" onClick={() => setMobileOpen(false)}
-              className={`block py-3 px-4 text-base font-medium rounded-lg transition-all duration-200 ${
-                isActive('/about') ? "bg-[#D4AF37] text-[#0A1628]" : "text-white hover:text-[#D4AF37] hover:bg-white/10"
-              }`}>About Us</Link>
-            <Link href="/blog" onClick={() => setMobileOpen(false)}
-              className={`block py-3 px-4 text-base font-medium rounded-lg transition-all duration-200 ${
-                isActive('/blog') ? "bg-[#D4AF37] text-[#0A1628]" : "text-white hover:text-[#D4AF37] hover:bg-white/10"
-              }`}>Blog</Link>
+            {navLinks.map((link) => (
+              <Link key={link.href} href={link.href} onClick={() => setMobileOpen(false)}
+                className={`block py-3 px-4 text-base font-medium rounded-lg transition-all duration-200 ${
+                  isActive(link.href) ? "bg-[#D4AF37] text-[#0A1628]" : "text-white hover:text-[#D4AF37] hover:bg-white/10"
+                }`}>{link.label}</Link>
+            ))}
           </div>
 
           <div className="px-6 py-6 border-t border-[#D4AF37]/20 space-y-3">
@@ -145,3 +168,4 @@ export default function Navbar() {
     </>
   );
 }
+
