@@ -24,33 +24,60 @@ async function redisSet(collection: string, data: Record<string, any>): Promise<
   const redis = getRedis(); if (!redis) return null;
   const id = data.id || "gen_" + Date.now() + "_" + Math.random().toString(36).slice(2, 8);
   const item = { ...data, id, updatedAt: new Date().toISOString() };
-  await redis.hset("a9:" + collection, { [id]: JSON.stringify(item) });
-  return item;
+  try {
+    // Delete old key if it's the wrong type
+    try { await redis.del("a9:" + collection); } catch {}
+    await redis.hset("a9:" + collection, { [id]: JSON.stringify(item) });
+    return item;
+  } catch (err: any) {
+    console.warn("[Store] Redis hset(" + collection + ") failed:", err.message?.substring(0, 80));
+    return null;
+  }
 }
 async function redisGetAll(collection: string): Promise<any[] | null> {
   const redis = getRedis(); if (!redis) return null;
-  const hash = await redis.hgetall("a9:" + collection);
-  if (!hash) return [];
-  return Object.values(hash).map((v: any) => { try { return JSON.parse(v); } catch { return v; } });
+  try {
+    const hash = await redis.hgetall("a9:" + collection);
+    if (!hash) return [];
+    return Object.values(hash).map((v: any) => { try { return JSON.parse(v); } catch { return v; } });
+  } catch (err: any) {
+    console.warn("[Store] Redis hgetall(" + collection + ") failed:", err.message?.substring(0, 80));
+    return null;
+  }
 }
 async function redisGetById(collection: string, id: string): Promise<any | null> {
   const redis = getRedis(); if (!redis) return null;
-  const raw = await redis.hget("a9:" + collection, id);
-  if (!raw) return null;
-  try { return JSON.parse(raw as string); } catch { return raw; }
+  try {
+    const raw = await redis.hget("a9:" + collection, id);
+    if (!raw) return null;
+    try { return JSON.parse(raw as string); } catch { return raw; }
+  } catch (err: any) {
+    console.warn("[Store] Redis hget(" + collection + ", " + id + ") failed:", err.message?.substring(0, 80));
+    return null;
+  }
 }
 async function redisUpdate(collection: string, id: string, data: Record<string, any>): Promise<any | null> {
   const redis = getRedis(); if (!redis) return null;
-  const existing = await redisGetById(collection, id);
-  if (!existing) return null;
-  const updated = { ...existing, ...data, id, updatedAt: new Date().toISOString() };
-  await redis.hset("a9:" + collection, { [id]: JSON.stringify(updated) });
-  return updated;
+  try {
+    const existing = await redisGetById(collection, id);
+    if (!existing) return null;
+    const updated = { ...existing, ...data, id, updatedAt: new Date().toISOString() };
+    await redis.hset("a9:" + collection, { [id]: JSON.stringify(updated) });
+    return updated;
+  } catch (err: any) {
+    console.warn("[Store] Redis hset update(" + collection + ") failed:", err.message?.substring(0, 80));
+    return null;
+  }
 }
 async function redisDelete(collection: string, id: string): Promise<boolean> {
   const redis = getRedis(); if (!redis) return false;
-  await redis.hdel("a9:" + collection, id);
-  return true;
+  try {
+    await redis.hdel("a9:" + collection, id);
+    return true;
+  } catch (err: any) {
+    console.warn("[Store] Redis hdel(" + collection + ") failed:", err.message?.substring(0, 80));
+    return false;
+  }
 }
 // Fallback seed data (used if Supabase fails)
 const SEEDS: Record<string, any[]> = {
