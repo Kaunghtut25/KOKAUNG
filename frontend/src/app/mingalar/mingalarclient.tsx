@@ -107,11 +107,11 @@ export default function MingalarClient({ initialCards }: MingalarClientProps) {
       </section>
       <section className="max-w-6xl mx-auto px-4 py-12">
         {/* Row 1 */}
-        <div className={`grid grid-cols-${layout.mobile} md:grid-cols-${layout.tablet} gap-6 mb-6`}>
+        <div className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-6`}>
           {loungeCards.slice(0, 3).map((item, i) => renderCard(item, i))}
         </div>
         {/* Row 2 */}
-        <div className={`grid grid-cols-${layout.mobile} md:grid-cols-${layout.tablet} gap-6 mb-10`}>
+        <div className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-10`}>
           {loungeCards.slice(3, 6).map((item, i) => renderCard(item, i + 3))}
         </div>
         <div className="text-center">

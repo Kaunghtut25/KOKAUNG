@@ -457,7 +457,7 @@ function BookingPageContent() {
 
                 <p className="text-gray-500 text-xs">
                   {paymentMethod === 'bank_transfer'
-                    ? 'Account: A9 Global Travels & Tours | Bank: KBZ | Account No: 123-456-789'
+                    ? 'Account: 𝐈𝟣 𝐆𝐥𝐨𝐛𝐚𝐥 𝐓𝐫𝐚𝐯𝐞𝐥𝐬 & 𝐓𝐨𝐮𝐫𝐬 | Bank: KBZ | Account No: 123-456-789'
                     : `Open your ${getPaymentLabel(paymentMethod)} app and scan the QR code above`}
                 </p>
 

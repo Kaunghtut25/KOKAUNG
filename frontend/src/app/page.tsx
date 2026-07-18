@@ -228,7 +228,7 @@ export default function HomePage() {
           {slides.map((slide:any, index:number) => (
             <div key={index} className={`transition-all duration-700 ${index === currentSlide ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8 absolute pointer-events-none"}`}>
               {slide.label && <span className="inline-block px-3 py-1 rounded-full bg-[#D4AF37]/20 text-[#D4AF37] text-xs font-semibold uppercase tracking-wider mb-4 border border-[#D4AF37]/30">{slide.label}</span>}
-              <h1 className="text-4xl sm:text-5xl lg:text-7xl font-bold mb-4 text-white drop-shadow-lg" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>{slide.title || "A9 Global Travels & Tours"}</h1>
+              <h1 className="text-4xl sm:text-5xl lg:text-7xl font-bold mb-4 text-white drop-shadow-lg" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>{slide.title || "𝐈𝟣 𝐆𝐥𝐨𝐛𝐚𝐥 𝐓𝐫𝐚𝐯𝐞𝐥𝐬 & 𝐓𝐨𝐮𝐫𝐬"}</h1>
               {slide.subtitle && <p className="text-lg sm:text-xl text-white/80 max-w-2xl mx-auto drop-shadow">{slide.subtitle}</p>}
             </div>
           ))}
@@ -328,7 +328,7 @@ export default function HomePage() {
       </section>
       <footer className="bg-gray-50 border-t border-gray-200 py-10">
         <div className="max-w-6xl mx-auto px-4 text-center text-gray-500 text-sm">
-          <p>{siteConfig?.footerCopyright || `© ${new Date().getFullYear()} A9 Global Travels & Tours. All rights reserved.`}</p>
+          <p>{siteConfig?.footerCopyright || `© ${new Date().getFullYear()} 𝐈𝟣 𝐆𝐥𝐨𝐛𝐚𝐥 𝐓𝐫𝐚𝐯𝐞𝐥𝐬 & 𝐓𝐨𝐮𝐫𝐬. All rights reserved.`}</p>
         </div>
       </footer>
           <TrustBadges />

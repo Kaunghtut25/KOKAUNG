@@ -71,9 +71,9 @@ const defaultPrivacy: PrivacyItem[] = [
 ];
 
 const defaultCfg: SiteConfig = {
-  id: "site-config", siteName: "A9 Global Travels & Tours", logoUrl: "/logo.jpeg",
+  id: "site-config", siteName: "𝐈𝟣 𝐆𝐥𝐨𝐛𝐚𝐥 𝐓𝐫𝐚𝐯𝐞𝐥𝐬 & 𝐓𝐨𝐮𝐫𝐬", logoUrl: "/logo.jpeg",
   metaTitle: "A9 Global Travel | Luxury Travel Myanmar", metaDescription: "Premium travel experiences in Myanmar.",
-  footerCopyright: "© 2026 A9 Global Travels & Tours.", footerRegNumbers: "Company Reg: 126395248 | IATA: 05301026",
+  footerCopyright: "© 2026 𝐈𝟣 𝐆𝐥𝐨𝐛𝐚𝐥 𝐓𝐫𝐚𝐯𝐞𝐥𝐬 & 𝐓𝐨𝐮𝐫𝐬.", footerRegNumbers: "Company Reg: 126395248 | IATA: 05301026",
   footerTagline: "Where every journey is a story waiting to be told!", footerCompanyInfo: "Your premier IATA-accredited travel partner.",
   faqs: defaultFaqs,
   terms: defaultTerms,

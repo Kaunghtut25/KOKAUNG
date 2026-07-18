@@ -12,7 +12,7 @@ const inter = Inter({
 export const metadata: Metadata = {
   metadataBase: new URL("https://a9travel.com"),
   title: {
-    default: "A9 Global Travels & Tours | Luxury Travel Myanmar",
+    default: "𝐈𝟣 𝐆𝐥𝐨𝐛𝐚𝐥 𝐓𝐫𝐚𝐯𝐞𝐥𝐬 & 𝐓𝐨𝐮𝐫𝐬 | Luxury Travel Myanmar",
     template: "%s | A9 Global Travel",
   },
   description:
@@ -24,15 +24,15 @@ export const metadata: Metadata = {
   ],
   openGraph: {
     type: "website",
-    siteName: "A9 Global Travels & Tours",
-    title: "A9 Global Travels & Tours | Luxury Travel Myanmar",
+    siteName: "𝐈𝟣 𝐆𝐥𝐨𝐛𝐚𝐥 𝐓𝐫𝐚𝐯𝐞𝐥𝐬 & 𝐓𝐨𝐮𝐫𝐬",
+    title: "𝐈𝟣 𝐆𝐥𝐨𝐛𝐚𝐥 𝐓𝐫𝐚𝐯𝐞𝐥𝐬 & 𝐓𝐨𝐮𝐫𝐬 | Luxury Travel Myanmar",
     description: "Premium travel experiences in Myanmar.",
     url: "https://a9travel.com",
     images: [{ url: "/og-image.jpg", width: 1200, height: 630 }],
   },
   twitter: {
     card: "summary_large_image",
-    title: "A9 Global Travels & Tours",
+    title: "𝐈𝟣 𝐆𝐥𝐨𝐛𝐚𝐥 𝐓𝐫𝐚𝐯𝐞𝐥𝐬 & 𝐓𝐨𝐮𝐫𝐬",
     description: "Premium travel experiences in Myanmar.",
     images: ["/og-image.jpg"],
   },
@@ -58,7 +58,7 @@ export const metadata: Metadata = {
 const jsonLd = {
   "@context": "https://schema.org",
   "@type": "TravelAgency",
-  "name": "A9 Global Travels & Tours",
+  "name": "𝐈𝟣 𝐆𝐥𝐨𝐛𝐚𝐥 𝐓𝐫𝐚𝐯𝐞𝐥𝐬 & 𝐓𝐨𝐮𝐫𝐬",
   "url": "https://a9travel.com",
   "logo": "https://a9travel.com/favicon-192x192.png",
   "description": "Your premier IATA-accredited luxury travel partner in Myanmar. Premium tours, hotels, cars, visas, insurance.",
