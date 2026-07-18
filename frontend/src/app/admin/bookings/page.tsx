@@ -138,7 +138,7 @@ export default function AdminBookingsPage() {
     try {
       const res = await fetch(`${API_BASE}/api/booking-receiver/${inquiryId}`, {
         method: "PATCH",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
         body: JSON.stringify({ status: newStatus }),
       });
       if (res.ok) {
