@@ -4,9 +4,54 @@
  */
 
 import { supabase } from './supabase';
+import { Redis } from '@upstash/redis';
 
 type Collection = "tours" | "hotels" | "cars" | "cruises" | "visas" | "insurances" | "blog" | "bookings" | "mingalar" | "site-config" | "settings";
 
+// ── Redis client (lazy) ────────────────────────────────────
+let _redis: any = null;
+function getRedis(): any {
+  if (_redis) return _redis;
+  const url = process.env.UPSTASH_REDIS_REST_URL;
+  const token = process.env.UPSTASH_REDIS_REST_TOKEN;
+  if (!url || !token) { console.warn('[Store] Upstash Redis env vars missing'); return null; }
+  _redis = new Redis({ url, token });
+  console.warn('[Store] Upstash Redis connected');
+  return _redis;
+}
+
+async function redisSet(collection: string, data: Record<string, any>): Promise<any> {
+  const redis = getRedis(); if (!redis) return null;
+  const id = data.id || "gen_" + Date.now() + "_" + Math.random().toString(36).slice(2, 8);
+  const item = { ...data, id, updatedAt: new Date().toISOString() };
+  await redis.hset("a9:" + collection, { [id]: JSON.stringify(item) });
+  return item;
+}
+async function redisGetAll(collection: string): Promise<any[] | null> {
+  const redis = getRedis(); if (!redis) return null;
+  const hash = await redis.hgetall("a9:" + collection);
+  if (!hash) return [];
+  return Object.values(hash).map((v: any) => { try { return JSON.parse(v); } catch { return v; } });
+}
+async function redisGetById(collection: string, id: string): Promise<any | null> {
+  const redis = getRedis(); if (!redis) return null;
+  const raw = await redis.hget("a9:" + collection, id);
+  if (!raw) return null;
+  try { return JSON.parse(raw as string); } catch { return raw; }
+}
+async function redisUpdate(collection: string, id: string, data: Record<string, any>): Promise<any | null> {
+  const redis = getRedis(); if (!redis) return null;
+  const existing = await redisGetById(collection, id);
+  if (!existing) return null;
+  const updated = { ...existing, ...data, id, updatedAt: new Date().toISOString() };
+  await redis.hset("a9:" + collection, { [id]: JSON.stringify(updated) });
+  return updated;
+}
+async function redisDelete(collection: string, id: string): Promise<boolean> {
+  const redis = getRedis(); if (!redis) return false;
+  await redis.hdel("a9:" + collection, id);
+  return true;
+}
 // Fallback seed data (used if Supabase fails)
 const SEEDS: Record<string, any[]> = {
   tours: [
@@ -81,62 +126,68 @@ const SEEDS: Record<string, any[]> = {
 export async function getAll(collection: Collection): Promise<any[]> {
   try {
     const { data, error } = await supabase.from(collection).select('*').order('createdAt', { ascending: false });
-    if (error) throw error;
-    return data || [];
+    if (!error && data) return data;
   } catch (err) {
-    console.warn(`[Store] Supabase getAll(${collection}) failed, using seed:`, (err as Error).message?.substring(0, 80));
-    return SEEDS[collection] || [];
+    console.warn(`[Store] Supabase getAll(${collection}) failed, trying Redis:`, (err as Error).message?.substring(0, 80));
   }
+  const redisData = await redisGetAll(collection);
+  if (redisData !== null && redisData.length > 0) return redisData;
+  console.warn(`[Store] Using seed data for ${collection}`);
+  return SEEDS[collection] || [];
 }
 
 export async function getById(collection: Collection, id: string): Promise<any | null> {
   try {
     const { data, error } = await supabase.from(collection).select('*').eq('id', id).single();
-    if (error) throw error;
-    return data;
+    if (!error && data) return data;
   } catch (err) {
     console.warn(`[Store] Supabase getById(${collection}, ${id}) failed:`, (err as Error).message?.substring(0, 80));
-    const items = SEEDS[collection] || [];
-    return items.find((item: any) => item.id === id || item._id === id) || null;
   }
+  const redisItem = await redisGetById(collection, id);
+  if (redisItem) return redisItem;
+  const items = SEEDS[collection] || [];
+  return items.find((item: any) => item.id === id || item._id === id) || null;
 }
 
 export async function create(collection: Collection, data: Record<string, any>): Promise<any> {
+  const id = data.id || `gen_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
+  const item = { ...data, id, createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() };
   try {
-    const { data: result, error } = await supabase.from(collection).insert(data).select().single();
-    if (error) throw error;
-    return result;
+    const { data: result, error } = await supabase.from(collection).insert(item).select().single();
+    if (!error && result) return result;
   } catch (err) {
-    console.warn(`[Store] Supabase create(${collection}) failed:`, (err as Error).message?.substring(0, 80));
-    // Fallback to in-memory
-    const items = SEEDS[collection] || [];
-    const id = data.id || `gen_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
-    const item = { ...data, id, createdAt: new Date().toISOString() };
-    items.push(item);
-    return item;
+    console.warn(`[Store] Supabase create(${collection}) failed, trying Redis:`, (err as Error).message?.substring(0, 80));
   }
+  const redisResult = await redisSet(collection, item);
+  if (redisResult) { console.warn(`[Store] Saved ${collection}/${id} to Upstash Redis`); return redisResult; }
+  console.warn(`[Store] Saving ${collection}/${id} to memory (won't survive cold start)`);
+  const items = SEEDS[collection] || []; items.push(item); return item;
 }
 
 export async function update(collection: Collection, id: string, data: Record<string, any>): Promise<any | null> {
+  const payload = { ...data, updatedAt: new Date().toISOString() };
   try {
-    const { data: result, error } = await supabase.from(collection).update({ ...data, updatedAt: new Date().toISOString() }).eq('id', id).select().single();
-    if (error) throw error;
-    return result;
+    const { data: result, error } = await supabase.from(collection).update(payload).eq('id', id).select().single();
+    if (!error && result) return result;
   } catch (err) {
-    console.warn(`[Store] Supabase update(${collection}, ${id}) failed:`, (err as Error).message?.substring(0, 80));
-    return null;
+    console.warn(`[Store] Supabase update(${collection}, ${id}) failed, trying Redis:`, (err as Error).message?.substring(0, 80));
   }
+  const redisResult = await redisUpdate(collection, id, payload);
+  if (redisResult) { console.warn(`[Store] Updated ${collection}/${id} in Upstash Redis`); return redisResult; }
+  return null;
 }
 
 export const delete_ = async (collection: Collection, id: string): Promise<boolean> => {
   try {
     const { error } = await supabase.from(collection).delete().eq('id', id);
-    if (error) throw error;
-    return true;
+    if (!error) return true;
   } catch (err) {
     console.warn(`[Store] Supabase delete(${collection}, ${id}) failed:`, (err as Error).message?.substring(0, 80));
-    return false;
   }
+  const redisOk = await redisDelete(collection, id);
+  if (redisOk) { console.warn(`[Store] Deleted ${collection}/${id} from Upstash Redis`); return true; }
+  const items = SEEDS[collection] || []; const idx = items.findIndex((item: any) => item.id === id || item._id === id);
+  if (idx >= 0) { items.splice(idx, 1); return true; } return false;
 };
 
 export async function getBookings(): Promise<any[]> {
