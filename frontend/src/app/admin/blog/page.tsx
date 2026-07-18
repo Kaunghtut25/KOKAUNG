@@ -18,6 +18,7 @@ interface BlogPost {
 }
 
 export default function AdminBlogPage() {
+  const token = typeof window !== "undefined" ? localStorage.getItem("admin_token") : "";
   const [posts, setPosts] = useState<BlogPost[]>([]);
   const [loading, setLoading] = useState(true);
   const [title, setTitle] = useState('');
@@ -98,7 +99,7 @@ export default function AdminBlogPage() {
       if (editingId) {
         await fetch('/api/admin/blog/' + editingId, {
           method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
+          headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
           body: JSON.stringify({ title, content, image, tags, phone, email }),
         });
       } else {
@@ -119,7 +120,7 @@ export default function AdminBlogPage() {
   const handleDelete = async (id: string) => {
     if (!confirm('Delete this post?')) return;
     try {
-      await fetch('/api/admin/blog/' + id, { method: 'DELETE' });
+      await fetch('/api/admin/blog/' + id, { method: 'DELETE', headers: { Authorization: `Bearer ${token}` } });
       fetchPosts();
     } catch (err) { console.error(err); }
   };
