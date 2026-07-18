@@ -108,7 +108,7 @@ export default function AdminMingalarPage() {
       try {
         await fetch(API_BASE + "/admin/mingalar", {
           method: "POST",
-          headers: { "Content-Type": "application/json", Authorization: "***" + token },
+          headers: { "Content-Type": "application/json", Authorization: "Bearer " + token },
           body: JSON.stringify(d),
         });
       } catch {}
@@ -119,7 +119,7 @@ export default function AdminMingalarPage() {
     const token = getToken();
     try {
       const res = await fetch(API_BASE + "/admin/mingalar", {
-        headers: { Authorization: "***" + token },
+        headers: { Authorization: "Bearer " + token },
       });
       if (res.ok) {
         const data = await res.json();
@@ -127,7 +127,7 @@ export default function AdminMingalarPage() {
         if (list.length === 0) {
           await seedDefaults(token);
           const res2 = await fetch(API_BASE + "/admin/mingalar", {
-            headers: { Authorization: "***" + token },
+            headers: { Authorization: "Bearer " + token },
           });
           if (res2.ok) {
             const data2 = await res2.json();
@@ -160,7 +160,7 @@ export default function AdminMingalarPage() {
       const method = editing?._id || editing?.id ? "PUT" : "POST";
       const res = await fetch(url, {
         method,
-        headers: { "Content-Type": "application/json", Authorization: "***" + token },
+        headers: { "Content-Type": "application/json", Authorization: "Bearer " + token },
         body: JSON.stringify(form),
       });
       if (res.ok) {
@@ -187,7 +187,7 @@ export default function AdminMingalarPage() {
     try {
       const res = await fetch(API_BASE + "/admin/mingalar/" + (item._id || item.id), {
         method: "DELETE",
-        headers: { Authorization: "***" + token },
+        headers: { Authorization: "Bearer " + token },
       });
       if (res.ok) {
         toast.success("Deleted");
