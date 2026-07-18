@@ -49,9 +49,9 @@ export async function POST(request: NextRequest) {
 // ── Full default site config ────────────────────────────────
 const defaultConfig = {
   id: "site-config",
-  siteName: "𝐈𝟣 𝐆𝐥𝐨𝐛𝐚𝐥 𝐓𝐫𝐚𝐯𝐞𝐥𝐬 & 𝐓𝐨𝐮𝐫𝐬",
+  siteName: "𝐀𝟗 𝐆𝐥𝐨𝐛𝐚𝐥 𝐓𝐫𝐚𝐯𝐞𝐥𝐬 & 𝐓𝐨𝐮𝐫𝐬",
   logoUrl: "/logo.jpeg",
-  metaTitle: "𝐈𝟣 𝐆𝐥𝐨𝐛𝐚𝐥 𝐓𝐫𝐚𝐯𝐞𝐥𝐬 & 𝐓𝐨𝐮𝐫𝐬 | Luxury Travel Myanmar",
+  metaTitle: "𝐀𝟗 𝐆𝐥𝐨𝐛𝐚𝐥 𝐓𝐫𝐚𝐯𝐞𝐥𝐬 & 𝐓𝐨𝐮𝐫𝐬 | Luxury Travel Myanmar",
   metaDescription: "Premium travel experiences in Myanmar.",
   footerCopyright: "© 2026 𝐀𝟗 𝐆𝐥𝐨𝐛𝐚𝐥 Travels & Tours. All rights reserved.",
 
