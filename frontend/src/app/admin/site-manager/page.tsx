@@ -37,6 +37,8 @@ interface SiteConfig {
 }
 
 const API = "/api/admin/site-config";
+  const token = typeof window !== "undefined" ? localStorage.getItem("admin_token") : "";
+  
 
 const defaultFaqs: FaqItem[] = [
   { id: "1", question: "How do I book a tour?", answer: "Simply browse our Tours page, select your preferred tour, click 'Book Now', fill in your details and submit. Our team will contact you within 24 hours to confirm your booking." },
@@ -148,7 +150,7 @@ export default function SiteManagerPage() {
   const handleSave = async () => {
     setSaving(true);
     try {
-      const r = await fetch(API, { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ ...cfg, id: "site-config" }) });
+      const r = await fetch(API, { method: "PUT", headers: { "Content-Type": "application/json", Authorization: "Bearer " + token }, body: JSON.stringify({ ...cfg, id: "site-config" }) });
       if (r.ok) showToast("Changes saved and live!"); else showToast("Save failed", "error");
     } catch { showToast("Network error", "error"); }
     setSaving(false);
