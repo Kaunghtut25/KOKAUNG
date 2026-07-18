@@ -46,6 +46,8 @@ const emptyCar: Car = {
 };
 
 export default function AdminCarsPage() {
+  const token =
+    typeof window !== "undefined" ? localStorage.getItem("admin_token") : "";
   const [cars, setCars] = useState<Car[]>([]);
   const [loading, setLoading] = useState(true);
   const [modalOpen, setModalOpen] = useState(false);
@@ -145,7 +147,7 @@ export default function AdminCarsPage() {
     const formData = new FormData();
     formData.append("file", file);
     try {
-      const res = await fetch("/api/upload", { method: "POST", body: formData });
+      const res = await fetch("/api/upload", { method: "POST", headers: { Authorization: `Bearer ${token}` }, body: formData });
       const data = await res.json();
       if (data.success && data.uploads?.[0]) {
         const newUrl = `/api/upload?id=${data.uploads[0].id}`;

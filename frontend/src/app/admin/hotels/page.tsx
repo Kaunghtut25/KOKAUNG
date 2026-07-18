@@ -62,6 +62,8 @@ const emptyHotel: Hotel = {
 };
 
 export default function AdminHotelsPage() {
+  const token =
+    typeof window !== "undefined" ? localStorage.getItem("admin_token") : "";
   const [hotels, setHotels] = useState<Hotel[]>([]);
   const [loading, setLoading] = useState(true);
   const [modalOpen, setModalOpen] = useState(false);
@@ -158,7 +160,7 @@ export default function AdminHotelsPage() {
     const formData = new FormData();
     formData.append("file", file);
     try {
-      const res = await fetch("/api/upload", { method: "POST", body: formData });
+      const res = await fetch("/api/upload", { method: "POST", headers: { Authorization: `Bearer ${token}` }, body: formData });
       const data = await res.json();
       if (data.success && data.uploads?.[0]) {
         const newUrl = `/api/upload?id=${data.uploads[0].id}`;
