@@ -37,7 +37,7 @@ export default function ToursClient(props) {
   const [maxPrice, setMaxPrice] = useState('');
   const [durationFilter, setDurationFilter] = useState('');
   const [sort, setSort] = useState('');
-  useEffect(() => { fetch("/api/admin/settings").then(r => r.json()).then(d => { if (d?.heroImages?.tours) setHeroImage(d.heroImages.tours); }).catch(() => {}); }, []);
+  useEffect(() => { fetch("/api/admin/site-config").then(r => r.json()).then(d => { if (d?.heroImages?.tours) setHeroImage(d.heroImages.tours); }).catch(() => {}); }, []);
 
   useEffect(() => {
     fetch('/api/tours?page=1&limit=50').then(r => r.json()).then(data => {

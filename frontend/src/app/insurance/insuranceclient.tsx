@@ -124,12 +124,14 @@ interface InsuranceClientProps {
 }
 
 export default function InsuranceClient({ initialPlans }: InsuranceClientProps) {
+  const [heroImage, setHeroImage] = useState("/images_v2/ins1-v3.jpg");
   const [layout, setLayout] = useState({ desktop: 3, tablet: 2, mobile: 1 });
   useEffect(() => {
     fetch("/api/admin/site-config")
       .then(r => r.json())
       .then(d => {
         if (d?.sectionLayouts?.insurance) setLayout(d.sectionLayouts.insurance);
+        if (d?.heroImages?.insurance) setHeroImage(d.heroImages.insurance);
       })
       .catch(() => {});
   }, []);
@@ -159,7 +161,7 @@ export default function InsuranceClient({ initialPlans }: InsuranceClientProps) 
   return (
     <div className="min-h-screen bg-gray-50">
 <section className="relative w-full h-64 sm:h-80 overflow-hidden">
-        <img src="/images_v2/ins1-v3.jpg" alt="Insurance" className="w-full h-full object-cover" />
+        <img src={heroImage} alt="Insurance" className="w-full h-full object-cover" onError={(e) => { (e.target as HTMLImageElement).src = "/images_v2/ins1-v3.jpg"; }} />
         <div className="absolute inset-0 bg-gradient-to-b from-[#0A1628]/70 to-[#0A1628]/40" />
         <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4">
           <h1 className="text-3xl sm:text-4xl font-bold text-white mb-2" style={{ fontFamily: "'Playfair Display', serif" }}>Travel Insurance</h1>

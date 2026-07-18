@@ -64,6 +64,25 @@ const defaultConfig = {
   heroHeightMobile: 340,
   heroHeightDesktop: 460,
 
+  // Hero Images (per-page hero banners)
+  heroImages: {
+    about: "/images_v2/about-hero-v2.jpg",
+    mingalar: "/images_v2/sky1-v3.jpg",
+    blog: "/images_v2/hero-blog-v2.jpg",
+    contact: "/images_v2/hero-book-now-v2.jpg",
+    faq: "/images_v2/hero-bagan-v2.jpg",
+    terms: "/images_v2/hero-bagan-v2.jpg",
+    privacy: "/images_v2/hero-bagan-v2.jpg",
+    bookNow: "/images_v2/hero-book-now-v2.jpg",
+    flights: "/images_v2/hero-book-now-v2.jpg",
+    cruises: "/images_v2/cruise1-v2.jpg",
+    cars: "/images_v2/hero-cars-v2.jpg",
+    hotels: "/images_v2/hero-hotels-v2.jpg",
+    tours: "/images_v2/hero-tours-v2.jpg",
+    insurance: "/images_v2/ins1-v3.jpg",
+    visas: "/images_v2/visa1-v3.jpg",
+  },
+
   // Service Icons Bar
   serviceIcons: [
     { label: "Flights", icon: "✈️", href: "/", enabled: true },

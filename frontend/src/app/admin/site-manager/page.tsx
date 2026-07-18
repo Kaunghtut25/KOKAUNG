@@ -35,6 +35,7 @@ interface SiteConfig {
   sectionLayouts?: Record<string, SectionLayout>;
   sectionRows?: Record<string, string[]>;
 }
+  heroImages?: Record<string, string>;
 
 const API = "/api/admin/site-config";
   const token = typeof window !== "undefined" ? localStorage.getItem("admin_token") : "";
@@ -91,6 +92,23 @@ const defaultCfg: SiteConfig = {
     insurance: { desktop: 3, tablet: 2, mobile: 1 },
     skyLounge: { desktop: 3, tablet: 2, mobile: 1 },
   },
+  heroImages: {
+    about: "/images_v2/about-hero-v2.jpg",
+    mingalar: "/images_v2/sky1-v3.jpg",
+    blog: "/images_v2/hero-blog-v2.jpg",
+    contact: "/images_v2/hero-book-now-v2.jpg",
+    faq: "/images_v2/hero-bagan-v2.jpg",
+    terms: "/images_v2/hero-bagan-v2.jpg",
+    privacy: "/images_v2/hero-bagan-v2.jpg",
+    bookNow: "/images_v2/hero-book-now-v2.jpg",
+    flights: "/images_v2/hero-book-now-v2.jpg",
+    cruises: "/images_v2/cruise1-v2.jpg",
+    cars: "/images_v2/hero-cars-v2.jpg",
+    hotels: "/images_v2/hero-hotels-v2.jpg",
+    tours: "/images_v2/hero-tours-v2.jpg",
+    insurance: "/images_v2/ins1-v3.jpg",
+    visas: "/images_v2/visa1-v3.jpg",
+  },
   sectionRows: {
     hotels: ["Featured Hotels", "Budget Friendly", "Popular Hotels", "Row 4", "Row 5"],
     tours: ["Featured Tours", "Popular Destinations", "Adventure", "Row 4", "Row 5"],
@@ -98,7 +116,7 @@ const defaultCfg: SiteConfig = {
   },
 };
 
-type Tab = "layout" | "rows" | "faq" | "terms" | "privacy" | "hero" | "services" | "nav" | "stats" | "why" | "destinations" | "cta" | "contact" | "social" | "footer" | "meta";
+type Tab = "layout" | "rows" | "faq" | "terms" | "privacy" | "hero" | "heroImages" | "services" | "nav" | "stats" | "why" | "destinations" | "cta" | "contact" | "social" | "footer" | "meta";
 
 export default function SiteManagerPage() {
   const [cfg, setCfg] = useState(defaultCfg);
@@ -230,7 +248,8 @@ const tabs: { key: Tab; label: string }[] = [
   { key: "faq", label: "FAQ" },
   { key: "terms", label: "Terms" },
   { key: "privacy", label: "Privacy" },
-    { key: "hero", label: "Hero Slides" }, { key: "services", label: "Service Icons" },
+    { key: "hero", label: "Hero Slides" },
+    { key: "heroImages", label: "Hero Images" }, { key: "services", label: "Service Icons" },
     { key: "nav", label: "Nav Links" }, { key: "stats", label: "Stats Cards" },
     { key: "why", label: "Why Choose Us" }, { key: "destinations", label: "Destinations" },
     { key: "cta", label: "CTA Section" }, { key: "contact", label: "Contact Info" },
@@ -308,6 +327,59 @@ const tabs: { key: Tab; label: string }[] = [
                 </div>
               ))}
               <button onClick={() => set("heroSlides", [...cfg.heroSlides, { image: "", label: "", title: "", subtitle: "" }])} className="px-4 py-2 bg-gray-100 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-200">+ Add Slide</button>
+
+          {tab === "heroImages" && (
+            <div className="space-y-6">
+              <h2 className="text-lg font-bold text-[#0A1628]">Hero Images (Per-Page Banners)</h2>
+              <p className="text-sm text-gray-500">Set the hero banner image for each public page. Used by About, Sky Lounge, Blog, Contact, FAQ, Terms, Privacy, Book Now, Flights, Cruises, Cars, Hotels, Tours, Insurance, and Visas.</p>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {[
+                  { key: "about", label: "About Page" },
+                  { key: "mingalar", label: "Sky Lounge (Mingalar)" },
+                  { key: "blog", label: "Blog" },
+                  { key: "contact", label: "Contact" },
+                  { key: "faq", label: "FAQ" },
+                  { key: "terms", label: "Terms & Conditions" },
+                  { key: "privacy", label: "Privacy Policy" },
+                  { key: "bookNow", label: "Book Now" },
+                  { key: "flights", label: "Flights" },
+                  { key: "cruises", label: "Cruises" },
+                  { key: "cars", label: "Cars" },
+                  { key: "hotels", label: "Hotels" },
+                  { key: "tours", label: "Tours" },
+                  { key: "insurance", label: "Insurance" },
+                  { key: "visas", label: "Visas" },
+                ].map(({ key, label }) => (
+                  <div key={key} className="border border-gray-200 rounded-lg p-4 space-y-3">
+                    <h3 className="font-medium text-[#0A1628]">{label}</h3>
+                    <ImageZone field="heroImages" index={undefined} label={`${label} Hero Image`} />
+                    <input
+                      type="text"
+                      placeholder="Or paste image URL"
+                      className={inputCls}
+                      value={(cfg.heroImages && cfg.heroImages[key]) || ""}
+                      onChange={(e) => {
+                        setCfg((p) => ({
+                          ...p,
+                          heroImages: { ...(p.heroImages || {}), [key]: e.target.value },
+                        }));
+                      }}
+                    />
+                    {(cfg.heroImages && cfg.heroImages[key]) && (
+                      <img
+                        src={cfg.heroImages[key]}
+                        alt={`${label} preview`}
+                        className="w-full h-32 object-cover rounded-lg"
+                        onError={(e) => {
+                          (e.target as HTMLImageElement).style.display = "none";
+                        }}
+                      />
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
             </div>
           )}
 
@@ -531,7 +603,24 @@ const tabs: { key: Tab; label: string }[] = [
                             newTitles[i] = e.target.value;
                             setCfg(p => ({
                               ...p,
-                              sectionRows: { ...p.sectionRows, [sk.key]: newTitles }
+                              heroImages: {
+    about: "/images_v2/about-hero-v2.jpg",
+    mingalar: "/images_v2/sky1-v3.jpg",
+    blog: "/images_v2/hero-blog-v2.jpg",
+    contact: "/images_v2/hero-book-now-v2.jpg",
+    faq: "/images_v2/hero-bagan-v2.jpg",
+    terms: "/images_v2/hero-bagan-v2.jpg",
+    privacy: "/images_v2/hero-bagan-v2.jpg",
+    bookNow: "/images_v2/hero-book-now-v2.jpg",
+    flights: "/images_v2/hero-book-now-v2.jpg",
+    cruises: "/images_v2/cruise1-v2.jpg",
+    cars: "/images_v2/hero-cars-v2.jpg",
+    hotels: "/images_v2/hero-hotels-v2.jpg",
+    tours: "/images_v2/hero-tours-v2.jpg",
+    insurance: "/images_v2/ins1-v3.jpg",
+    visas: "/images_v2/visa1-v3.jpg",
+  },
+  sectionRows: { ...p.sectionRows, [sk.key]: newTitles }
                             }));
                           }}
                         />

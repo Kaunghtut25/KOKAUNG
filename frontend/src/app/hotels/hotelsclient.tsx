@@ -58,7 +58,7 @@ export default function HotelsClient({ initialHotels }: HotelsClientProps) {
   const [maxPrice, setMaxPrice] = useState('');
   const [sort, setSort] = useState('');
 
-  useEffect(() => { fetch("/api/admin/settings").then(r => r.json()).then(d => { if (d?.heroImages?.hotels) setHeroImage(d.heroImages.hotels); }).catch(() => {}); }, []);
+  useEffect(() => { fetch("/api/admin/site-config").then(r => r.json()).then(d => { if (d?.heroImages?.hotels) setHeroImage(d.heroImages.hotels); }).catch(() => {}); }, []);
 
   const handleFilterChange = (setter: React.Dispatch<React.SetStateAction<string>>, value: string) => {
     setter(value);

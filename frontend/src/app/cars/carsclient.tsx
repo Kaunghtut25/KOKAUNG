@@ -54,7 +54,7 @@ export default function CarsClient({ initialCars }: CarsClientProps) {
   }, []);
   const [carType, setCarType] = useState('All');
   const [sort, setSort] = useState('');
-  useEffect(() => { fetch("/api/admin/settings").then(r => r.json()).then(d => { if (d?.heroImages?.cars) setHeroImage(d.heroImages.cars); }).catch(() => {}); }, []);
+  useEffect(() => { fetch("/api/admin/site-config").then(r => r.json()).then(d => { if (d?.heroImages?.cars) setHeroImage(d.heroImages.cars); }).catch(() => {}); }, []);
 
   // Apply sort
   const sortedCars = [...initialCars].sort((a, b) => {

@@ -133,12 +133,13 @@ interface VisasClientProps {
 }
 
 export default function VisasClient({ initialVisas }: VisasClientProps) {
+  const [heroImage, setHeroImage] = useState("/images_v2/visa1-v3.jpg");
   const [layout, setLayout] = useState({ desktop: 4, tablet: 3, mobile: 2 });
   useEffect(() => {
     fetch("/api/admin/site-config")
       .then(r => r.json())
       .then(d => {
-        if (d?.sectionLayouts?.visas) setLayout(d.sectionLayouts.visas);
+        if (d?.sectionLayouts?.visas) setLayout(d.sectionLayouts.visas);`r`n        if (d?.heroImages?.visas) setHeroImage(d.heroImages.visas);
       })
       .catch(() => {});
   }, []);
@@ -178,7 +179,7 @@ export default function VisasClient({ initialVisas }: VisasClientProps) {
   return (
     <div className="min-h-screen bg-gray-50">
 <section className="relative w-full h-64 sm:h-80 overflow-hidden">
-        <img src="/images_v2/visa1-v3.jpg" alt="Visa Services" className="w-full h-full object-cover" />
+        <img src={heroImage} alt="Visa Services" className="w-full h-full object-cover" onError={(e) => { (e.target as HTMLImageElement).src = "/images_v2/visa1-v3.jpg"; }} />
         <div className="absolute inset-0 bg-gradient-to-b from-[#0A1628]/70 to-[#0A1628]/40" />
         <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4 mb-8">
           <h1 className="text-3xl sm:text-4xl font-bold text-white mb-2" style={{ fontFamily: "'Playfair Display', serif" }}>Visa Services</h1>
