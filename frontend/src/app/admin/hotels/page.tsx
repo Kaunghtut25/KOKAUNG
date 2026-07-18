@@ -62,8 +62,6 @@ const emptyHotel: Hotel = {
 };
 
 export default function AdminHotelsPage() {
-  const token =
-    typeof window !== "undefined" ? localStorage.getItem("admin_token") : "";
   const [hotels, setHotels] = useState<Hotel[]>([]);
   const [loading, setLoading] = useState(true);
   const [modalOpen, setModalOpen] = useState(false);

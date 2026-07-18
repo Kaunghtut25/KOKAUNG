@@ -139,7 +139,7 @@ export default function VisasClient({ initialVisas }: VisasClientProps) {
     fetch("/api/admin/site-config")
       .then(r => r.json())
       .then(d => {
-        if (d?.sectionLayouts?.visas) setLayout(d.sectionLayouts.visas);`r`n        if (d?.heroImages?.visas) setHeroImage(d.heroImages.visas);
+        if (d?.sectionLayouts?.visas) setLayout(d.sectionLayouts.visas);        if (d?.heroImages?.visas) setHeroImage(d.heroImages.visas);
       })
       .catch(() => {});
   }, []);

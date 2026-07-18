@@ -34,8 +34,8 @@ interface SiteConfig {
   contact: ContactInfo; socialLinks: SocialLink[]; footerSections: FooterSection[];
   sectionLayouts?: Record<string, SectionLayout>;
   sectionRows?: Record<string, string[]>;
-}
   heroImages?: Record<string, string>;
+}
 
 const API = "/api/admin/site-config";
   const token = typeof window !== "undefined" ? localStorage.getItem("admin_token") : "";

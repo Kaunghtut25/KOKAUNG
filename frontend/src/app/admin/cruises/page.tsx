@@ -47,8 +47,6 @@ const emptyCruise: cruise = {
 };
 
 export default function AdminCruisesPage() {
-  const token =
-    typeof window !== "undefined" ? localStorage.getItem("admin_token") : "";
   const [cruises, setCruises] = useState<cruise[]>([]);
   const [loading, setLoading] = useState(true);
   const [modalOpen, setModalOpen] = useState(false);

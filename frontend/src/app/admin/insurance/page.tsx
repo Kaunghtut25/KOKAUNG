@@ -40,8 +40,6 @@ const emptyInsurance: Insurance = {
 };
 
 export default function AdminInsurancePage() {
-  const token =
-    typeof window !== "undefined" ? localStorage.getItem("admin_token") : "";
   const [insurances, setInsurances] = useState<Insurance[]>([]);
   const [loading, setLoading] = useState(true);
   const [modalOpen, setModalOpen] = useState(false);

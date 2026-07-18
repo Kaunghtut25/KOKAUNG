@@ -46,8 +46,6 @@ const emptyCar: Car = {
 };
 
 export default function AdminCarsPage() {
-  const token =
-    typeof window !== "undefined" ? localStorage.getItem("admin_token") : "";
   const [cars, setCars] = useState<Car[]>([]);
   const [loading, setLoading] = useState(true);
   const [modalOpen, setModalOpen] = useState(false);

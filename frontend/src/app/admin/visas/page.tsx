@@ -38,8 +38,6 @@ const emptyVisa: Visa = {
 };
 
 export default function AdminVisasPage() {
-  const token =
-    typeof window !== "undefined" ? localStorage.getItem("admin_token") : "";
   const [visas, setVisas] = useState<Visa[]>([]);
   const [loading, setLoading] = useState(true);
   const [modalOpen, setModalOpen] = useState(false);
