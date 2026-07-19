@@ -119,7 +119,7 @@ export default function CruisesClient({ initialCruises }: { initialCruises: Crui
   const router = useRouter();
   const cruises = initialCruises.length > 0 ? initialCruises : FALLBACK_CRUISES;
   const [currency, setCurrency] = useState<'MMK' | 'USD'>('MMK');
-  useEffect(() => { fetch("/api/admin/settings").then(r => r.json()).then(d => { if (d?.heroImages?.cruises) setHeroImage(d.heroImages.cruises); }).catch(() => {}); }, []);
+  useEffect(() => { fetch("/api/admin/site-config").then(r => r.json()).then(d => { if (d?.heroImages?.cruises) setHeroImage(d.heroImages.cruises); }).catch(() => {}); }, []);
 
   return (
     <main className="min-h-screen bg-white">

@@ -177,12 +177,12 @@ export default function VisasClient({ initialVisas }: VisasClientProps) {
 
 
   return (
-    <div className="min-h-screen bg-gray-50">
-<section className="relative w-full h-64 sm:h-80 overflow-hidden">
+    <div className="min-h-screen bg-[#0A1628]">
+<section className="relative w-full h-[400px] md:h-[500px] overflow-hidden">
         <img src={heroImage} alt="Visa Services" className="w-full h-full object-cover" onError={(e) => { (e.target as HTMLImageElement).src = "/images_v2/visa1-v3.jpg"; }} />
         <div className="absolute inset-0 bg-gradient-to-b from-[#0A1628]/70 to-[#0A1628]/40" />
         <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4 mb-8">
-          <h1 className="text-3xl sm:text-4xl font-bold text-white mb-2" style={{ fontFamily: "'Playfair Display', serif" }}>Visa Services</h1>
+          <h1 className="text-4xl md:text-6xl font-bold text-white mb-2" style={{ fontFamily: "'Playfair Display', serif" }}>Visa Services</h1>
           <p className="text-white/70 max-w-xl text-xs sm:text-sm">Hassle-free visa processing for destinations worldwide</p>
           <div className="flex gap-2 mt-3">
             <button onClick={() => setCurrency('MMK')} className={`px-3 py-1 rounded-full text-[11px] font-semibold transition-all ${currency==='MMK'?'bg-gold text-white':'bg-white/20 text-white/70'}`}>🇲🇲 MMK</button>

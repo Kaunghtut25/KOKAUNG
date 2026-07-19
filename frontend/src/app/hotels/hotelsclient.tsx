@@ -1,5 +1,15 @@
 'use client';
 
+  const [heroImage, setHeroImage] = useState("/images_v2/hero-hotels-v2.jpg");
+  useEffect(() => {
+    fetch("/api/admin/site-config")
+      .then(r => r.json())
+      .then(d => {
+        if (d?.heroImages?.hotels) setHeroImage(d.heroImages.hotels);
+      })
+      .catch(() => {});
+  }, []);
+  
 import React, { useState, useEffect } from 'react';
 import { Hotel } from '@/lib/api';
 import HotelCard from '@/components/HotelCard';
@@ -80,7 +90,22 @@ export default function HotelsClient({ initialHotels }: HotelsClientProps) {
   }
 
   return (
-    <main className="min-h-screen bg-white">
+    <main className="min-h-screen bg-[#0A1628]">
+      {/* Hero */}
+      <section className="relative h-[400px] md:h-[500px] w-full overflow-hidden">
+        <img
+          src={heroImage}
+          alt="Our Hotels"
+          className="w-full h-full object-cover"
+          onError={(e) => { (e.target as HTMLImageElement).src = "/images_v2/hero-hotels-v2.jpg"; }}
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#0A1628]/90 via-[#0A1628]/40 to-[#0A1628]/30" />
+        <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4">
+          <h1 className="text-4xl md:text-6xl font-bold text-white mb-4 drop-shadow-lg" style={{ fontFamily: "'Playfair Display', serif" }}>Our Hotels</h1>
+          <p className="text-white/80 max-w-xl text-lg">Stay in handpicked accommodations</p>
+        </div>
+      </section>
+
 <section className="relative pt-24 pb-12 px-4 overflow-hidden">
         <div className="absolute inset-0">
           <img src={heroImage} alt="A9 Global Hotels" className="w-full h-full object-cover" onError={(e) => { (e.target as HTMLImageElement).src = "/images_v2/hero-hotels-v2.jpg"; }} />
