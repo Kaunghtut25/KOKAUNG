@@ -19,6 +19,17 @@ export default async function MingalarDetailPage({ params }: PageProps) {
 
   return (
     <main style={{ minHeight: '100vh', background: '#f8f9fa' }}>
+      {/* Back Button */}
+      <button
+        onClick={() => router.back()}
+        className="absolute top-4 left-4 z-30 flex items-center gap-1.5 px-3 py-2 rounded-full bg-white/90 backdrop-blur-sm border border-gray-200 shadow-md hover:shadow-lg hover:bg-white transition-all duration-200 text-gray-700 hover:text-[#D4AF37] text-sm font-medium"
+      >
+        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+        </svg>
+        Back
+      </button>
+
       <section style={{ position: 'relative', height: 400, overflow: 'hidden' }}>
         <Image src={displayImage} alt={title} width={1200} height={630} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
         <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(10,22,40,0.9), rgba(10,22,40,0.3))' }} />

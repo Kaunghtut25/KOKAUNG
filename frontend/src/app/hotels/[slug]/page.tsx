@@ -152,6 +152,17 @@ export default async function HotelDetailPage({ params }: { params: Promise<{ sl
 
   return (
     <main className="min-h-screen bg-white">
+      {/* Back Button */}
+      <button
+        onClick={() => router.back()}
+        className="absolute top-4 left-4 z-30 flex items-center gap-1.5 px-3 py-2 rounded-full bg-white/90 backdrop-blur-sm border border-gray-200 shadow-md hover:shadow-lg hover:bg-white transition-all duration-200 text-gray-700 hover:text-[#D4AF37] text-sm font-medium"
+      >
+        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+        </svg>
+        Back
+      </button>
+
       <section className="relative w-full h-[50vh] md:h-[60vh] overflow-hidden">
         <Image src={heroImage} alt={hotel.name} width={1200} height={630} className="w-full h-full object-cover" />
         <div className="absolute inset-0 bg-gradient-to-t from-[#0A1628] via-[#0A1628]/40 to-transparent" />

@@ -65,6 +65,17 @@ export default function BlogDetailPage() {
   if (!post) {
     return (
       <main className="min-h-screen bg-white pt-24 text-center">
+      {/* Back Button */}
+      <button
+        onClick={() => router.back()}
+        className="absolute top-4 left-4 z-30 flex items-center gap-1.5 px-3 py-2 rounded-full bg-white/90 backdrop-blur-sm border border-gray-200 shadow-md hover:shadow-lg hover:bg-white transition-all duration-200 text-gray-700 hover:text-[#D4AF37] text-sm font-medium"
+      >
+        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+        </svg>
+        Back
+      </button>
+
         <h1 className="text-4xl font-bold text-[#0A1628] mb-4">Post Not Found</h1>
         <p className="text-gray-600 mb-8">The blog post you are looking for does not exist.</p>
         <Link href="/blog" className="text-[#D4AF37] font-semibold hover:underline">← Back to Blog</Link>
