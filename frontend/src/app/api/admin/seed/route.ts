@@ -1,6 +1,6 @@
 export const dynamic = 'force-dynamic';
 
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { getAll, create } from '@/lib/persistentStore';
 
 // ═══════════════════════════════════════════════════════════════════════
@@ -148,12 +148,15 @@ const COLLECTIONS = [
   "tours", "hotels", "cars", "visas", "insurances", "cruises", "mingalar", "blog",
 ] as const;
 
-export async function GET() {
+export async function GET(request: NextRequest) {
+  const { searchParams } = new URL(request.url);
+  const reset = searchParams.get("reset") === "true";
+
   const results: Record<string, number> = {};
 
   for (const collection of COLLECTIONS) {
-    const existing = await getAll(collection as any);
-    if (!existing || existing.length === 0) {
+    const existing = reset ? [] : await getAll(collection as any);
+    if (reset || !existing || existing.length === 0) {
       const items = SEED[collection];
       for (const item of items) {
         await create(collection as any, item);
