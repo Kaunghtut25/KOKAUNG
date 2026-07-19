@@ -13,7 +13,7 @@ const apiClient: AxiosInstance = axios.create({
 apiClient.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
     if (typeof window !== 'undefined') {
-      const token = localStorage.getItem('a9token');
+      const token = localStorage.getItem('a9token') || localStorage.getItem('admin_token');
       if (token && config.headers) {
         config.headers.Authorization = `Bearer ${token}`;
       }
@@ -34,7 +34,7 @@ apiClient.interceptors.response.use(
       const path = window.location.pathname;
       const isPublicPage = path.startsWith('/tours') || path.startsWith('/hotels') || path.startsWith('/cars') || path.startsWith('/insurance') || path.startsWith('/visas') || path.startsWith('/cruises') || path === '/';
       if (!path.includes('/auth/login') && !path.includes('/auth/register') && !isPublicPage) {
-        localStorage.removeItem('a9token');
+        localStorage.removeItem('a9token'); localStorage.removeItem('admin_token');
         window.location.href = '/auth/login';
       }
     }
