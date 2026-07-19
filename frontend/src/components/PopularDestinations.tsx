@@ -6,6 +6,15 @@ import ScrollingRow from "./ScrollingRow";
 
 const FALLBACK_IMG = "/images_v2/cta-bg-v2.jpg";
 
+const FALLBACK_DESTS = [
+  { city: "Paris", country: "France", image: "/images_v2/dest-paris-v2.jpg", minPrice: "Ks 850,000" },
+  { city: "Dubai", country: "UAE", image: "/images_v2/dest-dubai-v2.jpg", minPrice: "Ks 680,000" },
+  { city: "Korea", country: "South Korea", image: "/images_v2/dest-korea-v2.jpg", minPrice: "Ks 550,000" },
+  { city: "Thailand", country: "Thailand", image: "/images_v2/hero-thailand-v2.jpg", minPrice: "Ks 150,000" },
+  { city: "Singapore", country: "Singapore", image: "/images_v2/hero-singapore-v2.jpg", minPrice: "Ks 250,000" },
+  { city: "Japan", country: "Japan", image: "/images_v2/dest-japan-v2.jpg", minPrice: "Ks 780,000" },
+];
+
 function DestinationCard({ dest }: { dest: { city: string; country: string; image: string; minPrice: string } }) {
   const [imgError, setImgError] = useState(false);
   const router = useRouter();
@@ -24,40 +33,27 @@ function DestinationCard({ dest }: { dest: { city: string; country: string; imag
 }
 
 export default function PopularDestinations() {
-  const [dests, setDests] = useState<any[]>([]);
+  const [dests, setDests] = useState<any[] | null>(null);
 
   useEffect(() => {
     fetch('/api/admin/site-config').then(r=>r.json()).then(d=>{
-      if (d?.popularDestinations?.length) setDests(d.popularDestinations);
-    }).catch(()=>{});
+      if (d?.popularDestinations?.length) {
+        setDests(d.popularDestinations);
+      } else {
+        setDests(FALLBACK_DESTS);
+      }
+    }).catch(()=>{ setDests(FALLBACK_DESTS); });
   }, []);
 
-  if (!dests.length) {
-    // Static fallback
-    const fallback = [
-      { city: "Paris", country: "France", image: "/images_v2/dest-paris-v2.jpg", minPrice: "Ks 850,000" },
-      { city: "Dubai", country: "UAE", image: "/images_v2/dest-dubai-v2.jpg", minPrice: "Ks 680,000" },
-      { city: "Korea", country: "South Korea", image: "/images_v2/dest-korea-v2.jpg", minPrice: "Ks 550,000" },
-      { city: "Thailand", country: "Thailand", image: "/images_v2/hero-thailand-v2.jpg", minPrice: "Ks 150,000" },
-      { city: "Singapore", country: "Singapore", image: "/images_v2/hero-singapore-v2.jpg", minPrice: "Ks 250,000" },
-      { city: "Japan", country: "Japan", image: "/images_v2/dest-japan-v2.jpg", minPrice: "Ks 780,000" },
-    ];
-    return (
-      <section className="max-w-7xl mx-auto px-4 py-12">
-        <div className="text-center mb-10"><h2 className="text-3xl md:text-4xl font-bold text-[#0A1628] mb-2" style={{fontFamily:"'Playfair Display', Georgia, serif"}}>Explore The World</h2><p className="text-gray-500">Popular Destinations</p></div>
-        <ScrollingRow>{fallback.map((d,i)=><DestinationCard key={i} dest={d} />)}</ScrollingRow>
-        <ScrollingRow>{fallback.slice(3).concat(fallback.slice(0,3)).map((d,i)=><DestinationCard key={"r2-"+i} dest={d} />)}</ScrollingRow>
-      </section>
-    );
-  }
+  // Loading state
+  if (dests === null) return null;
+
+  const displayDests = dests.length > 0 ? dests : FALLBACK_DESTS;
 
   return (
     <section className="max-w-7xl mx-auto px-4 py-12">
       <div className="text-center mb-10"><h2 className="text-3xl md:text-4xl font-bold text-[#0A1628] mb-2" style={{fontFamily:"'Playfair Display', Georgia, serif"}}>Explore The World</h2><p className="text-gray-500">Popular Destinations</p></div>
-      <ScrollingRow>{dests.map((d,i)=><DestinationCard key={i} dest={d} />)}</ScrollingRow>
-      {dests.length > 3 && (
-        <ScrollingRow className="mt-4">{[...dests.slice(3), ...dests.slice(0, Math.min(3, dests.length))].map((d,i)=><DestinationCard key={"r2-"+i} dest={d} />)}</ScrollingRow>
-      )}
+      <ScrollingRow>{displayDests.map((d,i)=><DestinationCard key={i} dest={d} />)}</ScrollingRow>
     </section>
   );
 }
