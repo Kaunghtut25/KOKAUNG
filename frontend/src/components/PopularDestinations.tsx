@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import ScrollingRow from "./ScrollingRow";
 
 const FALLBACK_IMG = "/images_v2/cta-bg-v2.jpg";
 
@@ -25,7 +24,7 @@ function DestinationCard({ dest }: { dest: { city: string; country: string; imag
       onClick={() => router.push("/destinations/" + encodeURIComponent(dest.city.toLowerCase().replace(/\s+/g, "-")))}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      className="flex-shrink-0 w-[280px] sm:w-[300px] snap-start cursor-pointer"
+      className="cursor-pointer w-full"
     >
       <div
         className={`relative rounded-2xl overflow-hidden bg-white h-full flex flex-col transition-all duration-500 ease-out ${
@@ -92,9 +91,9 @@ export default function PopularDestinations() {
         <p className="text-gray-500">Popular Destinations</p>
       </div>
       {dests.length > 0 ? (
-        <ScrollingRow>
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-5">
           {dests.map((d, i) => <DestinationCard key={i} dest={d} />)}
-        </ScrollingRow>
+        </div>
       ) : (
         <p className="text-center text-gray-400 py-8">No destinations yet. Add some from the admin panel!</p>
       )}
