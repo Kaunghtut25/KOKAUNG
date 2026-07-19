@@ -323,6 +323,8 @@ export default function AdminMingalarPage() {
                   </div>
                 )}
                 <div className="flex gap-2 mt-3">
+                  <Link href={`/mingalar/${item._id || item.id}`} target="_blank" rel="noopener noreferrer" className="text-xs px-3 py-1 bg-cyan-600 text-white rounded hover:bg-cyan-500 inline-block text-center">View</Link>
+
                   <button onClick={() => handleEdit(item)} className="text-xs px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-500">Edit</button>
                   <button onClick={() => handleDelete(item)} className="text-xs px-3 py-1 bg-red-600 text-white rounded hover:bg-red-500">Delete</button>
                 </div>

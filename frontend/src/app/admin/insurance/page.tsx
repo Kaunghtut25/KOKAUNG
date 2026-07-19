@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useState, useCallback } from "react";
+import Link from "next/link";
 import AdminFormModal from "@/components/AdminFormModal";
 
 interface Insurance {
@@ -449,6 +450,9 @@ export default function AdminInsurancePage() {
                     </td>
                     <td className="p-4">
                       <div className="flex items-center gap-2">
+                        <Link href={`/insurance/${insurance.id}`} target="_blank" rel="noopener noreferrer" className="px-3 py-1 rounded bg-blue-500/10 text-blue-400 text-xs hover:bg-blue-500/20 transition-colors">
+                          View
+                        </Link>
                         <button
                           onClick={() => openEditModal(insurance)}
                           className="px-3 py-1 rounded bg-gold/10 text-gold text-xs hover:bg-gold/20 transition-colors"
