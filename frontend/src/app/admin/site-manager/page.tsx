@@ -193,7 +193,7 @@ export default function SiteManagerPage() {
         <div
           onDrop={(e) => handleDrop(e, field, index, subKey)}
           onDragOver={(e) => e.preventDefault()}
-          className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center cursor-pointer hover:border-[#D4AF37] transition-colors"
+          className="border-2 border-dashed border-white/20 rounded-lg p-4 text-center cursor-pointer hover:border-[#D4AF37] transition-colors"
           onClick={() => fileInputRefs.current[`${field}_${index ?? ''}_${subKey ?? ''}`]?.click()}
         >
           <input
@@ -206,16 +206,16 @@ export default function SiteManagerPage() {
           {currentVal ? (
             <img src={currentVal} alt="Preview" className="mx-auto mt-2 w-full h-28 object-cover rounded" />
           ) : (
-            <p className="text-sm text-gray-500">Drag &amp; drop or click to upload</p>
+            <p className="text-sm text-white/40">Drag &amp; drop or click to upload</p>
           )}
           {uploading && <p className="text-xs text-[#D4AF37] mt-1">Uploading...</p>}
-          {uploadError && <p className="text-xs text-red-500 mt-1">{uploadError}</p>}
-          <p className="text-xs text-gray-400 mt-1">Recommended: 1200x630px (JPEG, max 2MB)</p>
+          {uploadError && <p className="text-xs text-red-400 mt-1">{uploadError}</p>}
+          <p className="text-xs text-white/30 mt-1">Recommended: 1200x630px (JPEG, max 2MB)</p>
         </div>
         <input
           type="text"
           placeholder="Or paste image URL (https://...)"
-          className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm mt-2"
+          className="w-full px-3 py-2 rounded-lg border border-white/10 text-sm mt-2"
           value={imageUrlInput || currentVal || ""}
           onChange={(e) => {
             setImageUrlInput(e.target.value);
@@ -267,7 +267,7 @@ const tabs: { key: Tab; label: string }[] = [
     { key: "meta", label: "Meta & SEO" },
   ];
 
-  const inputCls = "w-full px-3 py-2 rounded-lg border border-gray-200 text-sm";
+  const inputCls = "w-full px-3 py-2 rounded-lg border border-white/10 text-sm";
   const labelCls = "block text-sm font-medium text-white/70 mb-1";
 
   return (
@@ -277,7 +277,7 @@ const tabs: { key: Tab; label: string }[] = [
         <div className="flex items-center justify-between mb-6">
           <div>
             <h1 className="text-2xl font-bold text-white" style={{ fontFamily: "'Playfair Display', serif" }}>Site Manager</h1>
-            <p className="text-gray-500 text-sm">Control every section of your website</p>
+            <p className="text-white/40 text-sm">Control every section of your website</p>
           </div>
           <button
             onClick={handleSave}
@@ -300,7 +300,7 @@ const tabs: { key: Tab; label: string }[] = [
             <button
               key={t.key}
               onClick={() => setTab(t.key)}
-              className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${tab === t.key ? "bg-[#0A1628] text-white" : "text-gray-600 hover:bg-gray-100"}`}
+              className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${tab === t.key ? "bg-[#0A1628] text-white" : "text-white/50 hover:bg-white/10"}`}
             >
               {t.label}
             </button>
@@ -326,7 +326,7 @@ const tabs: { key: Tab; label: string }[] = [
                 <div key={i} className="border border-white/10 bg-white/5 text-white rounded-lg p-4 space-y-3">
                   <div className="flex items-center justify-between">
                     <h3 className="font-medium text-white">Slide {i + 1}</h3>
-                    <button onClick={() => set("heroSlides", cfg.heroSlides.filter((_, idx) => idx !== i))} className="text-red-500 text-sm">Delete</button>
+                    <button onClick={() => set("heroSlides", cfg.heroSlides.filter((_, idx) => idx !== i))} className="text-red-400 text-sm">Delete</button>
                   </div>
                   <ImageZone field="heroSlides" index={i} label="Slide Image" />
                   <div className="grid grid-cols-2 gap-3">
@@ -336,12 +336,12 @@ const tabs: { key: Tab; label: string }[] = [
                   <div><label className={labelCls}>Subtitle</label><input className={inputCls} value={slide.subtitle} onChange={e => { const a = [...cfg.heroSlides]; a[i] = { ...slide, subtitle: e.target.value }; set("heroSlides", a); }} /></div>
                 </div>
               ))}
-              <button onClick={() => set("heroSlides", [...cfg.heroSlides, { image: "", label: "", title: "", subtitle: "" }])} className="px-4 py-2 bg-gray-100 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-200">+ Add Slide</button>
+              <button onClick={() => set("heroSlides", [...cfg.heroSlides, { image: "", label: "", title: "", subtitle: "" }])} className="px-4 py-2 bg-white/10 rounded-lg text-sm font-medium text-white/50 hover:bg-white/20">+ Add Slide</button>
 
           {tab === "heroImages" && (
             <div className="space-y-6">
               <h2 className="text-lg font-bold text-white">Hero Images (Per-Page Banners)</h2>
-              <p className="text-sm text-gray-500">Set the hero banner image for each public page. Used by About, Sky Lounge, Blog, Contact, FAQ, Terms, Privacy, Book Now, Flights, Cruises, Cars, Hotels, Tours, Insurance, and Visas.</p>
+              <p className="text-sm text-white/40">Set the hero banner image for each public page. Used by About, Sky Lounge, Blog, Contact, FAQ, Terms, Privacy, Book Now, Flights, Cruises, Cars, Hotels, Tours, Insurance, and Visas.</p>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {[
                   { key: "about", label: "About Page" },
@@ -403,11 +403,11 @@ const tabs: { key: Tab; label: string }[] = [
                   <input className={inputCls} placeholder="Link" value={s.href} onChange={e => { const a = [...cfg.serviceIcons]; a[i] = { ...s, href: e.target.value }; set("serviceIcons", a); }} />
                   <div className="flex items-center gap-2">
                     <input type="checkbox" checked={s.enabled} onChange={e => { const a = [...cfg.serviceIcons]; a[i] = { ...s, enabled: e.target.checked }; set("serviceIcons", a); }} />
-                    <button onClick={() => set("serviceIcons", cfg.serviceIcons.filter((_, idx) => idx !== i))} className="text-red-500 text-sm">Delete</button>
+                    <button onClick={() => set("serviceIcons", cfg.serviceIcons.filter((_, idx) => idx !== i))} className="text-red-400 text-sm">Delete</button>
                   </div>
                 </div>
               ))}
-              <button onClick={() => set("serviceIcons", [...cfg.serviceIcons, { label: "", icon: "", href: "/", enabled: true }])} className="px-4 py-2 bg-gray-100 rounded-lg text-sm">+ Add</button>
+              <button onClick={() => set("serviceIcons", [...cfg.serviceIcons, { label: "", icon: "", href: "/", enabled: true }])} className="px-4 py-2 bg-white/10 rounded-lg text-sm">+ Add</button>
             </div>
           )}
 
@@ -418,10 +418,10 @@ const tabs: { key: Tab; label: string }[] = [
                 <div key={i} className="flex gap-3 items-center">
                   <input className={inputCls} placeholder="Label" value={n.label} onChange={e => { const a = [...cfg.navLinks]; a[i] = { ...n, label: e.target.value }; set("navLinks", a); }} />
                   <input className={inputCls} placeholder="URL" value={n.href} onChange={e => { const a = [...cfg.navLinks]; a[i] = { ...n, href: e.target.value }; set("navLinks", a); }} />
-                  <button onClick={() => set("navLinks", cfg.navLinks.filter((_, idx) => idx !== i))} className="text-red-500 text-sm">Delete</button>
+                  <button onClick={() => set("navLinks", cfg.navLinks.filter((_, idx) => idx !== i))} className="text-red-400 text-sm">Delete</button>
                 </div>
               ))}
-              <button onClick={() => set("navLinks", [...cfg.navLinks, { label: "", href: "/" }])} className="px-4 py-2 bg-gray-100 rounded-lg text-sm">+ Add</button>
+              <button onClick={() => set("navLinks", [...cfg.navLinks, { label: "", href: "/" }])} className="px-4 py-2 bg-white/10 rounded-lg text-sm">+ Add</button>
             </div>
           )}
 
@@ -430,7 +430,7 @@ const tabs: { key: Tab; label: string }[] = [
               <h2 className="text-lg font-bold text-white">Stats Cards</h2>
               {cfg.statsCards.map((s, i) => (
                 <div key={i} className="border border-white/10 bg-white/5 text-white rounded-lg p-4 space-y-3">
-                  <div className="flex justify-between"><h3 className="font-medium">Card {i + 1}</h3><button onClick={() => set("statsCards", cfg.statsCards.filter((_, idx) => idx !== i))} className="text-red-500 text-sm">Delete</button></div>
+                  <div className="flex justify-between"><h3 className="font-medium">Card {i + 1}</h3><button onClick={() => set("statsCards", cfg.statsCards.filter((_, idx) => idx !== i))} className="text-red-400 text-sm">Delete</button></div>
                   <div className="grid grid-cols-3 gap-3">
                     <input className={inputCls} placeholder="Icon" value={s.icon} onChange={e => { const a = [...cfg.statsCards]; a[i] = { ...s, icon: e.target.value }; set("statsCards", a); }} />
                     <input className={inputCls} placeholder="Title" value={s.title} onChange={e => { const a = [...cfg.statsCards]; a[i] = { ...s, title: e.target.value }; set("statsCards", a); }} />
@@ -439,7 +439,7 @@ const tabs: { key: Tab; label: string }[] = [
                   <ImageZone field="statsCards" index={i} label="Card Image" />
                 </div>
               ))}
-              <button onClick={() => set("statsCards", [...cfg.statsCards, { icon: "", title: "", description: "", imgSrc: "" }])} className="px-4 py-2 bg-gray-100 rounded-lg text-sm">+ Add</button>
+              <button onClick={() => set("statsCards", [...cfg.statsCards, { icon: "", title: "", description: "", imgSrc: "" }])} className="px-4 py-2 bg-white/10 rounded-lg text-sm">+ Add</button>
             </div>
           )}
 
@@ -451,10 +451,10 @@ const tabs: { key: Tab; label: string }[] = [
                   <input className={inputCls} placeholder="Icon" value={w.icon} onChange={e => { const a = [...cfg.whyChooseCards]; a[i] = { ...w, icon: e.target.value }; set("whyChooseCards", a); }} />
                   <input className={inputCls} placeholder="Title" value={w.title} onChange={e => { const a = [...cfg.whyChooseCards]; a[i] = { ...w, title: e.target.value }; set("whyChooseCards", a); }} />
                   <input className={inputCls} placeholder="Description" value={w.description} onChange={e => { const a = [...cfg.whyChooseCards]; a[i] = { ...w, description: e.target.value }; set("whyChooseCards", a); }} />
-                  <button onClick={() => set("whyChooseCards", cfg.whyChooseCards.filter((_, idx) => idx !== i))} className="text-red-500 text-sm col-span-3 text-right">Delete</button>
+                  <button onClick={() => set("whyChooseCards", cfg.whyChooseCards.filter((_, idx) => idx !== i))} className="text-red-400 text-sm col-span-3 text-right">Delete</button>
                 </div>
               ))}
-              <button onClick={() => set("whyChooseCards", [...cfg.whyChooseCards, { icon: "", title: "", description: "" }])} className="px-4 py-2 bg-gray-100 rounded-lg text-sm">+ Add</button>
+              <button onClick={() => set("whyChooseCards", [...cfg.whyChooseCards, { icon: "", title: "", description: "" }])} className="px-4 py-2 bg-white/10 rounded-lg text-sm">+ Add</button>
             </div>
           )}
 
@@ -463,7 +463,7 @@ const tabs: { key: Tab; label: string }[] = [
               <h2 className="text-lg font-bold text-white">Popular Destinations</h2>
               {cfg.popularDestinations.map((d, i) => (
                 <div key={i} className="border border-white/10 bg-white/5 text-white rounded-lg p-4 space-y-3">
-                  <div className="flex justify-between"><h3 className="font-medium">{d.city || `Destination ${i + 1}`}</h3><button onClick={() => set("popularDestinations", cfg.popularDestinations.filter((_, idx) => idx !== i))} className="text-red-500 text-sm">Delete</button></div>
+                  <div className="flex justify-between"><h3 className="font-medium">{d.city || `Destination ${i + 1}`}</h3><button onClick={() => set("popularDestinations", cfg.popularDestinations.filter((_, idx) => idx !== i))} className="text-red-400 text-sm">Delete</button></div>
                   <div className="grid grid-cols-3 gap-3">
                     <input className={inputCls} placeholder="City" value={d.city} onChange={e => { const a = [...cfg.popularDestinations]; a[i] = { ...d, city: e.target.value }; set("popularDestinations", a); }} />
                     <input className={inputCls} placeholder="Country" value={d.country} onChange={e => { const a = [...cfg.popularDestinations]; a[i] = { ...d, country: e.target.value }; set("popularDestinations", a); }} />
@@ -472,7 +472,7 @@ const tabs: { key: Tab; label: string }[] = [
                   <ImageZone field="popularDestinations" index={i} label="Destination Image" />
                 </div>
               ))}
-              <button onClick={() => set("popularDestinations", [...cfg.popularDestinations, { city: "", country: "", image: "", minPrice: "" }])} className="px-4 py-2 bg-gray-100 rounded-lg text-sm">+ Add</button>
+              <button onClick={() => set("popularDestinations", [...cfg.popularDestinations, { city: "", country: "", image: "", minPrice: "" }])} className="px-4 py-2 bg-white/10 rounded-lg text-sm">+ Add</button>
             </div>
           )}
 
@@ -491,7 +491,7 @@ const tabs: { key: Tab; label: string }[] = [
           {tab === "contact" && (
             <div className="space-y-4">
               <h2 className="text-lg font-bold text-white">Contact Information</h2>
-              <p className="text-sm text-gray-500">This controls phone/email/address shown on Contact page, Footer, and LiveChat widget.</p>
+              <p className="text-sm text-white/40">This controls phone/email/address shown on Contact page, Footer, and LiveChat widget.</p>
               <div className="grid grid-cols-2 gap-3">
                 <div><label className={labelCls}>Phone</label><input className={inputCls} value={cfg.contact.phone} onChange={e => set("contact", { ...cfg.contact, phone: e.target.value })} /></div>
                 <div><label className={labelCls}>Email</label><input className={inputCls} value={cfg.contact.email} onChange={e => set("contact", { ...cfg.contact, email: e.target.value })} /></div>
@@ -514,10 +514,10 @@ const tabs: { key: Tab; label: string }[] = [
                 <div key={i} className="flex gap-3 items-center">
                   <input className={inputCls} placeholder="Platform (Facebook, Instagram...)" value={s.platform} onChange={e => { const a = [...cfg.socialLinks]; a[i] = { ...s, platform: e.target.value }; set("socialLinks", a); }} />
                   <input className={inputCls} placeholder="URL" value={s.url} onChange={e => { const a = [...cfg.socialLinks]; a[i] = { ...s, url: e.target.value }; set("socialLinks", a); }} />
-                  <button onClick={() => set("socialLinks", cfg.socialLinks.filter((_, idx) => idx !== i))} className="text-red-500 text-sm">Delete</button>
+                  <button onClick={() => set("socialLinks", cfg.socialLinks.filter((_, idx) => idx !== i))} className="text-red-400 text-sm">Delete</button>
                 </div>
               ))}
-              <button onClick={() => set("socialLinks", [...cfg.socialLinks, { platform: "", url: "" }])} className="px-4 py-2 bg-gray-100 rounded-lg text-sm">+ Add</button>
+              <button onClick={() => set("socialLinks", [...cfg.socialLinks, { platform: "", url: "" }])} className="px-4 py-2 bg-white/10 rounded-lg text-sm">+ Add</button>
             </div>
           )}
 
@@ -532,26 +532,26 @@ const tabs: { key: Tab; label: string }[] = [
                 <div key={i} className="border border-white/10 bg-white/5 text-white rounded-lg p-3 space-y-2">
                   <div className="flex justify-between">
                     <input className={inputCls} placeholder="Section Title" value={sec.title} onChange={e => { const a = [...cfg.footerSections]; a[i] = { ...sec, title: e.target.value }; set("footerSections", a); }} />
-                    <button onClick={() => set("footerSections", cfg.footerSections.filter((_, idx) => idx !== i))} className="text-red-500 text-sm ml-2">Delete</button>
+                    <button onClick={() => set("footerSections", cfg.footerSections.filter((_, idx) => idx !== i))} className="text-red-400 text-sm ml-2">Delete</button>
                   </div>
                   {sec.links.map((link, j) => (
                     <div key={j} className="flex gap-2">
                       <input className={inputCls} placeholder="Label" value={link.label} onChange={e => { const a = [...cfg.footerSections]; a[i].links[j] = { ...link, label: e.target.value }; set("footerSections", [...a]); }} />
                       <input className={inputCls} placeholder="URL" value={link.href} onChange={e => { const a = [...cfg.footerSections]; a[i].links[j] = { ...link, href: e.target.value }; set("footerSections", [...a]); }} />
-                      <button onClick={() => { const a = [...cfg.footerSections]; a[i].links = a[i].links.filter((_, idx) => idx !== j); set("footerSections", a); }} className="text-red-500 text-sm">X</button>
+                      <button onClick={() => { const a = [...cfg.footerSections]; a[i].links = a[i].links.filter((_, idx) => idx !== j); set("footerSections", a); }} className="text-red-400 text-sm">X</button>
                     </div>
                   ))}
                   <button onClick={() => { const a = [...cfg.footerSections]; a[i].links.push({ label: "", href: "" }); set("footerSections", a); }} className="text-sm text-[#D4AF37]">+ Add Link</button>
                 </div>
               ))}
-              <button onClick={() => set("footerSections", [...cfg.footerSections, { title: "", links: [] }])} className="px-4 py-2 bg-gray-100 rounded-lg text-sm">+ Add Section</button>
+              <button onClick={() => set("footerSections", [...cfg.footerSections, { title: "", links: [] }])} className="px-4 py-2 bg-white/10 rounded-lg text-sm">+ Add Section</button>
             </div>
           )}
 
           {tab === "layout" && (
             <div className="space-y-6">
               <h2 className="text-lg font-bold text-white">Section Layout — Items Per Row</h2>
-              <p className="text-sm text-gray-500">Control how many cards appear per row on each public section page, for desktop, tablet, and mobile viewports.</p>
+              <p className="text-sm text-white/40">Control how many cards appear per row on each public section page, for desktop, tablet, and mobile viewports.</p>
               {sectionKeys.map(sk => {
                 const sl = cfg.sectionLayouts?.[sk.key] || { desktop: 3, tablet: 2, mobile: 1 };
                 return (
@@ -559,8 +559,8 @@ const tabs: { key: Tab; label: string }[] = [
                     <h3 className="font-medium text-white">{sk.label}</h3>
                     <div className="grid grid-cols-3 gap-4">
                       <div>
-                        <label className="block text-xs font-medium text-gray-500 mb-1">Desktop</label>
-                        <select className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm" value={sl.desktop} onChange={e => {
+                        <label className="block text-xs font-medium text-white/40 mb-1">Desktop</label>
+                        <select className="w-full px-3 py-2 rounded-lg border border-white/10 text-sm" value={sl.desktop} onChange={e => {
                           const v = parseInt(e.target.value);
                           setCfg(p => ({ ...p, sectionLayouts: { ...p.sectionLayouts, [sk.key]: { ...sl, desktop: v } } }));
                         }}>
@@ -568,8 +568,8 @@ const tabs: { key: Tab; label: string }[] = [
                         </select>
                       </div>
                       <div>
-                        <label className="block text-xs font-medium text-gray-500 mb-1">Tablet</label>
-                        <select className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm" value={sl.tablet} onChange={e => {
+                        <label className="block text-xs font-medium text-white/40 mb-1">Tablet</label>
+                        <select className="w-full px-3 py-2 rounded-lg border border-white/10 text-sm" value={sl.tablet} onChange={e => {
                           const v = parseInt(e.target.value);
                           setCfg(p => ({ ...p, sectionLayouts: { ...p.sectionLayouts, [sk.key]: { ...sl, tablet: v } } }));
                         }}>
@@ -577,8 +577,8 @@ const tabs: { key: Tab; label: string }[] = [
                         </select>
                       </div>
                       <div>
-                        <label className="block text-xs font-medium text-gray-500 mb-1">Mobile</label>
-                        <select className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm" value={sl.mobile} onChange={e => {
+                        <label className="block text-xs font-medium text-white/40 mb-1">Mobile</label>
+                        <select className="w-full px-3 py-2 rounded-lg border border-white/10 text-sm" value={sl.mobile} onChange={e => {
                           const v = parseInt(e.target.value);
                           setCfg(p => ({ ...p, sectionLayouts: { ...p.sectionLayouts, [sk.key]: { ...sl, mobile: v } } }));
                         }}>
@@ -595,7 +595,7 @@ const tabs: { key: Tab; label: string }[] = [
           {tab === "rows" && (
             <div className="space-y-6">
               <h2 className="text-lg font-bold text-white">Section Row Titles</h2>
-              <p className="text-sm text-gray-500">Set custom row titles for Hotels, Tours, and Cars section pages. Each row can have up to 6 cards with horizontal scrolling.</p>
+              <p className="text-sm text-white/40">Set custom row titles for Hotels, Tours, and Cars section pages. Each row can have up to 6 cards with horizontal scrolling.</p>
               {rowSectionKeys.map(sk => {
                 const titles = cfg.sectionRows?.[sk.key] || ["Row 1", "Row 2", "Row 3", "Row 4", "Row 5"];
                 return (
@@ -603,7 +603,7 @@ const tabs: { key: Tab; label: string }[] = [
                     <h3 className="font-medium text-white">{sk.label} Row Titles</h3>
                     {titles.map((title, i) => (
                       <div key={i}>
-                        <label className="block text-xs font-medium text-gray-500 mb-1">Row {i + 1}</label>
+                        <label className="block text-xs font-medium text-white/40 mb-1">Row {i + 1}</label>
                         <input
                           className={inputCls}
                           value={title}
@@ -644,7 +644,7 @@ const tabs: { key: Tab; label: string }[] = [
           {tab === "faq" && (
             <div className="space-y-5">
               <h2 className="text-lg font-bold text-white">FAQ Management</h2>
-              <p className="text-sm text-gray-500">Manage frequently asked questions displayed on the FAQ page.</p>
+              <p className="text-sm text-white/40">Manage frequently asked questions displayed on the FAQ page.</p>
               {cfg.faqs.map((faq, i) => (
                 <div key={faq.id} className="border border-white/10 bg-white/5 text-white rounded-lg p-4 space-y-3">
                   <div className="flex items-center justify-between">
@@ -660,13 +660,13 @@ const tabs: { key: Tab; label: string }[] = [
                       >&#9998;</button>
                       <button
                         onClick={() => set("faqs", cfg.faqs.filter((_, idx) => idx !== i))}
-                        className="text-red-500 text-sm"
+                        className="text-red-400 text-sm"
                         title="Delete"
                       >&#128465;</button>
                     </div>
                   </div>
                   <div>
-                    <label className="block text-xs font-medium text-gray-500 mb-1">Question</label>
+                    <label className="block text-xs font-medium text-white/40 mb-1">Question</label>
                     <textarea
                       id={`faq-question-${faq.id}`}
                       className={inputCls}
@@ -680,7 +680,7 @@ const tabs: { key: Tab; label: string }[] = [
                     />
                   </div>
                   <div>
-                    <label className="block text-xs font-medium text-gray-500 mb-1">Answer</label>
+                    <label className="block text-xs font-medium text-white/40 mb-1">Answer</label>
                     <textarea
                       className={inputCls}
                       rows={3}
@@ -696,7 +696,7 @@ const tabs: { key: Tab; label: string }[] = [
               ))}
               <button
                 onClick={() => set("faqs", [...cfg.faqs, { id: crypto.randomUUID(), question: "", answer: "" }])}
-                className="px-4 py-2 bg-gray-100 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-200 transition-colors"
+                className="px-4 py-2 bg-white/10 rounded-lg text-sm font-medium text-white/50 hover:bg-white/20 transition-colors"
               >
                 + Add FAQ
               </button>
@@ -706,18 +706,18 @@ const tabs: { key: Tab; label: string }[] = [
           {tab === "terms" && (
             <div className="space-y-5">
               <h2 className="text-lg font-bold text-white">Terms and Conditions</h2>
-              <p className="text-sm text-gray-500">Manage terms and conditions displayed on the Terms page.</p>
+              <p className="text-sm text-white/40">Manage terms and conditions displayed on the Terms page.</p>
               {cfg.terms.map((item, i) => (
                 <div key={item.id} className="border border-white/10 bg-white/5 text-white rounded-lg p-4 space-y-3">
                   <div className="flex items-center justify-between">
                     <h3 className="font-medium text-white">{item.title || `Section ${i + 1}`}</h3>
                     <button
                       onClick={() => set("terms", cfg.terms.filter((_, idx) => idx !== i))}
-                      className="text-red-500 text-sm"
+                      className="text-red-400 text-sm"
                     >Delete</button>
                   </div>
                   <div>
-                    <label className="block text-xs font-medium text-gray-500 mb-1">Title</label>
+                    <label className="block text-xs font-medium text-white/40 mb-1">Title</label>
                     <input
                       className={inputCls}
                       value={item.title}
@@ -729,7 +729,7 @@ const tabs: { key: Tab; label: string }[] = [
                     />
                   </div>
                   <div>
-                    <label className="block text-xs font-medium text-gray-500 mb-1">Content</label>
+                    <label className="block text-xs font-medium text-white/40 mb-1">Content</label>
                     <textarea
                       className={inputCls}
                       rows={4}
@@ -745,7 +745,7 @@ const tabs: { key: Tab; label: string }[] = [
               ))}
               <button
                 onClick={() => set("terms", [...cfg.terms, { id: crypto.randomUUID(), title: "", content: "" }])}
-                className="px-4 py-2 bg-gray-100 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-200 transition-colors"
+                className="px-4 py-2 bg-white/10 rounded-lg text-sm font-medium text-white/50 hover:bg-white/20 transition-colors"
               >
                 + Add Section
               </button>
@@ -755,18 +755,18 @@ const tabs: { key: Tab; label: string }[] = [
           {tab === "privacy" && (
             <div className="space-y-5">
               <h2 className="text-lg font-bold text-white">Privacy Policy</h2>
-              <p className="text-sm text-gray-500">Manage privacy policy sections displayed on the Privacy page.</p>
+              <p className="text-sm text-white/40">Manage privacy policy sections displayed on the Privacy page.</p>
               {cfg.privacy.map((item, i) => (
                 <div key={item.id} className="border border-white/10 bg-white/5 text-white rounded-lg p-4 space-y-3">
                   <div className="flex items-center justify-between">
                     <h3 className="font-medium text-white">{item.title || `Section ${i + 1}`}</h3>
                     <button
                       onClick={() => set("privacy", cfg.privacy.filter((_, idx) => idx !== i))}
-                      className="text-red-500 text-sm"
+                      className="text-red-400 text-sm"
                     >Delete</button>
                   </div>
                   <div>
-                    <label className="block text-xs font-medium text-gray-500 mb-1">Title</label>
+                    <label className="block text-xs font-medium text-white/40 mb-1">Title</label>
                     <input
                       className={inputCls}
                       value={item.title}
@@ -778,7 +778,7 @@ const tabs: { key: Tab; label: string }[] = [
                     />
                   </div>
                   <div>
-                    <label className="block text-xs font-medium text-gray-500 mb-1">Content</label>
+                    <label className="block text-xs font-medium text-white/40 mb-1">Content</label>
                     <textarea
                       className={inputCls}
                       rows={4}
@@ -794,7 +794,7 @@ const tabs: { key: Tab; label: string }[] = [
               ))}
               <button
                 onClick={() => set("privacy", [...cfg.privacy, { id: crypto.randomUUID(), title: "", content: "" }])}
-                className="px-4 py-2 bg-gray-100 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-200 transition-colors"
+                className="px-4 py-2 bg-white/10 rounded-lg text-sm font-medium text-white/50 hover:bg-white/20 transition-colors"
               >
                 + Add Section
               </button>
