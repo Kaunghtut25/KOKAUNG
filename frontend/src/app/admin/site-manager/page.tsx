@@ -135,7 +135,7 @@ export default function SiteManagerPage() {
     fetch(API).then(r => r.json()).then(d => { setCfg({ ...defaultCfg, ...d }); }).catch(() => { }).finally(() => setLoading(false));
   }, []);
 
-  const uploadFile = async (file: File, field: string, index?: number, subKey?: string) => {
+  const uploadFile = async (file: File, field: string, index?: number) => {
     if (!file.type.startsWith("image/")) { setUploadError("Only image files are accepted."); return; }
     setUploading(true); setUploadError("");
     try {
@@ -146,11 +146,7 @@ export default function SiteManagerPage() {
         arr[index] = { ...arr[index], image: url };
         setCfg(p => ({ ...p, [field]: arr }));
       } else {
-        if (subKey !== undefined) {
-      setCfg(p => ({ ...p, [field]: { ...(p[field] as any || {}), [subKey]: url } }));
-    } else {
-      setCfg(p => ({ ...p, [field]: url }));
-    }
+        setCfg(p => ({ ...p, [field]: url }));
       }
       showToast("Image uploaded!");
     } catch (err: any) {
@@ -158,15 +154,15 @@ export default function SiteManagerPage() {
     } finally { setUploading(false); }
   };
 
-  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>, field: string, index?: number, subKey?: string) => {
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>, field: string, index?: number) => {
     const file = e.target.files?.[0]; if (!file) return;
-    await uploadFile(file, field, index, subKey);
+    await uploadFile(file, field, index);
   };
 
-  const handleDrop = (e: React.DragEvent, field: string, index?: number, subKey?: string) => {
+  const handleDrop = (e: React.DragEvent, field: string, index?: number) => {
     e.preventDefault();
     const file = e.dataTransfer.files?.[0]; if (!file) return;
-    handleFileChange({ target: { files: [file] } } as any, field, index, subKey);
+    handleFileChange({ target: { files: [file] } } as any, field, index);
   };
 
   const handleSave = async () => {
@@ -181,27 +177,23 @@ export default function SiteManagerPage() {
   const set = <K extends keyof SiteConfig>(k: K, v: SiteConfig[K]) => setCfg(p => ({ ...p, [k]: v }));
 
   // Image upload zone component
-  const ImageZone = ({ field, index, subKey, label }: { field: string; index?: number; subKey?: string; label: string }) => {
-    const currentVal = index !== undefined
-      ? (cfg as any)[field]?.[index]?.image
-      : subKey !== undefined
-        ? (cfg as any)[field]?.[subKey]
-        : (cfg as any)[field];
+  const ImageZone = ({ field, index, label }: { field: string; index?: number; label: string }) => {
+    const currentVal = index !== undefined ? (cfg as any)[field]?.[index]?.image : (cfg as any)[field];
     return (
       <div className="mb-3">
         <label className="block text-sm font-medium text-white/70 mb-1">{label}</label>
         <div
-          onDrop={(e) => handleDrop(e, field, index, subKey)}
+          onDrop={(e) => handleDrop(e, field, index)}
           onDragOver={(e) => e.preventDefault()}
           className="border-2 border-dashed border-white/20 rounded-lg p-4 text-center cursor-pointer hover:border-[#D4AF37] transition-colors"
-          onClick={() => fileInputRefs.current[`${field}_${index ?? ''}_${subKey ?? ''}`]?.click()}
+          onClick={() => fileInputRefs.current[`${field}_${index ?? ''}`]?.click()}
         >
           <input
             type="file"
             accept="image/*"
             className="hidden"
-            ref={(el) => { fileInputRefs.current[`${field}_${index ?? ''}_${subKey ?? ''}`] = el; }}
-            onChange={(e) => handleFileChange(e, field, index, subKey)}
+            ref={(el) => { fileInputRefs.current[`${field}_${index ?? ''}`] = el; }}
+            onChange={(e) => handleFileChange(e, field, index)}
           />
           {currentVal ? (
             <img src={currentVal} alt="Preview" className="mx-auto mt-2 w-full h-28 object-cover rounded" />
@@ -219,9 +211,7 @@ export default function SiteManagerPage() {
           value={imageUrlInput || currentVal || ""}
           onChange={(e) => {
             setImageUrlInput(e.target.value);
-            if (subKey !== undefined) {
-              setCfg(p => ({ ...p, [field]: { ...(p[field] || {}), [subKey]: e.target.value } }));
-            } else if (index !== undefined) {
+            if (index !== undefined) {
               const arr = [...(cfg as any)[field]];
               arr[index] = { ...arr[index], image: e.target.value };
               setCfg(p => ({ ...p, [field]: arr }));
@@ -267,7 +257,7 @@ const tabs: { key: Tab; label: string }[] = [
     { key: "meta", label: "Meta & SEO" },
   ];
 
-  const inputCls = "w-full px-3 py-2 rounded-lg border border-white/10 bg-white/5 text-white text-sm placeholder:text-white/30";
+  const inputCls = "w-full px-3 py-2 rounded-lg border border-white/10 text-white text-sm";
   const labelCls = "block text-sm font-medium text-white/70 mb-1";
 
   return (
@@ -315,11 +305,11 @@ const tabs: { key: Tab; label: string }[] = [
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className={labelCls}>Mobile Height</label>
-                  <input type="number" className={inputCls} value={cfg.heroHeightMobile} onChange={e => set("heroHeightMobile", parseInt(e.target.value) || 500)} />
+                  <input type="number" style={{ backgroundColor: "rgba(255,255,255,0.06)", color: "white" }} className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} value={cfg.heroHeightMobile} onChange={e => set("heroHeightMobile", parseInt(e.target.value) || 500)} />
                 </div>
                 <div>
                   <label className={labelCls}>Desktop Height</label>
-                  <input type="number" className={inputCls} value={cfg.heroHeightDesktop} onChange={e => set("heroHeightDesktop", parseInt(e.target.value) || 680)} />
+                  <input type="number" style={{ backgroundColor: "rgba(255,255,255,0.06)", color: "white" }} className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} value={cfg.heroHeightDesktop} onChange={e => set("heroHeightDesktop", parseInt(e.target.value) || 680)} />
                 </div>
               </div>
               {cfg.heroSlides.map((slide, i) => (
@@ -330,10 +320,10 @@ const tabs: { key: Tab; label: string }[] = [
                   </div>
                   <ImageZone field="heroSlides" index={i} label="Slide Image" />
                   <div className="grid grid-cols-2 gap-3">
-                    <div><label className={labelCls}>Label</label><input className={inputCls} value={slide.label} onChange={e => { const a = [...cfg.heroSlides]; a[i] = { ...slide, label: e.target.value }; set("heroSlides", a); }} /></div>
-                    <div><label className={labelCls}>Title</label><input className={inputCls} value={slide.title} onChange={e => { const a = [...cfg.heroSlides]; a[i] = { ...slide, title: e.target.value }; set("heroSlides", a); }} /></div>
+                    <div><label className={labelCls}>Label</label><input className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} value={slide.label} onChange={e => { const a = [...cfg.heroSlides]; a[i] = { ...slide, label: e.target.value }; set("heroSlides", a); }} /></div>
+                    <div><label className={labelCls}>Title</label><input className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} value={slide.title} onChange={e => { const a = [...cfg.heroSlides]; a[i] = { ...slide, title: e.target.value }; set("heroSlides", a); }} /></div>
                   </div>
-                  <div><label className={labelCls}>Subtitle</label><input className={inputCls} value={slide.subtitle} onChange={e => { const a = [...cfg.heroSlides]; a[i] = { ...slide, subtitle: e.target.value }; set("heroSlides", a); }} /></div>
+                  <div><label className={labelCls}>Subtitle</label><input className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} value={slide.subtitle} onChange={e => { const a = [...cfg.heroSlides]; a[i] = { ...slide, subtitle: e.target.value }; set("heroSlides", a); }} /></div>
                 </div>
               ))}
               <button onClick={() => set("heroSlides", [...cfg.heroSlides, { image: "", label: "", title: "", subtitle: "" }])} className="px-4 py-2 bg-white/10 rounded-lg text-sm font-medium text-white/50 hover:bg-white/20">+ Add Slide</button>
@@ -362,11 +352,45 @@ const tabs: { key: Tab; label: string }[] = [
                 ].map(({ key, label }) => (
                   <div key={key} className="border border-white/10 bg-white/5 text-white rounded-lg p-4 space-y-3">
                     <h3 className="font-medium text-white">{label}</h3>
-                    <ImageZone field="heroImages" index={undefined} subKey={key} label={`${label} Hero Image`} />
+                    {/* Simple image edit for heroImages */}
+                    <div className="mb-3">
+                      <div
+                        className="border-2 border-dashed border-white/20 rounded-lg p-4 text-center cursor-pointer hover:border-[#D4AF37] transition-colors"
+                        onClick={() => {
+                          const ref = fileInputRefs.current[`heroImages_${key}`];
+                          if (ref) ref.click();
+                        }}
+                      >
+                        <input
+                          type="file"
+                          accept="image/*"
+                          className="hidden"
+                          ref={(el) => { fileInputRefs.current[`heroImages_${key}`] = el; }}
+                          onChange={async (e) => {
+                            const file = e.target.files?.[0];
+                            if (!file) return;
+                            setUploading(true); setUploadError("");
+                            try {
+                              const blob = await put(file.name, file, { access: 'public' });
+                              setCfg(p => ({ ...p, heroImages: { ...(p.heroImages || {}), [key]: blob.url } }));
+                              showToast("Image uploaded!");
+                            } catch { setUploadError("Upload failed."); }
+                            setUploading(false);
+                          }}
+                        />
+                        {(cfg.heroImages && cfg.heroImages[key]) ? (
+                          <img src={cfg.heroImages[key]} alt="Preview" className="mx-auto mt-2 w-full h-28 object-cover rounded" />
+                        ) : (
+                          <p className="text-sm text-white/40">Click to upload</p>
+                        )}
+                        {uploading && <p className="text-xs text-[#D4AF37] mt-1">Uploading...</p>}
+                        <p className="text-xs text-white/30 mt-1">1200x630px JPEG max 2MB</p>
+                      </div>
+                    </div>
                     <input
                       type="text"
                       placeholder="Or paste image URL"
-                      className={inputCls}
+                      className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }}
                       value={(cfg.heroImages && cfg.heroImages[key]) || ""}
                       onChange={(e) => {
                         setCfg((p) => ({
@@ -398,9 +422,9 @@ const tabs: { key: Tab; label: string }[] = [
               <h2 className="text-lg font-bold text-white">Service Icons</h2>
               {cfg.serviceIcons.map((s, i) => (
                 <div key={i} className="border border-white/10 bg-white/5 text-white rounded-lg p-3 grid grid-cols-4 gap-3 items-center">
-                  <input className={inputCls} placeholder="Icon (emoji)" value={s.icon} onChange={e => { const a = [...cfg.serviceIcons]; a[i] = { ...s, icon: e.target.value }; set("serviceIcons", a); }} />
-                  <input className={inputCls} placeholder="Label" value={s.label} onChange={e => { const a = [...cfg.serviceIcons]; a[i] = { ...s, label: e.target.value }; set("serviceIcons", a); }} />
-                  <input className={inputCls} placeholder="Link" value={s.href} onChange={e => { const a = [...cfg.serviceIcons]; a[i] = { ...s, href: e.target.value }; set("serviceIcons", a); }} />
+                  <input className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} placeholder="Icon (emoji)" value={s.icon} onChange={e => { const a = [...cfg.serviceIcons]; a[i] = { ...s, icon: e.target.value }; set("serviceIcons", a); }} />
+                  <input className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} placeholder="Label" value={s.label} onChange={e => { const a = [...cfg.serviceIcons]; a[i] = { ...s, label: e.target.value }; set("serviceIcons", a); }} />
+                  <input className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} placeholder="Link" value={s.href} onChange={e => { const a = [...cfg.serviceIcons]; a[i] = { ...s, href: e.target.value }; set("serviceIcons", a); }} />
                   <div className="flex items-center gap-2">
                     <input type="checkbox" checked={s.enabled} onChange={e => { const a = [...cfg.serviceIcons]; a[i] = { ...s, enabled: e.target.checked }; set("serviceIcons", a); }} />
                     <button onClick={() => set("serviceIcons", cfg.serviceIcons.filter((_, idx) => idx !== i))} className="text-red-400 text-sm">Delete</button>
@@ -416,8 +440,8 @@ const tabs: { key: Tab; label: string }[] = [
               <h2 className="text-lg font-bold text-white">Navigation Links</h2>
               {cfg.navLinks.map((n, i) => (
                 <div key={i} className="flex gap-3 items-center">
-                  <input className={inputCls} placeholder="Label" value={n.label} onChange={e => { const a = [...cfg.navLinks]; a[i] = { ...n, label: e.target.value }; set("navLinks", a); }} />
-                  <input className={inputCls} placeholder="URL" value={n.href} onChange={e => { const a = [...cfg.navLinks]; a[i] = { ...n, href: e.target.value }; set("navLinks", a); }} />
+                  <input className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} placeholder="Label" value={n.label} onChange={e => { const a = [...cfg.navLinks]; a[i] = { ...n, label: e.target.value }; set("navLinks", a); }} />
+                  <input className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} placeholder="URL" value={n.href} onChange={e => { const a = [...cfg.navLinks]; a[i] = { ...n, href: e.target.value }; set("navLinks", a); }} />
                   <button onClick={() => set("navLinks", cfg.navLinks.filter((_, idx) => idx !== i))} className="text-red-400 text-sm">Delete</button>
                 </div>
               ))}
@@ -432,9 +456,9 @@ const tabs: { key: Tab; label: string }[] = [
                 <div key={i} className="border border-white/10 bg-white/5 text-white rounded-lg p-4 space-y-3">
                   <div className="flex justify-between"><h3 className="font-medium">Card {i + 1}</h3><button onClick={() => set("statsCards", cfg.statsCards.filter((_, idx) => idx !== i))} className="text-red-400 text-sm">Delete</button></div>
                   <div className="grid grid-cols-3 gap-3">
-                    <input className={inputCls} placeholder="Icon" value={s.icon} onChange={e => { const a = [...cfg.statsCards]; a[i] = { ...s, icon: e.target.value }; set("statsCards", a); }} />
-                    <input className={inputCls} placeholder="Title" value={s.title} onChange={e => { const a = [...cfg.statsCards]; a[i] = { ...s, title: e.target.value }; set("statsCards", a); }} />
-                    <input className={inputCls} placeholder="Description" value={s.description} onChange={e => { const a = [...cfg.statsCards]; a[i] = { ...s, description: e.target.value }; set("statsCards", a); }} />
+                    <input className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} placeholder="Icon" value={s.icon} onChange={e => { const a = [...cfg.statsCards]; a[i] = { ...s, icon: e.target.value }; set("statsCards", a); }} />
+                    <input className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} placeholder="Title" value={s.title} onChange={e => { const a = [...cfg.statsCards]; a[i] = { ...s, title: e.target.value }; set("statsCards", a); }} />
+                    <input className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} placeholder="Description" value={s.description} onChange={e => { const a = [...cfg.statsCards]; a[i] = { ...s, description: e.target.value }; set("statsCards", a); }} />
                   </div>
                   <ImageZone field="statsCards" index={i} label="Card Image" />
                 </div>
@@ -448,9 +472,9 @@ const tabs: { key: Tab; label: string }[] = [
               <h2 className="text-lg font-bold text-white">Why Choose Us Cards</h2>
               {cfg.whyChooseCards.map((w, i) => (
                 <div key={i} className="border border-white/10 bg-white/5 text-white rounded-lg p-3 grid grid-cols-3 gap-3">
-                  <input className={inputCls} placeholder="Icon" value={w.icon} onChange={e => { const a = [...cfg.whyChooseCards]; a[i] = { ...w, icon: e.target.value }; set("whyChooseCards", a); }} />
-                  <input className={inputCls} placeholder="Title" value={w.title} onChange={e => { const a = [...cfg.whyChooseCards]; a[i] = { ...w, title: e.target.value }; set("whyChooseCards", a); }} />
-                  <input className={inputCls} placeholder="Description" value={w.description} onChange={e => { const a = [...cfg.whyChooseCards]; a[i] = { ...w, description: e.target.value }; set("whyChooseCards", a); }} />
+                  <input className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} placeholder="Icon" value={w.icon} onChange={e => { const a = [...cfg.whyChooseCards]; a[i] = { ...w, icon: e.target.value }; set("whyChooseCards", a); }} />
+                  <input className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} placeholder="Title" value={w.title} onChange={e => { const a = [...cfg.whyChooseCards]; a[i] = { ...w, title: e.target.value }; set("whyChooseCards", a); }} />
+                  <input className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} placeholder="Description" value={w.description} onChange={e => { const a = [...cfg.whyChooseCards]; a[i] = { ...w, description: e.target.value }; set("whyChooseCards", a); }} />
                   <button onClick={() => set("whyChooseCards", cfg.whyChooseCards.filter((_, idx) => idx !== i))} className="text-red-400 text-sm col-span-3 text-right">Delete</button>
                 </div>
               ))}
@@ -465,9 +489,9 @@ const tabs: { key: Tab; label: string }[] = [
                 <div key={i} className="border border-white/10 bg-white/5 text-white rounded-lg p-4 space-y-3">
                   <div className="flex justify-between"><h3 className="font-medium">{d.city || `Destination ${i + 1}`}</h3><button onClick={() => set("popularDestinations", cfg.popularDestinations.filter((_, idx) => idx !== i))} className="text-red-400 text-sm">Delete</button></div>
                   <div className="grid grid-cols-3 gap-3">
-                    <input className={inputCls} placeholder="City" value={d.city} onChange={e => { const a = [...cfg.popularDestinations]; a[i] = { ...d, city: e.target.value }; set("popularDestinations", a); }} />
-                    <input className={inputCls} placeholder="Country" value={d.country} onChange={e => { const a = [...cfg.popularDestinations]; a[i] = { ...d, country: e.target.value }; set("popularDestinations", a); }} />
-                    <input className={inputCls} placeholder="Min Price" value={d.minPrice} onChange={e => { const a = [...cfg.popularDestinations]; a[i] = { ...d, minPrice: e.target.value }; set("popularDestinations", a); }} />
+                    <input className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} placeholder="City" value={d.city} onChange={e => { const a = [...cfg.popularDestinations]; a[i] = { ...d, city: e.target.value }; set("popularDestinations", a); }} />
+                    <input className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} placeholder="Country" value={d.country} onChange={e => { const a = [...cfg.popularDestinations]; a[i] = { ...d, country: e.target.value }; set("popularDestinations", a); }} />
+                    <input className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} placeholder="Min Price" value={d.minPrice} onChange={e => { const a = [...cfg.popularDestinations]; a[i] = { ...d, minPrice: e.target.value }; set("popularDestinations", a); }} />
                   </div>
                   <ImageZone field="popularDestinations" index={i} label="Destination Image" />
                 </div>
@@ -479,11 +503,11 @@ const tabs: { key: Tab; label: string }[] = [
           {tab === "cta" && (
             <div className="space-y-4">
               <h2 className="text-lg font-bold text-white">Call-to-Action Section</h2>
-              <div><label className={labelCls}>Title</label><input className={inputCls} value={cfg.ctaTitle} onChange={e => set("ctaTitle", e.target.value)} /></div>
-              <div><label className={labelCls}>Description</label><textarea className={inputCls} rows={3} value={cfg.ctaDescription} onChange={e => set("ctaDescription", e.target.value)} /></div>
+              <div><label className={labelCls}>Title</label><input className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} value={cfg.ctaTitle} onChange={e => set("ctaTitle", e.target.value)} /></div>
+              <div><label className={labelCls}>Description</label><textarea style={{ backgroundColor: "rgba(255,255,255,0.06)", color: "white" }} className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} rows={3} value={cfg.ctaDescription} onChange={e => set("ctaDescription", e.target.value)} /></div>
               <div className="grid grid-cols-2 gap-3">
-                <div><label className={labelCls}>Button Label</label><input className={inputCls} value={cfg.ctaButtonLabel} onChange={e => set("ctaButtonLabel", e.target.value)} /></div>
-                <div><label className={labelCls}>Button Link</label><input className={inputCls} value={cfg.ctaButtonHref} onChange={e => set("ctaButtonHref", e.target.value)} /></div>
+                <div><label className={labelCls}>Button Label</label><input className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} value={cfg.ctaButtonLabel} onChange={e => set("ctaButtonLabel", e.target.value)} /></div>
+                <div><label className={labelCls}>Button Link</label><input className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} value={cfg.ctaButtonHref} onChange={e => set("ctaButtonHref", e.target.value)} /></div>
               </div>
             </div>
           )}
@@ -493,15 +517,15 @@ const tabs: { key: Tab; label: string }[] = [
               <h2 className="text-lg font-bold text-white">Contact Information</h2>
               <p className="text-sm text-white/40">This controls phone/email/address shown on Contact page, Footer, and LiveChat widget.</p>
               <div className="grid grid-cols-2 gap-3">
-                <div><label className={labelCls}>Phone</label><input className={inputCls} value={cfg.contact.phone} onChange={e => set("contact", { ...cfg.contact, phone: e.target.value })} /></div>
-                <div><label className={labelCls}>Email</label><input className={inputCls} value={cfg.contact.email} onChange={e => set("contact", { ...cfg.contact, email: e.target.value })} /></div>
+                <div><label className={labelCls}>Phone</label><input className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} value={cfg.contact.phone} onChange={e => set("contact", { ...cfg.contact, phone: e.target.value })} /></div>
+                <div><label className={labelCls}>Email</label><input className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} value={cfg.contact.email} onChange={e => set("contact", { ...cfg.contact, email: e.target.value })} /></div>
               </div>
-              <div><label className={labelCls}>Address</label><input className={inputCls} value={cfg.contact.address} onChange={e => set("contact", { ...cfg.contact, address: e.target.value })} /></div>
+              <div><label className={labelCls}>Address</label><input className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} value={cfg.contact.address} onChange={e => set("contact", { ...cfg.contact, address: e.target.value })} /></div>
               <div className="grid grid-cols-2 gap-3">
-                <div><label className={labelCls}>WhatsApp</label><input className={inputCls} value={cfg.contact.whatsapp} onChange={e => set("contact", { ...cfg.contact, whatsapp: e.target.value })} /></div>
-                <div><label className={labelCls}>Messenger</label><input className={inputCls} value={cfg.contact.messenger} onChange={e => set("contact", { ...cfg.contact, messenger: e.target.value })} /></div>
-                <div><label className={labelCls}>Viber</label><input className={inputCls} value={cfg.contact.viber} onChange={e => set("contact", { ...cfg.contact, viber: e.target.value })} /></div>
-                <div><label className={labelCls}>Telegram</label><input className={inputCls} value={cfg.contact.telegram} onChange={e => set("contact", { ...cfg.contact, telegram: e.target.value })} /></div>
+                <div><label className={labelCls}>WhatsApp</label><input className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} value={cfg.contact.whatsapp} onChange={e => set("contact", { ...cfg.contact, whatsapp: e.target.value })} /></div>
+                <div><label className={labelCls}>Messenger</label><input className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} value={cfg.contact.messenger} onChange={e => set("contact", { ...cfg.contact, messenger: e.target.value })} /></div>
+                <div><label className={labelCls}>Viber</label><input className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} value={cfg.contact.viber} onChange={e => set("contact", { ...cfg.contact, viber: e.target.value })} /></div>
+                <div><label className={labelCls}>Telegram</label><input className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} value={cfg.contact.telegram} onChange={e => set("contact", { ...cfg.contact, telegram: e.target.value })} /></div>
               </div>
               <ImageZone field="logoUrl" label="Site Logo" />
             </div>
@@ -512,8 +536,8 @@ const tabs: { key: Tab; label: string }[] = [
               <h2 className="text-lg font-bold text-white">Social Media Links</h2>
               {cfg.socialLinks.map((s, i) => (
                 <div key={i} className="flex gap-3 items-center">
-                  <input className={inputCls} placeholder="Platform (Facebook, Instagram...)" value={s.platform} onChange={e => { const a = [...cfg.socialLinks]; a[i] = { ...s, platform: e.target.value }; set("socialLinks", a); }} />
-                  <input className={inputCls} placeholder="URL" value={s.url} onChange={e => { const a = [...cfg.socialLinks]; a[i] = { ...s, url: e.target.value }; set("socialLinks", a); }} />
+                  <input className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} placeholder="Platform (Facebook, Instagram...)" value={s.platform} onChange={e => { const a = [...cfg.socialLinks]; a[i] = { ...s, platform: e.target.value }; set("socialLinks", a); }} />
+                  <input className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} placeholder="URL" value={s.url} onChange={e => { const a = [...cfg.socialLinks]; a[i] = { ...s, url: e.target.value }; set("socialLinks", a); }} />
                   <button onClick={() => set("socialLinks", cfg.socialLinks.filter((_, idx) => idx !== i))} className="text-red-400 text-sm">Delete</button>
                 </div>
               ))}
@@ -524,20 +548,20 @@ const tabs: { key: Tab; label: string }[] = [
           {tab === "footer" && (
             <div className="space-y-4">
               <h2 className="text-lg font-bold text-white">Footer Settings</h2>
-              <div><label className={labelCls}>Copyright Text</label><input className={inputCls} value={cfg.footerCopyright} onChange={e => set("footerCopyright", e.target.value)} /></div>
-              <div><label className={labelCls}>Registration Numbers</label><input className={inputCls} value={cfg.footerRegNumbers || ""} onChange={e => set("footerRegNumbers", e.target.value)} /></div>
-              <div><label className={labelCls}>Tagline</label><input className={inputCls} value={cfg.footerTagline || ""} onChange={e => set("footerTagline", e.target.value)} /></div>
-              <div><label className={labelCls}>Company Info</label><textarea className={inputCls} rows={2} value={cfg.footerCompanyInfo || ""} onChange={e => set("footerCompanyInfo", e.target.value)} /></div>
+              <div><label className={labelCls}>Copyright Text</label><input className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} value={cfg.footerCopyright} onChange={e => set("footerCopyright", e.target.value)} /></div>
+              <div><label className={labelCls}>Registration Numbers</label><input className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} value={cfg.footerRegNumbers || ""} onChange={e => set("footerRegNumbers", e.target.value)} /></div>
+              <div><label className={labelCls}>Tagline</label><input className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} value={cfg.footerTagline || ""} onChange={e => set("footerTagline", e.target.value)} /></div>
+              <div><label className={labelCls}>Company Info</label><textarea style={{ backgroundColor: "rgba(255,255,255,0.06)", color: "white" }} className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} rows={2} value={cfg.footerCompanyInfo || ""} onChange={e => set("footerCompanyInfo", e.target.value)} /></div>
               {cfg.footerSections.map((sec, i) => (
                 <div key={i} className="border border-white/10 bg-white/5 text-white rounded-lg p-3 space-y-2">
                   <div className="flex justify-between">
-                    <input className={inputCls} placeholder="Section Title" value={sec.title} onChange={e => { const a = [...cfg.footerSections]; a[i] = { ...sec, title: e.target.value }; set("footerSections", a); }} />
+                    <input className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} placeholder="Section Title" value={sec.title} onChange={e => { const a = [...cfg.footerSections]; a[i] = { ...sec, title: e.target.value }; set("footerSections", a); }} />
                     <button onClick={() => set("footerSections", cfg.footerSections.filter((_, idx) => idx !== i))} className="text-red-400 text-sm ml-2">Delete</button>
                   </div>
                   {sec.links.map((link, j) => (
                     <div key={j} className="flex gap-2">
-                      <input className={inputCls} placeholder="Label" value={link.label} onChange={e => { const a = [...cfg.footerSections]; a[i].links[j] = { ...link, label: e.target.value }; set("footerSections", [...a]); }} />
-                      <input className={inputCls} placeholder="URL" value={link.href} onChange={e => { const a = [...cfg.footerSections]; a[i].links[j] = { ...link, href: e.target.value }; set("footerSections", [...a]); }} />
+                      <input className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} placeholder="Label" value={link.label} onChange={e => { const a = [...cfg.footerSections]; a[i].links[j] = { ...link, label: e.target.value }; set("footerSections", [...a]); }} />
+                      <input className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} placeholder="URL" value={link.href} onChange={e => { const a = [...cfg.footerSections]; a[i].links[j] = { ...link, href: e.target.value }; set("footerSections", [...a]); }} />
                       <button onClick={() => { const a = [...cfg.footerSections]; a[i].links = a[i].links.filter((_, idx) => idx !== j); set("footerSections", a); }} className="text-red-400 text-sm">X</button>
                     </div>
                   ))}
@@ -605,7 +629,7 @@ const tabs: { key: Tab; label: string }[] = [
                       <div key={i}>
                         <label className="block text-xs font-medium text-white/40 mb-1">Row {i + 1}</label>
                         <input
-                          className={inputCls}
+                          className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }}
                           value={title}
                           placeholder={`Row ${i + 1} title`}
                           onChange={e => {
@@ -667,9 +691,9 @@ const tabs: { key: Tab; label: string }[] = [
                   </div>
                   <div>
                     <label className="block text-xs font-medium text-white/40 mb-1">Question</label>
-                    <textarea
+                    <textarea style={{ backgroundColor: "rgba(255,255,255,0.06)", color: "white" }}
                       id={`faq-question-${faq.id}`}
-                      className={inputCls}
+                      className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }}
                       rows={2}
                       value={faq.question}
                       onChange={e => {
@@ -681,8 +705,8 @@ const tabs: { key: Tab; label: string }[] = [
                   </div>
                   <div>
                     <label className="block text-xs font-medium text-white/40 mb-1">Answer</label>
-                    <textarea
-                      className={inputCls}
+                    <textarea style={{ backgroundColor: "rgba(255,255,255,0.06)", color: "white" }}
+                      className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }}
                       rows={3}
                       value={faq.answer}
                       onChange={e => {
@@ -719,7 +743,7 @@ const tabs: { key: Tab; label: string }[] = [
                   <div>
                     <label className="block text-xs font-medium text-white/40 mb-1">Title</label>
                     <input
-                      className={inputCls}
+                      className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }}
                       value={item.title}
                       onChange={e => {
                         const a = [...cfg.terms];
@@ -730,8 +754,8 @@ const tabs: { key: Tab; label: string }[] = [
                   </div>
                   <div>
                     <label className="block text-xs font-medium text-white/40 mb-1">Content</label>
-                    <textarea
-                      className={inputCls}
+                    <textarea style={{ backgroundColor: "rgba(255,255,255,0.06)", color: "white" }}
+                      className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }}
                       rows={4}
                       value={item.content}
                       onChange={e => {
@@ -768,7 +792,7 @@ const tabs: { key: Tab; label: string }[] = [
                   <div>
                     <label className="block text-xs font-medium text-white/40 mb-1">Title</label>
                     <input
-                      className={inputCls}
+                      className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }}
                       value={item.title}
                       onChange={e => {
                         const a = [...cfg.privacy];
@@ -779,8 +803,8 @@ const tabs: { key: Tab; label: string }[] = [
                   </div>
                   <div>
                     <label className="block text-xs font-medium text-white/40 mb-1">Content</label>
-                    <textarea
-                      className={inputCls}
+                    <textarea style={{ backgroundColor: "rgba(255,255,255,0.06)", color: "white" }}
+                      className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }}
                       rows={4}
                       value={item.content}
                       onChange={e => {
@@ -804,9 +828,9 @@ const tabs: { key: Tab; label: string }[] = [
           {tab === "meta" && (
             <div className="space-y-4">
               <h2 className="text-lg font-bold text-white">Meta & SEO</h2>
-              <div><label className={labelCls}>Site Name</label><input className={inputCls} value={cfg.siteName} onChange={e => set("siteName", e.target.value)} /></div>
-              <div><label className={labelCls}>Meta Title</label><input className={inputCls} value={cfg.metaTitle} onChange={e => set("metaTitle", e.target.value)} /></div>
-              <div><label className={labelCls}>Meta Description</label><textarea className={inputCls} rows={3} value={cfg.metaDescription} onChange={e => set("metaDescription", e.target.value)} /></div>
+              <div><label className={labelCls}>Site Name</label><input className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} value={cfg.siteName} onChange={e => set("siteName", e.target.value)} /></div>
+              <div><label className={labelCls}>Meta Title</label><input className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} value={cfg.metaTitle} onChange={e => set("metaTitle", e.target.value)} /></div>
+              <div><label className={labelCls}>Meta Description</label><textarea style={{ backgroundColor: "rgba(255,255,255,0.06)", color: "white" }} className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} rows={3} value={cfg.metaDescription} onChange={e => set("metaDescription", e.target.value)} /></div>
               <ImageZone field="logoUrl" label="Site Logo" />
             </div>
           )}
