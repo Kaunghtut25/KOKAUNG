@@ -25,8 +25,7 @@ async function redisSet(collection: string, data: Record<string, any>): Promise<
   const id = data.id || "gen_" + Date.now() + "_" + Math.random().toString(36).slice(2, 8);
   const item = { ...data, id, updatedAt: new Date().toISOString() };
   try {
-    // Delete old key if it's the wrong type
-    try { await redis.del("a9:" + collection); } catch {}
+    // Add/update single item — do NOT delete whole hash (would wipe all other items)
     await redis.hset("a9:" + collection, { [id]: JSON.stringify(item) });
     return item;
   } catch (err: any) {
