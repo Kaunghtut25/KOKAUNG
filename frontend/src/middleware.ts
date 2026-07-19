@@ -42,7 +42,8 @@ export function middleware(request: NextRequest) {
     // Allow public GET on site-config and settings (needed for Footer, Navbar, Contact, etc.)
     const isPublicRead = request.method === "GET" && (
       pathname === "/api/admin/site-config" ||
-      pathname === "/api/admin/settings"
+      pathname === "/api/admin/settings" ||
+      pathname === "/api/admin/seed"
     );
 
     if (!isPublicRead) {
