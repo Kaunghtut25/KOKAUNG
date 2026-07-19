@@ -172,11 +172,18 @@ export default function PopularDestinations() {
         <p className="text-gray-500">Popular Destinations</p>
       </div>
       {dests.length > 0 ? (
-        <ScrollingRow>
-          {dests.map((d, i) => (
-            <DestinationCard key={i} dest={d} />
-          ))}
-        </ScrollingRow>
+        <div className="space-y-5">
+          <ScrollingRow>
+            {dests.slice(0, 6).map((d, i) => (
+              <DestinationCard key={i} dest={d} />
+            ))}
+          </ScrollingRow>
+          <ScrollingRow>
+            {dests.slice(6, 12).map((d, i) => (
+              <DestinationCard key={i + 6} dest={d} />
+            ))}
+          </ScrollingRow>
+        </div>
       ) : (
         <p className="text-center text-gray-400 py-8">No destinations yet. Add some from the admin panel!</p>
       )}
