@@ -135,7 +135,7 @@ export default function SiteManagerPage() {
     fetch(API).then(r => r.json()).then(d => { setCfg({ ...defaultCfg, ...d }); }).catch(() => { }).finally(() => setLoading(false));
   }, []);
 
-  const uploadFile = async (file: File, field: string, index?: number) => {
+  const uploadFile = async (file: File, field: string, index?: number, subKey?: string) => {
     if (!file.type.startsWith("image/")) { setUploadError("Only image files are accepted."); return; }
     setUploading(true); setUploadError("");
     try {
@@ -146,7 +146,11 @@ export default function SiteManagerPage() {
         arr[index] = { ...arr[index], image: url };
         setCfg(p => ({ ...p, [field]: arr }));
       } else {
-        setCfg(p => ({ ...p, [field]: url }));
+        if (subKey !== undefined) {
+      setCfg(p => ({ ...p, [field]: { ...(p[field] as any || {}), [subKey]: url } }));
+    } else {
+      setCfg(p => ({ ...p, [field]: url }));
+    }
       }
       showToast("Image uploaded!");
     } catch (err: any) {
@@ -154,15 +158,15 @@ export default function SiteManagerPage() {
     } finally { setUploading(false); }
   };
 
-  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>, field: string, index?: number) => {
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>, field: string, index?: number, subKey?: string) => {
     const file = e.target.files?.[0]; if (!file) return;
-    await uploadFile(file, field, index);
+    await uploadFile(file, field, index, subKey);
   };
 
-  const handleDrop = (e: React.DragEvent, field: string, index?: number) => {
+  const handleDrop = (e: React.DragEvent, field: string, index?: number, subKey?: string) => {
     e.preventDefault();
     const file = e.dataTransfer.files?.[0]; if (!file) return;
-    handleFileChange({ target: { files: [file] } } as any, field, index);
+    handleFileChange({ target: { files: [file] } } as any, field, index, subKey);
   };
 
   const handleSave = async () => {
@@ -177,23 +181,27 @@ export default function SiteManagerPage() {
   const set = <K extends keyof SiteConfig>(k: K, v: SiteConfig[K]) => setCfg(p => ({ ...p, [k]: v }));
 
   // Image upload zone component
-  const ImageZone = ({ field, index, label }: { field: string; index?: number; label: string }) => {
-    const currentVal = index !== undefined ? (cfg as any)[field]?.[index]?.image : (cfg as any)[field];
+  const ImageZone = ({ field, index, subKey, label }: { field: string; index?: number; subKey?: string; label: string }) => {
+    const currentVal = index !== undefined
+      ? (cfg as any)[field]?.[index]?.image
+      : subKey !== undefined
+        ? (cfg as any)[field]?.[subKey]
+        : (cfg as any)[field];
     return (
       <div className="mb-3">
         <label className="block text-sm font-medium text-gray-700 mb-1">{label}</label>
         <div
-          onDrop={(e) => handleDrop(e, field, index)}
+          onDrop={(e) => handleDrop(e, field, index, subKey)}
           onDragOver={(e) => e.preventDefault()}
           className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center cursor-pointer hover:border-[#D4AF37] transition-colors"
-          onClick={() => fileInputRefs.current[`${field}_${index ?? ''}`]?.click()}
+          onClick={() => fileInputRefs.current[`${field}_${index ?? ''}_${subKey ?? ''}`]?.click()}
         >
           <input
             type="file"
             accept="image/*"
             className="hidden"
-            ref={(el) => { fileInputRefs.current[`${field}_${index ?? ''}`] = el; }}
-            onChange={(e) => handleFileChange(e, field, index)}
+            ref={(el) => { fileInputRefs.current[`${field}_${index ?? ''}_${subKey ?? ''}`] = el; }}
+            onChange={(e) => handleFileChange(e, field, index, subKey)}
           />
           {currentVal ? (
             <img src={currentVal} alt="Preview" className="mx-auto mt-2 w-full h-28 object-cover rounded" />
@@ -211,7 +219,9 @@ export default function SiteManagerPage() {
           value={imageUrlInput || currentVal || ""}
           onChange={(e) => {
             setImageUrlInput(e.target.value);
-            if (index !== undefined) {
+            if (subKey !== undefined) {
+              setCfg(p => ({ ...p, [field]: { ...(p[field] || {}), [subKey]: e.target.value } }));
+            } else if (index !== undefined) {
               const arr = [...(cfg as any)[field]];
               arr[index] = { ...arr[index], image: e.target.value };
               setCfg(p => ({ ...p, [field]: arr }));
@@ -352,7 +362,7 @@ const tabs: { key: Tab; label: string }[] = [
                 ].map(({ key, label }) => (
                   <div key={key} className="border border-gray-200 rounded-lg p-4 space-y-3">
                     <h3 className="font-medium text-[#0A1628]">{label}</h3>
-                    <ImageZone field="heroImages" index={undefined} label={`${label} Hero Image`} />
+                    <ImageZone field="heroImages" index={undefined} subKey={key} label={`${label} Hero Image`} />
                     <input
                       type="text"
                       placeholder="Or paste image URL"
