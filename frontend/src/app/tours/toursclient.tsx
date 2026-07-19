@@ -1,15 +1,5 @@
 'use client';
 
-  const [heroImage, setHeroImage] = useState("/images_v2/hero-tours-v2.jpg");
-  useEffect(() => {
-    fetch("/api/admin/site-config")
-      .then(r => r.json())
-      .then(d => {
-        if (d?.heroImages?.tours) setHeroImage(d.heroImages.tours);
-      })
-      .catch(() => {});
-  }, []);
-  
 import React, { useState, useEffect } from 'react';
 import TourCard from '@/components/TourCard';
 import ScrollingRow from '@/components/ScrollingRow';
@@ -105,22 +95,7 @@ export default function ToursClient(props) {
   }
 
   return (
-    <main className="min-h-screen bg-[#0A1628]">
-      {/* Hero */}
-      <section className="relative h-[400px] md:h-[500px] w-full overflow-hidden">
-        <img
-          src={heroImage}
-          alt="Our Tours"
-          className="w-full h-full object-cover"
-          onError={(e) => { (e.target as HTMLImageElement).src = "/images_v2/hero-tours-v2.jpg"; }}
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#0A1628]/90 via-[#0A1628]/40 to-[#0A1628]/30" />
-        <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4">
-          <h1 className="text-4xl md:text-6xl font-bold text-white mb-4 drop-shadow-lg" style={{ fontFamily: "'Playfair Display', serif" }}>Our Tours</h1>
-          <p className="text-white/80 max-w-xl text-lg">Discover extraordinary journeys across Asia</p>
-        </div>
-      </section>
-
+    <main className="min-h-screen bg-white">
       {/* Hero */}
       <section className="relative pt-24 pb-12 px-4 overflow-hidden">
         <div className="absolute inset-0">
