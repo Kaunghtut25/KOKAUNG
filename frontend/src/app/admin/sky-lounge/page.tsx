@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useState, useEffect, useRef } from "react";
 import { put } from "@vercel/blob";
@@ -30,6 +30,7 @@ export default function AdminMingalarPage() {
   const [uploading, setUploading] = useState(false);
   const [uploadError, setUploadError] = useState("");
   const [imageUrlInput, setImageUrlInput] = useState("");
+  const seededRef = useRef(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleImageUrlChange = (url: string) => {
@@ -124,8 +125,9 @@ export default function AdminMingalarPage() {
       if (res.ok) {
         const data = await res.json();
         const list = Array.isArray(data) ? data : (data.data || []);
-        if (list.length === 0) {
+        if (list.length === 0 && !seededRef.current) {
           await seedDefaults(token);
+          seededRef.current = true;
           const res2 = await fetch(API_BASE + "/admin/mingalar", {
             headers: { Authorization: "Bearer " + token },
           });

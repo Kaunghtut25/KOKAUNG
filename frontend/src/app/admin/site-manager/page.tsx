@@ -305,11 +305,11 @@ const tabs: { key: Tab; label: string }[] = [
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className={labelCls}>Mobile Height</label>
-                  <input type="number" style={{ backgroundColor: "rgba(255,255,255,0.06)", color: "white" }} className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} value={cfg.heroHeightMobile} onChange={e => set("heroHeightMobile", parseInt(e.target.value) || 500)} />
+                  <input type="number" className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.06)", color: "white" }} value={cfg.heroHeightMobile} onChange={e => set("heroHeightMobile", parseInt(e.target.value) || 500)} />
                 </div>
                 <div>
                   <label className={labelCls}>Desktop Height</label>
-                  <input type="number" style={{ backgroundColor: "rgba(255,255,255,0.06)", color: "white" }} className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} value={cfg.heroHeightDesktop} onChange={e => set("heroHeightDesktop", parseInt(e.target.value) || 680)} />
+                  <input type="number" className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.06)", color: "white" }} value={cfg.heroHeightDesktop} onChange={e => set("heroHeightDesktop", parseInt(e.target.value) || 680)} />
                 </div>
               </div>
               {cfg.heroSlides.map((slide, i) => (
@@ -327,6 +327,9 @@ const tabs: { key: Tab; label: string }[] = [
                 </div>
               ))}
               <button onClick={() => set("heroSlides", [...cfg.heroSlides, { image: "", label: "", title: "", subtitle: "" }])} className="px-4 py-2 bg-white/10 rounded-lg text-sm font-medium text-white/50 hover:bg-white/20">+ Add Slide</button>
+
+            </div>
+          )}
 
           {tab === "heroImages" && (
             <div className="space-y-6">
@@ -414,9 +417,6 @@ const tabs: { key: Tab; label: string }[] = [
               </div>
             </div>
           )}
-            </div>
-          )}
-
           {tab === "services" && (
             <div className="space-y-4">
               <h2 className="text-lg font-bold text-white">Service Icons</h2>
@@ -584,7 +584,7 @@ const tabs: { key: Tab; label: string }[] = [
                     <div className="grid grid-cols-3 gap-4">
                       <div>
                         <label className="block text-xs font-medium text-white/40 mb-1">Desktop</label>
-                        <select className="w-full px-3 py-2 rounded-lg border border-white/10 bg-white/5 text-white text-sm" value={sl.desktop} onChange={e => {
+                        <select className="w-full px-3 py-2 rounded-lg border border-white/10 text-white text-sm" style={{ backgroundColor: "rgba(255,255,255,0.06)", color: "white" }} value={sl.desktop} onChange={e => {
                           const v = parseInt(e.target.value);
                           setCfg(p => ({ ...p, sectionLayouts: { ...p.sectionLayouts, [sk.key]: { ...sl, desktop: v } } }));
                         }}>
@@ -593,7 +593,7 @@ const tabs: { key: Tab; label: string }[] = [
                       </div>
                       <div>
                         <label className="block text-xs font-medium text-white/40 mb-1">Tablet</label>
-                        <select className="w-full px-3 py-2 rounded-lg border border-white/10 bg-white/5 text-white text-sm" value={sl.tablet} onChange={e => {
+                        <select className="w-full px-3 py-2 rounded-lg border border-white/10 text-white text-sm" style={{ backgroundColor: "rgba(255,255,255,0.06)", color: "white" }} value={sl.tablet} onChange={e => {
                           const v = parseInt(e.target.value);
                           setCfg(p => ({ ...p, sectionLayouts: { ...p.sectionLayouts, [sk.key]: { ...sl, tablet: v } } }));
                         }}>
@@ -602,7 +602,7 @@ const tabs: { key: Tab; label: string }[] = [
                       </div>
                       <div>
                         <label className="block text-xs font-medium text-white/40 mb-1">Mobile</label>
-                        <select className="w-full px-3 py-2 rounded-lg border border-white/10 bg-white/5 text-white text-sm" value={sl.mobile} onChange={e => {
+                        <select className="w-full px-3 py-2 rounded-lg border border-white/10 text-white text-sm" style={{ backgroundColor: "rgba(255,255,255,0.06)", color: "white" }} value={sl.mobile} onChange={e => {
                           const v = parseInt(e.target.value);
                           setCfg(p => ({ ...p, sectionLayouts: { ...p.sectionLayouts, [sk.key]: { ...sl, mobile: v } } }));
                         }}>
@@ -637,23 +637,6 @@ const tabs: { key: Tab; label: string }[] = [
                             newTitles[i] = e.target.value;
                             setCfg(p => ({
                               ...p,
-                              heroImages: {
-    about: "/images_v2/about-hero-v2.jpg",
-    mingalar: "/images_v2/sky1-v3.jpg",
-    blog: "/images_v2/hero-blog-v2.jpg",
-    contact: "/images_v2/hero-book-now-v2.jpg",
-    faq: "/images_v2/hero-bagan-v2.jpg",
-    terms: "/images_v2/hero-bagan-v2.jpg",
-    privacy: "/images_v2/hero-bagan-v2.jpg",
-    bookNow: "/images_v2/hero-book-now-v2.jpg",
-    flights: "/images_v2/hero-book-now-v2.jpg",
-    cruises: "/images_v2/cruise1-v2.jpg",
-    cars: "/images_v2/hero-cars-v2.jpg",
-    hotels: "/images_v2/hero-hotels-v2.jpg",
-    tours: "/images_v2/hero-tours-v2.jpg",
-    insurance: "/images_v2/ins1-v3.jpg",
-    visas: "/images_v2/visa1-v3.jpg",
-  },
   sectionRows: { ...p.sectionRows, [sk.key]: newTitles }
                             }));
                           }}
