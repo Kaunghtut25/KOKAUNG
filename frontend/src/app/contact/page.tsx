@@ -342,7 +342,7 @@ export default function ContactPage() {
                     {label:"Hotel Department",phone:"959 694 320 111"},
                     {label:"Outbound Department",phone:"959 694 320 111"},
                     {label:"Inbound Department",phone:"959 694 320 111"},
-                  ].map(d=><div key={d.label} className="flex justify-between items-center"><span className="text-gray-500 text-xs">{d.label}</span><a href={`tel:${d.phone.replace(/\s/g,'')}`} className="text-gray-700 font-medium hover:text-[#D4AF37] transition-colors">{d.phone}</a></div>)}
+                  ].map(d=><div key={d.label} className="flex justify-between items-center"><span className="text-gray-500 text-xs">{d.label}</span><a href={`tel:+959694320111`} className="text-gray-700 font-medium hover:text-[#D4AF37] transition-colors">{d.phone}</a></div>)}
                 </div>
               </div>
             </div>

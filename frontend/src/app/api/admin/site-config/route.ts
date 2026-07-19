@@ -139,7 +139,7 @@ const defaultConfig = {
   // Contact Info
   contact: {
     email: "a9ticketing@a9globaltravel.com.mm",
-    phone: "09 694 320 111",
+    phone: "959 694 320 111",
     address: "No-18, Ground Floor, Zayya Waddy Street, Baho Road, Sanchaung Tsp, Yangon, Myanmar",
     whatsapp: "+959694320111",
     messenger: "https://m.me/a9globaltravel",

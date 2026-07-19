@@ -142,7 +142,7 @@ export async function sendCustomerConfirmationEmail(data: {
 
         <p style="color: #333; margin-top: 20px;">If you have any questions or need to modify your booking, please don't hesitate to contact us:</p>
         <div style="background: #fff; padding: 16px; border-radius: 8px; margin: 16px 0; border: 1px solid #eee;">
-          <p style="margin: 0 0 6px; font-size: 14px;">📞 <strong>Phone:</strong> <a href="tel:+959694320111" style="color: #0A1628;">+95 978 161 7111</a></p>
+          <p style="margin: 0 0 6px; font-size: 14px;">📞 <strong>Phone:</strong> <a href="tel:+959694320111" style="color: #0A1628;">959 694 320 111</a></p>
           <p style="margin: 0 0 6px; font-size: 14px;">✉️ <strong>Email:</strong> <a href="mailto:dadkaunghtut@gmail.com" style="color: #0A1628;">dadkaunghtut@gmail.com</a></p>
           <p style="margin: 0; font-size: 14px;">🌐 <strong>Website:</strong> <a href="https://a9travel.com" style="color: #D4AF37;">a9travel.com</a></p>
         </div>
