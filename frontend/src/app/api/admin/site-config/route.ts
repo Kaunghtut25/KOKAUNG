@@ -9,7 +9,7 @@ export async function GET() {
     // Merge: stored config overrides defaults, but we pick up any code-level changes
     // Stored data overrides defaults, but branding fields always use code defaults
     const stored = cfg?.[0] || {};
-    const merged = { ...defaultConfig, ...stored, siteName: defaultConfig.siteName, footerCopyright: defaultConfig.footerCopyright, metaTitle: defaultConfig.metaTitle };
+    const merged = { ...defaultConfig, ...stored, siteName: defaultConfig.siteName, footerCopyright: defaultConfig.footerCopyright, metaTitle: defaultConfig.metaTitle, contact: { ...defaultConfig.contact, ...(stored.contact || {}), phone: defaultConfig.contact.phone, email: defaultConfig.contact.email } };
     return NextResponse.json(merged);
   } catch {
     return NextResponse.json(defaultConfig);
