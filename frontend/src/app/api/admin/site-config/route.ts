@@ -6,7 +6,9 @@ import { getAll, create } from "@/lib/persistentStore";
 export async function GET() {
   try {
     const cfg = await getAll("site-config" as any);
-    return NextResponse.json(cfg?.[0] || defaultConfig);
+    // Merge: stored config overrides defaults, but we pick up any code-level changes
+    const merged = { ...(cfg?.[0] || {}), ...defaultConfig };
+    return NextResponse.json(merged);
   } catch {
     return NextResponse.json(defaultConfig);
   }
