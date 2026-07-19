@@ -59,7 +59,7 @@ export async function POST(request: NextRequest) {
         try { await del(old.url); } catch { /* best-effort */ }
       }
 
-      const blob = await put(pathname, buffer, {
+      const blob = await put(pathname, buffer, { addRandomSuffix: true,
         access: 'public',
         contentType: mimeType,
       });
