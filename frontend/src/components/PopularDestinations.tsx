@@ -171,11 +171,9 @@ export default function PopularDestinations() {
         <p className="text-gray-500">Popular Destinations</p>
       </div>
       {dests.length > 0 ? (
-        <div className="flex flex-wrap justify-center gap-5">
+        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-5 justify-center">
           {dests.map((d, i) => (
-            <div key={i} className="w-[300px] flex-shrink-0">
-              <DestinationCard dest={d} />
-            </div>
+            <DestinationCard key={i} dest={d} />
           ))}
         </div>
       ) : (
