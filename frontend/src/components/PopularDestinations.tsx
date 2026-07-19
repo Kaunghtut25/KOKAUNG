@@ -2,20 +2,19 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import ScrollingRow from "./ScrollingRow";
 
 const FALLBACK_IMG = "/images_v2/cta-bg-v2.jpg";
 
 const FALLBACK_DESTS = [
-  { city: "Paris", country: "France", image: "/images_v2/dest-paris-v2.jpg", minPrice: "Ks 850,000" },
-  { city: "Dubai", country: "UAE", image: "/images_v2/dest-dubai-v2.jpg", minPrice: "Ks 680,000" },
-  { city: "Korea", country: "South Korea", image: "/images_v2/dest-korea-v2.jpg", minPrice: "Ks 550,000" },
-  { city: "Thailand", country: "Thailand", image: "/images_v2/hero-thailand-v2.jpg", minPrice: "Ks 150,000" },
-  { city: "Singapore", country: "Singapore", image: "/images_v2/hero-singapore-v2.jpg", minPrice: "Ks 250,000" },
-  { city: "Japan", country: "Japan", image: "/images_v2/dest-japan-v2.jpg", minPrice: "Ks 780,000" },
+  { city: "Paris", country: "France", image: "/images_v2/dest-paris-v2.jpg", minPrice: "Ks 850,000", rating: 4.8, reviews: 2340, duration: "5 Days", tags: ["Luxury", "Romance", "Culture"], description: "Iconic Eiffel Tower, Louvre Museum, Seine River cruises and world-class cuisine." },
+  { city: "Dubai", country: "UAE", image: "/images_v2/dest-dubai-v2.jpg", minPrice: "Ks 680,000", rating: 4.7, reviews: 1890, duration: "4 Days", tags: ["Luxury", "Shopping", "Modern"], description: "Burj Khalifa, desert safaris, gold souks and futuristic architecture." },
+  { city: "Korea", country: "South Korea", image: "/images_v2/dest-korea-v2.jpg", minPrice: "Ks 550,000", rating: 4.6, reviews: 1560, duration: "6 Days", tags: ["Culture", "Food", "K-Pop"], description: "Ancient palaces, vibrant street food, K-pop culture and stunning cherry blossoms." },
+  { city: "Thailand", country: "Thailand", image: "/images_v2/hero-thailand-v2.jpg", minPrice: "Ks 150,000", rating: 4.5, reviews: 3210, duration: "4 Days", tags: ["Beach", "Temple", "Food"], description: "Golden temples, pristine beaches, floating markets and warm Thai hospitality." },
+  { city: "Singapore", country: "Singapore", image: "/images_v2/hero-singapore-v2.jpg", minPrice: "Ks 250,000", rating: 4.7, reviews: 1980, duration: "3 Days", tags: ["Modern", "Food", "Shopping"], description: "Marina Bay Sands, Gardens by the Bay, hawker food paradise." },
+  { city: "Japan", country: "Japan", image: "/images_v2/dest-japan-v2.jpg", minPrice: "Ks 780,000", rating: 4.9, reviews: 2870, duration: "7 Days", tags: ["Culture", "Food", "Nature"], description: "Ancient temples, bullet trains, cherry blossoms, exquisite cuisine." },
 ];
 
-function DestinationCard({ dest }: { dest: { city: string; country: string; image: string; minPrice: string } }) {
+function DestinationCard({ dest }: { dest: { city: string; country: string; image: string; minPrice: string; rating?: number; reviews?: number; duration?: string; tags?: string[]; description?: string } }) {
   const [imgError, setImgError] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const router = useRouter();
@@ -25,7 +24,7 @@ function DestinationCard({ dest }: { dest: { city: string; country: string; imag
       onClick={() => router.push("/destinations/" + encodeURIComponent(dest.city.toLowerCase().replace(/\s+/g, "-")))}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      className="flex-shrink-0 w-[300px] snap-start group relative cursor-pointer h-full"
+      className="group relative cursor-pointer h-full"
       style={{ perspective: "1200px" }}
     >
       <div
@@ -88,11 +87,23 @@ function DestinationCard({ dest }: { dest: { city: string; country: string; imag
         {/* Info */}
         <div className="px-4 pt-2 pb-1 space-y-1.5 flex-1">
           <h3
-            className="text-[#0A1628] text-base font-bold leading-tight line-clamp-2 group-hover:text-[#D4AF37] transition-colors duration-300"
+            className="text-[#0A1628] text-base font-bold leading-tight line-clamp-1 group-hover:text-[#D4AF37] transition-colors duration-300"
             style={{ fontFamily: "'Playfair Display', Georgia, serif" }}
           >
             {dest.city}
           </h3>
+          <div className="flex items-center gap-1.5">
+            <div className="flex items-center gap-0.5">
+              {Array.from({ length: 5 }, (_, i) => (
+                <svg key={i} className={`w-3 h-3 ${i < Math.round(dest.rating || 4.5) ? 'text-[#D4AF37]' : 'text-gray-300'}`} fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                </svg>
+              ))}
+            </div>
+            <span className="text-gray-400 text-[10px]">({(dest.reviews || 1500).toLocaleString()})</span>
+            <span className="text-gray-300 text-[10px] mx-1">·</span>
+            <span className="text-gray-400 text-[10px]">{dest.duration || "5 Days"}</span>
+          </div>
           <div className="flex items-center justify-between">
             <span className="text-gray-400 text-xs">{dest.country}</span>
             <div className="text-right">
@@ -100,7 +111,20 @@ function DestinationCard({ dest }: { dest: { city: string; country: string; imag
               <span className="text-gray-400 text-[11px] ml-0.5">/person</span>
             </div>
           </div>
-          <p className="text-gray-500 text-xs leading-relaxed line-clamp-2">Discover the best of {dest.city}'s iconic landmarks, vibrant culture, and unforgettable experiences with A9 Global Travels.</p>
+          {dest.description ? (
+            <p className="text-gray-500 text-[11px] leading-relaxed line-clamp-2">{dest.description}</p>
+          ) : (
+            <p className="text-gray-500 text-[11px] leading-relaxed line-clamp-2">Discover the best of {dest.city}'s iconic landmarks, vibrant culture, and unforgettable experiences with A9 Global Travels.</p>
+          )}
+          {dest.tags && dest.tags.length > 0 && (
+            <div className="flex flex-wrap gap-1 pt-0.5">
+              {dest.tags.slice(0, 3).map((tag, idx) => (
+                <span key={idx} className="px-2 py-0.5 rounded-full bg-[#D4AF37]/10 text-[#B8960F] text-[10px] font-medium border border-[#D4AF37]/20">
+                  {tag}
+                </span>
+              ))}
+            </div>
+          )}
         </div>
 
         {/* Button */}
@@ -147,9 +171,13 @@ export default function PopularDestinations() {
         <p className="text-gray-500">Popular Destinations</p>
       </div>
       {dests.length > 0 ? (
-        <ScrollingRow>
-          {dests.map((d, i) => <DestinationCard key={i} dest={d} />)}
-        </ScrollingRow>
+        <div className="flex flex-wrap justify-center gap-5">
+          {dests.map((d, i) => (
+            <div key={i} className="w-[300px] flex-shrink-0">
+              <DestinationCard dest={d} />
+            </div>
+          ))}
+        </div>
       ) : (
         <p className="text-center text-gray-400 py-8">No destinations yet. Add some from the admin panel!</p>
       )}
