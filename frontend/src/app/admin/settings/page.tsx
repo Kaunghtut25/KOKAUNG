@@ -115,7 +115,7 @@ export default function AdminSettingsPage() {
           ...data,
           socialLinks: { ...defaultSettings.socialLinks, ...(data.socialLinks || {}) },
           heroImages: { ...defaultSettings.heroImages, ...(data.heroImages || {}) },
-          certifications: data.certifications?.length ? data.certifications : defaultSettings.certifications,
+          certifications: data.certifications != null ? data.certifications : defaultSettings.certifications,
         });
       }
     } catch (err) {

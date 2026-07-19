@@ -114,7 +114,7 @@ export default function AdminBookingsPage() {
       params.set("page", String(inquiryPage));
       params.set("limit", String(limit));
       if (inquiryFilter !== "all") params.set("status", inquiryFilter);
-      const res = await fetch(`${API_BASE}/api/booking-receiver?${params.toString()}`);
+      const res = await fetch(`${API_BASE}/api/booking-receiver?${params.toString()}`, { headers: { Authorization: `Bearer ${token}` } });
       if (res.ok) {
         const data = await res.json();
         setInquiries(data.data || []);
