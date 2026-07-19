@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import ScrollingRow from "./ScrollingRow";
 
 const FALLBACK_IMG = "/images_v2/cta-bg-v2.jpg";
 
@@ -171,11 +172,11 @@ export default function PopularDestinations() {
         <p className="text-gray-500">Popular Destinations</p>
       </div>
       {dests.length > 0 ? (
-        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-5 justify-center">
+        <ScrollingRow>
           {dests.map((d, i) => (
             <DestinationCard key={i} dest={d} />
           ))}
-        </div>
+        </ScrollingRow>
       ) : (
         <p className="text-center text-gray-400 py-8">No destinations yet. Add some from the admin panel!</p>
       )}
