@@ -267,7 +267,7 @@ const tabs: { key: Tab; label: string }[] = [
     { key: "meta", label: "Meta & SEO" },
   ];
 
-  const inputCls = "w-full px-3 py-2 rounded-lg border border-white/10 text-sm";
+  const inputCls = "w-full px-3 py-2 rounded-lg border border-white/10 bg-white/5 text-white text-sm placeholder:text-white/30";
   const labelCls = "block text-sm font-medium text-white/70 mb-1";
 
   return (
@@ -560,7 +560,7 @@ const tabs: { key: Tab; label: string }[] = [
                     <div className="grid grid-cols-3 gap-4">
                       <div>
                         <label className="block text-xs font-medium text-white/40 mb-1">Desktop</label>
-                        <select className="w-full px-3 py-2 rounded-lg border border-white/10 text-sm" value={sl.desktop} onChange={e => {
+                        <select className="w-full px-3 py-2 rounded-lg border border-white/10 bg-white/5 text-white text-sm" value={sl.desktop} onChange={e => {
                           const v = parseInt(e.target.value);
                           setCfg(p => ({ ...p, sectionLayouts: { ...p.sectionLayouts, [sk.key]: { ...sl, desktop: v } } }));
                         }}>
@@ -569,7 +569,7 @@ const tabs: { key: Tab; label: string }[] = [
                       </div>
                       <div>
                         <label className="block text-xs font-medium text-white/40 mb-1">Tablet</label>
-                        <select className="w-full px-3 py-2 rounded-lg border border-white/10 text-sm" value={sl.tablet} onChange={e => {
+                        <select className="w-full px-3 py-2 rounded-lg border border-white/10 bg-white/5 text-white text-sm" value={sl.tablet} onChange={e => {
                           const v = parseInt(e.target.value);
                           setCfg(p => ({ ...p, sectionLayouts: { ...p.sectionLayouts, [sk.key]: { ...sl, tablet: v } } }));
                         }}>
@@ -578,7 +578,7 @@ const tabs: { key: Tab; label: string }[] = [
                       </div>
                       <div>
                         <label className="block text-xs font-medium text-white/40 mb-1">Mobile</label>
-                        <select className="w-full px-3 py-2 rounded-lg border border-white/10 text-sm" value={sl.mobile} onChange={e => {
+                        <select className="w-full px-3 py-2 rounded-lg border border-white/10 bg-white/5 text-white text-sm" value={sl.mobile} onChange={e => {
                           const v = parseInt(e.target.value);
                           setCfg(p => ({ ...p, sectionLayouts: { ...p.sectionLayouts, [sk.key]: { ...sl, mobile: v } } }));
                         }}>

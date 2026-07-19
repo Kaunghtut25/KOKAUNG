@@ -153,9 +153,9 @@ export default function AdminBlogPage() {
       <form onSubmit={handleSubmit} className="bg-white/5 rounded-xl p-6 mb-8 border border-white/10 space-y-4">
         <h2 className="text-lg font-semibold">{editingId ? 'Edit Post' : 'New Post'}</h2>
         <input type="text" value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Post title" required
-          className="w-full px-4 py-2 border border-white/10 bg-white/5 text-white rounded-lg text-sm" />
+          className="w-full px-4 py-2 border border-white/10 bg-white/5 text-white rounded-lg text-sm placeholder:text-white/30" />
         <textarea value={content} onChange={(e) => setContent(e.target.value)} placeholder="Post content" required rows={4}
-          className="w-full px-4 py-2 border border-white/10 bg-white/5 text-white rounded-lg text-sm" />
+          className="w-full px-4 py-2 border border-white/10 bg-white/5 text-white rounded-lg text-sm placeholder:text-white/30" />
 
         <div>
           <label className="block text-sm text-gray-600 mb-1">Image</label>
@@ -165,7 +165,7 @@ export default function AdminBlogPage() {
             value={image}
             onChange={(e) => { setImage(e.target.value); setImagePreview(e.target.value); setUploadError(''); }}
             placeholder="https://... or pick a file below"
-            className="w-full px-4 py-2 border border-white/10 bg-white/5 text-white rounded-lg text-sm"
+            className="w-full px-4 py-2 border border-white/10 bg-white/5 text-white rounded-lg text-sm placeholder:text-white/30"
           />
           {/* Drag & Drop Zone */}
           <div
@@ -189,7 +189,7 @@ export default function AdminBlogPage() {
               handleImageUrlChange(e.target.value);
             }}
             placeholder="Or paste image URL"
-            className="w-full mt-2 px-3 py-2 border border-white/10 bg-white/5 text-white rounded-lg text-sm focus:outline-none focus:border-[#D4AF37] transition-colors"
+            className="w-full mt-2 px-3 py-2 border border-white/10 bg-white/5 text-white rounded-lg text-sm placeholder:text-white/30 focus:outline-none focus:border-[#D4AF37] transition-colors"
           />
           {imagePreview && (
             <div className="mt-2">
@@ -199,13 +199,13 @@ export default function AdminBlogPage() {
         </div>
 
         <input type="text" value={tags} onChange={(e) => setTags(e.target.value)} placeholder="Tags (comma separated)"
-          className="w-full px-4 py-2 border border-white/10 bg-white/5 text-white rounded-lg text-sm" />
+          className="w-full px-4 py-2 border border-white/10 bg-white/5 text-white rounded-lg text-sm placeholder:text-white/30" />
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <input type="text" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="Phone (optional)"
-            className="w-full px-4 py-2 border border-white/10 bg-white/5 text-white rounded-lg text-sm" />
+            className="w-full px-4 py-2 border border-white/10 bg-white/5 text-white rounded-lg text-sm placeholder:text-white/30" />
           <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Email (optional)"
-            className="w-full px-4 py-2 border border-white/10 bg-white/5 text-white rounded-lg text-sm" />
+            className="w-full px-4 py-2 border border-white/10 bg-white/5 text-white rounded-lg text-sm placeholder:text-white/30" />
         </div>
 
         <div className="flex gap-3">
