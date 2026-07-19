@@ -172,7 +172,7 @@ export async function GET(request: NextRequest) {
     existingConfig?.[0]?.popularDestinations &&
     existingConfig[0].popularDestinations.length > 0;
 
-  if (!hasExistingDestinations) {
+  if (!hasExistingDestinations || reset) {
     const base = existingConfig?.[0] || {};
     const store = await import("@/lib/persistentStore");
 
