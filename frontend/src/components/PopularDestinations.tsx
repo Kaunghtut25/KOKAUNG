@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import ScrollingRow from "./ScrollingRow";
 
 const FALLBACK_IMG = "/images_v2/cta-bg-v2.jpg";
 
@@ -21,7 +20,7 @@ function DestinationCard({ dest }: { dest: { city: string; country: string; imag
   return (
     <div
       onClick={() => router.push('/destinations/' + encodeURIComponent(dest.city.toLowerCase().replace(/\s+/g, '-')))}
-      className="flex-shrink-0 w-[300px] rounded-xl overflow-hidden border border-gray-200 shadow-sm hover:shadow-md hover:border-[#D4AF37]/40 transition-all group cursor-pointer">
+      className="rounded-xl overflow-hidden border border-gray-200 shadow-sm hover:shadow-md hover:border-[#D4AF37]/40 transition-all group cursor-pointer">
       <img src={imgError ? FALLBACK_IMG : dest.image} alt={dest.city} className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-500" onError={()=>setImgError(true)} loading="lazy" />
       <div className="p-3 text-center bg-white">
         <p className="text-lg font-semibold text-[#0A1628] group-hover:text-[#D4AF37] transition-colors">{dest.city}</p>
@@ -53,7 +52,13 @@ export default function PopularDestinations() {
   return (
     <section className="max-w-7xl mx-auto px-4 py-12">
       <div className="text-center mb-10"><h2 className="text-3xl md:text-4xl font-bold text-[#0A1628] mb-2" style={{fontFamily:"'Playfair Display', Georgia, serif"}}>Explore The World</h2><p className="text-gray-500">Popular Destinations</p></div>
-      <ScrollingRow>{dests.length > 0 ? dests.map((d,i)=><DestinationCard key={i} dest={d} />) : <p className="text-center text-gray-400 py-8">No destinations yet. Add some from the admin panel!</p>}</ScrollingRow>
+      {dests.length > 0 ? (
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-5">
+          {dests.map((d, i) => <DestinationCard key={i} dest={d} />)}
+        </div>
+      ) : (
+        <p className="text-center text-gray-400 py-8">No destinations yet. Add some from the admin panel!</p>
+      )}
     </section>
   );
 }
