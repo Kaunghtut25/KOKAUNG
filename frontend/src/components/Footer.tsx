@@ -36,7 +36,7 @@ export default function Footer() {
   }, []);
 
   // ── Dynamic values with hardcoded fallbacks ──
-  const phone = config?.contact?.phone || "+959781617111";
+  const phone = config?.contact?.phone || "+959694320111";
   const email = config?.contact?.email || "a9ticketing@a9globaltravel.com.mm";
   const address =
     config?.contact?.address ||
