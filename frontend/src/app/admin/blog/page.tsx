@@ -220,7 +220,7 @@ export default function AdminBlogPage() {
       </form>
 
       {/* Posts List */}
-      <div className="space-y-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {loading ? <p className="text-gray-500">Loading...</p> :
           posts.map((post: BlogPost) => (
             <div key={post._id} className="bg-white/5 backdrop-blur rounded-xl p-5 border border-white/10 flex items-start gap-4 hover:border-[#D4AF37]/30 transition-all">
