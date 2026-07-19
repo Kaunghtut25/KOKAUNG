@@ -53,7 +53,7 @@ export default function PopularDestinations() {
   return (
     <section className="max-w-7xl mx-auto px-4 py-12">
       <div className="text-center mb-10"><h2 className="text-3xl md:text-4xl font-bold text-[#0A1628] mb-2" style={{fontFamily:"'Playfair Display', Georgia, serif"}}>Explore The World</h2><p className="text-gray-500">Popular Destinations</p></div>
-      <ScrollingRow>{dests.length > 0 ? dests.map((d,i)=><DestinationCard key={i} dest={d} />) : <p className="text-center text-gray-400 py-8">No destinations yet. Add some from the admin panel!</p>}</ScrollingRow> : <p className="text-center text-gray-400 py-8">No destinations yet. Add some from the admin panel!</p>
+      <ScrollingRow>{dests.length > 0 ? dests.map((d,i)=><DestinationCard key={i} dest={d} />) : <p className="text-center text-gray-400 py-8">No destinations yet. Add some from the admin panel!</p>}</ScrollingRow>
     </section>
   );
 }

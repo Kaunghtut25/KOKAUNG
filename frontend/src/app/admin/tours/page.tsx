@@ -65,6 +65,10 @@ export default function AdminToursPage() {
   const token =
     typeof window !== "undefined" ? localStorage.getItem("admin_token") : "";
 
+  // Ensure token is available before first render
+  const [tokenReady, setTokenReady] = React.useState(false);
+  React.useEffect(() => { setTokenReady(true); }, []);
+
   const fetchTours = useCallback(async () => {
     try {
       const res = await fetch(`${API_BASE}/admin/tours`, {

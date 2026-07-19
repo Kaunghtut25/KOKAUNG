@@ -100,7 +100,8 @@ export default function AdminSettingsPage() {
   const [uploadError, setUploadError] = useState("");
   const [logoUrlInput, setLogoUrlInput] = useState("");
 
-  const token = typeof window !== "undefined" ? localStorage.getItem("admin_token") : "";
+  const [token, setToken] = useState("");
+  useEffect(() => { setToken(localStorage.getItem("admin_token") || ""); }, []);
 
   const fetchSettings = useCallback(async () => {
     try {
@@ -658,7 +659,8 @@ export default function AdminSettingsPage() {
 
   const tabs = [
     { key: "general", label: "🏷️ General", icon: "⚙️" },
-    { key: "hero", label: "🖼️ Hero Images", icon: "🖼️" },
+    // Hero Images moved to Site Manager (uses /api/admin/site-config)
+    // { key: "hero", label: "🖼️ Hero Images", icon: "🖼️" },
     { key: "social", label: "🌐 Social Links", icon: "🔗" },
     { key: "certs", label: "🏅 Certifications", icon: "🏅" },
     { key: "theme", label: "🎨 Theme Colors", icon: "🎨" },
