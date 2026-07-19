@@ -99,6 +99,7 @@ function DestinationCard({ dest }: { dest: { city: string; country: string; imag
               <span className="text-gray-400 text-[11px] ml-0.5">/person</span>
             </div>
           </div>
+          <p className="text-gray-500 text-xs leading-relaxed line-clamp-2">Discover the best of {dest.city}'s iconic landmarks, vibrant culture, and unforgettable experiences with A9 Global Travels.</p>
         </div>
 
         {/* Button */}
@@ -145,7 +146,7 @@ export default function PopularDestinations() {
         <p className="text-gray-500">Popular Destinations</p>
       </div>
       {dests.length > 0 ? (
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-5">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
           {dests.map((d, i) => <DestinationCard key={i} dest={d} />)}
         </div>
       ) : (
