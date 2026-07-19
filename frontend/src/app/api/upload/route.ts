@@ -1,4 +1,5 @@
 ﻿export const dynamic = 'force-dynamic';
+export const runtime = 'nodejs';
 
 import { put, list, del } from '@vercel/blob';
 import { NextRequest, NextResponse } from 'next/server';
