@@ -175,12 +175,12 @@ export default function PopularDestinations() {
         <div className="space-y-5">
           <ScrollingRow>
             {dests.slice(0, 6).map((d, i) => (
-              <DestinationCard key={i} dest={d} />
+              <div key={i} className="flex-shrink-0 w-[300px] snap-start"><DestinationCard dest={d} /></div>
             ))}
           </ScrollingRow>
           <ScrollingRow>
             {dests.slice(6, 12).map((d, i) => (
-              <DestinationCard key={i + 6} dest={d} />
+              <div key={i + 6} className="flex-shrink-0 w-[300px] snap-start"><DestinationCard dest={d} /></div>
             ))}
           </ScrollingRow>
         </div>
