@@ -151,8 +151,9 @@ function DestinationCard({ dest }: { dest: { city: string; country: string; imag
 }
 
 export default function PopularDestinations() {
-  const [dests, setDests] = useState<any[] | null>(null);
+  const [dests, setDests] = useState<any[]>(FALLBACK_DESTS);
 
+  const [loaded, setLoaded] = useState(false);
   useEffect(() => {
     fetch("/api/admin/site-config").then(r => r.json()).then(d => {
       if (d?.popularDestinations != null) {
@@ -160,10 +161,9 @@ export default function PopularDestinations() {
       } else {
         setDests(FALLBACK_DESTS);
       }
-    }).catch(() => { setDests(FALLBACK_DESTS); });
+    }).catch(() => { setDests(FALLBACK_DESTS); }).finally(() => { setLoaded(true); });
   }, []);
 
-  if (dests === null) return null;
 
   return (
     <section className="max-w-7xl mx-auto px-4 py-12">
