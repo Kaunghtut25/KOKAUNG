@@ -112,7 +112,7 @@ function DestinationCard({ dest }: { dest: { city: string; country: string; imag
             </div>
           </div>
           {dest.description ? (
-            <p className="text-gray-500 text-[11px] leading-relaxed line-clamp-2">{dest.description}</p>
+            <p className="text-gray-500 text-[11px] leading-relaxed text-gray-500 text-[11px] leading-relaxed">{dest.description}</p>
           ) : (
             <p className="text-gray-500 text-[11px] leading-relaxed line-clamp-2">Discover the best of {dest.city}'s iconic landmarks, vibrant culture, and unforgettable experiences with A9 Global Travels.</p>
           )}
