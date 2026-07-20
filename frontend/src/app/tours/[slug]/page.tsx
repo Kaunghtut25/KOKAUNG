@@ -8,6 +8,7 @@ import SocialShare from '@/components/SocialShare';
 import { getTour, Tour, ItineraryDay } from '@/lib/api';
 import RelatedItems from '@/components/RelatedItems';
 import BackButton from '@/components/BackButton';
+import ErrorBoundary from '@/components/ErrorBoundary';
 type TabKey = 'overview' | 'itinerary' | 'included' | 'reviews';
 
 // ─── Fallback tours when API is unavailable ─────────────────
@@ -355,8 +356,8 @@ const PLACEHOLDER_IMG =
   'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIwMCIgaGVpZ2h0PSI2MDAiIHZpZXdCb3g9IjAgMCAxMjAwIDYwMCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTIwMCIgaGVpZ2h0PSI2MDAiIGZpbGw9IiMxQTFBMkUiLz48dGV4dCB4PSI2MDAiIHk9IjMwMCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iIzY2NiIgZm9udC1mYW1pbHk9Ikdlb3JnaWEiIGZvbnQtc2l6ZT0iMjQiPkE5IEdsb2JhbCAmIzE4MzsgVG91cnM8L3RleHQ+PC9zdmc+';
 
 // ─── Itinerary generator helpers ─────────────────────────
-function parseDays(durationStr: string): number {
-  const match = durationStr.match(/(\d+)/);
+function parseDays(durationStr: string | number): number {
+  const match = String(durationStr ?? '').match(/(\d+)/);
   return match ? parseInt(match[1], 10) : 0;
 }
 
@@ -602,6 +603,7 @@ export default function TourDetailPage() {
 
   // ─── Main Content ───────────────────────────────────────
   return (
+    <ErrorBoundary>
     <main className="min-h-screen bg-gradient-to-b from-white via-gray-50 to-white">
       {/* Back Button */}
       <BackButton />
@@ -1106,7 +1108,10 @@ export default function TourDetailPage() {
           </div>
         </div>
       )}
-      <RelatedItems section="tours" />
+            <ErrorBoundary fallback={null}>
+        <RelatedItems section="tours" />
+      </ErrorBoundary>
 </main>
+    </ErrorBoundary>
   );
 }
