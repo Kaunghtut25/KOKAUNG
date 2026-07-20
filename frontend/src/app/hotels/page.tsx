@@ -21,9 +21,25 @@ interface Hotel {
   featured: boolean;
 }
 
+const FALLBACK_HOTELS: Hotel[] = [
+  { _id: "fh1", slug: "sedona-hotel-yangon", name: "Sedona Hotel Yangon", location: "Yangon", description: "Luxury hotel with stunning views of Inya Lake and world-class amenities.", rating: 4.5, reviewCount: 128, pricePerNightMMK: 185000, pricePerNightUSD: 88, availableRooms: 45, totalRooms: 120, amenities: ["Pool", "Spa", "Gym", "Restaurant", "WiFi"], images: ["/images_v2/hotel1-v3.jpg"], status: "active", featured: true },
+  { _id: "fh2", slug: "aureum-palace-bagan", name: "Aureum Palace Bagan", location: "Bagan", description: "Luxury resort amidst ancient temples with a stunning pool and spa.", rating: 4.7, reviewCount: 95, pricePerNightMMK: 245000, pricePerNightUSD: 118, availableRooms: 20, totalRooms: 80, amenities: ["Pool", "Spa", "Restaurant", "WiFi", "Bar"], images: ["/images_v2/hotel2-v3.jpg"], status: "active", featured: true },
+  { _id: "fh3", slug: "inle-princess-resort", name: "Inle Princess Resort", location: "Inle Lake", description: "Beautiful lakeside resort with traditional architecture and stunning views.", rating: 4.6, reviewCount: 72, pricePerNightMMK: 220000, pricePerNightUSD: 105, availableRooms: 15, totalRooms: 50, amenities: ["Lake View", "Spa", "Restaurant", "WiFi"], images: ["/images_v2/hotel3-v3.jpg"], status: "active", featured: true },
+  { _id: "fh4", slug: "mandalay-hill-resort", name: "Mandalay Hill Resort", location: "Mandalay", description: "Elegant resort at the foot of Mandalay Hill with panoramic city views.", rating: 4.4, reviewCount: 63, pricePerNightMMK: 195000, pricePerNightUSD: 93, availableRooms: 30, totalRooms: 90, amenities: ["Pool", "Gym", "Restaurant", "WiFi", "Spa"], images: ["/images_v2/hotel4-v3.jpg"], status: "active", featured: true },
+  { _id: "fh5", slug: "ngapali-bay-villas", name: "Ngapali Bay Villas", location: "Ngapali", description: "Beachfront villas with private pools and stunning Bay of Bengal views.", rating: 4.8, reviewCount: 54, pricePerNightMMK: 320000, pricePerNightUSD: 152, availableRooms: 10, totalRooms: 25, amenities: ["Beach", "Pool", "Restaurant", "WiFi", "Spa"], images: ["/images_v2/hotel1-v3.jpg"], status: "active", featured: true },
+  { _id: "fh6", slug: "strand-hotel-yangon", name: "The Strand Yangon", location: "Yangon", description: "Iconic colonial-era luxury hotel in the heart of downtown Yangon.", rating: 4.6, reviewCount: 210, pricePerNightMMK: 280000, pricePerNightUSD: 134, availableRooms: 12, totalRooms: 32, amenities: ["Restaurant", "Bar", "Spa", "WiFi", "Butler"], images: ["/images_v2/hotel2-v3.jpg"], status: "active", featured: true },
+  { _id: "fh7", slug: "amazing-ngapali-resort", name: "Amazing Ngapali Resort", location: "Ngapali", description: "Tropical beachfront resort with lush gardens and exceptional service.", rating: 4.5, reviewCount: 48, pricePerNightMMK: 265000, pricePerNightUSD: 126, availableRooms: 18, totalRooms: 45, amenities: ["Beach", "Pool", "Restaurant", "WiFi", "Diving"], images: ["/images_v2/hotel3-v3.jpg"], status: "active", featured: false },
+  { _id: "fh8", slug: "bagan-thiripyitsaya", name: "Bagan Thiripyitsaya Sanctuary", location: "Bagan", description: "Riverside sanctuary with breathtaking views of the Irrawaddy River and temples.", rating: 4.7, reviewCount: 67, pricePerNightMMK: 235000, pricePerNightUSD: 112, availableRooms: 22, totalRooms: 60, amenities: ["River View", "Pool", "Restaurant", "WiFi", "Spa"], images: ["/images_v2/hotel4-v3.jpg"], status: "active", featured: true },
+  { _id: "fh9", slug: "novotel-yangon-max", name: "Novotel Yangon Max", location: "Yangon", description: "Modern business hotel with rooftop pool and panoramic city views.", rating: 4.3, reviewCount: 185, pricePerNightMMK: 165000, pricePerNightUSD: 79, availableRooms: 55, totalRooms: 200, amenities: ["Pool", "Gym", "Restaurant", "WiFi", "Business Center"], images: ["/images_v2/hotel1-v3.jpg"], status: "active", featured: false },
+  { _id: "fh10", slug: "chatrium-hotel-yangon", name: "Chatrium Hotel Yangon", location: "Yangon", description: "Elegant riverside hotel with spacious suites and excellent dining options.", rating: 4.4, reviewCount: 142, pricePerNightMMK: 175000, pricePerNightUSD: 84, availableRooms: 35, totalRooms: 150, amenities: ["River View", "Pool", "Restaurant", "WiFi", "Gym"], images: ["/images_v2/hotel2-v3.jpg"], status: "active", featured: false },
+  { _id: "fh11", slug: "pullman-yangon-centrepoint", name: "Pullman Yangon Centrepoint", location: "Yangon", description: "Contemporary luxury hotel in the heart of Yangon's business district.", rating: 4.5, reviewCount: 98, pricePerNightMMK: 195000, pricePerNightUSD: 93, availableRooms: 40, totalRooms: 180, amenities: ["Pool", "Gym", "Restaurant", "WiFi", "Spa"], images: ["/images_v2/hotel3-v3.jpg"], status: "active", featured: false },
+  { _id: "fh12", slug: "kandawgyi-palace", name: "Kandawgyi Palace Hotel", location: "Yangon", description: "Lakeside palace hotel with traditional Myanmar architecture and stunning views.", rating: 4.6, reviewCount: 112, pricePerNightMMK: 210000, pricePerNightUSD: 100, availableRooms: 20, totalRooms: 80, amenities: ["Lake View", "Pool", "Spa", "Restaurant", "WiFi"], images: ["/images_v2/hotel4-v3.jpg"], status: "active", featured: true },
+];
+
 async function getInitialHotels(): Promise<Hotel[]> {
   try {
     const rawHotels = await getAll("hotels") as any[];
+    if (!rawHotels || rawHotels.length === 0) return FALLBACK_HOTELS;
     return rawHotels.map((h: any) => {
       let images: string[] = [];
       if (Array.isArray(h.images)) {
@@ -59,7 +75,7 @@ async function getInitialHotels(): Promise<Hotel[]> {
       };
     });
   } catch {
-    return [];
+    return FALLBACK_HOTELS;
   }
 }
 

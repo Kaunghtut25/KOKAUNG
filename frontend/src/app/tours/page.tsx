@@ -27,13 +27,32 @@ interface Tour {
   createdAt: string;
 }
 
+const FALLBACK_TOURS: Tour[] = [
+  { _id: "ft1", slug: "classic-vietnam", title: "Classic Vietnam", destination: "Vietnam", description: "Experience the best of Vietnam from Hanoi to Ho Chi Minh City.", priceMMK: 1850000, priceUSD: 880, duration: "8", durationUnit: "days", groupSize: 12, rating: 4.7, reviewCount: 56, images: ["/images_v2/tour-vietnam-v2.jpg"], image: "/images_v2/tour-vietnam-v2.jpg", amenities: [], itinerary: [], included: ["Accommodation", "Meals", "Transport"], excluded: ["Flights", "Insurance"], featured: true, createdAt: "2026-01-01T00:00:00.000Z" },
+  { _id: "ft2", slug: "myanmar-highlights", title: "Myanmar Highlights", destination: "Myanmar", description: "Discover ancient temples of Bagan, Inle Lake, and Yangon on this comprehensive tour.", priceMMK: 2450000, priceUSD: 1180, duration: "10", durationUnit: "days", groupSize: 10, rating: 4.8, reviewCount: 72, images: ["/images_v2/tour-bagan-v2.jpg"], image: "/images_v2/tour-bagan-v2.jpg", amenities: [], itinerary: [], included: ["Accommodation", "Guide", "Meals"], excluded: ["Flights"], featured: true, createdAt: "2026-01-02T00:00:00.000Z" },
+  { _id: "ft3", slug: "ngapali-beach-retreat", title: "Ngapali Beach Retreat", destination: "Ngapali", description: "Relax on the pristine beaches of Ngapali with crystal clear waters and fresh seafood.", priceMMK: 1650000, priceUSD: 790, duration: "5", durationUnit: "days", groupSize: 8, rating: 4.6, reviewCount: 38, images: ["/images_v2/tour-beach-v2.jpg"], image: "/images_v2/tour-beach-v2.jpg", amenities: [], itinerary: [], included: ["Beach Resort", "Meals", "Spa"], excluded: ["Flights"], featured: false, createdAt: "2026-01-03T00:00:00.000Z" },
+  { _id: "ft4", slug: "bagan-temples", title: "Bagan Temples Explorer", destination: "Bagan", description: "Explore over 2000 ancient temples and pagodas in the archaeological wonder of Bagan.", priceMMK: 1950000, priceUSD: 930, duration: "4", durationUnit: "days", groupSize: 10, rating: 4.9, reviewCount: 91, images: ["/images_v2/tour-bagan-v2.jpg"], image: "/images_v2/tour-bagan-v2.jpg", amenities: [], itinerary: [], included: ["Hotel", "Guide", "E-bike"], excluded: ["Flights", "Drinks"], featured: true, createdAt: "2026-01-04T00:00:00.000Z" },
+  { _id: "ft5", slug: "inle-lake", title: "Inle Lake Discovery", destination: "Inle Lake", description: "Cruise the serene waters of Inle Lake, visit floating gardens and traditional villages.", priceMMK: 1550000, priceUSD: 740, duration: "3", durationUnit: "days", groupSize: 8, rating: 4.5, reviewCount: 45, images: ["/images_v2/tour-inle-v2.jpg"], image: "/images_v2/tour-inle-v2.jpg", amenities: [], itinerary: [], included: ["Boat tours", "Hotel", "Meals"], excluded: ["Flights"], featured: false, createdAt: "2026-01-05T00:00:00.000Z" },
+  { _id: "ft6", slug: "yangon-city", title: "Yangon City Experience", destination: "Yangon", description: "Explore Myanmar's largest city from Shwedagon Pagoda to colonial architecture.", priceMMK: 1250000, priceUSD: 590, duration: "3", durationUnit: "days", groupSize: 15, rating: 4.4, reviewCount: 33, images: ["/images_v2/tour-yangon-v2.jpg"], image: "/images_v2/tour-yangon-v2.jpg", amenities: [], itinerary: [], included: ["Hotel", "City tour", "Meals"], excluded: ["Tips"], featured: false, createdAt: "2026-01-06T00:00:00.000Z" },
+  { _id: "ft7", slug: "mandalay-royal", title: "Mandalay Royal Heritage", destination: "Mandalay", description: "Visit the last royal capital of Myanmar with its ancient palaces and monasteries.", priceMMK: 1750000, priceUSD: 840, duration: "5", durationUnit: "days", groupSize: 10, rating: 4.6, reviewCount: 41, images: ["/images_v2/tour-mandalay-v2.jpg"], image: "/images_v2/tour-mandalay-v2.jpg", amenities: [], itinerary: [], included: ["Hotel", "Guide", "Transport"], excluded: ["Flights"], featured: true, createdAt: "2026-01-07T00:00:00.000Z" },
+  { _id: "ft8", slug: "golden-rock", title: "Golden Rock Pilgrimage", destination: "Kyaiktiyo", description: "Visit the miraculous Golden Rock pagoda perched on a cliff edge.", priceMMK: 950000, priceUSD: 450, duration: "2", durationUnit: "days", groupSize: 20, rating: 4.3, reviewCount: 29, images: ["/images_v2/tour-goldenrock-v2.jpg"], image: "/images_v2/tour-goldenrock-v2.jpg", amenities: [], itinerary: [], included: ["Transport", "Hotel", "Meals"], excluded: ["Personal expenses"], featured: false, createdAt: "2026-01-08T00:00:00.000Z" },
+  { _id: "ft9", slug: "pyin-oo-lwin", title: "Pyin Oo Lwin Garden Escape", destination: "Pyin Oo Lwin", description: "Enjoy the cool highland air, botanical gardens and colonial charm of Pyin Oo Lwin.", priceMMK: 1100000, priceUSD: 520, duration: "3", durationUnit: "days", groupSize: 12, rating: 4.5, reviewCount: 27, images: ["/images_v2/tour-pyinoolwin-v2.jpg"], image: "/images_v2/tour-pyinoolwin-v2.jpg", amenities: [], itinerary: [], included: ["Hotel", "Garden tours", "Meals"], excluded: ["Flights"], featured: false, createdAt: "2026-01-09T00:00:00.000Z" },
+  { _id: "ft10", slug: "ngwe-saung-beach", title: "Ngwe Saung Beach Getaway", destination: "Ngwe Saung", description: "Unwind on the silver sands of Ngwe Saung Beach with crystal clear waters.", priceMMK: 1350000, priceUSD: 640, duration: "4", durationUnit: "days", groupSize: 8, rating: 4.4, reviewCount: 22, images: ["/images_v2/tour-beach-v2.jpg"], image: "/images_v2/tour-beach-v2.jpg", amenities: [], itinerary: [], included: ["Resort", "Water sports", "Meals"], excluded: ["Flights"], featured: false, createdAt: "2026-01-10T00:00:00.000Z" },
+  { _id: "ft11", slug: "mrauk-u", title: "Mrauk U Ancient Kingdom", destination: "Mrauk U", description: "Discover the forgotten ancient kingdom of Mrauk U with its unique stone temples.", priceMMK: 2250000, priceUSD: 1070, duration: "6", durationUnit: "days", groupSize: 8, rating: 4.7, reviewCount: 18, images: ["/images_v2/tour-mrauku-v2.jpg"], image: "/images_v2/tour-mrauku-v2.jpg", amenities: [], itinerary: [], included: ["Hotel", "Guide", "Boat"], excluded: ["Flights"], featured: false, createdAt: "2026-01-11T00:00:00.000Z" },
+  { _id: "ft12", slug: "hpa-an-adventure", title: "Hpa An Adventure", destination: "Hpa An", description: "Explore caves, karst mountains and rivers in the stunning landscape of Hpa An.", priceMMK: 1450000, priceUSD: 690, duration: "4", durationUnit: "days", groupSize: 10, rating: 4.6, reviewCount: 31, images: ["/images_v2/tour-hpaan-v2.jpg"], image: "/images_v2/tour-hpaan-v2.jpg", amenities: [], itinerary: [], included: ["Hotel", "Guide", "Cave tours"], excluded: ["Flights"], featured: false, createdAt: "2026-01-12T00:00:00.000Z" },
+  { _id: "ft13", slug: "putao-trek", title: "Putao Trekking Adventure", destination: "Putao", description: "Trek through the untouched Himalayan foothills in Myanmar's far north.", priceMMK: 3250000, priceUSD: 1550, duration: "10", durationUnit: "days", groupSize: 6, rating: 4.8, reviewCount: 15, images: ["/images_v2/tour-putao-v2.jpg"], image: "/images_v2/tour-putao-v2.jpg", amenities: [], itinerary: [], included: ["Camping", "Guide", "Meals", "Porters"], excluded: ["Flights", "Insurance"], featured: false, createdAt: "2026-01-13T00:00:00.000Z" },
+  { _id: "ft14", slug: "kawthaung-islands", title: "Kawthaung Island Hopping", destination: "Kawthaung", description: "Hop between pristine islands in the Mergui Archipelago with crystal clear waters.", priceMMK: 2850000, priceUSD: 1360, duration: "7", durationUnit: "days", groupSize: 8, rating: 4.7, reviewCount: 24, images: ["/images_v2/tour-kawthaung-v2.jpg"], image: "/images_v2/tour-kawthaung-v2.jpg", amenities: [], itinerary: [], included: ["Resort", "Boat", "Snorkeling", "Meals"], excluded: ["Flights", "Drinks"], featured: false, createdAt: "2026-01-14T00:00:00.000Z" },
+  { _id: "ft15", slug: "loikaw-tribal", title: "Loikaw Tribal Heritage", destination: "Loikaw", description: "Meet the Kayan long-neck women and explore the tribal culture of Kayah State.", priceMMK: 1850000, priceUSD: 880, duration: "5", durationUnit: "days", groupSize: 8, rating: 4.5, reviewCount: 19, images: ["/images_v2/tour-loikaw-v2.jpg"], image: "/images_v2/tour-loikaw-v2.jpg", amenities: [], itinerary: [], included: ["Hotel", "Guide", "Tribal visits"], excluded: ["Flights"], featured: false, createdAt: "2026-01-15T00:00:00.000Z" },
+  { _id: "ft16", slug: "kalaw-hiking", title: "Kalaw Hill Trekking", destination: "Kalaw", description: "Trek through pine forests and hill tribe villages from Kalaw to Inle Lake.", priceMMK: 1350000, priceUSD: 640, duration: "3", durationUnit: "days", groupSize: 8, rating: 4.6, reviewCount: 35, images: ["/images_v2/tour-kalaw-v2.jpg"], image: "/images_v2/tour-kalaw-v2.jpg", amenities: [], itinerary: [], included: ["Guide", "Homestay", "Meals"], excluded: ["Flights", "Tips"], featured: false, createdAt: "2026-01-16T00:00:00.000Z" },
+];
+
 async function getInitialTours(): Promise<Tour[]> {
   try {
     const rawTours = await getAll("tours") as any[];
+    if (!rawTours || rawTours.length === 0) return FALLBACK_TOURS;
     return rawTours.map((t: any) => {
       let images: string[] = [];
       if (Array.isArray(t.images)) {
-        // Could contain JSON string elements
         for (const item of t.images) {
           if (typeof item === 'string' && item.trim().startsWith('[')) {
             try { const parsed = JSON.parse(item); if (Array.isArray(parsed)) { images.push(...parsed.filter((x: string) => x.trim())); continue; } } catch {}
@@ -72,7 +91,7 @@ async function getInitialTours(): Promise<Tour[]> {
       };
     });
   } catch {
-    return [];
+    return FALLBACK_TOURS;
   }
 }
 
@@ -81,7 +100,6 @@ type PreloadMap = Record<string, string>;
 export default async function ToursPage() {
   const initialTours = await getInitialTours();
   
-  // Build preload map of image URLs for server-side delivery
   const preloadMap: PreloadMap = {};
   for (const tour of initialTours) {
     const img = getImageFallback(tour._id, tour.images);
