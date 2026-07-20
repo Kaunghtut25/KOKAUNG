@@ -157,6 +157,7 @@ export default function TourDetailPage() {
   };
 
   const handleBookNow = () => {
+    if (!tour) return;
     const bookUrl = new URL('/book-now', window.location.origin);
     bookUrl.searchParams.set('type', 'tour');
     bookUrl.searchParams.set('tour', tour.slug || tour._id);
@@ -174,6 +175,7 @@ export default function TourDetailPage() {
   };
 
   const handleConfirmBooking = () => {
+    if (!tour) return;
     const bookUrl = new URL('/book-now', window.location.origin);
     bookUrl.searchParams.set('type', 'tour');
     bookUrl.searchParams.set('tour', tour.slug || tour._id);
@@ -596,7 +598,8 @@ export default function TourDetailPage() {
               {/* Book Now */}
               <button
                 onClick={handleBookNow}
-                className="w-full py-3.5 rounded-xl bg-gradient-to-r from-[#D4AF37] to-[#C5A028] hover:from-[#E5C048] hover:to-[#D4AF37] text-gray-900 font-bold text-lg shadow-lg shadow-[#D4AF37]/20 hover:shadow-[#D4AF37]/40 transition-all duration-300 active:scale-[0.98]"
+                disabled={!tour}
+                className="w-full py-3.5 rounded-xl bg-gradient-to-r from-[#D4AF37] to-[#C5A028] hover:from-[#E5C048] hover:to-[#D4AF37] text-gray-900 font-bold text-lg shadow-lg shadow-[#D4AF37]/20 hover:shadow-[#D4AF37]/40 transition-all duration-300 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:from-[#D4AF37] disabled:hover:to-[#C5A028]"
               >
                 Book Now
               </button>

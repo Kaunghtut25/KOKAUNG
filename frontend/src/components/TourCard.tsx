@@ -16,11 +16,11 @@ export default function TourCard({ tour, currency = 'MMK', preloadedImage }: Tou
   const [imgError, setImgError] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
 
-  const price = currency === 'MMK' ? tour.priceMMK : tour.priceUSD;
+  const price = currency === 'MMK' ? tour?.priceMMK : tour?.priceUSD;
   const currencySymbol = currency === 'MMK' ? 'Ks' : '$';
 
   const tourId = (tour._id || (tour as any).id) as string;
-  const displayImage = preloadedImage || getImageFallback(tourId, tour.images);
+  const displayImage = preloadedImage || getImageFallback(tourId, tour?.images);
 
   const renderStars = (rating: number) => {
     return Array.from({ length: 5 }, (_, i) => (
@@ -37,7 +37,7 @@ export default function TourCard({ tour, currency = 'MMK', preloadedImage }: Tou
 
   return (
     <div
-      onClick={() => router.push(`/tours/${tour.slug || tour._id || tour.id || ''}`)}
+      onClick={() => router.push(`/tours/${(tour?.slug || tour?._id || (tour as any)?.id) || ''}`)}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       className="group relative cursor-pointer w-full h-full"
@@ -70,7 +70,7 @@ export default function TourCard({ tour, currency = 'MMK', preloadedImage }: Tou
           {!imgError ? (
             <img
               src={displayImage}
-              alt={tour.title}
+              alt={tour?.title || ''}
               className="w-full h-full object-cover transition-transform duration-700 ease-out"
               style={{ position: 'absolute', inset: 0, transform: isHovered ? 'scale(1.08)' : 'scale(1)' }}
               onError={() => setImgError(true)}
@@ -80,22 +80,22 @@ export default function TourCard({ tour, currency = 'MMK', preloadedImage }: Tou
             <div className="absolute inset-0 bg-gradient-to-br from-[#0A1628] to-[#1a2744] flex items-center justify-center">
               <div className="text-center">
                 <span className="text-3xl mb-2 block">🏛️</span>
-                <span className="text-[#D4AF37] text-sm font-semibold block">{tour.destination}</span>
+                <span className="text-[#D4AF37] text-sm font-semibold block">{tour?.destination}</span>
               </div>
             </div>
           )}
           <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/15 to-transparent" />
           <div className="absolute top-7 left-3 z-20">
             <span className="inline-block px-2.5 py-0.5 rounded-full bg-[#0A1628]/85 text-[#D4AF37] text-[11px] font-semibold backdrop-blur-sm border border-[#D4AF37]/40 shadow-lg shadow-black/30">
-              📍 {tour.destination}
+              📍 {tour?.destination}
             </span>
           </div>
           <div className="absolute top-7 right-3 z-20">
             <span className="inline-block px-2.5 py-0.5 rounded-full bg-black/60 text-white text-[11px] font-medium backdrop-blur-sm border border-white/15">
-              {tour.duration}
+              {tour?.duration || ''}
             </span>
           </div>
-          {tour.featured && (
+          {tour?.featured && (
             <div className="absolute top-7 left-1/2 -translate-x-1/2 z-20">
               <span className="inline-block px-2.5 py-0.5 rounded-full bg-[#D4AF37]/90 text-[#0A1628] text-[10px] font-bold uppercase tracking-wider shadow-lg">
                 ⭐ Featured
@@ -113,29 +113,29 @@ export default function TourCard({ tour, currency = 'MMK', preloadedImage }: Tou
             className="text-[#0A1628] text-base font-bold leading-tight line-clamp-2 group-hover:text-[#D4AF37] transition-colors duration-300"
             style={{ fontFamily: "'Playfair Display', Georgia, serif" }}
           >
-            {tour.title}
+            {tour?.title || ''}
           </h3>
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-1">
-              <div className="flex items-center gap-0.5">{renderStars(tour.rating)}</div>
-              <span className="text-gray-400 text-[11px]">({tour.reviewCount})</span>
+              <div className="flex items-center gap-0.5">{renderStars(tour?.rating ?? 0)}</div>
+              <span className="text-gray-400 text-[11px]">({tour?.reviewCount})</span>
             </div>
             <div className="text-right">
               <span className="text-[#0A1628] text-base font-bold">
-                {currencySymbol} {price.toLocaleString()}
+                {currencySymbol} {price?.toLocaleString() ?? '0'}
               </span>
               <span className="text-gray-400 text-[11px] ml-0.5">/person</span>
             </div>
           </div>
-          {tour.amenities && tour.amenities.length > 0 && (
+          {tour?.amenities && tour?.amenities.length > 0 && (
             <div className="flex flex-wrap gap-1 pt-0.5">
-              {tour.amenities.slice(0, 3).map((amenity, idx) => (
+              {tour?.amenities.slice(0, 3).map((amenity, idx) => (
                 <span key={idx} className="px-2 py-0.5 rounded-full bg-[#D4AF37]/10 text-[#B8960F] text-[10px] font-medium border border-[#D4AF37]/20">
                   {amenity}
                 </span>
               ))}
-              {tour.amenities.length > 3 && (
-                <span className="px-2 py-0.5 rounded-full bg-gray-100 text-gray-400 text-[10px]">+{tour.amenities.length - 3}</span>
+              {tour?.amenities.length > 3 && (
+                <span className="px-2 py-0.5 rounded-full bg-gray-100 text-gray-400 text-[10px]">+{tour?.amenities.length - 3}</span>
               )}
             </div>
           )}
