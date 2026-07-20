@@ -7,6 +7,10 @@ import FAQAccordion from '@/components/FAQAccordion';
 import TestimonialSlider from '@/components/TestimonialSlider';
 import RoutesMap from '@/components/RoutesMap';
 interface Cruise {
+  _id?: string;
+  id?: string;
+  slug?: string;
+  name?: string;
   id: string; title: string; destination: string; description: string;
   priceMMK: number; priceUSD: number; duration: string;
   images: string[]; amenities: string; included: string; excluded: string;

@@ -1,0 +1,141 @@
+﻿
+> a9global-travels@1.0.0 build
+> next build
+
+  ▲ Next.js 14.2.15
+  - Environments: .env.local
+
+   Creating an optimized production build ...
+ ✓ Compiled successfully
+   Skipping validation of types
+   Skipping linting
+   Collecting page data ...
+npm : [Supabase] Missing env vars. Set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY
+At line:1 char:1
++ npm run build 2>&1 | Out-File -FilePath build_log.txt -Encoding utf8; ...
++ ~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: ([Supabase] Miss...PABASE_ANON_KEY:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+[Supabase] Missing env vars. Set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY
+[Supabase] Missing env vars. Set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY
+[Supabase] Missing env vars. Set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY
+[Supabase] Missing env vars. Set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY
+[Supabase] Missing env vars. Set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY
+[Supabase] Missing env vars. Set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY
+[Supabase] Missing env vars. Set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY
+[Supabase] Missing env vars. Set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY
+[Supabase] Missing env vars. Set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY
+[Supabase] Missing env vars. Set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY
+[Supabase] Missing env vars. Set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY
+[Supabase] Missing env vars. Set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY
+[Supabase] Missing env vars. Set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY
+   Generating static pages (0/45) ...
+[Store] Supabase getAll(blog) failed, trying Redis: Supabase not configured — missing env vars
+[Store] Upstash Redis env vars missing
+[Store] Using seed data for blog
+   Generating static pages (11/45) 
+   Generating static pages (22/45) 
+   Generating static pages (33/45) 
+ ✓ Generating static pages (45/45)
+   Finalizing page optimization ...
+   Collecting build traces ...
+
+Route (app)                              Size     First Load JS
+┌ ○ /                                    129 kB          226 kB
+├ ○ /_not-found                          174 B          87.4 kB
+├ ○ /about                               6.78 kB         101 kB
+├ ○ /admin                               574 B          87.8 kB
+├ ○ /admin/blog                          3.2 kB          147 kB
+├ ○ /admin/bookings                      4.44 kB        91.6 kB
+├ ○ /admin/cars                          5.67 kB        99.7 kB
+├ ○ /admin/cruises                       6.01 kB         100 kB
+├ ○ /admin/dashboard                     3.81 kB          91 kB
+├ ○ /admin/hotels                        5.99 kB         100 kB
+├ ○ /admin/insurance                     4.92 kB        98.9 kB
+├ ○ /admin/settings                      4.71 kB         125 kB
+├ ○ /admin/site-manager                  8.72 kB         129 kB
+├ ○ /admin/sky-lounge                    3.27 kB         136 kB
+├ ○ /admin/tours                         6.05 kB         100 kB
+├ ○ /admin/visas                         4.9 kB         98.9 kB
+├ ƒ /api/admin/blog                      0 B                0 B
+├ ƒ /api/admin/blog/[id]                 0 B                0 B
+├ ƒ /api/admin/bookings                  0 B                0 B
+├ ƒ /api/admin/cars                      0 B                0 B
+├ ƒ /api/admin/cars/[id]                 0 B                0 B
+├ ƒ /api/admin/cruises                   0 B                0 B
+├ ƒ /api/admin/cruises/[id]              0 B                0 B
+├ ƒ /api/admin/hotels                    0 B                0 B
+├ ƒ /api/admin/hotels/[id]               0 B                0 B
+├ ƒ /api/admin/insurances                0 B                0 B
+├ ƒ /api/admin/insurances/[id]           0 B                0 B
+├ ƒ /api/admin/mingalar                  0 B                0 B
+├ ƒ /api/admin/mingalar/[id]             0 B                0 B
+├ ƒ /api/admin/seed                      0 B                0 B
+├ ƒ /api/admin/settings                  0 B                0 B
+├ ƒ /api/admin/site-config               0 B                0 B
+├ ƒ /api/admin/stats                     0 B                0 B
+├ ƒ /api/admin/tours                     0 B                0 B
+├ ƒ /api/admin/tours/[id]                0 B                0 B
+├ ƒ /api/admin/visas                     0 B                0 B
+├ ƒ /api/admin/visas/[id]                0 B                0 B
+├ ƒ /api/amadeus                         0 B                0 B
+├ ƒ /api/auth/login                      0 B                0 B
+├ ƒ /api/auth/register                   0 B                0 B
+├ ○ /api/blog                            0 B                0 B
+├ ƒ /api/booking-receiver                0 B                0 B
+├ ƒ /api/booking-receiver/[id]           0 B                0 B
+├ ƒ /api/cars                            0 B                0 B
+├ ƒ /api/contact                         0 B                0 B
+├ ƒ /api/cruises                         0 B                0 B
+├ ƒ /api/hotels                          0 B                0 B
+├ ƒ /api/img                             0 B                0 B
+├ ƒ /api/insurance                       0 B                0 B
+├ ƒ /api/insurances                      0 B                0 B
+├ ƒ /api/mingalar                        0 B                0 B
+├ ƒ /api/search                          0 B                0 B
+├ ƒ /api/tours                           0 B                0 B
+├ ƒ /api/tours/[slug]                    0 B                0 B
+├ ƒ /api/upload                          0 B                0 B
+├ ƒ /api/visas                           0 B                0 B
+├ ○ /auth/login                          1.62 kB        95.6 kB
+├ ○ /auth/register                       2.53 kB         126 kB
+├ ○ /blog                                6.65 kB        93.8 kB
+├ ƒ /blog/[slug]                         8.4 kB          102 kB
+├ ○ /book-now                            5.13 kB        94.2 kB
+├ ○ /booking                             4.7 kB          121 kB
+├ ƒ /cars                                6.11 kB          97 kB
+├ ƒ /cars/[slug]                         3.07 kB        95.3 kB
+├ ○ /contact                             5.33 kB         122 kB
+├ ƒ /cruises                             7.02 kB         101 kB
+├ ƒ /cruises/[slug]                      2.99 kB         102 kB
+├ ○ /destinations                        174 B          87.4 kB
+├ ƒ /destinations/[city]                 1.98 kB          96 kB
+├ ○ /faq                                 1.96 kB        89.1 kB
+├ ○ /flights                             5.09 kB        99.8 kB
+├ ƒ /hotels                              6.04 kB        96.9 kB
+├ ƒ /hotels/[slug]                       2.98 kB         102 kB
+├ ƒ /insurance                           3.76 kB         128 kB
+├ ƒ /insurance/[slug]                    2.98 kB         102 kB
+├ ƒ /mingalar                            5.03 kB          99 kB
+├ ƒ /mingalar/[slug]                     2.98 kB         102 kB
+├ ○ /privacy                             1.19 kB        88.4 kB
+├ ○ /robots.txt                          0 B                0 B
+├ ƒ /search                              181 B          94.2 kB
+├ ○ /sitemap.xml                         0 B                0 B
+├ ○ /terms                               1.47 kB        88.7 kB
+├ ƒ /tours                               6.95 kB        97.8 kB
+├ ƒ /tours/[slug]                        8.01 kB         125 kB
+├ ƒ /visas                               3.13 kB         127 kB
+└ ƒ /visas/[slug]                        2.72 kB         102 kB
++ First Load JS shared by all            87.2 kB
+  ├ chunks/2117-cb9c0e8b80e104f7.js      31.6 kB
+  ├ chunks/fd9d1056-7984ecb68951ae61.js  53.6 kB
+  └ other shared chunks (total)          1.95 kB
+
+
+ƒ Middleware                             26.8 kB
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+

@@ -9,7 +9,10 @@ import DealsBanner from '@/components/DealsBanner';
 import FAQAccordion from '@/components/FAQAccordion';
 import TestimonialSlider from '@/components/TestimonialSlider';
 interface InsurancePlan {
-  _id: string;
+  id?: string;
+  _id?: string;
+  premiumPriceMMK?: number;
+  premiumPriceUSD?: number;
   planName?: string;
   title?: string;
   coverageAmountMMK?: number;
@@ -185,9 +188,7 @@ export default function InsuranceClient({ initialPlans }: InsuranceClientProps) 
           </div>
         )}
       </section>
-{selectedPlan && (
-        <BookingModal isOpen={!!selectedPlan} onClose={() => setSelectedPlan(null)} title={`Book Now: ${selectedPlan.planName || selectedPlan.title}`} fields={['Name', 'Email', 'Phone', 'Travel Date']} />
-      )}
+      {selectedPlan && <BookingModal isOpen={!!selectedPlan} onClose={() => setSelectedPlan(null)} itemType="insurance" itemId={selectedPlan.id || selectedPlan._id || ''} itemName={selectedPlan.planName || selectedPlan.title || ''} priceMMK={selectedPlan.premiumPriceMMK || selectedPlan.priceMMK} priceUSD={selectedPlan.premiumPriceUSD || selectedPlan.priceUSD} />}
           <DealsBanner />
       <FAQAccordion section="insurance" />
       <TestimonialSlider />

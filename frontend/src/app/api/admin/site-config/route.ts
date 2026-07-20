@@ -108,7 +108,7 @@ const defaultConfig = {
 
   // Stats Cards (Why Us section)
   statsCards: [
-    { icon: "⭐", title: "IATA Accredited", description: "Internationally certified travel agency since 2015", imgSrc: "" },
+    { icon: "⭐", title: "IATA Accredited", description: "Internationally certified travel agency since 2015", imgSrc: "/images_v2/hero-home-v2.jpg" },
     { icon: "👥", title: "5,000+ Happy Travelers", description: "Trusted by thousands of satisfied customers worldwide", imgSrc: "" },
     { icon: "🗺️", title: "50+ Destinations", description: "From Myanmar to Southeast Asia and beyond", imgSrc: "" },
     { icon: "🕐", title: "24/7 Support", description: "Round-the-clock assistance wherever you are", imgSrc: "" },

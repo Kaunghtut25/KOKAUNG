@@ -7,6 +7,8 @@ import DealsBanner from '@/components/DealsBanner';
 import FAQAccordion from '@/components/FAQAccordion';
 import TestimonialSlider from '@/components/TestimonialSlider';
 interface LoungeItem {
+  slug?: string;
+  id?: string;
   img: string;
   icon: string;
   title: string;

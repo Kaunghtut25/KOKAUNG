@@ -126,6 +126,8 @@ export interface Hotel {
   reviewCount: number;
   pricePerNightMMK: number;
   pricePerNightUSD: number;
+  priceMMK?: number;
+  priceUSD?: number;
   images: string[] | string;  // API returns space-separated string
   amenities: string[];
   availableRooms: number;

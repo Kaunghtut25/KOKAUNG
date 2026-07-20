@@ -63,6 +63,8 @@ const defaultSettings: SiteSettings = {
     cars: "",
     visas: "",
     insurance: "",
+    flights: "",
+    cruises: "",
   },
   certifications: [
     { title: "IATA Accredited", code: "05301026", image: "/images_v2/iata-logo.png" },
