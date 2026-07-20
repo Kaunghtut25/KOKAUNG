@@ -1,10 +1,27 @@
+'use client';
+import { useState, useEffect } from 'react';
+
+const FALLBACK_PARTNERS = [
+  'Shangri-La', 'Sedona Hotel', 'Sule Palace', 'Melia Hotel',
+  'Myanmar Airways', 'Thai Airways', 'Singapore Airlines', 'Emirates',
+  'AIA Insurance', 'CB Insurance', 'Great Eastern',
+  'Myanmar Tourism Federation', 'ASEAN Tourism',
+];
+
 export default function PartnerLogos() {
-  const partners = [
-    'Shangri-La', 'Sedona Hotel', 'Sule Palace', 'Melia Hotel',
-    'Myanmar Airways', 'Thai Airways', 'Singapore Airlines', 'Emirates',
-    'AIA Insurance', 'CB Insurance', 'Great Eastern',
-    'Myanmar Tourism Federation', 'ASEAN Tourism',
-  ];
+  const [partners, setPartners] = useState<string[]>(FALLBACK_PARTNERS);
+
+  useEffect(() => {
+    fetch("/api/admin/site-config")
+      .then(r => r.json())
+      .then(config => {
+        if (config?.partners?.length > 0) {
+          setPartners(config.partners);
+        }
+      })
+      .catch(() => {});
+  }, []);
+
   return (
     <div style={{ background: '#f8f9fa', padding: '32px 20px' }}>
       <div style={{ maxWidth: 1000, margin: '0 auto', textAlign: 'center' }}>

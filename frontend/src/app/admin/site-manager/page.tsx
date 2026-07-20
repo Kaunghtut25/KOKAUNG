@@ -8,6 +8,7 @@ interface ServiceIcon { label: string; icon: string; href: string; enabled: bool
 interface NavLink { label: string; href: string; }
 interface StatsCard { icon: string; title: string; description: string; imgSrc: string; }
 interface WhyCard { icon: string; title: string; description: string; }
+interface Testimonial { name: string; country: string; tour: string; text: string; rating: number; }
 interface PopularDestination { city: string; country: string; image: string; minPrice: string; }
 interface ContactInfo { email: string; phone: string; address: string; whatsapp: string; messenger: string; viber: string; telegram: string; }
 interface SocialLink { platform: string; url: string; }
@@ -30,6 +31,7 @@ interface SiteConfig {
   serviceIcons: ServiceIcon[]; navLinks: NavLink[];
   statsCards: StatsCard[]; whyChooseCards: WhyCard[];
   popularDestinations: PopularDestination[];
+  testimonials: Testimonial[]; partners: string[];
   ctaTitle: string; ctaDescription: string; ctaButtonLabel: string; ctaButtonHref: string;
   contact: ContactInfo; socialLinks: SocialLink[]; footerSections: FooterSection[];
   sectionLayouts?: Record<string, SectionLayout>;
@@ -80,6 +82,16 @@ const defaultCfg: SiteConfig = {
   privacy: defaultPrivacy,
   heroSlides: [{ image: "", label: "", title: "", subtitle: "" }], heroHeightMobile: 500, heroHeightDesktop: 680,
   serviceIcons: [], navLinks: [], statsCards: [], whyChooseCards: [], popularDestinations: [],
+  testimonials: [
+    { name: "John Smith", country: "Australia", tour: "Bagan Explorer", text: "Amazing experience! The hot air balloon ride was breathtaking. Professional team from start to finish.", rating: 5 },
+    { name: "Sarah Chen", country: "Singapore", tour: "Inle Lake Discovery", text: "Beautiful lake, friendly people. A9 made everything seamless. Highly recommend!", rating: 5 },
+    { name: "Marcus Weber", country: "Germany", tour: "Yangon City Tour", text: "Rich culture and history. Our guide was knowledgeable and spoke excellent English.", rating: 5 },
+    { name: "Yuki Tanaka", country: "Japan", tour: "Ngapali Beach Escape", text: "Perfect beach vacation. The resort was stunning and transfers were on time.", rating: 5 },
+  ],
+  partners: [
+    "Shangri-La", "Sedona Hotel", "Sule Palace", "Melia Hotel",
+    "Myanmar Airways", "Thai Airways", "Singapore Airlines", "Emirates",
+  ],
   ctaTitle: "", ctaDescription: "", ctaButtonLabel: "Book Now", ctaButtonHref: "/book-now",
   contact: { email: "", phone: "", address: "", whatsapp: "", messenger: "", viber: "", telegram: "" },
   socialLinks: [], footerSections: [],
@@ -116,7 +128,7 @@ const defaultCfg: SiteConfig = {
   },
 };
 
-type Tab = "layout" | "rows" | "faq" | "terms" | "privacy" | "hero" | "heroImages" | "services" | "nav" | "stats" | "why" | "destinations" | "cta" | "contact" | "social" | "footer" | "meta";
+type Tab = "layout" | "rows" | "faq" | "terms" | "privacy" | "hero" | "heroImages" | "services" | "nav" | "stats" | "why" | "destinations" | "cta" | "contact" | "social" | "footer" | "meta" | "testimonials" | "partners";
 
 export default function SiteManagerPage() {
   const [cfg, setCfg] = useState(defaultCfg);
@@ -255,6 +267,8 @@ const tabs: { key: Tab; label: string }[] = [
     { key: "cta", label: "CTA Section" }, { key: "contact", label: "Contact Info" },
     { key: "social", label: "Social Links" }, { key: "footer", label: "Footer" },
     { key: "meta", label: "Meta & SEO" },
+    { key: "testimonials", label: "Testimonials" },
+    { key: "partners", label: "Partners" },
   ];
 
   const inputCls = "w-full px-3 py-2 rounded-lg border border-white/10 text-white text-sm";
@@ -805,6 +819,43 @@ const tabs: { key: Tab; label: string }[] = [
               >
                 + Add Section
               </button>
+            </div>
+          )}
+
+                    {tab === "testimonials" && (
+            <div className="space-y-4">
+              <h2 className="text-lg font-bold text-white">Testimonials</h2>
+              <p className="text-sm text-white/40">Manage customer reviews shown on the homepage testimonial slider.</p>
+              {cfg.testimonials.map((t, i) => (
+                <div key={i} className="border border-white/10 bg-white/5 text-white rounded-lg p-4 space-y-3">
+                  <div className="flex justify-between">
+                    <h3 className="font-medium">Review {i + 1}</h3>
+                    <button onClick={() => set("testimonials", cfg.testimonials.filter((_, idx) => idx !== i))} className="text-red-400 text-sm">Delete</button>
+                  </div>
+                  <div className="grid grid-cols-2 gap-3">
+                    <div><label className={labelCls}>Name</label><input className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} value={t.name} onChange={e => { const a = [...cfg.testimonials]; a[i] = { ...t, name: e.target.value }; set("testimonials", a); }} /></div>
+                    <div><label className={labelCls}>Country</label><input className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} value={t.country} onChange={e => { const a = [...cfg.testimonials]; a[i] = { ...t, country: e.target.value }; set("testimonials", a); }} /></div>
+                  </div>
+                  <div><label className={labelCls}>Tour</label><input className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} value={t.tour} onChange={e => { const a = [...cfg.testimonials]; a[i] = { ...t, tour: e.target.value }; set("testimonials", a); }} /></div>
+                  <div><label className={labelCls}>Text</label><textarea style={{ backgroundColor: "rgba(255,255,255,0.06)", color: "white" }} className={inputCls} rows={3} value={t.text} onChange={e => { const a = [...cfg.testimonials]; a[i] = { ...t, text: e.target.value }; set("testimonials", a); }} /></div>
+                  <div><label className={labelCls}>Rating (1-5)</label><input type="number" min={1} max={5} className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white", width: 80 }} value={t.rating} onChange={e => { const a = [...cfg.testimonials]; a[i] = { ...t, rating: parseInt(e.target.value) || 5 }; set("testimonials", a); }} /></div>
+                </div>
+              ))}
+              <button onClick={() => set("testimonials", [...cfg.testimonials, { name: "", country: "", tour: "", text: "", rating: 5 }])} className="px-4 py-2 bg-white/10 rounded-lg text-sm">+ Add Testimonial</button>
+            </div>
+          )}
+
+          {tab === "partners" && (
+            <div className="space-y-4">
+              <h2 className="text-lg font-bold text-white">Partners</h2>
+              <p className="text-sm text-white/40">Manage partner names shown on the homepage partners section.</p>
+              {cfg.partners.map((p, i) => (
+                <div key={i} className="flex gap-3 items-center">
+                  <input className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} placeholder="Partner name" value={p} onChange={e => { const a = [...cfg.partners]; a[i] = e.target.value; set("partners", a); }} />
+                  <button onClick={() => set("partners", cfg.partners.filter((_, idx) => idx !== i))} className="text-red-400 text-sm">Delete</button>
+                </div>
+              ))}
+              <button onClick={() => set("partners", [...cfg.partners, ""])} className="px-4 py-2 bg-white/10 rounded-lg text-sm">+ Add Partner</button>
             </div>
           )}
 

@@ -154,6 +154,19 @@ const defaultConfig = {
     { platform: "telegram", url: "https://t.me/a9globaltravel" },
   ],
 
+  // Testimonials
+  testimonials: [
+    { name: "John Smith", country: "Australia", tour: "Bagan Explorer", text: "Amazing experience! The hot air balloon ride was breathtaking. Professional team from start to finish.", rating: 5 },
+    { name: "Sarah Chen", country: "Singapore", tour: "Inle Lake Discovery", text: "Beautiful lake, friendly people. A9 made everything seamless. Highly recommend!", rating: 5 },
+    { name: "Marcus Weber", country: "Germany", tour: "Yangon City Tour", text: "Rich culture and history. Our guide was knowledgeable and spoke excellent English.", rating: 5 },
+    { name: "Yuki Tanaka", country: "Japan", tour: "Ngapali Beach Escape", text: "Perfect beach vacation. The resort was stunning and transfers were on time.", rating: 5 },
+  ],
+
+  // Partners
+  partners: [
+    "Shangri-La", "Sedona Hotel", "Sule Palace", "Melia Hotel",
+    "Myanmar Airways", "Thai Airways", "Singapore Airlines", "Emirates",
+  ],
   // Footer Sections
   footerSections: [
     {
