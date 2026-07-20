@@ -7,11 +7,11 @@ import BackButton from '@/components/BackButton';
 import RelatedItems from '@/components/RelatedItems';
 export const dynamic = 'force-dynamic';
 
-interface PageProps { params: { id: string } }
+interface PageProps { params: { slug: string } }
 
 export default async function InsuranceDetailPage({ params }: PageProps) {
   const plans = await getAll('insurances') as any[];
-  const plan = plans.find((p: any) => p.id === params.id || p._id === params.id);
+  const plan = plans.find((p: any) => ((p.planName || p.title || '').toLowerCase().replace(/[^a-z0-9]+/g, '-')) === params.slug || p.id === params.slug || p._id === params.slug);
   if (!plan) notFound();
 
   const name = plan.planName || plan.title || '';
@@ -56,7 +56,7 @@ export default async function InsuranceDetailPage({ params }: PageProps) {
           </div>
         )}
 
-        <Link href={`/book-now?type=insurance&plan=${encodeURIComponent(name)}&id=${encodeURIComponent(plan.id||plan._id||params.id)}&priceMMK=${priceMMK}&priceUSD=${priceUSD}`}
+        <Link href={`/book-now?type=insurance&plan=${encodeURIComponent(name)}&id=${encodeURIComponent(plan.id||plan._id||params.slug)}&priceMMK=${priceMMK}&priceUSD=${priceUSD}`}
           style={{ display: 'block', textAlign: 'center', padding: '16px 0', borderRadius: 14, background: 'linear-gradient(to right, #D4AF37, #F5A623)', color: '#0A1628', fontWeight: 'bold', fontSize: 16, textDecoration: 'none' }}>Book Now</Link>
       </section>
       <RelatedItems section="insurance" />

@@ -7,11 +7,11 @@ import BackButton from '@/components/BackButton';
 import RelatedItems from '@/components/RelatedItems';
 export const dynamic = 'force-dynamic';
 
-interface PageProps { params: { id: string } }
+interface PageProps { params: { slug: string } }
 
 export default async function CruiseDetailPage({ params }: PageProps) {
   const cruises = await getAll('cruises') as any[];
-  const cruise = cruises.find((c: any) => c.id === params.id || c._id === params.id || c.slug === params.id);
+  const cruise = cruises.find((c: any) => ((c.title || c.name || '').toLowerCase().replace(/[^a-z0-9]+/g, '-')) === params.slug || c.id === params.slug || c._id === params.slug || c.slug === params.slug);
   if (!cruise) notFound();
 
   const name = cruise.title || cruise.name || '';
@@ -52,7 +52,7 @@ export default async function CruiseDetailPage({ params }: PageProps) {
           </div>
         </div>
 
-        <Link href={`/book-now?type=cruise&name=${encodeURIComponent(name)}&id=${encodeURIComponent(cruise.id||cruise._id||params.id)}&priceMMK=${priceMMK}&priceUSD=${priceUSD}&destination=${encodeURIComponent(dest)}`}
+        <Link href={`/book-now?type=cruise&name=${encodeURIComponent(name)}&id=${encodeURIComponent(cruise.id||cruise._id||params.slug)}&priceMMK=${priceMMK}&priceUSD=${priceUSD}&destination=${encodeURIComponent(dest)}`}
           style={{ display: 'block', textAlign: 'center', padding: '16px 0', borderRadius: 14, background: 'linear-gradient(to right, #D4AF37, #F5A623)', color: '#0A1628', fontWeight: 'bold', fontSize: 16, textDecoration: 'none' }}>Book Now</Link>
       </section>
       <RelatedItems section="cruises" />

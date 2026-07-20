@@ -7,11 +7,11 @@ import BackButton from '@/components/BackButton';
 import RelatedItems from '@/components/RelatedItems';
 export const dynamic = 'force-dynamic';
 
-interface PageProps { params: { id: string } }
+interface PageProps { params: { slug: string } }
 
 export default async function MingalarDetailPage({ params }: PageProps) {
   const items = await getAll('mingalar') as any[];
-  const item = items.find((m: any) => m.id === params.id || m._id === params.id);
+  const item = items.find((m: any) => ((m.title || m.name || '').toLowerCase().replace(/[^a-z0-9]+/g, '-')) === params.slug || m.id === params.slug || m._id === params.slug);
   if (!item) notFound();
 
   const title = item.title || item.name || '';
@@ -57,7 +57,7 @@ export default async function MingalarDetailPage({ params }: PageProps) {
           </ul>
         </div>
 
-        <Link href={`/book-now?type=lounge&name=${encodeURIComponent(title)}&id=${encodeURIComponent(item.id||item._id||params.id)}`}
+        <Link href={`/book-now?type=lounge&name=${encodeURIComponent(title)}&id=${encodeURIComponent(item.id||item._id||params.slug)}`}
           style={{ display: 'block', textAlign: 'center', padding: '16px 0', borderRadius: 14, background: 'linear-gradient(to right, #D4AF37, #F5A623)', color: '#0A1628', fontWeight: 'bold', fontSize: 16, textDecoration: 'none' }}>Book Now</Link>
       </section>
       <RelatedItems section="mingalar" />

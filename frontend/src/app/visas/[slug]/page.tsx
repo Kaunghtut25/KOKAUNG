@@ -6,11 +6,11 @@ import SocialShare from '@/components/SocialShare';
 import RelatedItems from '@/components/RelatedItems';
 export const dynamic = 'force-dynamic';
 
-interface PageProps { params: { id: string } }
+interface PageProps { params: { slug: string } }
 
 export default async function VisaDetailPage({ params }: PageProps) {
   const visas = await getAll('visas') as any[];
-  const visa = visas.find((v: any) => v.id === params.id || v._id === params.id);
+  const visa = visas.find((v: any) => ((v.country || '').toLowerCase().replace(/[^a-z0-9]+/g, '-')) === params.slug || v.id === params.slug || v._id === params.slug);
   if (!visa) notFound();
 
   const country = visa.country || visa.title || '';
@@ -81,7 +81,7 @@ export default async function VisaDetailPage({ params }: PageProps) {
           </div>
         )}
 
-        <Link href={`/book-now?type=visa&country=${encodeURIComponent(country)}&id=${encodeURIComponent(visa.id||visa._id||params.id)}&feeMMK=${feeMMK}&feeUSD=${feeUSD}&processingTime=${encodeURIComponent(processing)}`}
+        <Link href={`/book-now?type=visa&country=${encodeURIComponent(country)}&id=${encodeURIComponent(visa.id||visa._id||params.slug)}&feeMMK=${feeMMK}&feeUSD=${feeUSD}&processingTime=${encodeURIComponent(processing)}`}
           style={{ display: 'block', textAlign: 'center', padding: '16px 0', borderRadius: 14, background: 'linear-gradient(to right, #D4AF37, #F5A623)', color: '#0A1628', fontWeight: 'bold', fontSize: 16, textDecoration: 'none' }}>
           Book Now
         </Link>
