@@ -1,6 +1,6 @@
 "use client";
 
-import { Metadata } from "next";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import DestImage from "./DestImage";
@@ -22,6 +22,7 @@ function toSlug(text: string): string {
 }
 
 export default function DestinationPage({ params }: { params: { city: string } }) {
+  const router = useRouter();
   const key = params.city.toLowerCase();
   const [dest, setDest] = useState<PopularDestination | null>(null);
   const [loading, setLoading] = useState(true);
@@ -65,9 +66,9 @@ export default function DestinationPage({ params }: { params: { city: string } }
         <p className="text-gray-600 mb-8">
           We couldn&apos;t find details for &quot;{params.city}&quot;. This destination may have been removed or is not yet available.
         </p>
-        <Link href="/" className="inline-block bg-[#D4AF37] text-white font-semibold px-8 py-3 rounded-full">
-          Back to Home
-        </Link>
+        <button onClick={() => router.back()} className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-[#D4AF37] text-white hover:bg-[#C19B2F] border border-[#D4AF37] transition-all duration-300 font-medium">
+          ← Back
+        </button>
       </main>
     );
   }
@@ -81,6 +82,9 @@ export default function DestinationPage({ params }: { params: { city: string } }
     <main className="min-h-screen bg-white">
       {/* Hero */}
       <div className="relative h-64 md:h-96 overflow-hidden">
+        <button onClick={() => router.back()} className="absolute top-6 left-6 z-20 inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-white/15 backdrop-blur-md text-white hover:bg-white/25 border border-white/20 transition-all duration-300 font-medium">
+          ← Back
+        </button>
         <DestImage
           src={dest.image || DEST_HERO}
           alt={dest.city}

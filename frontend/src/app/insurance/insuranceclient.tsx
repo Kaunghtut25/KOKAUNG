@@ -87,7 +87,7 @@ function InsuranceCard({ plan, currency, onSelect }: { plan: InsurancePlan; curr
   const benefits = (plan.benefits || []).slice(0, 3);
 
   return (
-    <div className="rounded-2xl overflow-hidden group cursor-pointer border border-gray-100 hover:border-gold/40 transition-all duration-300 bg-white shadow-sm hover:shadow-xl hover:-translate-y-1 flex flex-col">
+    <div onClick={() => router.push("/insurance/" + (plan._id || plan.id))} className="rounded-2xl overflow-hidden group cursor-pointer border border-gray-100 hover:border-gold/40 transition-all duration-300 bg-white shadow-sm hover:shadow-xl hover:-translate-y-1 flex flex-col">
       <div className="relative h-40 overflow-hidden">
         <img src={imageUrl} alt={name} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" loading="lazy"
           onError={(e) => { (e.target as HTMLImageElement).src = '/images_v2/ins1-v3.jpg'; }} />

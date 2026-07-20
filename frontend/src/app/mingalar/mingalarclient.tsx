@@ -53,7 +53,7 @@ export default function MingalarClient({ initialCards }: MingalarClientProps) {
   const renderCard = (item: LoungeItem, i: number) => {
     const slug = item.slug || item.id || ('m' + (i + 1));
     return (
-      <div key={i} className="bg-white rounded-xl border border-gray-200 overflow-hidden hover:shadow-lg hover:border-[#D4AF37]/40 transition-all group">
+      <div key={i} onClick={() => router.push("/mingalar/" + (item.slug || item.id || ("m" + (i + 1))))} className="bg-white rounded-xl border border-gray-200 overflow-hidden hover:shadow-lg hover:border-[#D4AF37]/40 transition-all group cursor-pointer">
         <div className="relative h-48 w-full overflow-hidden">
           <img
             src={item.img}

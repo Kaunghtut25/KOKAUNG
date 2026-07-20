@@ -80,6 +80,7 @@ function VisaGridCard({ visa }: { visa: VisaService }) {
 
   return (
     <div
+      onClick={() => router.push("/visas/" + (visa._id||visa.id))}
       className="h-[430px] rounded-2xl overflow-hidden group cursor-pointer border border-gray-100 hover:border-gold/40 transition-all duration-300 bg-white shadow-sm flex flex-col"
     >
       {imageUrl ? (

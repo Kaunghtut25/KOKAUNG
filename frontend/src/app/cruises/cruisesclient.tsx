@@ -161,7 +161,7 @@ export default function CruisesClient({ initialCruises }: { initialCruises: Crui
               ? '$' + cruise.priceUSD.toLocaleString()
               : 'Ks ' + cruise.priceMMK.toLocaleString();
             return (
-              <div key={cruise.id} className="bg-white rounded-2xl border border-gray-200 overflow-hidden hover:shadow-xl hover:border-[#D4AF37]/40 transition-all group">
+              <div key={cruise.id} onClick={() => router.push("/cruises/" + (cruise.id || cruise._id || cruise.slug))} className="bg-white rounded-2xl border border-gray-200 overflow-hidden hover:shadow-xl hover:border-[#D4AF37]/40 transition-all group cursor-pointer">
                 <div className="relative h-48 overflow-hidden">
                   <img
                     src={cruise.images?.[0] || '/images_v2/hero-cruises-v2.jpg'}
