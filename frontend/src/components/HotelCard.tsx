@@ -36,9 +36,11 @@ export default function HotelCard({ hotel, currency = "MMK" }: HotelCardProps) {
     ));
   };
 
+  const slug = hotel.slug || hotel._id || '';
+
   return (
     <div
-      onClick={() => router.push(`/hotels/${hotel.slug}`)}
+      onClick={() => router.push("/hotels/" + slug)}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       className="group relative cursor-pointer w-full h-full"
@@ -127,7 +129,7 @@ export default function HotelCard({ hotel, currency = "MMK" }: HotelCardProps) {
           </div>
           {/* View Details button */}
           <div
-            onClick={(e) => { e.stopPropagation(); router.push("/hotels/" + hotel.slug); }}
+            onClick={(e) => { e.stopPropagation(); router.push("/hotels/" + slug); }}
             className={`w-full py-2.5 rounded-xl text-center font-semibold text-sm transition-all duration-400 border ${
               isHovered ? "bg-[#0A1628] text-[#D4AF37] border-[#D4AF37] shadow-lg shadow-[#0A1628]/20 scale-[1.02]" : "bg-white text-[#0A1628] border-[#D4AF37]/50"
             }`}>
@@ -138,9 +140,3 @@ export default function HotelCard({ hotel, currency = "MMK" }: HotelCardProps) {
     </div>
   );
 }
-
-
-
-
-
-

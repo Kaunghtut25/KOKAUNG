@@ -7,15 +7,19 @@ import BackButton from '@/components/BackButton';
 import RelatedItems from '@/components/RelatedItems';
 export const dynamic = 'force-dynamic';
 
-// Default fallback cards matching listing page defaults
+// Default fallback cards matching listing page defaults (with id matching client construction: m1, m2, etc.)
 const FALLBACK_ITEMS = [
-  { title: 'Fine Dining', img: '/images_v2/sky1-v3.jpg', icon: '🍽️', desc: 'Premium buffet & a la carte menu' },
-  { title: 'Open Bar', img: '/images_v2/sky2-v3.jpg', icon: '🍸', desc: 'Complimentary drinks & cocktails' },
-  { title: 'Workspace', img: '/images_v2/sky3-v3.jpg', icon: '💻', desc: 'High-speed WiFi & work stations' },
-  { title: 'Shower Suites', img: '/images_v2/sky1-v3.jpg', icon: '🚿', desc: 'Refresh before your flight' },
-  { title: 'Nap Pods', img: '/images_v2/sky2-v3.jpg', icon: '😴', desc: 'Rest in private sleeping pods' },
-  { title: 'Concierge', img: '/images_v2/sky3-v3.jpg', icon: '🛎️', desc: 'Priority check-in & boarding' },
+  { id: 'm1', _id: 'm1', title: 'Fine Dining', img: '/images_v2/sky1-v3.jpg', icon: '🍽️', desc: 'Premium buffet & a la carte menu' },
+  { id: 'm2', _id: 'm2', title: 'Open Bar', img: '/images_v2/sky2-v3.jpg', icon: '🍸', desc: 'Complimentary drinks & cocktails' },
+  { id: 'm3', _id: 'm3', title: 'Workspace', img: '/images_v2/sky3-v3.jpg', icon: '💻', desc: 'High-speed WiFi & work stations' },
+  { id: 'm4', _id: 'm4', title: 'Shower Suites', img: '/images_v2/sky1-v3.jpg', icon: '🚿', desc: 'Refresh before your flight' },
+  { id: 'm5', _id: 'm5', title: 'Nap Pods', img: '/images_v2/sky2-v3.jpg', icon: '😴', desc: 'Rest in private sleeping pods' },
+  { id: 'm6', _id: 'm6', title: 'Concierge', img: '/images_v2/sky3-v3.jpg', icon: '🛎️', desc: 'Priority check-in & boarding' },
 ];
+
+const FALLBACK_SLUG_MAP: Record<string, number> = {
+  'fine-dining': 0, 'open-bar': 1, 'workspace': 2, 'shower-suites': 3, 'nap-pods': 4, 'concierge': 5,
+};
 
 interface PageProps { params: { slug: string } }
 
@@ -23,7 +27,19 @@ export default async function MingalarDetailPage({ params }: PageProps) {
   const items = await getAll('mingalar') as any[];
   let item = items.find((m: any) => ((m.title || m.name || "").toLowerCase().replace(/[^a-z0-9]+/g, "-")) === params.slug || m.id === params.slug || m._id === params.slug);
   if (!item) {
-    item = FALLBACK_ITEMS.find((f: any) => f.title.toLowerCase().replace(/[^a-z0-9]+/g, "-") === params.slug);
+    // Also check FALLBACK_ITEMS by slug, title, id, or numeric index
+    const slugLower = params.slug.toLowerCase();
+    // Direct slug match from FALLBACK_SLUG_MAP
+    if (FALLBACK_SLUG_MAP[slugLower] !== undefined) {
+      item = FALLBACK_ITEMS[FALLBACK_SLUG_MAP[slugLower]];
+    } else if (/^m\d+$/.test(slugLower)) {
+      // Match by m1, m2, etc.
+      const idx = parseInt(slugLower.substring(1), 10) - 1;
+      if (idx >= 0 && idx < FALLBACK_ITEMS.length) item = FALLBACK_ITEMS[idx];
+    }
+    if (!item) {
+      item = FALLBACK_ITEMS.find((f: any) => f.title.toLowerCase().replace(/[^a-z0-9]+/g, "-") === slugLower);
+    }
   }
   if (!item) notFound();
 

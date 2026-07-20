@@ -9,8 +9,21 @@ export const dynamic = 'force-dynamic';
 
 interface PageProps { params: { slug: string } }
 
+const FALLBACK_PLANS = [
+  { _id: 'i1', planName: 'Basic Travel Shield', coverage: 'Medical + Trip Delay', priceMMK: 15000, priceUSD: 7, duration: 'Per trip', benefits: ['Medical Emergency', 'Trip Cancellation', 'Lost Baggage'] },
+  { _id: 'i2', planName: 'Standard Travel Guard', coverage: 'Medical + Baggage', priceMMK: 25000, priceUSD: 12, duration: 'Per trip', benefits: ['Medical Emergency', 'Baggage Loss', 'Flight Delay'] },
+  { _id: 'i3', planName: 'Premium Travel Protect', coverage: 'Medical + Cancellation', priceMMK: 45000, priceUSD: 21, duration: 'Annual', benefits: ['Unlimited Medical', 'Trip Cancellation', 'Concierge'] },
+  { _id: 'i4', planName: 'Family Travel Plan', coverage: 'Family Medical + Trip', priceMMK: 60000, priceUSD: 29, duration: 'Per trip', benefits: ['Full Family Cover', 'Child Medical', 'Trip Cancellation'] },
+  { _id: 'i5', planName: 'Senior Travel Cover', coverage: 'Medical + Evacuation', priceMMK: 55000, priceUSD: 26, duration: 'Per trip', benefits: ['Medical Emergency', 'Emergency Evacuation', 'Repatriation'] },
+  { _id: 'i6', planName: 'Adventure Sports Pack', coverage: 'Extreme Sports + Medical', priceMMK: 85000, priceUSD: 40, duration: 'Per trip', benefits: ['Sports Injury', 'Helicopter Rescue', 'Equipment Cover'] },
+  { _id: 'i7', planName: 'Business Travel Pro', coverage: 'Medical + Productivity', priceMMK: 75000, priceUSD: 36, duration: 'Annual', benefits: ['Medical Emergency', 'Trip Delay', 'Document Replacement'] },
+  { _id: 'i8', planName: 'Student Travel Basic', coverage: 'Medical + Baggage', priceMMK: 12000, priceUSD: 6, duration: 'Per trip', benefits: ['Medical Emergency', 'Baggage Loss', 'Trip Cancellation'] },
+  { _id: 'i9', planName: 'Cruise Coverage', coverage: 'Medical + Missed Port', priceMMK: 95000, priceUSD: 45, duration: 'Per trip', benefits: ['Medical Emergency', 'Missed Port', 'Cabin Cover'] },
+];
+
 export default async function InsuranceDetailPage({ params }: PageProps) {
-  const plans = await getAll('insurances') as any[];
+  let plans = await getAll('insurances') as any[];
+  if (plans.length === 0) plans = FALLBACK_PLANS;
   const plan = plans.find((p: any) => ((p.planName || p.title || '').toLowerCase().replace(/[^a-z0-9]+/g, '-')) === params.slug || p.id === params.slug || p._id === params.slug);
   if (!plan) notFound();
 

@@ -9,8 +9,22 @@ export const dynamic = 'force-dynamic';
 
 interface PageProps { params: { slug: string } }
 
+const FALLBACK_CRUISES = [
+  { id: "cr1", title: "Halong Bay Cruise", destination: "Vietnam", description: "Luxury overnight cruise through Halong Bay.", priceMMK: 650000, priceUSD: 310, duration: "3 Days / 2 Nights", images: ["/images_v2/hero-cruises-v2.jpg"] },
+  { id: "cr2", title: "Mekong River Cruise", destination: "Cambodia", description: "Journey along the legendary Mekong River.", priceMMK: 920000, priceUSD: 440, duration: "5 Days / 4 Nights", images: ["/images_v2/hero-cruises-v2.jpg"] },
+  { id: "cr3", title: "Andaman Sea Cruise", destination: "Thailand", description: "Island hopping in the Andaman Sea.", priceMMK: 580000, priceUSD: 276, duration: "4 Days / 3 Nights", images: ["/images_v2/hero-cruises-v2.jpg"] },
+  { id: "cr4", title: "Singapore Strait Cruise", destination: "Singapore", description: "Luxury cruise around Singapore.", priceMMK: 1200000, priceUSD: 571, duration: "3 Days / 2 Nights", images: ["/images_v2/hero-cruises-v2.jpg"] },
+  { id: "cr5", title: "Maldives Atoll Cruise", destination: "Maldives", description: "Sail through pristine atolls.", priceMMK: 2500000, priceUSD: 1190, duration: "7 Days / 6 Nights", images: ["/images_v2/dest-maldives-v2.jpg"] },
+  { id: "cr6", title: "Dubai Marina Cruise", destination: "UAE", description: "Evening dinner cruise along Dubai Marina.", priceMMK: 180000, priceUSD: 85, duration: "Evening", images: ["/images_v2/dest-dubai-v2.jpg"] },
+  { id: "cr7", title: "Alaska Glacier Cruise", destination: "Alaska, USA", description: "Witness towering glaciers and whales.", priceMMK: 4200000, priceUSD: 2000, duration: "7 Days / 6 Nights", images: ["/images_v2/dest-japan-v2.jpg"] },
+  { id: "cr8", title: "Norwegian Fjords Cruise", destination: "Norway", description: "Sail through dramatic fjords.", priceMMK: 3800000, priceUSD: 1810, duration: "7 Days / 6 Nights", images: ["/images_v2/dest-korea-v2.jpg"] },
+  { id: "cr9", title: "Greek Isles Cruise", destination: "Greece", description: "Island-hop through Santorini and Mykonos.", priceMMK: 2800000, priceUSD: 1333, duration: "8 Days / 7 Nights", images: ["/images_v2/dest-paris-v2.jpg"] },
+  { id: "cr10", title: "Antarctic Expedition", destination: "Antarctica", description: "The ultimate adventure to the last wilderness.", priceMMK: 8500000, priceUSD: 4050, duration: "12 Days / 11 Nights", images: ["/images_v2/hero-cruises-v2.jpg"] },
+];
+
 export default async function CruiseDetailPage({ params }: PageProps) {
-  const cruises = await getAll('cruises') as any[];
+  let cruises = await getAll('cruises') as any[];
+  if (cruises.length === 0) cruises = FALLBACK_CRUISES;
   const cruise = cruises.find((c: any) => ((c.title || c.name || '').toLowerCase().replace(/[^a-z0-9]+/g, '-')) === params.slug || c.id === params.slug || c._id === params.slug || c.slug === params.slug);
   if (!cruise) notFound();
 
