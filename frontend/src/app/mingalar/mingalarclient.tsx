@@ -42,6 +42,8 @@ export default function MingalarClient({ initialCards }: MingalarClientProps) {
     }).then(data => {
       if (data?.data?.length > 0) {
         const mapped = data.data.map((item: any) => ({
+          id: item.id || item._id,
+          slug: (item.title || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|$/g, ''),
           img: item.img || item.image || '/images_v2/sky1-v3.jpg',
           icon: item.icon || '✨',
           title: item.title || 'Sky Lounge',

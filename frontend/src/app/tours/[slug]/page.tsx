@@ -7,6 +7,7 @@ import CurrencyToggle from '@/components/CurrencyToggle';
 import SocialShare from '@/components/SocialShare';
 import { getTour, Tour, ItineraryDay } from '@/lib/api';
 import RelatedItems from '@/components/RelatedItems';
+import BackButton from '@/components/BackButton';
 type TabKey = 'overview' | 'itinerary' | 'included' | 'reviews';
 
 const PLACEHOLDER_IMG =
@@ -248,15 +249,7 @@ export default function TourDetailPage() {
   return (
     <main className="min-h-screen bg-gradient-to-b from-white via-gray-50 to-white">
       {/* Back Button */}
-      <button
-        onClick={() => router.back()}
-        className="absolute top-4 left-4 z-30 flex items-center gap-1.5 px-3 py-2 rounded-full bg-white/90 backdrop-blur-sm border border-gray-200 shadow-md hover:shadow-lg hover:bg-white transition-all duration-200 text-gray-700 hover:text-[#D4AF37] text-sm font-medium"
-      >
-        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-          <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
-        </svg>
-        Back
-      </button>
+      <BackButton />
 
       {/* Hero image */}
       <section className="relative w-full h-[60vh] overflow-hidden">
