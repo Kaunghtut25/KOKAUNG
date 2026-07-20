@@ -12,7 +12,8 @@ import RoutesMap from '@/components/RoutesMap';
 export default function ToursClient(props) {
   const [heroImage, setHeroImage] = useState("/images_v2/hero-tours-v2.jpg");
   const { initialTours, preloadMap } = props;
-  const [apiTours, setApiTours] = useState(initialTours);
+  // Use server-rendered data directly — no client re-fetch to avoid flash of old content
+  const apiTours = initialTours;
   const [currency, setCurrency] = useState('MMK');
   const [layout, setLayout] = useState({ desktop: 3, tablet: 2, mobile: 1 });
   useEffect(() => {
@@ -39,23 +40,6 @@ export default function ToursClient(props) {
   const [sort, setSort] = useState('');
   useEffect(() => { fetch("/api/admin/site-config").then(r => r.json()).then(d => { if (d?.heroImages?.tours) setHeroImage(d.heroImages.tours); }).catch(() => {}); }, []);
 
-  useEffect(() => {
-    fetch('/api/tours?page=1&limit=50').then(r => r.json()).then(data => {
-      const items = data?.data || data || [];
-      if (items.length > 0) {
-        const tours = items.map((t) => ({
-          _id: t._id, slug: t.slug, title: t.title || 'Untitled',
-          destination: t.destination || '', description: t.description || '',
-          priceMMK: t.priceMMK || 0, priceUSD: t.priceUSD || 0,
-          duration: t.duration || '', rating: t.rating || 0,
-          reviewCount: t.reviewCount || 0,
-          image: t.image || t.images?.[0] || '/images_v2/hero-tours-v2.jpg',
-          images: t.images || [], amenities: t.amenities || [],
-        }));
-        setApiTours(tours);
-      }
-    }).catch(() => {});
-  }, []);
 
   const filteredTours = apiTours.filter((t) => {
     const q = destination.toLowerCase();

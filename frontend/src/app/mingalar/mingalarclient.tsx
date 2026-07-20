@@ -35,24 +35,6 @@ export default function MingalarClient({ initialCards }: MingalarClientProps) {
       .catch(() => {});
   }, []);
 
-  useEffect(() => {
-    fetch('/api/mingalar').then(r => {
-      if (!r.ok) throw new Error('Not authed');
-      return r.json();
-    }).then(data => {
-      if (data?.data?.length > 0) {
-        const mapped = data.data.map((item: any) => ({
-          id: item.id || item._id,
-          slug: (item.title || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|$/g, ''),
-          img: item.img || item.image || '/images_v2/sky1-v3.jpg',
-          icon: item.icon || '✨',
-          title: item.title || 'Sky Lounge',
-          desc: item.desc || item.description || '',
-        }));
-        setLoungeCards(mapped);
-      }
-    }).catch(() => {});
-  }, []);
 
   const renderCard = (item: LoungeItem, i: number) => {
     const slug = item.slug || item.id || ('m' + (i + 1));
