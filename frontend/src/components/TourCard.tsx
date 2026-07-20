@@ -37,7 +37,7 @@ export default function TourCard({ tour, currency = 'MMK', preloadedImage }: Tou
 
   return (
     <div
-      onClick={() => router.push(`/tours/${tour.slug}`)}
+      onClick={() => router.push(`/tours/${tour.slug || tour._id || tour.id || ''}`)}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       className="group relative cursor-pointer w-full h-full"

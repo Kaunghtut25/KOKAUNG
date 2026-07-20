@@ -7,11 +7,24 @@ import BackButton from '@/components/BackButton';
 import RelatedItems from '@/components/RelatedItems';
 export const dynamic = 'force-dynamic';
 
+// Default fallback cards matching listing page defaults
+const FALLBACK_ITEMS = [
+  { title: 'Fine Dining', img: '/images_v2/sky1-v3.jpg', icon: '🍽️', desc: 'Premium buffet & a la carte menu' },
+  { title: 'Open Bar', img: '/images_v2/sky2-v3.jpg', icon: '🍸', desc: 'Complimentary drinks & cocktails' },
+  { title: 'Workspace', img: '/images_v2/sky3-v3.jpg', icon: '💻', desc: 'High-speed WiFi & work stations' },
+  { title: 'Shower Suites', img: '/images_v2/sky1-v3.jpg', icon: '🚿', desc: 'Refresh before your flight' },
+  { title: 'Nap Pods', img: '/images_v2/sky2-v3.jpg', icon: '😴', desc: 'Rest in private sleeping pods' },
+  { title: 'Concierge', img: '/images_v2/sky3-v3.jpg', icon: '🛎️', desc: 'Priority check-in & boarding' },
+];
+
 interface PageProps { params: { slug: string } }
 
 export default async function MingalarDetailPage({ params }: PageProps) {
   const items = await getAll('mingalar') as any[];
-  const item = items.find((m: any) => ((m.title || m.name || '').toLowerCase().replace(/[^a-z0-9]+/g, '-')) === params.slug || m.id === params.slug || m._id === params.slug);
+  let item = items.find((m: any) => ((m.title || m.name || "").toLowerCase().replace(/[^a-z0-9]+/g, "-")) === params.slug || m.id === params.slug || m._id === params.slug);
+  if (!item) {
+    item = FALLBACK_ITEMS.find((f: any) => f.title.toLowerCase().replace(/[^a-z0-9]+/g, "-") === params.slug);
+  }
   if (!item) notFound();
 
   const title = item.title || item.name || '';
