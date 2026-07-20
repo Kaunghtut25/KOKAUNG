@@ -10,6 +10,347 @@ import RelatedItems from '@/components/RelatedItems';
 import BackButton from '@/components/BackButton';
 type TabKey = 'overview' | 'itinerary' | 'included' | 'reviews';
 
+// ─── Fallback tours when API is unavailable ─────────────────
+const FALLBACK_TOURS: Tour[] = [
+  {
+    _id: 'fallback-1',
+    slug: 'classic-vietnam',
+    title: 'Classic Vietnam',
+    destination: 'Vietnam',
+    description: 'Experience the best of Vietnam on this comprehensive journey from Hanoi to Ho Chi Minh City. Explore ancient temples, cruise through Ha Long Bay, wander the lantern-lit streets of Hoi An, and savour the incredible flavours of Vietnamese cuisine. This tour blends culture, history, and natural beauty in one unforgettable adventure.',
+    priceMMK: 2150000,
+    priceUSD: 1024,
+    duration: '12',
+    durationUnit: 'Days',
+    groupSize: 16,
+    rating: 4.8,
+    reviewCount: 124,
+    images: ['https://images.unsplash.com/photo-1557750255-c76072a7aad1?w=1200&h=600&fit=crop'],
+    amenities: ['English Guide', 'Accommodation', 'Airport Transfers', 'Meals as Listed'],
+    itinerary: [],
+    included: ['Hotel accommodation', 'Daily breakfast', 'Guided tours', 'Entrance fees', 'Airport transfers'],
+    excluded: ['International flights', 'Visa fees', 'Travel insurance', 'Personal expenses', 'Tipping'],
+    featured: true,
+    createdAt: new Date().toISOString(),
+  },
+  {
+    _id: 'fallback-2',
+    slug: 'myanmar-highlights',
+    title: 'Myanmar Highlights',
+    destination: 'Myanmar',
+    description: 'Discover the golden land of Myanmar on this captivating tour. From the shimmering Shwedagon Pagoda in Yangon to the ancient temples of Bagan, the floating gardens of Inle Lake to the royal palace of Mandalay — immerse yourself in a culture untouched by time and a warmth of hospitality that will stay with you forever.',
+    priceMMK: 1890000,
+    priceUSD: 899,
+    duration: '10',
+    durationUnit: 'Days',
+    groupSize: 14,
+    rating: 4.9,
+    reviewCount: 208,
+    images: ['https://images.unsplash.com/photo-1570168007206-dfb2a1b1c637?w=1200&h=600&fit=crop'],
+    amenities: ['English Guide', 'Accommodation', 'Domestic Flights', 'Meals as Listed'],
+    itinerary: [],
+    included: ['Hotel accommodation', 'Daily breakfast', 'English-speaking guide', 'Domestic flights', 'Entrance fees', 'Airport transfers'],
+    excluded: ['International flights', 'Visa fees', 'Travel insurance', 'Personal expenses', 'Tips'],
+    featured: true,
+    createdAt: new Date().toISOString(),
+  },
+  {
+    _id: 'fallback-3',
+    slug: 'ngapali-beach-retreat',
+    title: 'Ngapali Beach Retreat',
+    destination: 'Ngapali',
+    description: 'Escape to the pristine shores of Ngapali Beach, Myanmar\'s premier coastal paradise. With powdery white sand, crystal-clear turquoise waters, and swaying palm trees, this retreat offers the perfect balance of relaxation and adventure. Enjoy fresh seafood, snorkelling, island hopping, and breathtaking sunsets over the Bay of Bengal.',
+    priceMMK: 1450000,
+    priceUSD: 690,
+    duration: '5',
+    durationUnit: 'Days',
+    groupSize: 12,
+    rating: 4.7,
+    reviewCount: 89,
+    images: ['https://images.unsplash.com/photo-1590523277543-a94d2e4eb00b?w=1200&h=600&fit=crop'],
+    amenities: ['Beachfront Resort', 'English Guide', 'Airport Transfers', 'Seafood Dining'],
+    itinerary: [],
+    included: ['Beachfront accommodation', 'Daily breakfast & dinner', 'Airport transfers', 'Snorkelling trip', 'Sunset cruise'],
+    excluded: ['Flights to Ngapali', 'Lunch', 'Alcoholic beverages', 'Spa treatments', 'Travel insurance'],
+    featured: true,
+    createdAt: new Date().toISOString(),
+  },
+  {
+    _id: 'fallback-4',
+    slug: 'bagan-temples',
+    title: 'Bagan Temples Explorer',
+    destination: 'Bagan',
+    description: 'Step back in time among the mystical plains of Bagan, where over 2,000 ancient temples and pagodas dot the landscape. Watch the sunrise from a temple terrace as hot air balloons drift across the sky, explore the intricate murals of Ananda Temple, and experience the spiritual heart of Myanmar at its most awe-inspiring archaeological site.',
+    priceMMK: 1260000,
+    priceUSD: 599,
+    duration: '4',
+    durationUnit: 'Days',
+    groupSize: 15,
+    rating: 4.9,
+    reviewCount: 176,
+    images: ['https://images.unsplash.com/photo-1581913629264-52e2e59b0702?w=1200&h=600&fit=crop'],
+    amenities: ['English Guide', 'E-Bike Rental', 'Sunrise Tour', 'Accommodation'],
+    itinerary: [],
+    included: ['Hotel accommodation', 'Daily breakfast', 'English-speaking guide', 'E-bike rental', 'Sunrise temple tour', 'Airport transfers'],
+    excluded: ['Flights to Bagan', 'Lunch & dinner', 'Balloon ride (optional)', 'Travel insurance', 'Tips'],
+    featured: true,
+    createdAt: new Date().toISOString(),
+  },
+  {
+    _id: 'fallback-5',
+    slug: 'inle-lake',
+    title: 'Inle Lake Discovery',
+    destination: 'Inle Lake',
+    description: 'Glide across the serene waters of Inle Lake, where the Intha people have built a unique way of life on floating gardens and stilted villages. Witness the famous leg-rowers, visit the five-day rotating market, explore artisan workshops for silk and silver, and discover the sacred Phaung Daw Oo Pagoda at the heart of this magical highland lake.',
+    priceMMK: 1050000,
+    priceUSD: 499,
+    duration: '3',
+    durationUnit: 'Days',
+    groupSize: 12,
+    rating: 4.8,
+    reviewCount: 145,
+    images: ['https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=1200&h=600&fit=crop'],
+    amenities: ['English Guide', 'Boat Trips', 'Lakeside Hotel', 'Cultural Visits'],
+    itinerary: [],
+    included: ['Lakeside accommodation', 'Daily breakfast', 'Boat excursions', 'English-speaking guide', 'Market visits', 'Airport transfers'],
+    excluded: ['Flights to Heho', 'Lunch & dinner', 'Shopping', 'Travel insurance', 'Tips'],
+    featured: false,
+    createdAt: new Date().toISOString(),
+  },
+  {
+    _id: 'fallback-6',
+    slug: 'yangon-city',
+    title: 'Yangon City Experience',
+    destination: 'Yangon',
+    description: 'Explore Myanmar\'s largest and most vibrant city, where colonial-era architecture meets golden pagodas. Visit the magnificent Shwedagon Pagoda at sunset, stroll through the bustling Bogyoke Market, admire the grand colonial buildings downtown, and sample the city\'s legendary street food scene in Chinatown.',
+    priceMMK: 840000,
+    priceUSD: 399,
+    duration: '3',
+    durationUnit: 'Days',
+    groupSize: 15,
+    rating: 4.6,
+    reviewCount: 112,
+    images: ['https://images.unsplash.com/photo-1558947530-cbcf6e9aeeae?w=1200&h=600&fit=crop'],
+    amenities: ['English Guide', 'City Hotel', 'Airport Transfers', 'Walking Tours'],
+    itinerary: [],
+    included: ['Hotel accommodation', 'Daily breakfast', 'City walking tour', 'Shwedagon visit', 'Airport transfers'],
+    excluded: ['Lunch & dinner', 'Shopping', 'Travel insurance', 'Tips', 'Personal expenses'],
+    featured: false,
+    createdAt: new Date().toISOString(),
+  },
+  {
+    _id: 'fallback-7',
+    slug: 'mandalay-royal',
+    title: 'Mandalay Royal Heritage',
+    destination: 'Mandalay',
+    description: 'Journey to the last royal capital of Myanmar. Explore the restored Mandalay Palace, climb Mandalay Hill for panoramic views, visit the world\'s largest book at Kuthodaw Pagoda, and witness the breathtaking U Bein Bridge at sunset — the longest teak bridge in the world. Discover ancient crafts like gold leaf beating and marble carving.',
+    priceMMK: 1050000,
+    priceUSD: 499,
+    duration: '3',
+    durationUnit: 'Days',
+    groupSize: 14,
+    rating: 4.7,
+    reviewCount: 98,
+    images: ['https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=1200&h=600&fit=crop'],
+    amenities: ['English Guide', 'Hotel', 'Airport Transfers', 'Heritage Tours'],
+    itinerary: [],
+    included: ['Hotel accommodation', 'Daily breakfast', 'Heritage tours', 'English-speaking guide', 'Airport transfers', 'U Bein Bridge sunset'],
+    excluded: ['Flights to Mandalay', 'Lunch & dinner', 'Travel insurance', 'Tips', 'Shopping'],
+    featured: false,
+    createdAt: new Date().toISOString(),
+  },
+  {
+    _id: 'fallback-8',
+    slug: 'golden-rock',
+    title: 'Golden Rock Pilgrimage',
+    destination: 'Kyaiktiyo',
+    description: 'Visit one of Myanmar\'s most sacred Buddhist sites — the gravity-defying Golden Rock at Kyaiktiyo. Perched precariously on the edge of a cliff and covered in gold leaf, this miraculous boulder is a powerful pilgrimage destination. Experience the spiritual atmosphere, panoramic mountain views, and the unique open-truck journey to the summit.',
+    priceMMK: 630000,
+    priceUSD: 299,
+    duration: '2',
+    durationUnit: 'Days',
+    groupSize: 15,
+    rating: 4.5,
+    reviewCount: 67,
+    images: ['https://images.unsplash.com/photo-1587247290321-f3b01fcba052?w=1200&h=600&fit=crop'],
+    amenities: ['English Guide', 'Hotel', 'Transport', 'Pilgrimage Guide'],
+    itinerary: [],
+    included: ['Hotel accommodation', 'Breakfast', 'Transport to Golden Rock', 'English-speaking guide', 'Entrance fees'],
+    excluded: ['Lunch & dinner', 'Travel insurance', 'Tips', 'Truck fare (additional)', 'Personal expenses'],
+    featured: false,
+    createdAt: new Date().toISOString(),
+  },
+  {
+    _id: 'fallback-9',
+    slug: 'pyin-oo-lwin',
+    title: 'Pyin Oo Lwin Highland Escape',
+    destination: 'Pyin Oo Lwin',
+    description: 'Escape to the cool highlands of Pyin Oo Lwin, the former British hill station. Explore the magnificent National Kandawgyi Botanical Gardens, visit colonial-era mansions, ride a horse-drawn carriage through town, tour strawberry farms and coffee plantations, and discover the stunning Pwe Kauk and Anisakan waterfalls.',
+    priceMMK: 840000,
+    priceUSD: 399,
+    duration: '3',
+    durationUnit: 'Days',
+    groupSize: 12,
+    rating: 4.6,
+    reviewCount: 78,
+    images: ['https://images.unsplash.com/photo-1580651315530-69c8e0026377?w=1200&h=600&fit=crop'],
+    amenities: ['English Guide', 'Colonial Hotel', 'Horse Cart Ride', 'Coffee Tour'],
+    itinerary: [],
+    included: ['Hotel accommodation', 'Daily breakfast', 'Botanical gardens', 'Horse carriage ride', 'Coffee plantation visit', 'Transport'],
+    excluded: ['Flights', 'Lunch & dinner', 'Travel insurance', 'Tips', 'Personal expenses'],
+    featured: false,
+    createdAt: new Date().toISOString(),
+  },
+  {
+    _id: 'fallback-10',
+    slug: 'ngwe-saung-beach',
+    title: 'Ngwe Saung Beach Bliss',
+    destination: 'Ngwe Saung',
+    description: 'Discover the unspoiled beauty of Ngwe Saung Beach (Silver Beach), a 15-kilometre stretch of pristine white sand on the Bay of Bengal. Swim in warm turquoise waters, explore nearby fishing villages, enjoy fresh seafood barbecues on the beach, and experience a slice of tropical paradise away from the crowds.',
+    priceMMK: 1260000,
+    priceUSD: 599,
+    duration: '4',
+    durationUnit: 'Days',
+    groupSize: 10,
+    rating: 4.5,
+    reviewCount: 56,
+    images: ['https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=1200&h=600&fit=crop'],
+    amenities: ['Beachfront Resort', 'Airport Transfers', 'Seafood Dining', 'Water Sports'],
+    itinerary: [],
+    included: ['Beachfront accommodation', 'Daily breakfast', 'Airport transfers', 'Island boat trip', 'Welcome seafood dinner'],
+    excluded: ['Flights', 'Lunch', 'Alcoholic drinks', 'Water sports equipment', 'Travel insurance'],
+    featured: false,
+    createdAt: new Date().toISOString(),
+  },
+  {
+    _id: 'fallback-11',
+    slug: 'mrauk-u',
+    title: 'Mrauk U Ancient Kingdoms',
+    destination: 'Mrauk U',
+    description: 'Venture off the beaten path to Mrauk U, the ancient capital of the Arakan Kingdom. Explore the fortress-like temples shrouded in mist at dawn, discover the unique stone pagodas unlike anywhere else in Myanmar, visit traditional Chin villages, and experience a side of Myanmar that few travellers ever see.',
+    priceMMK: 1680000,
+    priceUSD: 799,
+    duration: '5',
+    durationUnit: 'Days',
+    groupSize: 10,
+    rating: 4.7,
+    reviewCount: 42,
+    images: ['https://images.unsplash.com/photo-1570168007206-dfb2a1b1c637?w=1200&h=600&fit=crop'],
+    amenities: ['English Guide', 'Guesthouse', 'Boat Trip', 'Village Visits'],
+    itinerary: [],
+    included: ['Guesthouse accommodation', 'Daily breakfast', 'Temple tours', 'Boat trip on river', 'Chin village visit', 'Transport'],
+    excluded: ['Flights to Sittwe', 'Lunch & dinner', 'Travel insurance', 'Tips', 'Personal expenses'],
+    featured: false,
+    createdAt: new Date().toISOString(),
+  },
+  {
+    _id: 'fallback-12',
+    slug: 'hpa-an-adventure',
+    title: 'Hpa-An Cave & Karst Adventure',
+    destination: 'Hpa-An',
+    description: 'Explore the stunning karst landscapes of Hpa-An in Kayin State. Hike to hidden pagodas perched atop limestone cliffs, boat through caves filled with Buddha statues, explore the vast Saddan Cave, swim in natural pools at Kyauk Ka Lat, and experience the raw natural beauty of one of Southeast Asia\'s most underrated destinations.',
+    priceMMK: 1050000,
+    priceUSD: 499,
+    duration: '3',
+    durationUnit: 'Days',
+    groupSize: 12,
+    rating: 4.8,
+    reviewCount: 63,
+    images: ['https://images.unsplash.com/photo-1528164344705-47542687000d?w=1200&h=600&fit=crop'],
+    amenities: ['English Guide', 'Hotel', 'Boat Trips', 'Cave Tours'],
+    itinerary: [],
+    included: ['Hotel accommodation', 'Daily breakfast', 'Cave entrance fees', 'Boat trips', 'English-speaking guide', 'Transport'],
+    excluded: ['Flights', 'Lunch & dinner', 'Travel insurance', 'Tips', 'Personal expenses'],
+    featured: false,
+    createdAt: new Date().toISOString(),
+  },
+  {
+    _id: 'fallback-13',
+    slug: 'putao-trek',
+    title: 'Putao Himalayan Trek',
+    destination: 'Putao',
+    description: 'Embark on an epic adventure to Putao, Myanmar\'s northernmost town nestled in the foothills of the Himalayas. Trek through pristine rainforest, cross suspension bridges over rushing rivers, meet the Lisu, Rawang, and Khamti Shan tribes, and gaze upon snow-capped peaks at the edge of the world.',
+    priceMMK: 2520000,
+    priceUSD: 1199,
+    duration: '7',
+    durationUnit: 'Days',
+    groupSize: 8,
+    rating: 4.9,
+    reviewCount: 34,
+    images: ['https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1200&h=600&fit=crop'],
+    amenities: ['Trekking Guide', 'Camping Gear', 'Porter Service', 'Meals Included'],
+    itinerary: [],
+    included: ['Trekking permits', 'Camping accommodation', 'All meals on trek', 'English-speaking guide', 'Porters', 'Camping equipment'],
+    excluded: ['Flights to Putao', 'Personal trekking gear', 'Travel insurance', 'Tips', 'Visa fees'],
+    featured: false,
+    createdAt: new Date().toISOString(),
+  },
+  {
+    _id: 'fallback-14',
+    slug: 'kawthaung-islands',
+    title: 'Kawthaung Island Hopping',
+    destination: 'Kawthaung',
+    description: 'Explore the pristine Mergui Archipelago from Kawthaung, Myanmar\'s southernmost point. Sail through turquoise waters to untouched islands, snorkel among vibrant coral reefs teeming with marine life, visit sea gypsy (Moken) villages, and camp on deserted white-sand beaches under a canopy of stars.',
+    priceMMK: 2100000,
+    priceUSD: 999,
+    duration: '5',
+    durationUnit: 'Days',
+    groupSize: 10,
+    rating: 4.8,
+    reviewCount: 47,
+    images: ['https://images.unsplash.com/photo-1582967788606-a171c1080cb0?w=1200&h=600&fit=crop'],
+    amenities: ['Boat & Crew', 'Snorkel Gear', 'Beach Camping', 'Local Guide'],
+    itinerary: [],
+    included: ['Boat transfers', 'Snorkelling equipment', 'Beach camping gear', 'All meals on islands', 'Local guide', 'National park fees'],
+    excluded: ['Flights to Kawthaung', 'Alcoholic drinks', 'Travel insurance', 'Tips', 'Personal expenses'],
+    featured: false,
+    createdAt: new Date().toISOString(),
+  },
+  {
+    _id: 'fallback-15',
+    slug: 'loikaw-tribal',
+    title: 'Loikaw Tribal Heritage',
+    destination: 'Loikaw',
+    description: 'Journey to Loikaw, the capital of Kayah State, and discover the fascinating culture of the Kayan (Padaung) people. Visit traditional villages, learn about the iconic brass neck rings, explore the scenic Seven Lakes, discover ancient cave pagodas, and witness a way of life that has endured for centuries.',
+    priceMMK: 1260000,
+    priceUSD: 599,
+    duration: '4',
+    durationUnit: 'Days',
+    groupSize: 10,
+    rating: 4.6,
+    reviewCount: 38,
+    images: ['https://images.unsplash.com/photo-1518509562904-e7ef99cdcc86?w=1200&h=600&fit=crop'],
+    amenities: ['English Guide', 'Hotel', 'Village Visits', 'Lake Tour'],
+    itinerary: [],
+    included: ['Hotel accommodation', 'Daily breakfast', 'Village visits', 'Lake tour', 'English-speaking guide', 'Transport'],
+    excluded: ['Flights to Loikaw', 'Lunch & dinner', 'Travel insurance', 'Tips', 'Personal expenses'],
+    featured: false,
+    createdAt: new Date().toISOString(),
+  },
+  {
+    _id: 'fallback-16',
+    slug: 'kalaw-hiking',
+    title: 'Kalaw Hill Trekking',
+    destination: 'Kalaw',
+    description: 'Trek through the scenic Shan Hills from the colonial hill station of Kalaw. Walk through pine forests, tea plantations, and Pa-O and Danu villages. Experience rural Myanmar hospitality with homestay accommodation, enjoy panoramic hilltop views, and end your trek at the beautiful shores of Inle Lake.',
+    priceMMK: 1260000,
+    priceUSD: 599,
+    duration: '3',
+    durationUnit: 'Days',
+    groupSize: 12,
+    rating: 4.7,
+    reviewCount: 91,
+    images: ['https://images.unsplash.com/photo-1551632811-561732d1e306?w=1200&h=600&fit=crop'],
+    amenities: ['Trekking Guide', 'Homestay', 'Meals Included', 'Village Visits'],
+    itinerary: [],
+    included: ['Homestay accommodation', 'All meals during trek', 'English-speaking guide', 'Village visits', 'Trekking permits', 'Transport to Inle Lake'],
+    excluded: ['Flights', 'Personal trekking gear', 'Travel insurance', 'Tips', 'Alcoholic beverages'],
+    featured: false,
+    createdAt: new Date().toISOString(),
+  },
+];
+
+
 const PLACEHOLDER_IMG =
   'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIwMCIgaGVpZ2h0PSI2MDAiIHZpZXdCb3g9IjAgMCAxMjAwIDYwMCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTIwMCIgaGVpZ2h0PSI2MDAiIGZpbGw9IiMxQTFBMkUiLz48dGV4dCB4PSI2MDAiIHk9IjMwMCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iIzY2NiIgZm9udC1mYW1pbHk9Ikdlb3JnaWEiIGZvbnQtc2l6ZT0iMjQiPkE5IEdsb2JhbCAmIzE4MzsgVG91cnM8L3RleHQ+PC9zdmc+';
 
@@ -127,13 +468,19 @@ export default function TourDetailPage() {
       try {
         const response = await getTour(slug);
         setTour(response.data);
+        if (!response.data) throw new Error('Not found');
       } catch (err) {
         console.error('Failed to fetch tour:', err);
-        setError('Failed to load tour details. Please try again later.');
+        const fallback = FALLBACK_TOURS.find(t => t.slug === slug || t._id === slug);
+        if (fallback) {
+          setTour(fallback);
+        } else {
+          setError('Tour not found');
+        }
       } finally {
         setLoading(false);
       }
-    };
+    }
 
     fetchTour();
   }, [slug]);
@@ -207,6 +554,9 @@ export default function TourDetailPage() {
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-b from-white via-gray-50 to-white">
+        <div className="max-w-7xl mx-auto px-4 pt-24 pb-4">
+          <BackButton />
+        </div>
         <div className="h-[60vh] bg-white/5 animate-pulse" />
         <div className="max-w-7xl mx-auto px-4 py-12">
           <div className="h-8 bg-white/10 rounded w-1/3 mb-4 animate-pulse" />
@@ -227,19 +577,24 @@ export default function TourDetailPage() {
   // ─── Error State ─────────────────────────────────────────
   if (error || !tour) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-white via-gray-50 to-white flex items-center justify-center">
-        <div className="text-center space-y-4">
-          <svg className="w-16 h-16 mx-auto text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z" />
-          </svg>
-          <h2 className="text-xl text-[#0A1628] font-semibold">Something went wrong</h2>
-          <p className="text-gray-500">{error || 'Tour not found'}</p>
-          <button
-            onClick={() => router.push('/search')}
-            className="px-6 py-2 rounded-xl bg-gradient-to-r from-[#D4AF37] to-[#C5A028] text-gray-900 font-semibold inline-block"
-          >
-            Back to Search
-          </button>
+      <div className="min-h-screen bg-gradient-to-b from-white via-gray-50 to-white">
+        <div className="max-w-7xl mx-auto px-4 pt-24 pb-8">
+          <BackButton />
+        </div>
+        <div className="flex items-center justify-center flex-1">
+          <div className="text-center space-y-4">
+            <svg className="w-16 h-16 mx-auto text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z" />
+            </svg>
+            <h2 className="text-xl text-[#0A1628] font-semibold">Something went wrong</h2>
+            <p className="text-gray-500">{error || 'Tour not found'}</p>
+            <button
+              onClick={() => router.push('/search')}
+              className="px-6 py-2 rounded-xl bg-gradient-to-r from-[#D4AF37] to-[#C5A028] text-gray-900 font-semibold inline-block"
+            >
+              Back to Search
+            </button>
+          </div>
         </div>
       </div>
     );
