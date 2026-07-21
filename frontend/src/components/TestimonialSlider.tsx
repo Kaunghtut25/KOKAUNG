@@ -7,6 +7,7 @@ interface Review {
   tour: string;
   text: string;
   rating: number;
+  image?: string;
 }
 
 const FALLBACK_REVIEWS: Review[] = [
@@ -48,6 +49,7 @@ export default function TestimonialSlider() {
         <div style={{ background: 'rgba(255,255,255,0.05)', borderRadius: 16, padding: 24 }}>
           <div style={{ color: '#D4AF37', fontSize: 18, marginBottom: 8 }}>{'★'.repeat(r.rating || 5)}</div>
           <p style={{ color: 'white', fontSize: 16, lineHeight: 1.6, fontStyle: 'italic', marginBottom: 16 }}>"{r.text}"</p>
+          {r.image && <img src={r.image} alt={r.name} style={{ width: 60, height: 60, borderRadius: '50%', objectFit: 'cover', margin: '0 auto 12px', border: '2px solid #D4AF37' }} />}
           <div style={{ color: '#D4AF37', fontWeight: 600 }}>{r.name}</div>
           <div style={{ color: '#999', fontSize: 13 }}>{r.country} — {r.tour}</div>
         </div>

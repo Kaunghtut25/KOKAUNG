@@ -8,7 +8,7 @@ interface ServiceIcon { label: string; icon: string; href: string; enabled: bool
 interface NavLink { label: string; href: string; }
 interface StatsCard { icon: string; title: string; description: string; imgSrc: string; }
 interface WhyCard { icon: string; title: string; description: string; }
-interface Testimonial { name: string; country: string; tour: string; text: string; rating: number; }
+interface Testimonial { name: string; country: string; tour: string; text: string; rating: number; image?: string; }
 interface PopularDestination { city: string; country: string; image: string; minPrice: string; }
 interface ContactInfo { email: string; phone: string; address: string; whatsapp: string; messenger: string; viber: string; telegram: string; }
 interface SocialLink { platform: string; url: string; }
@@ -219,7 +219,7 @@ export default function SiteManagerPage() {
         <input
           type="text"
           placeholder="Or paste image URL (https://...)"
-          className="w-full px-3 py-2 rounded-lg border border-white/10 text-sm mt-2"
+          className="w-full px-3 py-2 rounded-lg border border-white/10 text-white text-sm mt-2" style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }}
           value={imageUrlInput || currentVal || ""}
           onChange={(e) => {
             setImageUrlInput(e.target.value);
@@ -370,6 +370,19 @@ const tabs: { key: Tab; label: string }[] = [
                     <div className="mb-3">
                       <div
                         className="border-2 border-dashed border-white/20 rounded-lg p-4 text-center cursor-pointer hover:border-[#D4AF37] transition-colors"
+                        onDrop={async (e) => {
+                          e.preventDefault();
+                          const file = e.dataTransfer.files?.[0];
+                          if (!file) return;
+                          setUploading(true); setUploadError("");
+                          try {
+                            const blob = await put(file.name, file, { access: "public" });
+                            setCfg(p => ({ ...p, heroImages: { ...(p.heroImages || {}), [key]: blob.url } }));
+                            showToast("Image uploaded!");
+                          } catch { setUploadError("Upload failed."); }
+                          setUploading(false);
+                        }}
+                        onDragOver={(e) => e.preventDefault()}
                         onClick={() => {
                           const ref = fileInputRefs.current[`heroImages_${key}`];
                           if (ref) ref.click();
@@ -810,12 +823,16 @@ const tabs: { key: Tab; label: string }[] = [
                     <button onClick={() => set("testimonials", cfg.testimonials.filter((_, idx) => idx !== i))} className="text-red-400 text-sm">Delete</button>
                   </div>
                   <div className="grid grid-cols-2 gap-3">
-                    <div><label className={`labelCls labelCls`}>Name</label><input className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} value={t.name} onChange={e => { const a = [...cfg.testimonials]; a[i] = { ...t, name: e.target.value }; set("testimonials", a); }} /></div>
+                    <div><label className={labelCls}>Name</label><input className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} value={t.name} onChange={e => { const a = [...cfg.testimonials]; a[i] = { ...t, name: e.target.value }; set("testimonials", a); }} /></div>
+                    <div><label className={labelCls}>Country</label><input className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} value={t.country} onChange={e => { const a = [...cfg.testimonials]; a[i] = { ...t, country: e.target.value }; set("testimonials", a); }} /></div>
                   </div>
-                  <div><label className={`labelCls labelCls`}>Tour</label><input className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} value={t.tour} onChange={e => { const a = [...cfg.testimonials]; a[i] = { ...t, tour: e.target.value }; set("testimonials", a); }} /></div>
+                  <div><label className={labelCls}>Tour</label><input className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} value={t.tour} onChange={e => { const a = [...cfg.testimonials]; a[i] = { ...t, tour: e.target.value }; set("testimonials", a); }} /></div>
+                  <div><label className={labelCls}>Text (Quote)</label><textarea className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} rows={3} value={t.text} onChange={e => { const a = [...cfg.testimonials]; a[i] = { ...t, text: e.target.value }; set("testimonials", a); }} /></div>
+                  <div><label className={labelCls}>Rating (1-5)</label><input type="number" min="1" max="5" className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} value={t.rating} onChange={e => { const a = [...cfg.testimonials]; a[i] = { ...t, rating: parseInt(e.target.value) || 5 }; set("testimonials", a); }} /></div>
+                  <div><label className={labelCls}>Photo URL (optional)</label><input type="text" placeholder="https://..." className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} value={t.image || ""} onChange={e => { const a = [...cfg.testimonials]; a[i] = { ...t, image: e.target.value }; set("testimonials", a); }} /></div>
                 </div>
               ))}
-              <button onClick={() => set("testimonials", [...cfg.testimonials, { name: "", country: "", tour: "", text: "", rating: 5 }])} className="px-4 py-2 bg-white/10 rounded-lg text-sm">+ Add Testimonial</button>
+              <button onClick={() => set("testimonials", [...cfg.testimonials, { name: "", country: "", tour: "", text: "", rating: 5, image: "" }])} className="px-4 py-2 bg-white/10 rounded-lg text-sm">+ Add Testimonial</button>
             </div>
           )}
 
