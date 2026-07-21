@@ -396,7 +396,7 @@ export default function AdminCarsPage() {
         <div className="flex gap-2 mb-3">
           <div
           className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center"
-          onDrop={(e) => { e.preventDefault(); const file = e.dataTransfer.files[0]; if (file) { const reader = new FileReader(); reader.onload = (ev) => setEditingCar((prev) => { return { ...prev, image: ev.target?.result as string }; }); reader.readAsDataURL(file); } }}
+          onDrop={(e) => { e.preventDefault(); const file = e.dataTransfer.files[0]; if (file) { const reader = new FileReader(); reader.onload = (ev) => setEditingCar((prev) => { return { ...prev, images: ev.target?.result as string }; }); reader.readAsDataURL(file); } }}
           onDragOver={(e) => e.preventDefault()}
         >
           <p className="text-sm text-gray-500 mb-2">Drag & drop image here</p>

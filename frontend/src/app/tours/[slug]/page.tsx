@@ -349,6 +349,27 @@ const FALLBACK_TOURS: Tour[] = [
     featured: false,
     createdAt: new Date().toISOString(),
   },
+  {
+    _id: 'fallback-17',
+    slug: 'yangon-shwedagon-pilgrimage',
+    title: 'Yangon Shwedagon Pilgrimage',
+    destination: 'Yangon',
+    description: 'Embark on a spiritual journey to the heart of Yangon. Visit the magnificent Shwedagon Pagoda, the crown jewel of Myanmar, and explore the most sacred Buddhist sites of the city. This pilgrimage tour takes you through centuries of devotion, stunning golden architecture, and the vibrant spiritual life of the largest city in Myanmar.',
+    priceMMK: 735000,
+    priceUSD: 349,
+    duration: '3',
+    durationUnit: 'Days',
+    groupSize: 15,
+    rating: 4.8,
+    reviewCount: 156,
+    images: ['/images_v2/tour-yangon-v2.jpg'],
+    amenities: ['English Guide', 'City Hotel', 'Airport Transfers', 'Pilgrimage Guide'],
+    itinerary: [],
+    included: ['Hotel accommodation', 'Daily breakfast', 'Shwedagon Pagoda visit', 'Sule Pagoda visit', 'Bogyoke Market tour', 'Airport transfers'],
+    excluded: ['International flights', 'Lunch & dinner', 'Visa fees', 'Travel insurance', 'Personal expenses'],
+    featured: false,
+    createdAt: new Date().toISOString(),
+  },
 ];
 
 

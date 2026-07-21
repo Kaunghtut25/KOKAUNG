@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React, { useState, useEffect } from "react";
 import toast from "react-hot-toast";
@@ -75,14 +75,7 @@ export default function ContactPage() {
         message: "",
       });
     } catch {
-      toast.success("Message sent successfully! We'll get back to you soon.");
-      setForm({
-        name: "",
-        email: "",
-        phone: "",
-        subject: "General Inquiry",
-        message: "",
-      });
+      toast.error("Failed to send message. Please try again.");
     } finally {
       setLoading(false);
     }

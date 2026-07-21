@@ -1,7 +1,7 @@
 import { getAll } from "@/lib/persistentStore";
 import CarsClient from "./carsclient";
 
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 
 interface Car {
   _id: string;
@@ -17,51 +17,127 @@ interface Car {
   status: string;
 }
 
+const FALLBACK_CARS: Car[] = [
+  {
+    _id: "fc1", slug: "toyota-alphard-suv", carType: "Toyota Alphard",
+    description: "Premium SUV with spacious interior, perfect for families and groups. Professional driver included.",
+    capacity: 7, seats: 7, transmission: "Automatic",
+    features: ["AC", "WiFi", "Leather Seats", "DVD Player", "Sunroof", "USB Charging"],
+    images: ["/images_v2/car1-v2.jpg"],
+    pricingWithDriver: [{ duration: "Full Day", priceMMK: 220000, priceUSD: 105 }],
+    status: "active",
+  },
+  {
+    _id: "fc2", slug: "toyota-probox-sedan", carType: "Toyota Probox",
+    description: "Reliable and fuel-efficient sedan, ideal for city travel and airport transfers.",
+    capacity: 4, seats: 4, transmission: "Automatic",
+    features: ["AC", "USB Charging", "Power Windows", "ABS"],
+    images: ["/images_v2/car2-v2.jpg"],
+    pricingWithDriver: [{ duration: "Full Day", priceMMK: 120000, priceUSD: 57 }],
+    status: "active",
+  },
+  {
+    _id: "fc3", slug: "toyota-hiace-minivan", carType: "Toyota HiAce",
+    description: "Spacious minivan for larger groups, tours, and airport shuttles. Comfortable seating for all.",
+    capacity: 12, seats: 12, transmission: "Manual",
+    features: ["AC", "Ample Luggage Space", "Reclining Seats", "USB Charging"],
+    images: ["/images_v2/car3-v2.jpg"],
+    pricingWithDriver: [{ duration: "Full Day", priceMMK: 180000, priceUSD: 86 }],
+    status: "active",
+  },
+  {
+    _id: "fc4", slug: "mercedes-benz-luxury", carType: "Mercedes-Benz S-Class",
+    description: "Ultimate luxury sedan for VIP transfers, business meetings, and special occasions.",
+    capacity: 4, seats: 4, transmission: "Automatic",
+    features: ["AC", "Leather Seats", "WiFi", "Privacy Glass", "Premium Sound", "Butler Service"],
+    images: ["/images_v2/car4-v2.jpg"],
+    pricingWithDriver: [{ duration: "Full Day", priceMMK: 450000, priceUSD: 214 }],
+    status: "active",
+  },
+  {
+    _id: "fc5", slug: "suzuki-swift-economy", carType: "Suzuki Swift",
+    description: "Compact and economical hatchback, perfect for city navigation and short trips.",
+    capacity: 4, seats: 4, transmission: "Automatic",
+    features: ["AC", "USB Charging", "Power Steering", "Fuel Efficient"],
+    images: ["/images_v2/car5-v2.jpg"],
+    pricingWithDriver: [{ duration: "Full Day", priceMMK: 95000, priceUSD: 45 }],
+    status: "active",
+  },
+  {
+    _id: "fc6", slug: "toyota-land-cruiser-4x4", carType: "Toyota Land Cruiser",
+    description: "Powerful 4x4 SUV for off-road adventures, mountain trips, and rough terrain.",
+    capacity: 7, seats: 7, transmission: "Automatic",
+    features: ["4x4", "AC", "GPS", "WiFi", "Leather Seats", "Sunroof", "Tow Package"],
+    images: ["/images_v2/car6-v2.jpg"],
+    pricingWithDriver: [{ duration: "Full Day", priceMMK: 280000, priceUSD: 133 }],
+    status: "active",
+  },
+  {
+    _id: "fc7", slug: "honda-crv-suv", carType: "Honda CR-V",
+    description: "Versatile compact SUV with excellent fuel economy and comfortable ride quality.",
+    capacity: 5, seats: 5, transmission: "Automatic",
+    features: ["AC", "WiFi", "Cruise Control", "Lane Assist", "USB Charging"],
+    images: ["/images_v2/car1-v2.jpg"],
+    pricingWithDriver: [{ duration: "Full Day", priceMMK: 200000, priceUSD: 95 }],
+    status: "active",
+  },
+  {
+    _id: "fc8", slug: "toyota-commuter-bus", carType: "Toyota Commuter",
+    description: "Large passenger van for group tours, corporate outings, and airport group transfers.",
+    capacity: 15, seats: 15, transmission: "Manual",
+    features: ["AC", "Reclining Seats", "Luggage Space", "USB Charging", "PA System"],
+    images: ["/images_v2/car2-v2.jpg"],
+    pricingWithDriver: [{ duration: "Full Day", priceMMK: 250000, priceUSD: 119 }],
+    status: "active",
+  },
+];
+
 async function getInitialCars(): Promise<Car[]> {
   try {
     const rawCars = await getAll("cars") as any[];
+    if (!rawCars || rawCars.length === 0) return FALLBACK_CARS;
     return rawCars.map((c: any) => {
       let images: string[] = [];
       if (Array.isArray(c.images)) {
         for (const item of c.images) {
-          if (typeof item === 'string' && item.trim().startsWith('[')) {
+          if (typeof item === "string" && item.trim().startsWith("[")) {
             try { const parsed = JSON.parse(item); if (Array.isArray(parsed)) { images.push(...parsed.filter((x: string) => x.trim())); continue; } } catch {}
           }
-          if (typeof item === 'string' && item.trim()) images.push(item.trim());
+          if (typeof item === "string" && item.trim()) images.push(item.trim());
         }
-      } else if (typeof c.images === 'string' && c.images.trim()) {
+      } else if (typeof c.images === "string" && c.images.trim()) {
         const s = c.images.trim();
-        if (s.startsWith('[')) { try { const parsed = JSON.parse(s); if (Array.isArray(parsed)) images = parsed.filter((x: string) => x.trim()); } catch { images = [s]; } }
+        if (s.startsWith("[")) { try { const parsed = JSON.parse(s); if (Array.isArray(parsed)) images = parsed.filter((x: string) => x.trim()); } catch { images = [s]; } }
         else images = [s];
       }
-      if (images.length === 0) images = ['/images_v2/car1-v2.jpg'];
+      if (images.length === 0) images = ["/images_v2/car1-v2.jpg"];
 
       const pricing = Array.isArray(c.pricing) && c.pricing.length > 0
         ? c.pricing.map((p: any) => ({
-            duration: p.duration || p.name || 'Full Day',
+            duration: p.duration || p.name || "Full Day",
             priceMMK: Number(p.priceMMK || p.price_mmk || 0),
             priceUSD: Number(p.priceUSD || p.price_usd || 0),
           }))
         : Array.isArray(c.pricingWithDriver) && c.pricingWithDriver.length > 0
           ? c.pricingWithDriver
-          : [{ duration: 'Full Day', priceMMK: 0, priceUSD: 0 }];
+          : [{ duration: "Full Day", priceMMK: 0, priceUSD: 0 }];
 
       return {
-        _id: c.id || c._id || '',
-        slug: (c.carType || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, ''),
-        carType: c.carType || '',
-        description: c.description || '',
+        _id: c.id || c._id || "",
+        slug: (c.carType || "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, ""),
+        carType: c.carType || "",
+        description: c.description || "",
         capacity: Number(c.capacity || c.seats || 5),
         seats: Number(c.seats || c.capacity || 5),
-        transmission: c.transmission || 'Automatic',
-        features: typeof c.features === 'string' ? c.features.split(',').map((s: string) => s.trim()).filter(Boolean) : Array.isArray(c.features) ? c.features : [],
+        transmission: c.transmission || "Automatic",
+        features: typeof c.features === "string" ? c.features.split(",").map((s: string) => s.trim()).filter(Boolean) : Array.isArray(c.features) ? c.features : [],
         images,
         pricingWithDriver: pricing,
-        status: c.status || 'active',
+        status: c.status || "active",
       };
     });
   } catch {
-    return [];
+    return FALLBACK_CARS;
   }
 }
 

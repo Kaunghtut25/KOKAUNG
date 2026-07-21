@@ -44,10 +44,10 @@ export default function FAQPage() {
         {faqs.map((faq, i) => (
           <details key={i} style={{ background: 'white', borderRadius: 12, marginBottom: 12, overflow: 'hidden', boxShadow: '0 1px 3px rgba(0,0,0,0.1)' }}>
             <summary style={{ padding: '20px 24px', cursor: 'pointer', fontWeight: 600, fontSize: 16, color: '#0A1628', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-              {faq.q}
+              {faq.question}
               <span style={{ color: '#D4AF37', fontSize: 20 }}>+</span>
             </summary>
-            <div style={{ padding: '0 24px 20px', color: '#555', lineHeight: 1.8, fontSize: 15 }}>{faq.a}</div>
+            <div style={{ padding: '0 24px 20px', color: '#555', lineHeight: 1.8, fontSize: 15 }}>{faq.answer}</div>
           </details>
         ))}
       </section>

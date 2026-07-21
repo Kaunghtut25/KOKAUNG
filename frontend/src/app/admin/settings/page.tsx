@@ -88,6 +88,8 @@ const heroPageLabels: Record<keyof HeroImages, string> = {
   cars: "Cars Page",
   visas: "Visas Page",
   insurance: "Insurance Page",
+  flights: "Flights",
+  cruises: "Cruises",
 };
 
 export default function AdminSettingsPage() {

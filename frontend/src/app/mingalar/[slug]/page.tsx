@@ -15,10 +15,12 @@ const FALLBACK_ITEMS = [
   { id: 'm4', _id: 'm4', title: 'Shower Suites', img: '/images_v2/sky1-v3.jpg', icon: '🚿', desc: 'Refresh before your flight' },
   { id: 'm5', _id: 'm5', title: 'Nap Pods', img: '/images_v2/sky2-v3.jpg', icon: '😴', desc: 'Rest in private sleeping pods' },
   { id: 'm6', _id: 'm6', title: 'Concierge', img: '/images_v2/sky3-v3.jpg', icon: '🛎️', desc: 'Priority check-in & boarding' },
+  { id: 'm7', _id: 'm7', title: 'Spa & Wellness', img: '/images_v2/sky1-v3.jpg', icon: '💆', desc: 'Relaxing spa treatments and massage services' },
 ];
 
 const FALLBACK_SLUG_MAP: Record<string, number> = {
   'fine-dining': 0, 'open-bar': 1, 'workspace': 2, 'shower-suites': 3, 'nap-pods': 4, 'concierge': 5,
+  'spa-wellness': 6,
 };
 
 interface PageProps { params: { slug: string } }

@@ -720,7 +720,7 @@ export default function AdminToursPage() {
                       <td className="p-4">
                         <div className="flex items-center gap-1.5">
                           <span className={getStatusBadge(tour.status)}>
-                            {tour.status.charAt(0).toUpperCase() + tour.status.slice(1)}
+                            {(tour.status || "active").charAt(0).toUpperCase() + (tour.status || "active").slice(1)}
                           </span>
                           {tour.featured && (
                             <span className="text-xs" title="Featured">⭐</span>
