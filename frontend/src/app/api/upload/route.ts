@@ -53,15 +53,11 @@ export async function POST(request: NextRequest) {
       const safeName = value.name.replace(/[^a-zA-Z0-9._-]/g, '_');
       const pathname = `uploads/${id}-${safeName}`;
 
-      // Purge old blob for the same name
-      const old = nameIndex[value.name];
-      if (old) {
-        try { await del(old.url); } catch { /* best-effort */ }
-      }
-
-      const blob = await put(pathname, buffer, { addRandomSuffix: true,
+      const blob = await put(pathname, buffer, { 
+        addRandomSuffix: true,
         access: 'public',
         contentType: mimeType,
+        allowOverwrite: true,
       });
 
       const entry: BlobEntry = {
@@ -73,7 +69,7 @@ export async function POST(request: NextRequest) {
         size: buffer.length,
         createdAt: new Date().toISOString(),
       };
-      nameIndex[value.name] = entry;
+      nameIndex[id] = entry;
 
       results.push({ id, name: value.name, url: blob.url, size: buffer.length });
     }
@@ -105,7 +101,7 @@ export async function GET(request: NextRequest) {
   if (id) {
     entry = Object.values(nameIndex).find((v) => v.id === id);
   } else if (name) {
-    entry = nameIndex[name];
+    entry = Object.values(nameIndex).find((v) => v.name === name);
   }
 
   if (!entry) {
@@ -151,12 +147,12 @@ export async function DELETE(request: NextRequest) {
         }
       }
     } else if (name) {
-      const entry = nameIndex[name];
+      const entry = Object.values(nameIndex).find((v) => v.name === name);
       if (!entry) {
         return NextResponse.json({ success: false, error: 'Not found' }, { status: 404 });
       }
       await del(entry.url);
-      delete nameIndex[name];
+      delete nameIndex[entry.id];
     }
 
     await saveNameIndex(nameIndex);
