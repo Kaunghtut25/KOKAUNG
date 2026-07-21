@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { put } from "@vercel/blob";
 import Link from "next/link";
 import toast from "react-hot-toast";
 
@@ -68,7 +67,11 @@ export default function AdminMingalarPage() {
     setUploading(true);
     setUploadError("");
     try {
-      const blob = await put(file.name, file, { access: "public" });
+      const fd = new FormData();
+      fd.append('file', file);
+      const res = await fetch('/api/upload', { method: 'POST', body: fd });
+      const data = await res.json();
+      const blob = data.results?.[0];
       const url = blob.url;
       setImagePreview(url);
       setForm(prev => ({ ...prev, img: url }));

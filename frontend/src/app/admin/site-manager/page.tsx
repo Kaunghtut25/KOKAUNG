@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useEffect, useState, useRef } from "react";
-import { put } from "@vercel/blob";
 
 interface HeroSlide { image: string; label: string; title: string; subtitle: string; }
 interface ServiceIcon { label: string; icon: string; href: string; enabled: boolean; }
@@ -151,7 +150,11 @@ export default function SiteManagerPage() {
     if (!file.type.startsWith("image/")) { setUploadError("Only image files are accepted."); return; }
     setUploading(true); setUploadError("");
     try {
-      const blob = await put(file.name, file, { access: 'public' });
+      const fd = new FormData();
+      fd.append('file', file);
+      const res = await fetch('/api/upload', { method: 'POST', body: fd });
+      const data = await res.json();
+      const blob = data.results?.[0];
       const url = blob.url;
       if (index !== undefined) {
         const arr = [...(cfg as any)[field]];
@@ -376,7 +379,11 @@ const tabs: { key: Tab; label: string }[] = [
                           if (!file) return;
                           setUploading(true); setUploadError("");
                           try {
-                            const blob = await put(file.name, file, { access: "public" });
+                            const fd = new FormData();
+                            fd.append('file', file);
+                            const res = await fetch('/api/upload', { method: 'POST', body: fd });
+                            const data = await res.json();
+                            const blob = data.results?.[0];
                             setCfg(p => ({ ...p, heroImages: { ...(p.heroImages || {}), [key]: blob.url } }));
                             showToast("Image uploaded!");
                           } catch { setUploadError("Upload failed."); }
@@ -398,7 +405,11 @@ const tabs: { key: Tab; label: string }[] = [
                             if (!file) return;
                             setUploading(true); setUploadError("");
                             try {
-                              const blob = await put(file.name, file, { access: 'public' });
+                              const fd = new FormData();
+                              fd.append('file', file);
+                              const res = await fetch('/api/upload', { method: 'POST', body: fd });
+                              const data = await res.json();
+                              const blob = data.results?.[0];
                               setCfg(p => ({ ...p, heroImages: { ...(p.heroImages || {}), [key]: blob.url } }));
                               showToast("Image uploaded!");
                             } catch { setUploadError("Upload failed."); }

@@ -1,8 +1,7 @@
-'use client';
+﻿'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
 import { api } from '@/lib/api';
-import { put } from '@vercel/blob';
 import Link from 'next/link';
 
 interface BlogPost {
@@ -59,7 +58,11 @@ export default function AdminBlogPage() {
     if (!file.type.startsWith('image/')) { setUploadError('Only image files are accepted.'); return; }
     setUploading(true); setUploadError('');
     try {
-      const blob = await put(file.name, file, { access: 'public' });
+      const fd = new FormData();
+      fd.append('file', file);
+      const res = await fetch('/api/upload', { method: 'POST', body: fd });
+      const data = await res.json();
+      const blob = data.results?.[0];
       const url = blob.url;
       setImage(url);
       setImagePreview(url);

@@ -1,8 +1,6 @@
 "use client";
 
 import React, { useEffect, useState, useCallback, useRef } from "react";
-import { put } from "@vercel/blob";
-
 interface HeroImages {
   flights: string;
   cruises: string;
@@ -143,7 +141,11 @@ export default function AdminSettingsPage() {
       return "";
     }
     try {
-      const blob = await put(file.name, file, { access: "public" });
+      const fd = new FormData();
+      fd.append('file', file);
+      const res = await fetch('/api/upload', { method: 'POST', body: fd });
+      const data = await res.json();
+      const blob = data.results?.[0];
       return blob.url;
     } catch {
       showToast("Upload failed. Check connection.", "error");
@@ -160,7 +162,11 @@ export default function AdminSettingsPage() {
     setUploading(true);
     setUploadError("");
     try {
-      const blob = await put(file.name, file, { access: "public" });
+      const fd = new FormData();
+      fd.append('file', file);
+      const res = await fetch('/api/upload', { method: 'POST', body: fd });
+      const data = await res.json();
+      const blob = data.results?.[0];
       const url = blob.url;
       if (target === "logo") {
         setSettings((prev) => ({ ...prev, logo: url }));
