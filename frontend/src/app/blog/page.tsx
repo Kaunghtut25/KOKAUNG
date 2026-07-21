@@ -50,7 +50,7 @@ export default function BlogPage() {
   const router = useRouter();
   const [posts, setPosts] = useState<BlogPost[]>([]);
   const [loading, setLoading] = useState(true);
-  useEffect(() => { fetch("/api/admin/settings").then(r => r.json()).then(d => { if (d?.heroImages?.blog) setHeroImage(d.heroImages.blog); }).catch(() => {}); }, []);
+  useEffect(() => { fetch("/api/admin/site-config").then(r => r.json()).then(d => { if (d?.heroImages?.blog) setHeroImage(d.heroImages.blog); }).catch(() => {}); }, []);
 
   useEffect(() => {
     const fetchPosts = async () => {
