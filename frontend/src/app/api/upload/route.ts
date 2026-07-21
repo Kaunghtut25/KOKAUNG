@@ -1,4 +1,4 @@
-﻿export const dynamic = 'force-dynamic';
+export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
 
 import { put, list, del } from '@vercel/blob';
@@ -23,6 +23,7 @@ async function saveNameIndex(index: Record<string, BlobEntry>) {
   await put(INDEX_PATHNAME, JSON.stringify(index), {
     access: 'public',
     contentType: 'application/json',
+    allowOverwrite: true,
   });
 }
 
