@@ -8,12 +8,21 @@ const FALLBACK_IMG = "/images_v2/cta-bg-v2.jpg";
 
 const FALLBACK_DESTS = [
   { city: "Paris", country: "France", image: "/images_v2/dest-paris-v2.jpg", minPrice: "Ks 850,000", rating: 4.8, reviews: 2340, duration: "5 Days", tags: ["Luxury", "Romance", "Culture"], description: "Iconic Eiffel Tower, Louvre Museum, Seine River cruises and world-class cuisine." },
-  { city: "Dubai", country: "UAE", image: "/images_v2/dest-dubai-v2.jpg", minPrice: "Ks 680,000", rating: 4.7, reviews: 1890, duration: "4 Days", tags: ["Luxury", "Shopping", "Modern"], description: "Burj Khalifa, desert safaris, gold souks and futuristic architecture." },
-  { city: "Korea", country: "South Korea", image: "/images_v2/dest-korea-v2.jpg", minPrice: "Ks 550,000", rating: 4.6, reviews: 1560, duration: "6 Days", tags: ["Culture", "Food", "K-Pop"], description: "Ancient palaces, vibrant street food, K-pop culture and stunning cherry blossoms." },
-  { city: "Thailand", country: "Thailand", image: "/images_v2/hero-thailand-v2.jpg", minPrice: "Ks 150,000", rating: 4.5, reviews: 3210, duration: "4 Days", tags: ["Beach", "Temple", "Food"], description: "Golden temples, pristine beaches, floating markets and warm Thai hospitality." },
+  { city: "Dubai", country: "United Arab Emirates", image: "/images_v2/dest-dubai-v2.jpg", minPrice: "Ks 680,000", rating: 4.7, reviews: 1890, duration: "4 Days", tags: ["Luxury", "Shopping", "Modern"], description: "Burj Khalifa, desert safaris, gold souks and futuristic architecture." },
+  { city: "Seoul", country: "South Korea", image: "/images_v2/dest-korea-v2.jpg", minPrice: "Ks 550,000", rating: 4.6, reviews: 1560, duration: "6 Days", tags: ["Culture", "Food", "K-Pop"], description: "Ancient palaces, vibrant street food, K-pop culture and stunning cherry blossoms." },
+  { city: "Bangkok", country: "Thailand", image: "/images_v2/hero-thailand-v2.jpg", minPrice: "Ks 150,000", rating: 4.5, reviews: 3210, duration: "4 Days", tags: ["Beach", "Temple", "Food"], description: "Golden temples, pristine beaches, floating markets and warm Thai hospitality." },
   { city: "Singapore", country: "Singapore", image: "/images_v2/hero-singapore-v2.jpg", minPrice: "Ks 250,000", rating: 4.7, reviews: 1980, duration: "3 Days", tags: ["Modern", "Food", "Shopping"], description: "Marina Bay Sands, Gardens by the Bay, hawker food paradise." },
-  { city: "Japan", country: "Japan", image: "/images_v2/dest-japan-v2.jpg", minPrice: "Ks 780,000", rating: 4.9, reviews: 2870, duration: "7 Days", tags: ["Culture", "Food", "Nature"], description: "Ancient temples, bullet trains, cherry blossoms, exquisite cuisine." },
+  { city: "Tokyo", country: "Japan", image: "/images_v2/dest-japan-v2.jpg", minPrice: "Ks 780,000", rating: 4.9, reviews: 2870, duration: "7 Days", tags: ["Culture", "Food", "Nature"], description: "Ancient temples, bullet trains, cherry blossoms, exquisite cuisine." },
+
 ];
+
+// Map old country-name cities from Redis to correct city names for detail page matching
+const CITY_FIX_MAP: Record<string, string> = {
+  "Korea": "Seoul",
+  "Thailand": "Bangkok",
+  "Japan": "Tokyo",
+  "Vietnam": "Ho Chi Minh City"
+};
 
 function DestinationCard({ dest }: { dest: { city: string; country: string; image: string; minPrice: string; rating?: number; reviews?: number; duration?: string; tags?: string[]; description?: string } }) {
   const [imgError, setImgError] = useState(false);
@@ -157,7 +166,7 @@ export default function PopularDestinations() {
   useEffect(() => {
     fetch("/api/admin/site-config").then(r => r.json()).then(d => {
       if (d?.popularDestinations != null) {
-        setDests(d.popularDestinations);
+        const fixed = d.popularDestinations.map((dest: any) => ({ ...dest, city: CITY_FIX_MAP[dest.city] || dest.city })); setDests(fixed);
       } else {
         setDests(FALLBACK_DESTS);
       }
@@ -180,7 +189,7 @@ export default function PopularDestinations() {
           </ScrollingRow>
           <ScrollingRow>
             {dests.slice(6, 12).map((d, i) => (
-              <div key={i + 6} className="flex-shrink-0 w-[300px] snap-start"><DestinationCard dest={d} /></div>
+              <div key={i + 6} className="flex-shrink-0 w-[300px} snap-start"><DestinationCard dest={d} /></div>
             ))}
           </ScrollingRow>
         </div>

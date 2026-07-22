@@ -26,6 +26,8 @@ interface Hotel {
   amenities: string;
   images: string;
   roomTypes: RoomType[];
+  reviewCount: number;
+  row: number;
   status: string;
   featured: boolean;
   phone: string;
@@ -56,6 +58,8 @@ const emptyHotel: Hotel = {
   amenities: "",
   images: "",
   roomTypes: [],
+  reviewCount: 0,
+  row: 1,
   status: "active",
   featured: false,
   phone: "",
@@ -396,6 +400,19 @@ export default function AdminHotelsPage() {
             }
             className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-gold/50 transition-colors"
           />
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label className="block text-white/70 text-sm mb-1">Review Count</label>
+          <input type="number" min={0} value={editingHotel.reviewCount} onChange={(e) => handleFieldChange("reviewCount", Number(e.target.value))} className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-gold/50 transition-colors" />
+        </div>
+        <div>
+          <label className="block text-white/70 text-sm mb-1">Row</label>
+          <select value={editingHotel.row} onChange={(e) => handleFieldChange("row", Number(e.target.value))} className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-gold/50 transition-colors">
+            {[1,2,3,4,5,6].map((r) => (<option key={r} value={r}>Row {r}</option>))}
+          </select>
         </div>
       </div>
 
@@ -807,8 +824,8 @@ export default function AdminHotelsPage() {
                       <td className="p-4 text-white/70">
                         {hotel.location}
                       </td>
-                      <td className="p-4 text-yellow-400">
-                        {renderStars(hotel.rating)}
+                      <td className="p-4 text-yellow-400 text-sm">
+                        {renderStars(hotel.rating || 0)} <span className="text-white/50">({hotel.reviewCount || 0})</span>
                       </td>
                       <td className="p-4 text-white">
                         {formatNumber(hotel.pricePerNightMMK)} Ks

@@ -145,7 +145,7 @@ export default function AdminSettingsPage() {
       fd.append('file', file);
       const res = await fetch('/api/upload', { method: 'POST', body: fd });
       const data = await res.json();
-      const blob = data.results?.[0];
+      const blob = data.uploads?.[0];
       return blob.url;
     } catch {
       showToast("Upload failed. Check connection.", "error");
@@ -166,7 +166,7 @@ export default function AdminSettingsPage() {
       fd.append('file', file);
       const res = await fetch('/api/upload', { method: 'POST', body: fd });
       const data = await res.json();
-      const blob = data.results?.[0];
+      const blob = data.uploads?.[0];
       const url = blob.url;
       if (target === "logo") {
         setSettings((prev) => ({ ...prev, logo: url }));

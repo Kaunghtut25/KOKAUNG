@@ -74,10 +74,17 @@ export default function HotelsClient({ initialHotels }: HotelsClientProps) {
 
   const ITEMS_PER_ROW = 6;
   const pool: Hotel[] = [...sortedHotels];
-  const hotelRows: Hotel[][] = [];
-  for (let i = 0; i < pool.length; i += ITEMS_PER_ROW) {
-    hotelRows.push(pool.slice(i, i + ITEMS_PER_ROW));
-  }
+  // Group by row field
+  const rowMap = new Map<number, Hotel[]>();
+  pool.forEach(h => {
+    const r = (h as any).row || 1;
+    if (!rowMap.has(r)) rowMap.set(r, []);
+    rowMap.get(r)!.push(h);
+  });
+  // Sort by row number, limit each row to 6
+  const hotelRows: Hotel[][] = [...rowMap.entries()]
+    .sort(([a],[b]) => a - b)
+    .map(([,items]) => items.slice(0, ITEMS_PER_ROW));
 
   return (
     <main className="min-h-screen bg-white">

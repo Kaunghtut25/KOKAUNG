@@ -71,7 +71,7 @@ export default function AdminMingalarPage() {
       fd.append('file', file);
       const res = await fetch('/api/upload', { method: 'POST', body: fd });
       const data = await res.json();
-      const blob = data.results?.[0];
+      const blob = data.uploads?.[0];
       const url = blob.url;
       setImagePreview(url);
       setForm(prev => ({ ...prev, img: url }));

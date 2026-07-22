@@ -20,6 +20,9 @@ interface Tour {
   email: string;
   address: string;
   maxGroupSize: number;
+  rating: number;
+  reviewCount: number;
+  row: number;
   status: string;
   featured: boolean;
   createdAt?: string;
@@ -43,6 +46,9 @@ const emptyTour: Tour = {
   email: "",
   address: "",
   maxGroupSize: 0,
+  rating: 4.5,
+  reviewCount: 0,
+  row: 1,
   status: "active",
   featured: false,
 };
@@ -76,7 +82,7 @@ export default function AdminToursPage() {
       });
       if (res.ok) {
         const data = await res.json();
-        setTours(Array.isArray(data) ? data : data.tours || []);
+        const tours = Array.isArray(data) ? data : (data?.tours || []); setTours(tours.filter(Boolean));
       }
     } catch (err) {
       console.error("Failed to fetch tours:", err);
@@ -98,7 +104,7 @@ export default function AdminToursPage() {
     return imagesStr.split(",").map((s) => s.trim()).filter((s) => s && (s.startsWith("http") || s.startsWith("/")));
   };
 
-  const getFirstImage = (imagesStr: string): string => {
+  const getFirstImage = (imagesStr: any): string => {
     const list = parseImageList(imagesStr);
     return list[0] || "";
   };
@@ -599,6 +605,23 @@ export default function AdminToursPage() {
           </label>
         </div>
       </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div>
+          <label className="block text-white/70 text-sm mb-1">Rating (1-5)</label>
+          <input type="number" min={1} max={5} step={0.1} value={editingTour.rating} onChange={(e) => handleFieldChange("rating", Number(e.target.value))} className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-gold/50 transition-colors" />
+        </div>
+        <div>
+          <label className="block text-white/70 text-sm mb-1">Review Count</label>
+          <input type="number" min={0} value={editingTour.reviewCount} onChange={(e) => handleFieldChange("reviewCount", Number(e.target.value))} className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-gold/50 transition-colors" />
+        </div>
+        <div>
+          <label className="block text-white/70 text-sm mb-1">Row</label>
+          <select value={editingTour.row} onChange={(e) => handleFieldChange("row", Number(e.target.value))} className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-gold/50 transition-colors">
+            {[1,2,3,4,5,6,7].map((r) => (<option key={r} value={r}>Row {r}</option>))}
+          </select>
+        </div>
+      </div>
     </div>
   );
 
@@ -657,6 +680,9 @@ export default function AdminToursPage() {
                   Duration
                 </th>
                 <th className="text-left p-4 text-white/40 font-semibold uppercase tracking-wider text-[11px]">
+                  Rating
+                </th>
+                <th className="text-left p-4 text-white/40 font-semibold uppercase tracking-wider text-[11px]">
                   Status
                 </th>
                 <th className="text-left p-4 text-white/40 font-semibold uppercase tracking-wider text-[11px]">
@@ -668,7 +694,7 @@ export default function AdminToursPage() {
               {tours.length === 0 ? (
                 <tr>
                   <td
-                    colSpan={7}
+                    colSpan={8}
                     className="p-10 text-center text-white/30"
                   >
                     <span className="text-3xl block mb-2">✈️</span>
@@ -677,7 +703,7 @@ export default function AdminToursPage() {
                   </td>
                 </tr>
               ) : (
-                tours.map((tour) => {
+                (tours || []).filter(Boolean).map((tour: any) => {
                   const thumb = getFirstImage(tour.images);
                   return (
                     <tr
@@ -717,6 +743,9 @@ export default function AdminToursPage() {
                         ${formatNumber(tour.priceUSD)}
                       </td>
                       <td className="p-4 text-white/70">{tour.duration}</td>
+                      <td className="p-4 text-yellow-400 text-sm">
+                        {typeof tour.rating === "number" || typeof tour.rating === "string" ? "⭐".repeat(Math.max(0, Math.min(5, Math.round(Number(tour.rating) || 4)))) : "⭐".repeat(4)} <span className="text-white/50">({Number(tour.reviewCount) || 0})</span>
+                      </td>
                       <td className="p-4">
                         <div className="flex items-center gap-1.5">
                           <span className={getStatusBadge(tour.status)}>

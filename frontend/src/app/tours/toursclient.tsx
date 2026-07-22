@@ -73,10 +73,17 @@ export default function ToursClient(props) {
 
   const ITEMS_PER_ROW = 6;
   const pool = [...sortedTours];
-  const tourRows = [];
-  for (let i = 0; i < pool.length; i += ITEMS_PER_ROW) {
-    tourRows.push(pool.slice(i, i + ITEMS_PER_ROW));
-  }
+  // Group by row field
+  const rowMap = new Map<number, typeof pool>();
+  pool.forEach(t => {
+    const r = (t as any).row || 1;
+    if (!rowMap.has(r)) rowMap.set(r, []);
+    rowMap.get(r)!.push(t);
+  });
+  // Sort by row number, limit each row to 6
+  const tourRows = [...rowMap.entries()]
+    .sort(([a],[b]) => a - b)
+    .map(([,items]) => items.slice(0, ITEMS_PER_ROW));
 
   return (
     <main className="min-h-screen bg-white">

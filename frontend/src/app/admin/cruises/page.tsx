@@ -88,16 +88,20 @@ export default function AdminCruisesPage() {
     fetchCruises();
   }, [fetchCruises]);
 
-  const parseImageList = (imagesStr: string): string[] => {
+  const parseImageList = (imagesStr: any): string[] => {
     if (!imagesStr) return [];
+    if (Array.isArray(imagesStr)) return imagesStr.filter((u: unknown) => typeof u === "string" && u);
     try {
-      const parsed = JSON.parse(imagesStr);
+      const parsed = JSON.parse(imagesStr as string);
       if (Array.isArray(parsed)) return parsed.filter((u: unknown) => typeof u === "string" && u);
     } catch { /* not JSON */ }
-    return imagesStr.split(",").map((s) => s.trim()).filter((s) => s && (s.startsWith("http") || s.startsWith("/")));
+    if (typeof imagesStr === "string") {
+      return imagesStr.split(",").map((s) => s.trim()).filter((s) => s && (s.startsWith("http") || s.startsWith("/")));
+    }
+    return [];
   };
 
-  const getFirstImage = (imagesStr: string): string => {
+  const getFirstImage = (imagesStr: any): string => {
     const list = parseImageList(imagesStr);
     return list[0] || "";
   };

@@ -104,21 +104,21 @@ const defaultCfg: SiteConfig = {
     skyLounge: { desktop: 3, tablet: 2, mobile: 1 },
   },
   heroImages: {
-    about: "/images_v2/about-hero-v2.jpg",
-    mingalar: "/images_v2/sky1-v3.jpg",
-    blog: "/images_v2/hero-blog-v2.jpg",
-    contact: "/images_v2/hero-book-now-v2.jpg",
-    faq: "/images_v2/hero-bagan-v2.jpg",
-    terms: "/images_v2/hero-bagan-v2.jpg",
-    privacy: "/images_v2/hero-bagan-v2.jpg",
-    bookNow: "/images_v2/hero-book-now-v2.jpg",
-    flights: "/images_v2/hero-book-now-v2.jpg",
-    cruises: "/images_v2/cruise1-v2.jpg",
-    cars: "/images_v2/hero-cars-v2.jpg",
-    hotels: "/images_v2/hero-hotels-v2.jpg",
-    tours: "/images_v2/hero-tours-v2.jpg",
-    insurance: "/images_v2/ins1-v3.jpg",
-    visas: "/images_v2/visa1-v3.jpg",
+    about: "https://vydupdjfr38dxlzx.public.blob.vercel-storage.com/uploads/img_1784609797449_9f7un5-hero-about-t767UxVogi3ih6w9rwFArg4ilDGNdz.jpg",
+    mingalar: "https://vydupdjfr38dxlzx.public.blob.vercel-storage.com/uploads/img_1784609798375_lnn6kp-hero-mingalar-iXSipAn6UMN12kyEIU3WiFiCMs20qc.jpg",
+    blog: "https://vydupdjfr38dxlzx.public.blob.vercel-storage.com/uploads/img_1784609799332_6ebnns-hero-blog-mBap03GJD1400JSclYnUjYfHoo3frB.jpg",
+    contact: "https://vydupdjfr38dxlzx.public.blob.vercel-storage.com/uploads/img_1784609800417_vhjn6x-hero-contact-QIxGEkpiOSIxCFvrw0ChbfhhUNYSuQ.jpg",
+    faq: "https://vydupdjfr38dxlzx.public.blob.vercel-storage.com/uploads/img_1784609801256_ruke67-hero-faq-liRka2pU7EEzMQipE1RYv44rCD9zcw.jpg",
+    terms: "https://vydupdjfr38dxlzx.public.blob.vercel-storage.com/uploads/img_1784609802402_52voor-hero-terms-pxoJKPcMuOinidhTKK5TA2zi6bpIA7.jpg",
+    privacy: "https://vydupdjfr38dxlzx.public.blob.vercel-storage.com/uploads/img_1784609803553_cfdhsm-hero-privacy-z9rX6irIergZ5bw5fSN03qLOm0GeSB.jpg",
+    bookNow: "https://vydupdjfr38dxlzx.public.blob.vercel-storage.com/uploads/img_1784609804673_59ylry-hero-bookNow-scMChIEz2tbilFW7dBtf1KcNU9UkED.jpg",
+    flights: "https://vydupdjfr38dxlzx.public.blob.vercel-storage.com/uploads/img_1784609806040_dy0gyu-hero-flights-jzePjnnHhOTfVOY3GEhUKFBINa7n3f.jpg",
+    cruises: "https://vydupdjfr38dxlzx.public.blob.vercel-storage.com/uploads/img_1784609807485_6pw8ew-hero-cruises-WIDq1Jve8AvJyNu5ZSaSijXmL0kZ1G.jpg",
+    cars: "https://vydupdjfr38dxlzx.public.blob.vercel-storage.com/uploads/img_1784609808655_l403a3-hero-cars-fjXhGpEAeGzTuP9I9JwFkeq0G4sGsx.jpg",
+    hotels: "https://vydupdjfr38dxlzx.public.blob.vercel-storage.com/uploads/img_1784609809532_sgh7un-hero-hotels-QYNI1doqQgUXvnUcIrBHuZfwDFssuK.jpg",
+    tours: "https://vydupdjfr38dxlzx.public.blob.vercel-storage.com/uploads/img_1784609810919_004yzh-hero-tours-UsdmyqKcP581EhNqux4A5bBKwpudIx.jpg",
+    insurance: "https://vydupdjfr38dxlzx.public.blob.vercel-storage.com/uploads/img_1784609811896_gmexob-hero-insurance-hgvtL1kVRATajwICoA0WvEjL0rQB2K.jpg",
+    visas: "https://vydupdjfr38dxlzx.public.blob.vercel-storage.com/uploads/img_1784609812789_zgd7hq-hero-visas-CjTSUSqnTR16khrC4YxJ66jcyj106i.jpg",
   },
   sectionRows: {
     hotels: ["Featured Hotels", "Budget Friendly", "Popular Hotels", "Row 4", "Row 5"],
@@ -154,7 +154,7 @@ export default function SiteManagerPage() {
       fd.append('file', file);
       const res = await fetch('/api/upload', { method: 'POST', body: fd });
       const data = await res.json();
-      const blob = data.results?.[0];
+      const blob = data.uploads?.[0];
       const url = blob.url;
       if (index !== undefined) {
         const arr = [...(cfg as any)[field]];
@@ -383,7 +383,7 @@ const tabs: { key: Tab; label: string }[] = [
                             fd.append('file', file);
                             const res = await fetch('/api/upload', { method: 'POST', body: fd });
                             const data = await res.json();
-                            const blob = data.results?.[0];
+                            const blob = data.uploads?.[0];
                             setCfg(p => ({ ...p, heroImages: { ...(p.heroImages || {}), [key]: blob.url } }));
                             showToast("Image uploaded!");
                           } catch { setUploadError("Upload failed."); }
@@ -409,7 +409,7 @@ const tabs: { key: Tab; label: string }[] = [
                               fd.append('file', file);
                               const res = await fetch('/api/upload', { method: 'POST', body: fd });
                               const data = await res.json();
-                              const blob = data.results?.[0];
+                              const blob = data.uploads?.[0];
                               setCfg(p => ({ ...p, heroImages: { ...(p.heroImages || {}), [key]: blob.url } }));
                               showToast("Image uploaded!");
                             } catch { setUploadError("Upload failed."); }

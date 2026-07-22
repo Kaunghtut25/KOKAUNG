@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
 import { api } from '@/lib/api';
@@ -62,7 +62,7 @@ export default function AdminBlogPage() {
       fd.append('file', file);
       const res = await fetch('/api/upload', { method: 'POST', body: fd });
       const data = await res.json();
-      const blob = data.results?.[0];
+      const blob = data.uploads?.[0];
       const url = blob.url;
       setImage(url);
       setImagePreview(url);
