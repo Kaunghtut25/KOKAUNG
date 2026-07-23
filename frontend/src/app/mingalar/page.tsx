@@ -1,6 +1,13 @@
 import { getAll } from "@/lib/persistentStore";
 import MingalarClient from "./mingalarclient";
 
+async function fetchSiteConfig() {
+  try {
+    const r = await fetch((process.env.SITE_URL || "http://localhost:3000") + "/api/admin/site-config", { next: { revalidate: 60 }, cache: "no-store" });
+    return await r.json();
+  } catch { return {}; }
+}
+
 export const dynamic = "force-dynamic";
 
 interface LoungeItem {

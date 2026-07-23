@@ -129,18 +129,9 @@ interface InsuranceClientProps {
   initialPlans: InsurancePlan[];
 }
 
-export default function InsuranceClient({ initialPlans }: InsuranceClientProps) {
-  const [heroImage, setHeroImage] = useState("/images_v2/ins1-v3.jpg");
-  const [layout, setLayout] = useState({ desktop: 3, tablet: 2, mobile: 1 });
-  useEffect(() => {
-    fetch("/api/admin/site-config")
-      .then(r => r.json())
-      .then(d => {
-        if (d?.sectionLayouts?.insurance) setLayout(d.sectionLayouts.insurance);
-        if (d?.heroImages?.insurance) setHeroImage(d.heroImages.insurance);
-      })
-      .catch(() => {});
-  }, []);
+export default function InsuranceClient({ initialPlans, siteConfig }: InsuranceClientProps & { siteConfig?: any }) {
+  const heroImage = siteConfig?.heroImages?.insurance || "/images_v2/ins1-v3.jpg";
+  const layout = siteConfig?.sectionLayouts?.insurance || { desktop: 3, tablet: 2, mobile: 1 };
   const [plans, setPlans] = useState<InsurancePlan[]>(initialPlans.length > 0 ? initialPlans : FALLBACK_PLANS);
   const [loading, setLoading] = useState(initialPlans.length === 0);
   const [currency, setCurrency] = useState<'MMK' | 'USD'>('MMK');

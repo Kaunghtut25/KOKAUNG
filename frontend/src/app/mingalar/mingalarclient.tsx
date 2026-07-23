@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import DealsBanner from '@/components/DealsBanner';
@@ -21,7 +21,7 @@ interface MingalarClientProps {
 
 export default function MingalarClient({ initialCards }: MingalarClientProps) {
   const router = useRouter();
-  const [heroImage, setHeroImage] = useState("/images_v2/sky1-v3.jpg");
+  const heroImage = siteConfig?.heroImages?.mingalar || "/images_v2/sky1-v3.jpg";
   const [layout, setLayout] = useState({ desktop: 3, tablet: 2, mobile: 1 });
   const [loungeCards, setLoungeCards] = useState<LoungeItem[]>(initialCards);
 

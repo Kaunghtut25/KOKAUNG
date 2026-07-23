@@ -1,6 +1,13 @@
 import { getAll } from "@/lib/persistentStore";
 import VisasClient from "./visasclient";
 
+async function fetchSiteConfig() {
+  try {
+    const r = await fetch((process.env.SITE_URL || "http://localhost:3000") + "/api/admin/site-config", { next: { revalidate: 60 }, cache: "no-store" });
+    return await r.json();
+  } catch { return {}; }
+}
+
 export const dynamic = "force-dynamic";
 
 interface VisaService {
@@ -53,6 +60,6 @@ async function getInitialVisas(): Promise<VisaService[]> {
 }
 
 export default async function VisasPage() {
-  const initialVisas = await getInitialVisas();
-  return <VisasClient initialVisas={initialVisas} />;
+  const [initialVisas, siteConfig] = await Promise.all([getInitialVisas(), fetchSiteConfig()]);
+  return <VisasClient initialVisas={initialVisas} siteConfig={siteConfig || {}} />;
 }

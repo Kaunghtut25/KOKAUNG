@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { api } from '@/lib/api';
 import BookingModal from '@/components/BookingModal';
@@ -146,8 +146,8 @@ interface VisasClientProps {
   initialVisas: VisaService[];
 }
 
-export default function VisasClient({ initialVisas }: VisasClientProps) {
-  const [heroImage, setHeroImage] = useState("/images_v2/visa1-v3.jpg");
+export default function VisasClient({ initialVisas, siteConfig }: VisasClientProps & { siteConfig?: any }) {
+  const heroImage = siteConfig?.heroImages?.visas || "/images_v2/visa1-v3.jpg";
   const [layout, setLayout] = useState({ desktop: 4, tablet: 3, mobile: 2 });
   useEffect(() => {
     fetch("/api/admin/site-config")
