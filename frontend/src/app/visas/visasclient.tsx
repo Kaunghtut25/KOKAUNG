@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { api } from '@/lib/api';
 import BookingModal from '@/components/BookingModal';
@@ -148,15 +148,7 @@ interface VisasClientProps {
 
 export default function VisasClient({ initialVisas, siteConfig }: VisasClientProps & { siteConfig?: any }) {
   const heroImage = siteConfig?.heroImages?.visas || "/images_v2/visa1-v3.jpg";
-  const [layout, setLayout] = useState({ desktop: 4, tablet: 3, mobile: 2 });
-  useEffect(() => {
-    fetch("/api/admin/site-config")
-      .then(r => r.json())
-      .then(d => {
-        if (d?.sectionLayouts?.visas) setLayout(d.sectionLayouts.visas);        if (d?.heroImages?.visas) setHeroImage(d.heroImages.visas);
-      })
-      .catch(() => {});
-  }, []);
+  const layout = siteConfig?.sectionLayouts?.visas || { desktop: 4, tablet: 3, mobile: 2 };
   const [visas, setVisas] = useState<VisaService[]>(initialVisas.length > 0 ? initialVisas : FALLBACK_VISAS);
   const [currency, setCurrency] = useState<'MMK' | 'USD'>('MMK');
   const [selectedVisa, setSelectedVisa] = useState<VisaService | null>(null);

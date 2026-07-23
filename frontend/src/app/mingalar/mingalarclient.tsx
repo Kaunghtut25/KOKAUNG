@@ -22,18 +22,8 @@ interface MingalarClientProps {
 export default function MingalarClient({ initialCards }: MingalarClientProps) {
   const router = useRouter();
   const heroImage = siteConfig?.heroImages?.mingalar || "/images_v2/sky1-v3.jpg";
-  const [layout, setLayout] = useState({ desktop: 3, tablet: 2, mobile: 1 });
+  const layout = siteConfig?.sectionLayouts?.skyLounge || { desktop: 3, tablet: 2, mobile: 1 };
   const [loungeCards, setLoungeCards] = useState<LoungeItem[]>(initialCards);
-
-  useEffect(() => {
-    fetch("/api/admin/site-config")
-      .then(r => r.json())
-      .then(d => {
-        if (d?.sectionLayouts?.skyLounge) setLayout(d.sectionLayouts.skyLounge);
-        if (d?.heroImages?.mingalar) setHeroImage(d.heroImages.mingalar);
-      })
-      .catch(() => {});
-  }, []);
 
 
   const renderCard = (item: LoungeItem, i: number) => {
