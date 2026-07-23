@@ -548,7 +548,38 @@ const tabs: { key: Tab; label: string }[] = [
               <div className="grid grid-cols-2 gap-3">
                 <div><label className={`labelCls labelCls`}>WhatsApp</label><input className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} value={cfg.contact.whatsapp} onChange={e => set("contact", { ...cfg.contact, whatsapp: e.target.value })} /></div>
               </div>
-              <ImageZone field="logoUrl" label="Site Logo" />
+              
+              <div className="mt-6 border-t border-white/10 pt-4">
+                <h3 className="text-sm font-semibold text-[#D4AF37] mb-3">Department Phone Numbers</h3>
+                <div className="grid grid-cols-2 gap-3">
+                  <div><label className={labelCls}>Ticket Department</label>
+                    <input className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }}
+                      value={(cfg.departmentPhones && cfg.departmentPhones.ticket) || ""}
+                      onChange={e => setCfg(p => ({ ...p, departmentPhones: { ...(p.departmentPhones || {}), ticket: e.target.value } }))} />
+                  </div>
+                  <div><label className={labelCls}>Visa Department</label>
+                    <input className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }}
+                      value={(cfg.departmentPhones && cfg.departmentPhones.visa) || ""}
+                      onChange={e => setCfg(p => ({ ...p, departmentPhones: { ...(p.departmentPhones || {}), visa: e.target.value } }))} />
+                  </div>
+                  <div><label className={labelCls}>Hotel Department</label>
+                    <input className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }}
+                      value={(cfg.departmentPhones && cfg.departmentPhones.hotel) || ""}
+                      onChange={e => setCfg(p => ({ ...p, departmentPhones: { ...(p.departmentPhones || {}), hotel: e.target.value } }))} />
+                  </div>
+                  <div><label className={labelCls}>Outbound Department</label>
+                    <input className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }}
+                      value={(cfg.departmentPhones && cfg.departmentPhones.outbound) || ""}
+                      onChange={e => setCfg(p => ({ ...p, departmentPhones: { ...(p.departmentPhones || {}), outbound: e.target.value } }))} />
+                  </div>
+                  <div><label className={labelCls}>Inbound Department</label>
+                    <input className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }}
+                      value={(cfg.departmentPhones && cfg.departmentPhones.inbound) || ""}
+                      onChange={e => setCfg(p => ({ ...p, departmentPhones: { ...(p.departmentPhones || {}), inbound: e.target.value } }))} />
+                  </div>
+                </div>
+              </div>
+            <ImageZone field="logoUrl" label="Site Logo" />
             </div>
           )}
 
