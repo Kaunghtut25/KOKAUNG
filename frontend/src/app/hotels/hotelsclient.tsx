@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Hotel } from '@/lib/api';
 import HotelCard from '@/components/HotelCard';
 import ScrollingRow from '@/components/ScrollingRow';
@@ -31,34 +31,16 @@ interface HotelsClientProps {
   initialHotels: Hotel[];
 }
 
-export default function HotelsClient({ initialHotels }: HotelsClientProps) {
-  const [heroImage, setHeroImage] = useState("/images_v2/hero-hotels-v2.jpg");
+export default function HotelsClient({ initialHotels, siteConfig }: HotelsClientProps & { siteConfig?: any }) {
+  const heroImage = siteConfig?.heroImages?.hotels || "/images_v2/hero-hotels-v2.jpg";
   const [currency, setCurrency] = useState<'MMK' | 'USD'>('MMK');
-  const [layout, setLayout] = useState({ desktop: 4, tablet: 2, mobile: 1 });
-  useEffect(() => {
-    fetch("/api/admin/site-config")
-      .then(r => r.json())
-      .then(d => {
-        if (d?.sectionLayouts?.hotels) setLayout(d.sectionLayouts.hotels);
-      })
-      .catch(() => {});
-  }, []);
-  const [rowTitles, setRowTitles] = useState(["Featured Hotels", "More Hotels", "Additional Hotels"]);
-  useEffect(() => {
-    fetch("/api/admin/site-config")
-      .then(r => r.json())
-      .then(d => {
-        if (d?.sectionRows?.hotels) setRowTitles(d.sectionRows.hotels);
-      })
-      .catch(() => {});
-  }, []);
+  const layout = siteConfig?.sectionLayouts?.hotels || { desktop: 4, tablet: 2, mobile: 1 };
+  const rowTitles = siteConfig?.sectionRows?.hotels || ["Featured Hotels", "More Hotels", "Additional Hotels"];
   const [location, setLocation] = useState('');
   const [rating, setRating] = useState('');
   const [minPrice, setMinPrice] = useState('');
   const [maxPrice, setMaxPrice] = useState('');
   const [sort, setSort] = useState('');
-
-  useEffect(() => { fetch("/api/admin/site-config").then(r => r.json()).then(d => { if (d?.heroImages?.hotels) setHeroImage(d.heroImages.hotels); }).catch(() => {}); }, []);
 
   const handleFilterChange = (setter: React.Dispatch<React.SetStateAction<string>>, value: string) => {
     setter(value);
