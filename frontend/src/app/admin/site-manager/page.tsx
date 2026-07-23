@@ -520,7 +520,60 @@ const tabs: { key: Tab; label: string }[] = [
                   <div className="grid grid-cols-3 gap-3">
                     <input className={`inputCls inputCls`} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} placeholder="City" value={d.city} onChange={e => { const a = [...cfg.popularDestinations]; a[i] = { ...d, city: e.target.value }; set("popularDestinations", a); }} />
                   </div>
-                  <ImageZone field="popularDestinations" index={i} label="Destination Image" />
+                  
+              <div className="mt-4 border-t border-white/10 pt-4">
+                <h3 className="text-sm font-semibold text-[#D4AF37] mb-3">Section Header Text</h3>
+                <div className="grid grid-cols-2 gap-3 mb-3">
+                  <div><label className={labelCls}>Title</label>
+                    <input className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }}
+                      value={(cfg.destinationsText?.title) || "Explore The World"}
+                      onChange={e => setCfg(p => ({ ...p, destinationsText: { ...(p.destinationsText || {}), title: e.target.value } }))} /></div>
+                  <div><label className={labelCls}>Subtitle</label>
+                    <input className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }}
+                      value={(cfg.destinationsText?.subtitle) || "Popular Destinations"}
+                      onChange={e => setCfg(p => ({ ...p, destinationsText: { ...(p.destinationsText || {}), subtitle: e.target.value } }))} /></div>
+                  <div><label className={labelCls}>Title Font</label>
+                    <select className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }}
+                      value={(cfg.destinationsText?.titleFont) || "'Playfair Display', Georgia, serif"}
+                      onChange={e => setCfg(p => ({ ...p, destinationsText: { ...(p.destinationsText || {}), titleFont: e.target.value } }))}>
+                      <option value="Georgia, serif">Georgia</option>
+                      <option value="'Playfair Display', Georgia, serif">Playfair Display</option>
+                      <option value="Arial, sans-serif">Arial</option>
+                      <option value="system-ui, sans-serif">System UI</option>
+                    </select></div>
+                  <div><label className={labelCls}>Title Size</label>
+                    <select className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }}
+                      value={(cfg.destinationsText?.titleSize) || "2.5rem"}
+                      onChange={e => setCfg(p => ({ ...p, destinationsText: { ...(p.destinationsText || {}), titleSize: e.target.value } }))}>
+                      <option value="1.5rem">1.5rem</option><option value="2rem">2rem</option><option value="2.5rem">2.5rem</option><option value="3rem">3rem</option></select></div>
+                  <div><label className={labelCls}>Title Color</label>
+                    <input className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} type="color"
+                      value={(cfg.destinationsText?.titleColor) || "#0A1628"}
+                      onChange={e => setCfg(p => ({ ...p, destinationsText: { ...(p.destinationsText || {}), titleColor: e.target.value } }))} /></div>
+                </div>
+                <h4 className="text-xs font-semibold text-white/50 mb-2">Card Title Style</h4>
+                <div className="grid grid-cols-2 gap-3">
+                  <div><label className={labelCls}>Font</label>
+                    <select className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }}
+                      value={(cfg.destinationsText?.cardTitleFont) || "'Playfair Display', Georgia, serif"}
+                      onChange={e => setCfg(p => ({ ...p, destinationsText: { ...(p.destinationsText || {}), cardTitleFont: e.target.value } }))}>
+                      <option value="Georgia, serif">Georgia</option>
+                      <option value="'Playfair Display', Georgia, serif">Playfair Display</option>
+                      <option value="Arial, sans-serif">Arial</option>
+                      <option value="system-ui, sans-serif">System UI</option>
+                    </select></div>
+                  <div><label className={labelCls}>Size</label>
+                    <select className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }}
+                      value={(cfg.destinationsText?.cardTitleSize) || "1rem"}
+                      onChange={e => setCfg(p => ({ ...p, destinationsText: { ...(p.destinationsText || {}), cardTitleSize: e.target.value } }))}>
+                      <option value="0.875rem">0.875rem</option><option value="1rem">1rem</option><option value="1.125rem">1.125rem</option><option value="1.25rem">1.25rem</option></select></div>
+                  <div><label className={labelCls}>Color</label>
+                    <input className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} type="color"
+                      value={(cfg.destinationsText?.cardTitleColor) || "#0A1628"}
+                      onChange={e => setCfg(p => ({ ...p, destinationsText: { ...(p.destinationsText || {}), cardTitleColor: e.target.value } }))} /></div>
+                </div>
+              </div>
+            <ImageZone field="popularDestinations" index={i} label="Destination Image" />
                 </div>
               ))}
               <button onClick={() => set("popularDestinations", [...cfg.popularDestinations, { city: "", country: "", image: "", minPrice: "" }])} className="px-4 py-2 bg-white/10 rounded-lg text-sm">+ Add</button>

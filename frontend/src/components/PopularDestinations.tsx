@@ -24,7 +24,7 @@ const CITY_FIX_MAP: Record<string, string> = {
   "Vietnam": "Ho Chi Minh City"
 };
 
-function DestinationCard({ dest }: { dest: { city: string; country: string; image: string; minPrice: string; rating?: number; reviews?: number; duration?: string; tags?: string[]; description?: string } }) {
+function DestinationCard({ dest, destText = {} }: { dest: { city: string; country: string; image: string; minPrice: string; rating?: number; reviews?: number; duration?: string; tags?: string[]; description?: string } }) {
   const [imgError, setImgError] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const router = useRouter();
@@ -161,12 +161,15 @@ function DestinationCard({ dest }: { dest: { city: string; country: string; imag
 
 export default function PopularDestinations() {
   const [dests, setDests] = useState<any[]>(FALLBACK_DESTS);
+  const [destText, setDestText] = useState<any>({});
 
   const [loaded, setLoaded] = useState(false);
   useEffect(() => {
     fetch("/api/admin/site-config").then(r => r.json()).then(d => {
       if (d?.popularDestinations != null) {
         const fixed = d.popularDestinations.map((dest: any) => ({ ...dest, city: CITY_FIX_MAP[dest.city] || dest.city })); setDests(fixed);
+      const dt = d.destinationsText;
+      setDestText(dt || {});
       } else {
         setDests(FALLBACK_DESTS);
       }
@@ -177,19 +180,19 @@ export default function PopularDestinations() {
   return (
     <section className="max-w-7xl mx-auto px-4 py-12">
       <div className="text-center mb-10">
-        <h2 className="text-3xl md:text-4xl font-bold text-[#0A1628] mb-2" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>Explore The World</h2>
-        <p className="text-gray-500">Popular Destinations</p>
+        <h2 className="font-bold mb-2" style={{ fontFamily: destText?.titleFont || "'Playfair Display', Georgia, serif", fontSize: destText?.titleSize || "2.5rem", color: destText?.titleColor || "#0A1628" }}>{destText?.title || "Explore The World"}</h2>
+        <p style={{ fontSize: destText?.subtitleSize || "1rem" }} className="text-gray-500">{destText?.subtitle || "Popular Destinations"}</p>
       </div>
       {dests.length > 0 ? (
         <div className="space-y-5">
           <ScrollingRow>
             {dests.slice(0, 6).map((d, i) => (
-              <div key={i} className="flex-shrink-0 w-[300px] snap-start"><DestinationCard dest={d} /></div>
+              <div key={i} className="flex-shrink-0 w-[300px] snap-start"><DestinationCard dest={d} destText={destText} /></div>
             ))}
           </ScrollingRow>
           <ScrollingRow>
             {dests.slice(6, 12).map((d, i) => (
-              <div key={i + 6} className="flex-shrink-0 w-[300px} snap-start"><DestinationCard dest={d} /></div>
+              <div key={i + 6} className="flex-shrink-0 w-[300px} snap-start"><DestinationCard dest={d} destText={destText} /></div>
             ))}
           </ScrollingRow>
         </div>

@@ -123,6 +123,19 @@ const defaultConfig = {
   ],
 
   // Popular Destinations
+
+  // Popular Destinations Text Settings
+  destinationsText: {
+    title: "Explore The World",
+    subtitle: "Popular Destinations",
+    titleFont: "'Playfair Display', Georgia, serif",
+    titleSize: "2.5rem",
+    subtitleSize: "1rem",
+    titleColor: "#0A1628",
+    cardTitleFont: "'Playfair Display', Georgia, serif",
+    cardTitleSize: "1rem",
+    cardTitleColor: "#0A1628",
+  },
   popularDestinations: [
     { city: "Bagan", country: "Myanmar", image: "/images_v2/dest-bagan-v2.jpg", minPrice: "Ks 200,000" },
     { city: "Bangkok", country: "Thailand", image: "/images_v2/dest-bangkok-v2.jpg", minPrice: "Ks 150,000" },
