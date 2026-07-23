@@ -34,8 +34,8 @@ interface HotelsClientProps {
 export default function HotelsClient({ initialHotels, siteConfig }: HotelsClientProps & { siteConfig?: any }) {
   const heroImage = siteConfig?.heroImages?.hotels || "/images_v2/hero-hotels-v2.jpg";
   const ht = siteConfig?.heroText?.hotels || {};
-  const hTitle = ht.title || "A9 Global Hotels";
-  const hSubtitle = ht.subtitle || "Handpicked accommodations for your comfort";
+  const hTitle = ht.title || "";
+  const hSubtitle = ht.subtitle || "";
   const hTitleFont = ht.titleFont || "'Playfair Display', Georgia, serif";
   const hTitleSize = ht.titleSize || "3rem";
   const hSubtitleSize = ht.subtitleSize || "1.2rem";

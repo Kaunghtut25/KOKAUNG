@@ -132,8 +132,8 @@ interface InsuranceClientProps {
 export default function InsuranceClient({ initialPlans, siteConfig }: InsuranceClientProps & { siteConfig?: any }) {
   const heroImage = siteConfig?.heroImages?.insurance || "/images_v2/ins1-v3.jpg";
   const it = siteConfig?.heroText?.insurance || {};
-  const iTitle = it.title || "Travel Insurance";
-  const iSubtitle = it.subtitle || "Travel with peace of mind";
+  const iTitle = it.title || "";
+  const iSubtitle = it.subtitle || "";
   const iTitleFont = it.titleFont || "'Playfair Display', serif";
   const iTitleSize = it.titleSize || "2.5rem";
   const iSubtitleSize = it.subtitleSize || "1rem";

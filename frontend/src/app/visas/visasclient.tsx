@@ -149,8 +149,8 @@ interface VisasClientProps {
 export default function VisasClient({ initialVisas, siteConfig }: VisasClientProps & { siteConfig?: any }) {
   const heroImage = siteConfig?.heroImages?.visas || "/images_v2/visa1-v3.jpg";
   const vt = siteConfig?.heroText?.visas || {};
-  const vTitle = vt.title || "Visa Services";
-  const vSubtitle = vt.subtitle || "Hassle-free visa processing";
+  const vTitle = vt.title || "";
+  const vSubtitle = vt.subtitle || "";
   const vTitleFont = vt.titleFont || "'Playfair Display', serif";
   const vTitleSize = vt.titleSize || "2.5rem";
   const vSubtitleSize = vt.subtitleSize || "1rem";

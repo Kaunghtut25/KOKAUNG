@@ -34,8 +34,8 @@ interface CarsClientProps {
 export default function CarsClient({ initialCars, siteConfig }: CarsClientProps & { siteConfig?: any }) {
   const heroImage = siteConfig?.heroImages?.cars || "/images_v2/hero-cars-v2.jpg";
   const ct = siteConfig?.heroText?.cars || {};
-  const cTitle = ct.title || "A9 Global Car Rentals";
-  const cSubtitle = ct.subtitle || "Premium vehicles for your journey";
+  const cTitle = ct.title || "";
+  const cSubtitle = ct.subtitle || "";
   const cTitleFont = ct.titleFont || "'Playfair Display', Georgia, serif";
   const cTitleSize = ct.titleSize || "3rem";
   const cSubtitleSize = ct.subtitleSize || "1.2rem";

@@ -136,15 +136,15 @@ export default function Footer() {
                 <span className="text-gold mt-0.5 flex-shrink-0">📞</span>
                 <div className="text-sm text-white/60 space-y-1">
                   <p className="block text-white/50">Ticket Department</p>
-                  <a href={`tel:${phone}`} className="block hover:text-gold transition-colors">{phone}</a>
+                  <a href={`tel:${deptPhone("ticket")}`} className="block hover:text-gold transition-colors">{deptPhone("ticket")}</a>
                   <p className="block text-white/50 mt-2">Visa Department</p>
-                  <a href={`tel:${phone}`} className="block hover:text-gold transition-colors">{phone}</a>
+                  <a href={`tel:${deptPhone("visa")}`} className="block hover:text-gold transition-colors">{deptPhone("visa")}</a>
                   <p className="block text-white/50 mt-2">Hotel Department</p>
-                  <a href={`tel:${phone}`} className="block hover:text-gold transition-colors">{phone}</a>
+                  <a href={`tel:${deptPhone("hotel")}`} className="block hover:text-gold transition-colors">{deptPhone("hotel")}</a>
                   <p className="block text-white/50 mt-2">Outbound Department</p>
-                  <a href={`tel:${phone}`} className="block hover:text-gold transition-colors">{phone}</a>
+                  <a href={`tel:${deptPhone("outbound")}`} className="block hover:text-gold transition-colors">{deptPhone("outbound")}</a>
                   <p className="block text-white/50 mt-2">Inbound Department</p>
-                  <a href={`tel:${phone}`} className="block hover:text-gold transition-colors">{phone}</a>
+                  <a href={`tel:${deptPhone("inbound")}`} className="block hover:text-gold transition-colors">{deptPhone("inbound")}</a>
                 </div>
               </div>
               <div className="flex items-start space-x-3">

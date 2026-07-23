@@ -23,8 +23,8 @@ export default function MingalarClient({ initialCards, siteConfig }: MingalarCli
   const router = useRouter();
   const heroImage = siteConfig?.heroImages?.mingalar || "/images_v2/sky1-v3.jpg";
   const mt = siteConfig?.heroText?.mingalar || {};
-  const mTitle = mt.title || "Sky Lounge";
-  const mSubtitle = mt.subtitle || "Premium airport lounge experience";
+  const mTitle = mt.title || "";
+  const mSubtitle = mt.subtitle || "";
   const mTitleFont = mt.titleFont || "'Playfair Display', Georgia, serif";
   const mTitleSize = mt.titleSize || "3rem";
   const mSubtitleSize = mt.subtitleSize || "1.2rem";

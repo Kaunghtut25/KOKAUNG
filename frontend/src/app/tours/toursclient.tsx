@@ -12,8 +12,8 @@ import RoutesMap from '@/components/RoutesMap';
 export default function ToursClient(props) {
   const heroImage = props.siteConfig?.heroImages?.tours || "/images_v2/hero-tours-v2.jpg";
   const toursText = props.siteConfig?.heroText?.tours || {};
-  const toursTitle = toursText.title || "A9 Global Tours";
-  const toursSubtitle = toursText.subtitle || "Explore our curated travel packages";
+  const toursTitle = toursText.title || "";
+  const toursSubtitle = toursText.subtitle || "";
   const toursTitleFont = toursText.titleFont || "'Playfair Display', Georgia, serif";
   const toursTitleSize = toursText.titleSize || "3rem";
   const toursSubtitleSize = toursText.subtitleSize || "1.2rem";

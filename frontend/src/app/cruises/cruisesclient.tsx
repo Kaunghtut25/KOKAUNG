@@ -113,8 +113,8 @@ export default function CruisesClient({ initialCruises, siteConfig }: { initialC
   const layout = siteConfig?.sectionLayouts?.cruises || { desktop: 3, tablet: 2, mobile: 1 };
   const heroImage = siteConfig?.heroImages?.cruises || "/images_v2/hero-cruises-v2.jpg";
   const crt = siteConfig?.heroText?.cruises || {};
-  const crTitle = crt.title || "Luxury Cruises";
-  const crSubtitle = crt.subtitle || "Voyages to unforgettable destinations";
+  const crTitle = crt.title || "";
+  const crSubtitle = crt.subtitle || "";
   const crTitleFont = crt.titleFont || "'Playfair Display', Georgia, serif";
   const crTitleSize = crt.titleSize || "3rem";
   const crSubtitleSize = crt.subtitleSize || "1.2rem";
