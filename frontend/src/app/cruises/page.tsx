@@ -1,6 +1,13 @@
 import { getAll } from "@/lib/persistentStore";
 import CruisesClient from "./cruisesclient";
 
+async function fetchSiteConfig() {
+  try {
+    const r = await fetch((process.env.SITE_URL || "http://localhost:3000") + "/api/admin/site-config", { next: { revalidate: 60 }, cache: "no-store" });
+    return await r.json();
+  } catch { return {}; }
+}
+
 export const dynamic = 'force-dynamic';
 
 interface Cruise {
@@ -36,7 +43,7 @@ const DEFAULT_CRUISES: Cruise[] = [
 ];
 
 export default async function CruisesPage() {
-  const dbCruises = (await getAll('cruises')) as Cruise[];
+  const [dbCruises, siteConfig] = await Promise.all([(getAll('cruises') as Promise<Cruise[]>), fetchSiteConfig()]);
   const cruises = dbCruises.length > 0 ? dbCruises : DEFAULT_CRUISES;
-  return <CruisesClient initialCruises={cruises} />;
+  return <CruisesClient initialCruises={cruises} siteConfig={siteConfig || {}} />;
 }

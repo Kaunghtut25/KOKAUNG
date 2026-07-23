@@ -1,5 +1,5 @@
 'use client';
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import DealsBanner from '@/components/DealsBanner';
@@ -109,21 +109,12 @@ const FALLBACK_CRUISES: Cruise[] = [
   },
 ];
 
-export default function CruisesClient({ initialCruises }: { initialCruises: Cruise[] }) {
-  const [layout, setLayout] = useState({ desktop: 3, tablet: 2, mobile: 1 });
-  useEffect(() => {
-    fetch("/api/admin/site-config")
-      .then(r => r.json())
-      .then(d => {
-        if (d?.sectionLayouts?.cruises) setLayout(d.sectionLayouts.cruises);
-      })
-      .catch(() => {});
-  }, []);
-  const [heroImage, setHeroImage] = useState("/images_v2/hero-cruises-v2.jpg");
+export default function CruisesClient({ initialCruises, siteConfig }: { initialCruises: Cruise[]; siteConfig?: any }) {
+  const layout = siteConfig?.sectionLayouts?.cruises || { desktop: 3, tablet: 2, mobile: 1 };
+  const heroImage = siteConfig?.heroImages?.cruises || "/images_v2/hero-cruises-v2.jpg";
   const router = useRouter();
   const cruises = initialCruises.length > 0 ? initialCruises : FALLBACK_CRUISES;
   const [currency, setCurrency] = useState<'MMK' | 'USD'>('MMK');
-  useEffect(() => { fetch("/api/admin/site-config").then(r => r.json()).then(d => { if (d?.heroImages?.cruises) setHeroImage(d.heroImages.cruises); }).catch(() => {}); }, []);
 
   return (
     <main className="min-h-screen bg-white">
