@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import TourCard from '@/components/TourCard';
 import ScrollingRow from '@/components/ScrollingRow';
 import CurrencyToggle from '@/components/CurrencyToggle';
@@ -10,35 +10,19 @@ import TestimonialSlider from '@/components/TestimonialSlider';
 import RoutesMap from '@/components/RoutesMap';
 
 export default function ToursClient(props) {
-  const [heroImage, setHeroImage] = useState("/images_v2/hero-tours-v2.jpg");
+  const heroImage = props.siteConfig?.heroImages?.tours || "/images_v2/hero-tours-v2.jpg";
   const { initialTours, preloadMap } = props;
   // Use server-rendered data directly — no client re-fetch to avoid flash of old content
   const apiTours = initialTours;
   const [currency, setCurrency] = useState('MMK');
-  const [layout, setLayout] = useState({ desktop: 3, tablet: 2, mobile: 1 });
-  useEffect(() => {
-    fetch("/api/admin/site-config")
-      .then(r => r.json())
-      .then(d => {
-        if (d?.sectionLayouts?.tours) setLayout(d.sectionLayouts.tours);
-      })
-      .catch(() => {});
-  }, []);
-  const [rowTitles, setRowTitles] = useState(["Featured Tours", "More Tours", "Additional Tours"]);
-  useEffect(() => {
-    fetch("/api/admin/site-config")
-      .then(r => r.json())
-      .then(d => {
-        if (d?.sectionRows?.tours) setRowTitles(d.sectionRows.tours);
-      })
-      .catch(() => {});
-  }, []);
+  const layout = props.siteConfig?.sectionLayouts?.tours || { desktop: 3, tablet: 2, mobile: 1 };
+  const rowTitles = props.siteConfig?.sectionRows?.tours || ["Featured Tours", "More Tours", "Additional Tours"];
   const [destination, setDestination] = useState('');
   const [minPrice, setMinPrice] = useState('');
   const [maxPrice, setMaxPrice] = useState('');
   const [durationFilter, setDurationFilter] = useState('');
   const [sort, setSort] = useState('');
-  useEffect(() => { fetch("/api/admin/site-config").then(r => r.json()).then(d => { if (d?.heroImages?.tours) setHeroImage(d.heroImages.tours); }).catch(() => {}); }, []);
+  
 
 
   const filteredTours = apiTours.filter((t) => {
