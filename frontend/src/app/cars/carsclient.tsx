@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Car } from '@/lib/api';
 import CarCard from '@/components/CarCard';
 import ScrollingRow from '@/components/ScrollingRow';
@@ -31,31 +31,13 @@ interface CarsClientProps {
   initialCars: Car[];
 }
 
-export default function CarsClient({ initialCars }: CarsClientProps) {
-  const [heroImage, setHeroImage] = useState("/images_v2/hero-cars-v2.jpg");
+export default function CarsClient({ initialCars, siteConfig }: CarsClientProps & { siteConfig?: any }) {
+  const heroImage = siteConfig?.heroImages?.cars || "/images_v2/hero-cars-v2.jpg";
   const [currency, setCurrency] = useState<'MMK' | 'USD'>('MMK');
-  const [layout, setLayout] = useState({ desktop: 3, tablet: 2, mobile: 1 });
-  useEffect(() => {
-    fetch("/api/admin/site-config")
-      .then(r => r.json())
-      .then(d => {
-        if (d?.sectionLayouts?.cars) setLayout(d.sectionLayouts.cars);
-      })
-      .catch(() => {});
-  }, []);
-  const [rowTitles, setRowTitles] = useState(["Popular Cars", "More Cars", "Additional Cars"]);
-  useEffect(() => {
-    fetch("/api/admin/site-config")
-      .then(r => r.json())
-      .then(d => {
-        if (d?.sectionRows?.cars) setRowTitles(d.sectionRows.cars);
-      })
-      .catch(() => {});
-  }, []);
+  const layout = siteConfig?.sectionLayouts?.cars || { desktop: 3, tablet: 2, mobile: 1 };
+  const rowTitles = siteConfig?.sectionRows?.cars || ["Popular Cars", "More Cars", "Additional Cars"];
   const [carType, setCarType] = useState('All');
   const [sort, setSort] = useState('');
-  useEffect(() => { fetch("/api/admin/site-config").then(r => r.json()).then(d => { if (d?.heroImages?.cars) setHeroImage(d.heroImages.cars); }).catch(() => {}); }, []);
-
   // Apply sort
   const sortedCars = [...initialCars].sort((a, b) => {
     if (sort === 'price_asc') return (a.priceMMK || 0) - (b.priceMMK || 0);

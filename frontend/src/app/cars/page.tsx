@@ -1,6 +1,13 @@
 import { getAll } from "@/lib/persistentStore";
 import CarsClient from "./carsclient";
 
+async function fetchSiteConfig() {
+  try {
+    const r = await fetch((process.env.SITE_URL || "http://localhost:3000") + "/api/admin/site-config", { next: { revalidate: 60 }, cache: "no-store" });
+    return await r.json();
+  } catch { return {}; }
+}
+
 export const dynamic = "force-dynamic";
 
 interface Car {
@@ -142,6 +149,6 @@ async function getInitialCars(): Promise<Car[]> {
 }
 
 export default async function CarsPage() {
-  const initialCars = await getInitialCars();
-  return <CarsClient initialCars={initialCars} />;
+  const [initialCars, siteConfig] = await Promise.all([getInitialCars(), fetchSiteConfig()]);
+  return <CarsClient initialCars={initialCars} siteConfig={siteConfig || {}} />;
 }
