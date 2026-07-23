@@ -44,6 +44,6 @@ async function getInitialLounge(): Promise<LoungeItem[]> {
 }
 
 export default async function MingalarPage() {
-  const initialCards = await getInitialLounge();
-  return <MingalarClient initialCards={initialCards} />;
+  const [initialCards, siteConfig] = await Promise.all([getInitialLounge(), fetchSiteConfig()]);
+  return <MingalarClient initialCards={initialCards} siteConfig={siteConfig || {}} />;
 }

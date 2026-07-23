@@ -19,7 +19,7 @@ interface MingalarClientProps {
   initialCards: LoungeItem[];
 }
 
-export default function MingalarClient({ initialCards }: MingalarClientProps) {
+export default function MingalarClient({ initialCards, siteConfig }: MingalarClientProps & { siteConfig?: any }) {
   const router = useRouter();
   const heroImage = siteConfig?.heroImages?.mingalar || "/images_v2/sky1-v3.jpg";
   const layout = siteConfig?.sectionLayouts?.skyLounge || { desktop: 3, tablet: 2, mobile: 1 };
