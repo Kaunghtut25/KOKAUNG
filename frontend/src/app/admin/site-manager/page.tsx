@@ -127,7 +127,7 @@ const defaultCfg: SiteConfig = {
   },
 };
 
-type Tab = "layout" | "rows" | "faq" | "terms" | "privacy" | "hero" | "heroImages" | "services" | "nav" | "stats" | "why" | "destinations" | "cta" | "contact" | "social" | "footer" | "meta" | "testimonials" | "partners";
+type Tab = "layout" | "rows" | "faq" | "terms" | "privacy" | "hero" | "heroImages" | "services" | "nav" | "stats" | "why" | "destinations" | "cta" | "contact" | "social" | "footer" | "meta" | "testimonials" | "partners" | "heroText";
 
 export default function SiteManagerPage() {
   const [cfg, setCfg] = useState(defaultCfg);
@@ -264,7 +264,8 @@ const tabs: { key: Tab; label: string }[] = [
   { key: "terms", label: "Terms" },
   { key: "privacy", label: "Privacy" },
     { key: "hero", label: "Hero Slides" },
-    { key: "heroImages", label: "Hero Images" }, { key: "services", label: "Service Icons" },
+    { key: "heroImages", label: "Hero Images" },
+    { key: "heroText", label: "Hero Text" }, { key: "services", label: "Service Icons" },
     { key: "nav", label: "Nav Links" }, { key: "stats", label: "Stats Cards" },
     { key: "why", label: "Why Choose Us" }, { key: "destinations", label: "Destinations" },
     { key: "cta", label: "CTA Section" }, { key: "contact", label: "Contact Info" },
@@ -844,6 +845,74 @@ const tabs: { key: Tab; label: string }[] = [
                 </div>
               ))}
               <button onClick={() => set("testimonials", [...cfg.testimonials, { name: "", country: "", tour: "", text: "", rating: 5, image: "" }])} className="px-4 py-2 bg-white/10 rounded-lg text-sm">+ Add Testimonial</button>
+            </div>
+          )}
+
+          
+          {tab === "heroText" && (
+            <div className="space-y-6">
+              <h2 className="text-lg font-bold text-white">Hero Text Settings</h2>
+              <p className="text-sm text-white/40">Customize hero title, subtitle, and font style for each public page.</p>
+              {[
+                { key: "tours", label: "Tours Page" },
+                { key: "hotels", label: "Hotels Page" },
+                { key: "cars", label: "Cars Page" },
+                { key: "cruises", label: "Cruises Page" },
+                { key: "visas", label: "Visas Page" },
+                { key: "insurance", label: "Insurance Page" },
+                { key: "mingalar", label: "Sky Lounge (Mingalar)" },
+              ].map(({ key, label }) => {
+                const ht = cfg.heroText?.[key] || { title: "", subtitle: "", titleFont: "Georgia, serif", titleSize: "3rem", subtitleSize: "1.2rem" };
+                return (
+                  <div key={key} className="border border-white/10 bg-white/5 text-white rounded-lg p-4 space-y-3">
+                    <h3 className="font-medium text-[#D4AF37]">{label}</h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      <div>
+                        <label className={labelCls}>Title</label>
+                        <input className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} placeholder="Hero title"
+                          value={ht.title} onChange={e => setCfg(p => ({ ...p, heroText: { ...(p.heroText || {}), [key]: { ...ht, title: e.target.value } } }))} />
+                      </div>
+                      <div>
+                        <label className={labelCls}>Subtitle</label>
+                        <input className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} placeholder="Hero subtitle"
+                          value={ht.subtitle} onChange={e => setCfg(p => ({ ...p, heroText: { ...(p.heroText || {}), [key]: { ...ht, subtitle: e.target.value } } }))} />
+                      </div>
+                      <div>
+                        <label className={labelCls}>Title Font</label>
+                        <select className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }}
+                          value={ht.titleFont} onChange={e => setCfg(p => ({ ...p, heroText: { ...(p.heroText || {}), [key]: { ...ht, titleFont: e.target.value } } }))}>
+                          <option value="Georgia, serif">Georgia</option>
+                          <option value="Playfair Display, serif">Playfair Display</option>
+                          <option value="Arial, sans-serif">Arial</option>
+                          <option value="Helvetica, sans-serif">Helvetica</option>
+                          <option value="system-ui, sans-serif">System UI</option>
+                        </select>
+                      </div>
+                      <div>
+                        <label className={labelCls}>Title Size</label>
+                        <select className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }}
+                          value={ht.titleSize} onChange={e => setCfg(p => ({ ...p, heroText: { ...(p.heroText || {}), [key]: { ...ht, titleSize: e.target.value } } }))}>
+                          <option value="2rem">2rem</option>
+                          <option value="2.5rem">2.5rem</option>
+                          <option value="3rem">3rem (Default)</option>
+                          <option value="3.5rem">3.5rem</option>
+                          <option value="4rem">4rem</option>
+                        </select>
+                      </div>
+                      <div>
+                        <label className={labelCls}>Subtitle Size</label>
+                        <select className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }}
+                          value={ht.subtitleSize} onChange={e => setCfg(p => ({ ...p, heroText: { ...(p.heroText || {}), [key]: { ...ht, subtitleSize: e.target.value } } }))}>
+                          <option value="0.9rem">0.9rem</option>
+                          <option value="1rem">1rem</option>
+                          <option value="1.2rem">1.2rem (Default)</option>
+                          <option value="1.5rem">1.5rem</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           )}
 
