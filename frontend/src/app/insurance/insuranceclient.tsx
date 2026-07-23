@@ -131,6 +131,12 @@ interface InsuranceClientProps {
 
 export default function InsuranceClient({ initialPlans, siteConfig }: InsuranceClientProps & { siteConfig?: any }) {
   const heroImage = siteConfig?.heroImages?.insurance || "/images_v2/ins1-v3.jpg";
+  const it = siteConfig?.heroText?.insurance || {};
+  const iTitle = it.title || "Travel Insurance";
+  const iSubtitle = it.subtitle || "Travel with peace of mind";
+  const iTitleFont = it.titleFont || "'Playfair Display', serif";
+  const iTitleSize = it.titleSize || "2.5rem";
+  const iSubtitleSize = it.subtitleSize || "1rem";
   const layout = siteConfig?.sectionLayouts?.insurance || { desktop: 3, tablet: 2, mobile: 1 };
   const [plans, setPlans] = useState<InsurancePlan[]>(initialPlans.length > 0 ? initialPlans : FALLBACK_PLANS);
   const [loading, setLoading] = useState(initialPlans.length === 0);
@@ -161,7 +167,7 @@ export default function InsuranceClient({ initialPlans, siteConfig }: InsuranceC
         <img src={heroImage} alt="Insurance" className="w-full h-full object-cover" onError={(e) => { (e.target as HTMLImageElement).src = "/images_v2/ins1-v3.jpg"; }} />
         <div className="absolute inset-0 bg-gradient-to-b from-[#0A1628]/70 to-[#0A1628]/40" />
         <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4">
-          <h1 className="text-3xl sm:text-4xl font-bold text-white mb-2" style={{ fontFamily: "'Playfair Display', serif" }}>Travel Insurance</h1>
+          <h1 className="font-bold text-white mb-2" style={{ fontFamily: iTitleFont, fontSize: iTitleSize }}>{iTitle}</h1>
           <p className="text-white/70 max-w-xl text-xs sm:text-sm">Protect your journey with comprehensive coverage</p>
           <div className="flex gap-2 mt-3">
             <button onClick={() => setCurrency('MMK')} className={`px-3 py-1 rounded-full text-[11px] font-semibold transition-all ${currency==='MMK'?'bg-gold text-white':'bg-white/20 text-white/70'}`}>🇲🇲 MMK</button>

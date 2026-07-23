@@ -33,6 +33,12 @@ interface CarsClientProps {
 
 export default function CarsClient({ initialCars, siteConfig }: CarsClientProps & { siteConfig?: any }) {
   const heroImage = siteConfig?.heroImages?.cars || "/images_v2/hero-cars-v2.jpg";
+  const ct = siteConfig?.heroText?.cars || {};
+  const cTitle = ct.title || "A9 Global Car Rentals";
+  const cSubtitle = ct.subtitle || "Premium vehicles for your journey";
+  const cTitleFont = ct.titleFont || "'Playfair Display', Georgia, serif";
+  const cTitleSize = ct.titleSize || "3rem";
+  const cSubtitleSize = ct.subtitleSize || "1.2rem";
   const [currency, setCurrency] = useState<'MMK' | 'USD'>('MMK');
   const layout = siteConfig?.sectionLayouts?.cars || { desktop: 3, tablet: 2, mobile: 1 };
   const rowTitles = siteConfig?.sectionRows?.cars || ["Popular Cars", "More Cars", "Additional Cars"];
@@ -61,7 +67,7 @@ export default function CarsClient({ initialCars, siteConfig }: CarsClientProps 
         </div>
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(212,175,55,0.08),transparent_70%)]" />
         <div className="relative max-w-7xl mx-auto text-center">
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4 text-[#0A1628]" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
+          <h1 className="font-bold mb-4 text-[#0A1628]" style={{ fontFamily: cTitleFont, fontSize: cTitleSize }}>
             Premium Car Rentals
           </h1>
           <p className="text-gray-500 text-lg max-w-2xl mx-auto mb-8">

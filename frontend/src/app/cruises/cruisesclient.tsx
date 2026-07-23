@@ -112,6 +112,12 @@ const FALLBACK_CRUISES: Cruise[] = [
 export default function CruisesClient({ initialCruises, siteConfig }: { initialCruises: Cruise[]; siteConfig?: any }) {
   const layout = siteConfig?.sectionLayouts?.cruises || { desktop: 3, tablet: 2, mobile: 1 };
   const heroImage = siteConfig?.heroImages?.cruises || "/images_v2/hero-cruises-v2.jpg";
+  const crt = siteConfig?.heroText?.cruises || {};
+  const crTitle = crt.title || "Luxury Cruises";
+  const crSubtitle = crt.subtitle || "Voyages to unforgettable destinations";
+  const crTitleFont = crt.titleFont || "'Playfair Display', Georgia, serif";
+  const crTitleSize = crt.titleSize || "3rem";
+  const crSubtitleSize = crt.subtitleSize || "1.2rem";
   const router = useRouter();
   const cruises = initialCruises.length > 0 ? initialCruises : FALLBACK_CRUISES;
   const [currency, setCurrency] = useState<'MMK' | 'USD'>('MMK');
@@ -127,7 +133,7 @@ export default function CruisesClient({ initialCruises, siteConfig }: { initialC
         />
         <div className="absolute inset-0 bg-gradient-to-t from-[#0A1628]/90 via-[#0A1628]/40 to-[#0A1628]/30" />
         <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4">
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
+          <h1 className="font-bold text-white mb-4" style={{ fontFamily: crTitleFont, fontSize: crTitleSize }}>
             🚢 Cruises
           </h1>
           <p className="text-gray-300 text-lg max-w-2xl">Luxury cruise packages to world-class destinations</p>

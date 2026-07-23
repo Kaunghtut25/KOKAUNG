@@ -22,6 +22,12 @@ interface MingalarClientProps {
 export default function MingalarClient({ initialCards, siteConfig }: MingalarClientProps & { siteConfig?: any }) {
   const router = useRouter();
   const heroImage = siteConfig?.heroImages?.mingalar || "/images_v2/sky1-v3.jpg";
+  const mt = siteConfig?.heroText?.mingalar || {};
+  const mTitle = mt.title || "Sky Lounge";
+  const mSubtitle = mt.subtitle || "Premium airport lounge experience";
+  const mTitleFont = mt.titleFont || "'Playfair Display', Georgia, serif";
+  const mTitleSize = mt.titleSize || "3rem";
+  const mSubtitleSize = mt.subtitleSize || "1.2rem";
   const layout = siteConfig?.sectionLayouts?.skyLounge || { desktop: 3, tablet: 2, mobile: 1 };
   const [loungeCards, setLoungeCards] = useState<LoungeItem[]>(initialCards);
 
@@ -75,10 +81,8 @@ export default function MingalarClient({ initialCards, siteConfig }: MingalarCli
         <img src={heroImage} alt="Airport Lounge" className="w-full h-full object-cover" onError={(e) => { (e.target as HTMLImageElement).src = "/images_v2/sky1-v3.jpg"; }} />
         <div className="absolute inset-0 bg-gradient-to-t from-[#0A1628]/90 via-[#0A1628]/40 to-[#0A1628]/30" />
         <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4">
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
-            ✨ Mingalar Sky Lounge
-          </h1>
-          <p className="text-gray-300 text-lg max-w-2xl">Premium airport lounge experience at Yangon International</p>
+          <h1 className="font-bold text-white mb-4" style={{ fontFamily: mTitleFont, fontSize: mTitleSize }}>✨ {mTitle}</h1>
+          <p className="text-gray-300 text-lg max-w-2xl" style={{ fontSize: mSubtitleSize }}>{mSubtitle}</p>
         </div>
       </section>
       <section className="max-w-6xl mx-auto px-4 py-12">

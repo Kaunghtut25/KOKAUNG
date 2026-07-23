@@ -11,6 +11,12 @@ import RoutesMap from '@/components/RoutesMap';
 
 export default function ToursClient(props) {
   const heroImage = props.siteConfig?.heroImages?.tours || "/images_v2/hero-tours-v2.jpg";
+  const toursText = props.siteConfig?.heroText?.tours || {};
+  const toursTitle = toursText.title || "A9 Global Tours";
+  const toursSubtitle = toursText.subtitle || "Explore our curated travel packages";
+  const toursTitleFont = toursText.titleFont || "'Playfair Display', Georgia, serif";
+  const toursTitleSize = toursText.titleSize || "3rem";
+  const toursSubtitleSize = toursText.subtitleSize || "1.2rem";
   const { initialTours, preloadMap } = props;
   // Use server-rendered data directly — no client re-fetch to avoid flash of old content
   const apiTours = initialTours;
@@ -78,7 +84,7 @@ export default function ToursClient(props) {
           <div className="absolute inset-0 bg-gradient-to-b from-[#0A1628]/80 via-[#0A1628]/40 to-[#0A1628]/60" />
         </div>
         <div className="relative z-10 max-w-4xl mx-auto text-center">
-          <h1 className="text-4xl md:text-5xl font-bold text-white mb-3" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
+          <h1 className="font-bold text-white mb-3" style={{ fontFamily: toursTitleFont, fontSize: toursTitleSize }}>
             Explore Our Tours
           </h1>
           <p className="text-gray-300 text-lg">Discover the beauty of Myanmar with our curated tour packages</p>

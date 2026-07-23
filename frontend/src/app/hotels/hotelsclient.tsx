@@ -33,6 +33,12 @@ interface HotelsClientProps {
 
 export default function HotelsClient({ initialHotels, siteConfig }: HotelsClientProps & { siteConfig?: any }) {
   const heroImage = siteConfig?.heroImages?.hotels || "/images_v2/hero-hotels-v2.jpg";
+  const ht = siteConfig?.heroText?.hotels || {};
+  const hTitle = ht.title || "A9 Global Hotels";
+  const hSubtitle = ht.subtitle || "Handpicked accommodations for your comfort";
+  const hTitleFont = ht.titleFont || "'Playfair Display', Georgia, serif";
+  const hTitleSize = ht.titleSize || "3rem";
+  const hSubtitleSize = ht.subtitleSize || "1.2rem";
   const [currency, setCurrency] = useState<'MMK' | 'USD'>('MMK');
   const layout = siteConfig?.sectionLayouts?.hotels || { desktop: 4, tablet: 2, mobile: 1 };
   const rowTitles = siteConfig?.sectionRows?.hotels || ["Featured Hotels", "More Hotels", "Additional Hotels"];
@@ -77,7 +83,7 @@ export default function HotelsClient({ initialHotels, siteConfig }: HotelsClient
         </div>
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(212,175,55,0.08),transparent_70%)]" />
         <div className="relative max-w-7xl mx-auto text-center">
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4 text-[#0A1628]" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
+          <h1 className="font-bold mb-4 text-[#0A1628]" style={{ fontFamily: hTitleFont, fontSize: hTitleSize }}>
             Find Your Perfect Stay
           </h1>
           <p className="text-gray-500 text-lg max-w-2xl mx-auto mb-8">

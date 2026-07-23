@@ -148,6 +148,12 @@ interface VisasClientProps {
 
 export default function VisasClient({ initialVisas, siteConfig }: VisasClientProps & { siteConfig?: any }) {
   const heroImage = siteConfig?.heroImages?.visas || "/images_v2/visa1-v3.jpg";
+  const vt = siteConfig?.heroText?.visas || {};
+  const vTitle = vt.title || "Visa Services";
+  const vSubtitle = vt.subtitle || "Hassle-free visa processing";
+  const vTitleFont = vt.titleFont || "'Playfair Display', serif";
+  const vTitleSize = vt.titleSize || "2.5rem";
+  const vSubtitleSize = vt.subtitleSize || "1rem";
   const layout = siteConfig?.sectionLayouts?.visas || { desktop: 4, tablet: 3, mobile: 2 };
   const [visas, setVisas] = useState<VisaService[]>(initialVisas.length > 0 ? initialVisas : FALLBACK_VISAS);
   const [currency, setCurrency] = useState<'MMK' | 'USD'>('MMK');
@@ -188,7 +194,7 @@ export default function VisasClient({ initialVisas, siteConfig }: VisasClientPro
         <img src={heroImage} alt="Visa Services" className="w-full h-full object-cover" onError={(e) => { (e.target as HTMLImageElement).src = "/images_v2/visa1-v3.jpg"; }} />
         <div className="absolute inset-0 bg-gradient-to-b from-[#0A1628]/70 to-[#0A1628]/40" />
         <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4 mb-8">
-          <h1 className="text-3xl sm:text-4xl font-bold text-white mb-2" style={{ fontFamily: "'Playfair Display', serif" }}>Visa Services</h1>
+          <h1 className="font-bold text-white mb-2" style={{ fontFamily: vTitleFont, fontSize: vTitleSize }}>{vTitle}</h1>
           <p className="text-white/70 max-w-xl text-xs sm:text-sm">Hassle-free visa processing for destinations worldwide</p>
           <div className="flex gap-2 mt-3">
             <button onClick={() => setCurrency('MMK')} className={`px-3 py-1 rounded-full text-[11px] font-semibold transition-all ${currency==='MMK'?'bg-gold text-white':'bg-white/20 text-white/70'}`}>🇲🇲 MMK</button>
