@@ -126,7 +126,7 @@ function DestinationCard({ dest }: { dest: { city: string; country: string; imag
           ) : (
             <p className="text-gray-500 text-[11px] leading-relaxed line-clamp-2">Discover the best of {dest.city}'s iconic landmarks, vibrant culture, and unforgettable experiences with A9 Global Travels.</p>
           )}
-          {dest.tags && dest.tags.length > 0 && (
+          {Array.isArray(dest.tags) && dest.tags.length > 0 && (
             <div className="flex flex-wrap gap-1 pt-0.5">
               {dest.tags.slice(0, 3).map((tag, idx) => (
                 <span key={idx} className="px-2 py-0.5 rounded-full bg-[#D4AF37]/10 text-[#B8960F] text-[10px] font-medium border border-[#D4AF37]/20">
