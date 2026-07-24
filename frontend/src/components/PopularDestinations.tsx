@@ -159,7 +159,7 @@ function DestinationCard({ dest, destText = {} }: { dest: { city: string; countr
   );
 }
 
-export default function PopularDestinations() {
+export default function PopularDestinations({ siteConfig }: { siteConfig?: any } = {}) {
   const [dests, setDests] = useState<any[]>(FALLBACK_DESTS);
   const [destText, setDestText] = useState<any>({});
 
@@ -184,17 +184,12 @@ export default function PopularDestinations() {
         <p style={{ fontSize: destText?.subtitleSize || "1rem" }} className="text-gray-500">{destText?.subtitle || "Popular Destinations"}</p>
       </div>
       {dests.length > 0 ? (
-        <div className="space-y-5">
-          <ScrollingRow>
-            {dests.slice(0, 6).map((d, i) => (
-              <div key={i} className="flex-shrink-0 w-[300px] snap-start"><DestinationCard dest={d} destText={destText} /></div>
+        <div className="grid gap-4 justify-center" style={{ gridTemplateColumns: `repeat(${siteConfig?.sectionLayouts?.tours?.cardsPerRow || 6}, minmax(0, 300px))` }}>
+            {dests.map((d, i) => (
+              <div key={i}>
+                <DestinationCard dest={d} destText={destText} />
+              </div>
             ))}
-          </ScrollingRow>
-          <ScrollingRow>
-            {dests.slice(6, 12).map((d, i) => (
-              <div key={i + 6} className="flex-shrink-0 w-[300px} snap-start"><DestinationCard dest={d} destText={destText} /></div>
-            ))}
-          </ScrollingRow>
         </div>
       ) : (
         <p className="text-center text-gray-400 py-8">No destinations yet. Add some from the admin panel!</p>

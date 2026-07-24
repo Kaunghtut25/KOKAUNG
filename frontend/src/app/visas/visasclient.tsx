@@ -204,7 +204,7 @@ export default function VisasClient({ initialVisas, siteConfig }: VisasClientPro
         </div>
       </section>
 <section className="max-w-7xl mx-auto px-4 sm:px-6 pt-20 pb-20">
-        <div className={`grid grid-cols-${layout.mobile} md:grid-cols-${layout.tablet} lg:grid-cols-${layout.desktop} gap-4`}>
+        <div className="grid gap-4 justify-center" style={{ gridTemplateColumns: `repeat(${siteConfig?.sectionLayouts?.visas?.cardsPerRow || 6}, minmax(0, ${(siteConfig?.cardDimensions?.visas?.width || 280)}px))` }}>
           {pool.map(v => <VisaGridCard key={v._id + '-' + v._id} visa={v} cardWidth={siteConfig?.cardDimensions?.visas?.width} cardHeight={siteConfig?.cardDimensions?.visas?.height} />)}
         </div>
       </section>

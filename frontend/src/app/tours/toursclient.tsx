@@ -2,7 +2,6 @@
 
 import React, { useState } from 'react';
 import TourCard from '@/components/TourCard';
-import ScrollingRow from '@/components/ScrollingRow';
 import CurrencyToggle from '@/components/CurrencyToggle';
 import DealsBanner from '@/components/DealsBanner';
 import FAQAccordion from '@/components/FAQAccordion';
@@ -23,6 +22,9 @@ export default function ToursClient(props) {
   const [currency, setCurrency] = useState('MMK');
   const layout = props.siteConfig?.sectionLayouts?.tours || { desktop: 3, tablet: 2, mobile: 1 };
   const rowTitles = props.siteConfig?.sectionRows?.tours || ["Featured Tours", "More Tours", "Additional Tours"];
+  const cardsPerRow = props.siteConfig?.sectionLayouts?.tours?.cardsPerRow || 6;
+
+
   const [destination, setDestination] = useState('');
   const [minPrice, setMinPrice] = useState('');
   const [maxPrice, setMaxPrice] = useState('');
@@ -60,8 +62,6 @@ export default function ToursClient(props) {
     }
     return 0;
   });
-
-  const ITEMS_PER_ROW = 6;
   const pool = [...sortedTours];
   // Group by row field
   const rowMap = new Map<number, typeof pool>();
@@ -73,7 +73,7 @@ export default function ToursClient(props) {
   // Sort by row number, limit each row to 6
   const tourRows = [...rowMap.entries()]
     .sort(([a],[b]) => a - b)
-    .map(([,items]) => items.slice(0, ITEMS_PER_ROW));
+    .map(([,items]) => items);
 
   return (
     <main className="min-h-screen bg-white">
@@ -128,13 +128,13 @@ export default function ToursClient(props) {
                 <h2 className="text-xl font-bold text-gray-900 mb-4" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
                   {rowTitles[rowIdx] || `Row ${rowIdx + 1}`}
                 </h2>
-                <ScrollingRow>
+                <div className="grid gap-4 justify-center" style={{ gridTemplateColumns: `repeat(${cardsPerRow}, minmax(0, ${(props.siteConfig?.cardDimensions?.tours?.width || 300)}px))` }}>
                   {row.map((item, i) => (
-                    <div key={item._id || i} className="flex-shrink-0 snap-start" style={{ width: (siteConfig?.cardDimensions?.tours?.width) || 300 }}>
-<TourCard tour={item} currency={currency} preloadedImage={preloadMap?.[item._id]} cardWidth={siteConfig?.cardDimensions?.tours?.width} cardHeight={siteConfig?.cardDimensions?.tours?.height} />
+                    <div key={item._id || i}>
+<TourCard tour={item} currency={currency} preloadedImage={preloadMap?.[item._id]} cardWidth={props.siteConfig?.cardDimensions?.tours?.width} cardHeight={props.siteConfig?.cardDimensions?.tours?.height} />
 </div>
                   ))}
-                </ScrollingRow>
+                </div>
               </div>
             ))}
           </div>

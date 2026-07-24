@@ -770,6 +770,28 @@ const tabs: { key: Tab; label: string }[] = [
                   </div>
                 );
               })}
+              <h3 className="text-md font-semibold text-[#D4AF37] mt-6 mb-3">Cards Per Row</h3>
+              {sectionKeys.map(sk => {
+                const val = cfg.sectionLayouts?.[sk.key]?.cardsPerRow || 6;
+                return (
+                  <div key={"cpr-"+sk.key} className="flex items-center gap-3 mb-2">
+                    <span className="text-white/70 text-sm w-24 capitalize">{sk.label}</span>
+                    <select
+                      value={val}
+                      onChange={e => setCfg((p: any) => ({
+                        ...p,
+                        sectionLayouts: {
+                          ...p.sectionLayouts,
+                          [sk.key]: { ...(p.sectionLayouts?.[sk.key] || {}), cardsPerRow: parseInt(e.target.value) }
+                        }
+                      }))}
+                      className="bg-white/10 border border-white/20 text-white rounded px-2 py-1 text-sm"
+                    >
+                      {[2,3,4,5,6].map(n => <option key={n} value={n}>{n} per row</option>)}
+                    </select>
+                  </div>
+                );
+              })}
             </div>
           )}
 

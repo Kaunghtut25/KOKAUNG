@@ -3,7 +3,6 @@
 import React, { useState } from 'react';
 import { Car } from '@/lib/api';
 import CarCard from '@/components/CarCard';
-import ScrollingRow from '@/components/ScrollingRow';
 import CurrencyToggle from '@/components/CurrencyToggle';
 import DealsBanner from '@/components/DealsBanner';
 import FAQAccordion from '@/components/FAQAccordion';
@@ -42,6 +41,8 @@ export default function CarsClient({ initialCars, siteConfig }: CarsClientProps 
   const [currency, setCurrency] = useState<'MMK' | 'USD'>('MMK');
   const layout = siteConfig?.sectionLayouts?.cars || { desktop: 3, tablet: 2, mobile: 1 };
   const rowTitles = siteConfig?.sectionRows?.cars || ["Popular Cars", "More Cars", "Additional Cars"];
+  const cardsPerRow = siteConfig?.sectionLayouts?.cars?.cardsPerRow || 6;
+
   const [carType, setCarType] = useState('All');
   const [sort, setSort] = useState('');
   // Apply sort
@@ -50,8 +51,6 @@ export default function CarsClient({ initialCars, siteConfig }: CarsClientProps 
     if (sort === 'price_desc') return (b.priceMMK || 0) - (a.priceMMK || 0);
     return 0;
   });
-
-  const ITEMS_PER_ROW = 6;
   const pool: Car[] = [...sortedCars];
   const carRows: Car[][] = [];
   for (let i = 0; i < pool.length; i += ITEMS_PER_ROW) {
@@ -113,13 +112,13 @@ export default function CarsClient({ initialCars, siteConfig }: CarsClientProps 
                     {rowTitles[rowIdx] || `Row ${rowIdx + 1}`}
                   </h2>
                 </div>
-                <ScrollingRow>
-                  {row.map((car) => (
-                    <div key={car._id + '-' + rowIdx} className="flex-shrink-0 snap-start" style={{ width: (siteConfig?.cardDimensions?.cars?.width) || 300 }}>
+                <div className="grid gap-4 justify-center" style={{ gridTemplateColumns: `repeat(${cardsPerRow}, minmax(0, ${(siteConfig?.cardDimensions?.cars?.width || 300)}px))` }}>
+                  {carRows[carRowIdx].map((car, i) => (
+                    <div key={`car-${carRowIdx}-${i}`}>
 <CarCard car={car} currency={currency} cardWidth={siteConfig?.cardDimensions?.cars?.width} cardHeight={siteConfig?.cardDimensions?.cars?.height} />
 </div>
                   ))}
-                </ScrollingRow>
+                </div>
               </div>
             ))}
           </div>

@@ -245,14 +245,14 @@ const defaultConfig = {
     blog: true,
   },
 
-  sectionLayouts: {
-    hotels: { desktop: 4, tablet: 2, mobile: 1 },
-    tours: { desktop: 3, tablet: 2, mobile: 1 },
-    cars: { desktop: 3, tablet: 2, mobile: 1 },
-    cruises: { desktop: 3, tablet: 2, mobile: 1 },
-    visas: { desktop: 4, tablet: 3, mobile: 2 },
-    insurance: { desktop: 3, tablet: 2, mobile: 1 },
-    skyLounge: { desktop: 3, tablet: 2, mobile: 1 },
+    sectionLayouts: {
+    tours: { desktop: 3, tablet: 2, mobile: 1, cardsPerRow: 6 },
+    hotels: { desktop: 4, tablet: 2, mobile: 1, cardsPerRow: 6 },
+    cars: { desktop: 3, tablet: 2, mobile: 1, cardsPerRow: 6 },
+    cruises: { desktop: 2, tablet: 2, mobile: 1, cardsPerRow: 6 },
+    visas: { desktop: 4, tablet: 3, mobile: 2, cardsPerRow: 6 },
+    insurance: { desktop: 3, tablet: 2, mobile: 1, cardsPerRow: 6 },
+    mingalar: { desktop: 3, tablet: 2, mobile: 1, cardsPerRow: 6 },
   },
 
 

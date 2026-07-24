@@ -294,7 +294,7 @@ export default function HomePageClient({ siteConfig: ssrConfig }: { siteConfig?:
       </div>
 
       {/* ========== Trust Badges ========== */}
-      <PopularDestinations />
+      <PopularDestinations siteConfig={siteConfig} />
       {statsCards.length > 0 && (
       <section className="py-16 bg-[#FFFDF5]">
           <div className="max-w-6xl mx-auto px-4">

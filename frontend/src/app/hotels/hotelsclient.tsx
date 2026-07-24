@@ -3,7 +3,6 @@
 import React, { useState } from 'react';
 import { Hotel } from '@/lib/api';
 import HotelCard from '@/components/HotelCard';
-import ScrollingRow from '@/components/ScrollingRow';
 import CurrencyToggle from "@/components/CurrencyToggle";
 import DealsBanner from '@/components/DealsBanner';
 import FAQAccordion from '@/components/FAQAccordion';
@@ -42,6 +41,8 @@ export default function HotelsClient({ initialHotels, siteConfig }: HotelsClient
   const [currency, setCurrency] = useState<'MMK' | 'USD'>('MMK');
   const layout = siteConfig?.sectionLayouts?.hotels || { desktop: 4, tablet: 2, mobile: 1 };
   const rowTitles = siteConfig?.sectionRows?.hotels || ["Featured Hotels", "More Hotels", "Additional Hotels"];
+  const cardsPerRow = siteConfig?.sectionLayouts?.hotels?.cardsPerRow || 6;
+
   const [location, setLocation] = useState('');
   const [rating, setRating] = useState('');
   const [minPrice, setMinPrice] = useState('');
@@ -59,8 +60,6 @@ export default function HotelsClient({ initialHotels, siteConfig }: HotelsClient
     if (sort === 'price_desc') return (b.priceMMK || 0) - (a.priceMMK || 0);
     return 0;
   });
-
-  const ITEMS_PER_ROW = 6;
   const pool: Hotel[] = [...sortedHotels];
   // Group by row field
   const rowMap = new Map<number, Hotel[]>();
@@ -72,7 +71,7 @@ export default function HotelsClient({ initialHotels, siteConfig }: HotelsClient
   // Sort by row number, limit each row to 6
   const hotelRows: Hotel[][] = [...rowMap.entries()]
     .sort(([a],[b]) => a - b)
-    .map(([,items]) => items.slice(0, ITEMS_PER_ROW));
+    .map(([,items]) => items);
 
   return (
     <main className="min-h-screen bg-white">
@@ -147,13 +146,13 @@ export default function HotelsClient({ initialHotels, siteConfig }: HotelsClient
                     {rowTitles[rowIdx] || `Row ${rowIdx + 1}`}
                   </h2>
                 </div>
-                <ScrollingRow>
+                <div className="grid gap-4 justify-center" style={{ gridTemplateColumns: `repeat(${cardsPerRow}, minmax(0, ${(siteConfig?.cardDimensions?.hotels?.width || 300)}px))` }}>
                   {row.map((hotel, i) => (
-                    <div key={`hotel-row-${rowIdx}-card-${i}`} className="flex-shrink-0 snap-start" style={{ width: (siteConfig?.cardDimensions?.hotels?.width) || 300 }}>
+                    <div key={`hotel-row-${rowIdx}-card-${i}`}>
 <HotelCard hotel={hotel} currency={currency} cardWidth={siteConfig?.cardDimensions?.hotels?.width} cardHeight={siteConfig?.cardDimensions?.hotels?.height} />
 </div>
                   ))}
-                </ScrollingRow>
+                </div>
               </div>
             ))}
           </div>
