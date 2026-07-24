@@ -337,6 +337,7 @@ const tabs: { key: Tab; label: string }[] = [
                   <ImageZone field="heroSlides" index={i} label="Slide Image" />
                   <div className="grid grid-cols-2 gap-3">
                     <div><label className={`labelCls labelCls`}>Label</label><input className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} value={slide.label} onChange={e => { const a = [...cfg.heroSlides]; a[i] = { ...slide, label: e.target.value }; set("heroSlides", a); }} /></div>
+                    <div><label className={labelCls}>Title</label><input className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} value={slide.title} onChange={e => { const a = [...cfg.heroSlides]; a[i] = { ...slide, title: e.target.value }; set("heroSlides", a); }} /></div>
                   </div>
                   <div><label className={labelCls}>Subtitle</label><input className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} value={slide.subtitle} onChange={e => { const a = [...cfg.heroSlides]; a[i] = { ...slide, subtitle: e.target.value }; set("heroSlides", a); }} /></div>
                 </div>
