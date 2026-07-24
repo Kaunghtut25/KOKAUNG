@@ -87,6 +87,39 @@ const defaultConfig = {
     visas: "/images_v2/visa1-v3.jpg",
   },
 
+  // Hero Text Settings (per-page title/subtitle/font)
+  heroText: {
+    tours: { title: "", subtitle: "", titleFont: "Georgia, serif", titleSize: "3rem", subtitleSize: "1.2rem" },
+    hotels: { title: "", subtitle: "", titleFont: "Georgia, serif", titleSize: "3rem", subtitleSize: "1.2rem" },
+    cars: { title: "", subtitle: "", titleFont: "Georgia, serif", titleSize: "3rem", subtitleSize: "1.2rem" },
+    cruises: { title: "", subtitle: "", titleFont: "Georgia, serif", titleSize: "3rem", subtitleSize: "1.2rem" },
+    visas: { title: "", subtitle: "", titleFont: "Georgia, serif", titleSize: "2.5rem", subtitleSize: "1rem" },
+    insurance: { title: "", subtitle: "", titleFont: "Georgia, serif", titleSize: "2.5rem", subtitleSize: "1rem" },
+    mingalar: { title: "Sky Lounge", subtitle: "Premium airport lounge experience", titleFont: "Georgia, serif", titleSize: "3rem", subtitleSize: "1.2rem" },
+  },
+
+  // Department Phone Numbers
+  departmentPhones: {
+    ticket: "959 694 320 111",
+    visa: "959 694 320 222",
+    hotel: "959 694 320 333",
+    outbound: "959 694 320 444",
+    inbound: "959 694 320 555",
+  },
+
+  // Popular Destinations Text Settings
+  destinationsText: {
+    title: "Explore The World",
+    subtitle: "Popular Destinations",
+    titleFont: "'Playfair Display', Georgia, serif",
+    titleSize: "2.5rem",
+    subtitleSize: "1rem",
+    titleColor: "#0A1628",
+    cardTitleFont: "'Playfair Display', Georgia, serif",
+    cardTitleSize: "1rem",
+    cardTitleColor: "#0A1628",
+  },
+
   // Service Icons Bar
   serviceIcons: [
     { label: "Flights", icon: "✈️", href: "/", enabled: true },
