@@ -258,17 +258,22 @@ export default function AdminCruisesPage() {
     new Intl.NumberFormat("en-US").format(n);
 
   const getStatusBadge = (status?: string) => {
-    const map: Record<string, string> = {
-      active: "bg-green-600 text-white font-medium border border-green-400",
-      inactive: "bg-red-600 text-white font-medium border border-red-400",
-      featured: "bg-[#D4AF37] text-[#0A1628] font-bold border border-[#D4AF37]",
-    };
-    return `px-2 py-0.5 rounded-full text-xs font-medium border ${
-      map[status || "active"] || "bg-gray-500/20 text-gray-400 border-gray-500/30"
-    }`;
+    const color = (status || "active") === "active"
+      ? { bg: "#16a34a", text: "#fff", border: "#4ade80" }
+      : (status || "active") === "inactive"
+      ? { bg: "#dc2626", text: "#fff", border: "#f87171" }
+      : (status || "active") === "featured"
+      ? { bg: "#D4AF37", text: "#0A1628", border: "#D4AF37", fontWeight: "bold" as const }
+      : { bg: "rgba(107,114,128,0.2)", text: "#9ca3af", border: "rgba(107,114,128,0.3)" };
+    return {
+      backgroundColor: color.bg,
+      color: color.text,
+      borderColor: color.border,
+      fontWeight: (color as any).fontWeight || undefined,
+    } as React.CSSProperties;
   };
 
-  const renderFormFields = () => (
+    const renderFormFields = () => (
     <div className="space-y-4">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
@@ -707,7 +712,7 @@ export default function AdminCruisesPage() {
                       <td className="p-4 text-white/70">{cruise.duration}</td>
                       <td className="p-4">
                         <div className="flex items-center gap-1.5">
-                          <span className={getStatusBadge(cruise.status || "active")}>
+                          <span style={getStatusBadge(cruise.status)} className="px-2 py-0.5 rounded-full text-xs font-medium border">
                             {(cruise.status || "active").charAt(0).toUpperCase() + (cruise.status || "active").slice(1)}
                           </span>
                           {cruise.featured && (
