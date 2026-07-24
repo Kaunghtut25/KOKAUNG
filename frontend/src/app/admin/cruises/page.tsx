@@ -257,14 +257,14 @@ export default function AdminCruisesPage() {
   const formatNumber = (n: number) =>
     new Intl.NumberFormat("en-US").format(n);
 
-  const getStatusBadge = (status: string) => {
+  const getStatusBadge = (status?: string) => {
     const map: Record<string, string> = {
       active: "bg-green-600 text-white font-medium border border-green-400",
       inactive: "bg-red-600 text-white font-medium border border-red-400",
       featured: "bg-[#D4AF37] text-[#0A1628] font-bold border border-[#D4AF37]",
     };
     return `px-2 py-0.5 rounded-full text-xs font-medium border ${
-      map[status] || "bg-gray-500/20 text-gray-400 border-gray-500/30"
+      map[status || "active"] || "bg-gray-500/20 text-gray-400 border-gray-500/30"
     }`;
   };
 
@@ -707,7 +707,7 @@ export default function AdminCruisesPage() {
                       <td className="p-4 text-white/70">{cruise.duration}</td>
                       <td className="p-4">
                         <div className="flex items-center gap-1.5">
-                          <span className={getStatusBadge(cruise.status)}>
+                          <span className={getStatusBadge(cruise.status || "active")}>
                             {(cruise.status || "active").charAt(0).toUpperCase() + (cruise.status || "active").slice(1)}
                           </span>
                           {cruise.featured && (

@@ -192,12 +192,12 @@ export default function AdminVisasPage() {
 
   const formatNumber = (n: number) => new Intl.NumberFormat("en-US").format(n);
 
-  const getStatusBadge = (status: string) => {
+  const getStatusBadge = (status?: string) => {
     const map: Record<string, string> = {
       active: "bg-green-600 text-white font-medium border border-green-400",
       inactive: "bg-red-600 text-white font-medium border border-red-400",
     };
-    return `px-2 py-0.5 rounded-full text-xs font-medium border ${map[status] || "bg-gray-500/20 text-gray-400 border-gray-500/30"}`;
+    return `px-2 py-0.5 rounded-full text-xs font-medium border ${map[status || "active"] || "bg-gray-500/20 text-gray-400 border-gray-500/30"}`;
   };
 
   const renderFormFields = () => (
@@ -434,7 +434,7 @@ export default function AdminVisasPage() {
                     <td className="p-4 text-white/70">{visa.processingTime}</td>
                     <td className="p-4 text-white">{formatNumber(visa.visaFeeMMK)} Ks</td>
                     <td className="p-4">
-                      <span className={getStatusBadge(visa.status)}>{(visa.status || "active").charAt(0).toUpperCase() + (visa.status || "active").slice(1)}</span>
+                      <span className={getStatusBadge(visa.status || "active")}>{(visa.status || "active").charAt(0).toUpperCase() + (visa.status || "active").slice(1)}</span>
                     </td>
                     <td className="p-4">
                       <div className="flex items-center gap-2">
