@@ -8,9 +8,11 @@ import { getImageFallback } from '@/lib/imageFallback';
 interface CarCardProps {
   car: Car;
   currency?: 'MMK' | 'USD';
+  cardWidth?: number;
+  cardHeight?: number;
 }
 
-export default function CarCard({ car, currency = 'MMK' }: CarCardProps) {
+export default function CarCard({ car, currency = 'MMK', cardWidth, cardHeight }: CarCardProps) {
   const router = useRouter();
   const [imgError, setImgError] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
@@ -37,7 +39,7 @@ export default function CarCard({ car, currency = 'MMK' }: CarCardProps) {
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       className="group relative cursor-pointer w-full h-full"
-      style={{ perspective: '1200px' }}
+      style={{ perspective: '1200px', minWidth: cardWidth || 300, height: cardHeight || undefined }}
     >
       <div
         className={`relative rounded-2xl overflow-hidden bg-white h-full flex flex-col transition-all duration-500 ease-out ${
@@ -62,7 +64,7 @@ export default function CarCard({ car, currency = 'MMK' }: CarCardProps) {
         </div>
 
         {/* Image Section */}
-        <div className="relative h-[280px] w-full overflow-hidden bg-gray-200">
+        <div className="relative w-full overflow-hidden bg-gray-200" style={{ height: cardHeight || 280 }}>
           <img src={displayImage} alt={carType} className="w-full h-full object-cover transition-transform duration-700 ease-out" style={{ position: 'absolute', inset: 0, transform: isHovered ? 'scale(1.08)' : 'scale(1)' }} onError={() => setImgError(true)} loading="eager" />
           <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/15 to-transparent" />
           {/* Car type badge */}

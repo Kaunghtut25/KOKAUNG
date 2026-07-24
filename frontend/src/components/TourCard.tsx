@@ -9,9 +9,11 @@ interface TourCardProps {
   tour: Tour;
   currency?: 'MMK' | 'USD';
   preloadedImage?: string;
+  cardWidth?: number;
+  cardHeight?: number;
 }
 
-export default function TourCard({ tour, currency = 'MMK', preloadedImage }: TourCardProps) {
+export default function TourCard({ tour, currency = 'MMK', preloadedImage, cardWidth, cardHeight }: TourCardProps) {
   const router = useRouter();
   const [imgError, setImgError] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
@@ -41,7 +43,7 @@ export default function TourCard({ tour, currency = 'MMK', preloadedImage }: Tou
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       className="group relative cursor-pointer w-full h-full"
-      style={{ perspective: '1200px' }}
+      style={{ perspective: '1200px', minWidth: cardWidth || 300, height: cardHeight || undefined }}
     >
       <div
         className={`relative rounded-2xl overflow-hidden bg-white h-full flex flex-col transition-all duration-500 ease-out ${
@@ -66,7 +68,7 @@ export default function TourCard({ tour, currency = 'MMK', preloadedImage }: Tou
         </div>
 
         {/* Image Section — same pattern as cruises page that works */}
-        <div className="relative h-[280px] w-full overflow-hidden bg-gray-200">
+        <div className="relative w-full overflow-hidden bg-gray-200" style={{ height: cardHeight || 280 }}>
           {!imgError ? (
             <img
               src={displayImage}

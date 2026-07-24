@@ -86,7 +86,7 @@ const FALLBACK_VISAS: VisaService[] = [
 
 
 
-function VisaGridCard({ visa }: { visa: VisaService }) {
+function VisaGridCard({ visa, cardWidth, cardHeight }: { visa: VisaService; cardWidth?: number; cardHeight?: number }) {
   const router = useRouter();
   const flag = COUNTRY_FLAGS[visa.country] || '🌏';
   const imageUrl = visa.image || COUNTRY_IMAGES[visa.country];
@@ -94,10 +94,11 @@ function VisaGridCard({ visa }: { visa: VisaService }) {
   return (
     <div
       onClick={() => router.push("/visas/" + (visa.slug||visa._id||visa.id))}
-      className="h-[430px] rounded-2xl overflow-hidden group cursor-pointer border border-gray-100 hover:border-gold/40 transition-all duration-300 bg-white shadow-sm flex flex-col"
+      className="rounded-2xl overflow-hidden group cursor-pointer border border-gray-100 hover:border-gold/40 transition-all duration-300 bg-white shadow-sm flex flex-col"
+      style={{ height: cardHeight || 430, width: cardWidth || undefined }}
     >
       {imageUrl ? (
-        <div className="relative h-44 overflow-hidden">
+        <div className="relative overflow-hidden" style={{ height: cardHeight ? Math.round(cardHeight * 0.4) : 176 }}>
           <img src={imageUrl} alt={visa.country} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" loading="lazy" />
           <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
           <div className="absolute bottom-1.5 left-2 flex items-center gap-1.5">
@@ -204,7 +205,7 @@ export default function VisasClient({ initialVisas, siteConfig }: VisasClientPro
       </section>
 <section className="max-w-7xl mx-auto px-4 sm:px-6 pt-20 pb-20">
         <div className={`grid grid-cols-${layout.mobile} md:grid-cols-${layout.tablet} lg:grid-cols-${layout.desktop} gap-4`}>
-          {pool.map(v => <VisaGridCard key={v._id + '-' + v._id} visa={v} />)}
+          {pool.map(v => <VisaGridCard key={v._id + '-' + v._id} visa={v} cardWidth={siteConfig?.cardDimensions?.visas?.width} cardHeight={siteConfig?.cardDimensions?.visas?.height} />)}
         </div>
       </section>
 {selectedVisa && <BookingModal isOpen={!!selectedVisa} onClose={() => setSelectedVisa(null)} title={`Apply for ${selectedVisa.country} Visa`} fields={['Name','Passport No','Travel Date']} />}

@@ -134,7 +134,7 @@ export default function HotelsClient({ initialHotels, siteConfig }: HotelsClient
 <section className="max-w-7xl mx-auto px-4 py-10 pb-20">
         {sortedHotels.length === 0 && (
           <div className="flex gap-4 overflow-hidden">
-            {Array.from({ length: 4 }).map((_, i) => <div key={i} className="w-[300px] flex-shrink-0"><SkeletonCard /></div>)}
+            {Array.from({ length: 4 }).map((_, i) => <div key={i} className="flex-shrink-0" style={{ width: (siteConfig?.cardDimensions?.hotels?.width) || 300 }}><SkeletonCard /></div>)}
           </div>
         )}
 
@@ -149,8 +149,8 @@ export default function HotelsClient({ initialHotels, siteConfig }: HotelsClient
                 </div>
                 <ScrollingRow>
                   {row.map((hotel, i) => (
-                    <div key={`hotel-row-${rowIdx}-card-${i}`} className="w-[300px] flex-shrink-0 snap-start">
-<HotelCard hotel={hotel} currency={currency} />
+                    <div key={`hotel-row-${rowIdx}-card-${i}`} className="flex-shrink-0 snap-start" style={{ width: (siteConfig?.cardDimensions?.hotels?.width) || 300 }}>
+<HotelCard hotel={hotel} currency={currency} cardWidth={siteConfig?.cardDimensions?.hotels?.width} cardHeight={siteConfig?.cardDimensions?.hotels?.height} />
 </div>
                   ))}
                 </ScrollingRow>

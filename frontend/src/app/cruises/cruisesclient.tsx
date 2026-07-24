@@ -165,7 +165,7 @@ export default function CruisesClient({ initialCruises, siteConfig }: { initialC
               : 'Ks ' + cruise.priceMMK.toLocaleString();
             return (
               <div key={cruise.id} onClick={() => router.push("/cruises/" + (cruise.id || cruise._id || cruise.slug))} className="bg-white rounded-2xl border border-gray-200 overflow-hidden hover:shadow-xl hover:border-[#D4AF37]/40 transition-all group cursor-pointer">
-                <div className="relative h-48 overflow-hidden">
+                <div className="relative overflow-hidden" style={{ height: (siteConfig?.cardDimensions?.cruises?.height) || 192 }}>
                   <img
                     src={cruise.images?.[0] || '/images_v2/hero-cruises-v2.jpg'}
                     alt={cruise.title}

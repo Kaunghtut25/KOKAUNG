@@ -35,8 +35,8 @@ export default function MingalarClient({ initialCards, siteConfig }: MingalarCli
   const renderCard = (item: LoungeItem, i: number) => {
     const slug = item.slug || item.id || ('m' + (i + 1));
     return (
-      <div key={i} onClick={() => router.push("/mingalar/" + (item.slug || item.id || ("m" + (i + 1))))} className="bg-white rounded-xl border border-gray-200 overflow-hidden hover:shadow-lg hover:border-[#D4AF37]/40 transition-all group cursor-pointer">
-        <div className="relative h-48 w-full overflow-hidden">
+      <div key={i} onClick={() => router.push("/mingalar/" + (item.slug || item.id || ("m" + (i + 1))))} className="bg-white rounded-xl border border-gray-200 overflow-hidden hover:shadow-lg hover:border-[#D4AF37]/40 transition-all group cursor-pointer" style={{ width: (siteConfig?.cardDimensions?.mingalar?.width) || undefined, height: (siteConfig?.cardDimensions?.mingalar?.height) || undefined }}>
+        <div className="relative w-full overflow-hidden" style={{ height: (siteConfig?.cardDimensions?.mingalar?.height) ? Math.round(siteConfig.cardDimensions.mingalar.height * 0.5) : 192 }}>
           <img
             src={item.img}
             alt={item.title}

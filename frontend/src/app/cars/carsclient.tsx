@@ -100,7 +100,7 @@ export default function CarsClient({ initialCars, siteConfig }: CarsClientProps 
 <section className="max-w-7xl mx-auto px-4 py-8 pb-20">
         {sortedCars.length === 0 && (
           <div className="flex gap-4 overflow-hidden">
-            {Array.from({ length: 4 }).map((_, i) => <div key={i} className="w-[300px] flex-shrink-0"><SkeletonCard /></div>)}
+            {Array.from({ length: 4 }).map((_, i) => <div key={i} className="flex-shrink-0" style={{ width: (siteConfig?.cardDimensions?.cars?.width) || 300 }}><SkeletonCard /></div>)}
           </div>
         )}
 
@@ -115,8 +115,8 @@ export default function CarsClient({ initialCars, siteConfig }: CarsClientProps 
                 </div>
                 <ScrollingRow>
                   {row.map((car) => (
-                    <div key={car._id + '-' + rowIdx} className="w-[300px] flex-shrink-0 snap-start">
-<CarCard car={car} currency={currency} />
+                    <div key={car._id + '-' + rowIdx} className="flex-shrink-0 snap-start" style={{ width: (siteConfig?.cardDimensions?.cars?.width) || 300 }}>
+<CarCard car={car} currency={currency} cardWidth={siteConfig?.cardDimensions?.cars?.width} cardHeight={siteConfig?.cardDimensions?.cars?.height} />
 </div>
                   ))}
                 </ScrollingRow>

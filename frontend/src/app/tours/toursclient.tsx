@@ -130,8 +130,8 @@ export default function ToursClient(props) {
                 </h2>
                 <ScrollingRow>
                   {row.map((item, i) => (
-                    <div key={item._id || i} className="w-[300px] flex-shrink-0 snap-start">
-<TourCard tour={item} currency={currency} preloadedImage={preloadMap?.[item._id]} />
+                    <div key={item._id || i} className="flex-shrink-0 snap-start" style={{ width: (siteConfig?.cardDimensions?.tours?.width) || 300 }}>
+<TourCard tour={item} currency={currency} preloadedImage={preloadMap?.[item._id]} cardWidth={siteConfig?.cardDimensions?.tours?.width} cardHeight={siteConfig?.cardDimensions?.tours?.height} />
 </div>
                   ))}
                 </ScrollingRow>

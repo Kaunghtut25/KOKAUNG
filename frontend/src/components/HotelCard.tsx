@@ -10,9 +10,11 @@ import { getImageFallback } from "@/lib/imageFallback";
 interface HotelCardProps {
   hotel: Hotel;
   currency?: "MMK" | "USD";
+  cardWidth?: number;
+  cardHeight?: number;
 }
 
-export default function HotelCard({ hotel, currency = "MMK" }: HotelCardProps) {
+export default function HotelCard({ hotel, currency = "MMK", cardWidth, cardHeight }: HotelCardProps) {
   const router = useRouter();
   const [imgError, setImgError] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
@@ -44,7 +46,7 @@ export default function HotelCard({ hotel, currency = "MMK" }: HotelCardProps) {
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       className="group relative cursor-pointer w-full h-full"
-      style={{ perspective: "1200px" }}
+      style={{ perspective: "1200px", minWidth: cardWidth || 300, height: cardHeight || undefined }}
     >
       <div
         className={`relative rounded-2xl overflow-hidden bg-white h-full flex flex-col transition-all duration-500 ease-out ${
@@ -69,7 +71,7 @@ export default function HotelCard({ hotel, currency = "MMK" }: HotelCardProps) {
         </div>
 
         {/* Image Section */}
-        <div className="relative h-[280px] w-full overflow-hidden bg-gray-200">
+        <div className="relative w-full overflow-hidden bg-gray-200" style={{ height: cardHeight || 280 }}>
           <img src={displayImage} alt={hotel.name} className="w-full h-full object-cover" />
           <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/15 to-transparent" />
           {/* Location badge */}

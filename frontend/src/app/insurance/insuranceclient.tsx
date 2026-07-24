@@ -82,7 +82,7 @@ function normalizePlan(raw: any): InsurancePlan {
   };
 }
 
-function InsuranceCard({ plan, currency, onSelect }: { plan: InsurancePlan; currency: 'MMK' | 'USD'; onSelect: () => void }) {
+function InsuranceCard({ plan, currency, onSelect, cardWidth, cardHeight }: { plan: InsurancePlan; currency: 'MMK' | 'USD'; onSelect: () => void; cardWidth?: number; cardHeight?: number }) {
   const router = useRouter();
   const name = plan.planName || plan.title || '';
   const coverage = plan.coverage || '';
@@ -93,7 +93,7 @@ function InsuranceCard({ plan, currency, onSelect }: { plan: InsurancePlan; curr
   const benefits = (plan.benefits || []).slice(0, 3);
 
   return (
-    <div onClick={() => router.push("/insurance/" + (plan.slug||plan._id || plan.id))} className="rounded-2xl overflow-hidden group cursor-pointer border border-gray-100 hover:border-gold/40 transition-all duration-300 bg-white shadow-sm hover:shadow-xl hover:-translate-y-1 flex flex-col">
+    <div onClick={() => router.push("/insurance/" + (plan.slug||plan._id || plan.id))} className="rounded-2xl overflow-hidden group cursor-pointer border border-gray-100 hover:border-gold/40 transition-all duration-300 bg-white shadow-sm hover:shadow-xl hover:-translate-y-1 flex flex-col" style={{ width: cardWidth || undefined, height: cardHeight || undefined }}>
       <div className="relative h-40 overflow-hidden">
         <img src={imageUrl} alt={name} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" loading="lazy"
           onError={(e) => { (e.target as HTMLImageElement).src = '/images_v2/ins1-v3.jpg'; }} />
@@ -183,7 +183,7 @@ export default function InsuranceClient({ initialPlans, siteConfig }: InsuranceC
         ) : (
           <div className={`grid grid-cols-${layout.mobile} sm:grid-cols-${layout.tablet} lg:grid-cols-${layout.desktop} gap-4 sm:gap-5`}>
             {displayPlans.map(plan => (
-              <InsuranceCard key={plan._id} plan={plan} currency={currency} onSelect={() => setSelectedPlan(plan)} />
+              <InsuranceCard key={plan._id} plan={plan} currency={currency} onSelect={() => setSelectedPlan(plan)} cardWidth={siteConfig?.cardDimensions?.insurance?.width} cardHeight={siteConfig?.cardDimensions?.insurance?.height} />
             ))}
           </div>
         )}
