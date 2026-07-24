@@ -9,7 +9,7 @@ export async function GET() {
     // Merge: stored config overrides defaults, but we pick up any code-level changes
     // Stored data overrides defaults, but branding fields always use code defaults
     const stored = cfg?.[0] || {};
-    const merged = { ...defaultConfig, ...stored, siteName: defaultConfig.siteName, footerCopyright: defaultConfig.footerCopyright, metaTitle: defaultConfig.metaTitle, contact: { ...defaultConfig.contact, ...(stored.contact || {}), phone: defaultConfig.contact.phone, email: defaultConfig.contact.email } };
+    const merged = { ...defaultConfig, ...stored, contact: { ...defaultConfig.contact, ...(stored.contact || {}) } };
     return NextResponse.json(merged);
   } catch {
     return NextResponse.json(defaultConfig);
@@ -184,13 +184,13 @@ const defaultConfig = {
 
   // Contact Info
   contact: {
-    email: "a9ticketing@a9globaltravel.com.mm",
-    phone: "959 694 320 111",
-    address: "No-18, Ground Floor, Zayya Waddy Street, Baho Road, Sanchaung Tsp, Yangon, Myanmar",
-    whatsapp: "+959694320111",
-    messenger: "https://m.me/a9globaltravel",
-    viber: "+959694320111",
-    telegram: "https://t.me/a9globaltravel",
+    email: "",
+    phone: "",
+    address: "",
+    whatsapp: "",
+    messenger: "",
+    viber: "",
+    telegram: "",
   },
 
   // Social Links

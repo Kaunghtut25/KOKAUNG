@@ -36,12 +36,10 @@ export default function Footer() {
   }, []);
 
   // ── Dynamic values with hardcoded fallbacks ──
-  const phone = config?.contact?.phone || "+959694320111";
+  const phone = config?.contact?.phone || "";
   const deptPhone = (dept: string) => config?.departmentPhones?.[dept] || phone;
-  const email = config?.contact?.email || "a9ticketing@a9globaltravel.com.mm";
-  const address =
-    config?.contact?.address ||
-    "No-18, Ground Floor, Zayya Waddy Street,\nBaho Road, Sanchaung Tsp,\nYangon, Myanmar, 11111";
+  const email = config?.contact?.email || "";
+  const address = config?.contact?.address || "";
   const fbLink = config?.socialLinks?.facebook || "https://facebook.com";
   const igLink = config?.socialLinks?.instagram || "https://instagram.com";
   const tgLink = config?.socialLinks?.telegram || "https://t.me";
