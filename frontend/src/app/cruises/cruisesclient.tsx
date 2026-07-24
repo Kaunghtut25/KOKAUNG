@@ -134,9 +134,11 @@ export default function CruisesClient({ initialCruises, siteConfig }: { initialC
         <div className="absolute inset-0 bg-gradient-to-t from-[#0A1628]/90 via-[#0A1628]/40 to-[#0A1628]/30" />
         <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4">
           <h1 className="font-bold text-white mb-4" style={{ fontFamily: crTitleFont, fontSize: crTitleSize }}>
-            🚢 Cruises
+            {crTitle}
           </h1>
-          <p className="text-gray-300 text-lg max-w-2xl">Luxury cruise packages to world-class destinations</p>
+          {crSubtitle ? (
+            <p className="text-gray-300 text-lg max-w-2xl" style={{ fontSize: crSubtitleSize }}>{crSubtitle}</p>
+          ) : null}
         </div>
       </section>
 

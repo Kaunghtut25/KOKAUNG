@@ -85,9 +85,9 @@ export default function ToursClient(props) {
         </div>
         <div className="relative z-10 max-w-4xl mx-auto text-center">
           <h1 className="font-bold text-white mb-3" style={{ fontFamily: toursTitleFont, fontSize: toursTitleSize }}>
-            Explore Our Tours
+            {toursTitle}
           </h1>
-          <p className="text-gray-300 text-lg">Discover the beauty of Myanmar with our curated tour packages</p>
+          {toursSubtitle ? <p className="text-gray-300 text-lg" style={{ fontSize: toursSubtitleSize }}>{toursSubtitle}</p> : null}
         </div>
       </section>
 

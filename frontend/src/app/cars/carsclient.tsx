@@ -68,11 +68,11 @@ export default function CarsClient({ initialCars, siteConfig }: CarsClientProps 
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(212,175,55,0.08),transparent_70%)]" />
         <div className="relative max-w-7xl mx-auto text-center">
           <h1 className="font-bold mb-4 text-[#0A1628]" style={{ fontFamily: cTitleFont, fontSize: cTitleSize }}>
-            Premium Car Rentals
+            {cTitle}
           </h1>
-          <p className="text-gray-500 text-lg max-w-2xl mx-auto mb-8">
-            Travel in comfort and style. Choose from our fleet of well-maintained vehicles with professional drivers.
-          </p>
+          {cSubtitle ? (
+            <p className="text-gray-500 text-lg max-w-2xl mx-auto mb-8" style={{ fontSize: cSubtitleSize }}>{cSubtitle}</p>
+          ) : null}
         </div>
       </section>
 <section className="sticky top-[72px] z-30 bg-white/95 backdrop-blur-md border-b border-gray-200 shadow-sm">

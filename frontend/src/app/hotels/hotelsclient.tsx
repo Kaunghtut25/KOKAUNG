@@ -84,11 +84,11 @@ export default function HotelsClient({ initialHotels, siteConfig }: HotelsClient
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(212,175,55,0.08),transparent_70%)]" />
         <div className="relative max-w-7xl mx-auto text-center">
           <h1 className="font-bold mb-4 text-[#0A1628]" style={{ fontFamily: hTitleFont, fontSize: hTitleSize }}>
-            Find Your Perfect Stay
+            {hTitle}
           </h1>
-          <p className="text-gray-500 text-lg max-w-2xl mx-auto mb-8">
-            From luxury resorts to cozy boutique hotels — discover accommodations that make your trip unforgettable.
-          </p>
+          {hSubtitle ? (
+            <p className="text-gray-500 text-lg max-w-2xl mx-auto mb-8" style={{ fontSize: hSubtitleSize }}>{hSubtitle}</p>
+          ) : null}
         </div>
       </section>
 <section className="sticky top-[72px] z-30 bg-white/95 backdrop-blur-md border-b border-gray-200 shadow-sm">

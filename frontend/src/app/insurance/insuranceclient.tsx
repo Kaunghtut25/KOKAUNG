@@ -168,7 +168,7 @@ export default function InsuranceClient({ initialPlans, siteConfig }: InsuranceC
         <div className="absolute inset-0 bg-gradient-to-b from-[#0A1628]/70 to-[#0A1628]/40" />
         <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4">
           {iTitle ? (<h1 className="font-bold text-white mb-2" style={{ fontFamily: iTitleFont, fontSize: iTitleSize }}>{iTitle}</h1>) : null}
-          <p className="text-white/70 max-w-xl text-xs sm:text-sm">Protect your journey with comprehensive coverage</p>
+          {iSubtitle ? (<p className="text-white/70 max-w-xl text-xs sm:text-sm" style={{ fontSize: iSubtitleSize }}>{iSubtitle}</p>) : null}
           <div className="flex gap-2 mt-3">
             <button onClick={() => setCurrency('MMK')} className={`px-3 py-1 rounded-full text-[11px] font-semibold transition-all ${currency==='MMK'?'bg-gold text-white':'bg-white/20 text-white/70'}`}>🇲🇲 MMK</button>
             <button onClick={() => setCurrency('USD')} className={`px-3 py-1 rounded-full text-[11px] font-semibold transition-all ${currency==='USD'?'bg-gold text-white':'bg-white/20 text-white/70'}`}>💵 USD</button>
