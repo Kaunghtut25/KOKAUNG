@@ -192,7 +192,7 @@ export default function AdminInsurancePage() {
     }
   };
 
-  const formatNumber = (n: number) => new Intl.NumberFormat("en-MM").format(n);
+  const formatNumber = (n: number) => new Intl.NumberFormat("en-US").format(n);
 
   const getStatusBadge = (status: string) => {
     const map: Record<string, string> = {

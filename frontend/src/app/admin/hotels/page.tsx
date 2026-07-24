@@ -264,7 +264,7 @@ export default function AdminHotelsPage() {
   };
 
   const formatNumber = (n: number) =>
-    new Intl.NumberFormat("en-MM").format(n);
+    new Intl.NumberFormat("en-US").format(n);
 
   const getStatusBadge = (status: string) => {
     const s = status || "active";
