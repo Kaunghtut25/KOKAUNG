@@ -150,7 +150,8 @@ async function getInitialCars(): Promise<Car[]> {
 
 export default async function CarsPage() {
   const [initialCars, siteConfig] = await Promise.all([getInitialCars(), fetchSiteConfig()]);
-  const moduleOn = siteConfig?.moduleToggles?.["cars"] !== false;
-  if (!moduleOn) return <div className="min-h-screen bg-[#0A1628] flex items-center justify-center"><div className="text-center"><h1 className="text-3xl text-white font-light mb-3">Coming Soon</h1><p className="text-white/40">This section is temporarily unavailable.</p></div></div>;
+  let moduleOn2 = true;
+  try { moduleOn2 = siteConfig?.moduleToggles?.["cars"] !== false; } catch {}
+  if (!moduleOn2) return <div className="min-h-screen bg-[#0A1628] flex items-center justify-center"><div className="text-center"><h1 className="text-3xl text-white font-light mb-3">Coming Soon</h1><p className="text-white/40">This section is temporarily unavailable.</p></div></div>;
   return <CarsClient initialCars={initialCars} siteConfig={siteConfig || {}} />;
 }

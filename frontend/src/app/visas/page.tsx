@@ -61,7 +61,8 @@ async function getInitialVisas(): Promise<VisaService[]> {
 
 export default async function VisasPage() {
   const [initialVisas, siteConfig] = await Promise.all([getInitialVisas(), fetchSiteConfig()]);
-  const moduleOn = siteConfig?.moduleToggles?.["visas"] !== false;
-  if (!moduleOn) return <div className="min-h-screen bg-[#0A1628] flex items-center justify-center"><div className="text-center"><h1 className="text-3xl text-white font-light mb-3">Coming Soon</h1><p className="text-white/40">This section is temporarily unavailable.</p></div></div>;
+  let moduleOn2 = true;
+  try { moduleOn2 = siteConfig?.moduleToggles?.["visas"] !== false; } catch {}
+  if (!moduleOn2) return <div className="min-h-screen bg-[#0A1628] flex items-center justify-center"><div className="text-center"><h1 className="text-3xl text-white font-light mb-3">Coming Soon</h1><p className="text-white/40">This section is temporarily unavailable.</p></div></div>;
   return <VisasClient initialVisas={initialVisas} siteConfig={siteConfig || {}} />;
 }
