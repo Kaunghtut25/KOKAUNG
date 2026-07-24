@@ -127,7 +127,7 @@ const defaultCfg: SiteConfig = {
   },
 };
 
-type Tab = "layout" | "rows" | "faq" | "terms" | "privacy" | "hero" | "heroImages" | "services" | "nav" | "stats" | "why" | "destinations" | "cta" | "contact" | "social" | "footer" | "meta" | "testimonials" | "partners" | "heroText";
+type Tab = "layout" | "rows" | "faq" | "terms" | "privacy" | "hero" | "heroImages" | "services" | "nav" | "stats" | "why" | "destinations" | "cta" | "contact" | "social" | "footer" | "meta" | "testimonials" | "partners" | "heroText" | "cardDims";
 
 export default function SiteManagerPage() {
   const [cfg, setCfg] = useState(defaultCfg);
@@ -265,7 +265,8 @@ const tabs: { key: Tab; label: string }[] = [
   { key: "privacy", label: "Privacy" },
     { key: "hero", label: "Hero Slides" },
     { key: "heroImages", label: "Hero Images" },
-    { key: "heroText", label: "Hero Text" }, { key: "services", label: "Service Icons" },
+    { key: "heroText", label: "Hero Text" },
+    { key: "cardDims", label: "Card & Hero Sizes" }, { key: "services", label: "Service Icons" },
     { key: "nav", label: "Nav Links" }, { key: "stats", label: "Stats Cards" },
     { key: "why", label: "Why Choose Us" }, { key: "destinations", label: "Destinations" },
     { key: "cta", label: "CTA Section" }, { key: "contact", label: "Contact Info" },
@@ -993,6 +994,84 @@ const tabs: { key: Tab; label: string }[] = [
                           <option value="1.2rem">1.2rem (Default)</option>
                           <option value="1.5rem">1.5rem</option>
                         </select>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+
+          
+          {tab === "cardDims" && (
+            <div className="space-y-6">
+              <h2 className="text-lg font-bold text-white">Card &amp; Hero Image Dimensions</h2>
+              <p className="text-sm text-white/40">Control card width/height and hero banner height for each section page. All values in pixels.</p>
+              
+              <h3 className="text-md font-semibold text-[#D4AF37] mt-4">Card Dimensions</h3>
+              {[
+                { key: "tours", label: "Tours" },
+                { key: "hotels", label: "Hotels" },
+                { key: "cars", label: "Cars" },
+                { key: "cruises", label: "Cruises" },
+                { key: "visas", label: "Visas" },
+                { key: "insurance", label: "Insurance" },
+                { key: "mingalar", label: "Sky Lounge" },
+              ].map(({ key, label }) => {
+                const cd = cfg.cardDimensions?.[key] || { width: 300, height: 420 };
+                return (
+                  <div key={key} className="border border-white/10 bg-white/5 text-white rounded-lg p-4">
+                    <h4 className="font-medium mb-2">{label} Cards</h4>
+                    <div className="grid grid-cols-2 gap-3">
+                      <div>
+                        <label className={labelCls}>Width (px)</label>
+                        <input type="number" className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }}
+                          value={cd.width} min={200} max={800} step={10}
+                          onChange={e => setCfg(p => ({ ...p, cardDimensions: { ...(p.cardDimensions || {}), [key]: { ...cd, width: parseInt(e.target.value) || 300 } } }))} />
+                      </div>
+                      <div>
+                        <label className={labelCls}>Height (px)</label>
+                        <input type="number" className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }}
+                          value={cd.height} min={200} max={900} step={10}
+                          onChange={e => setCfg(p => ({ ...p, cardDimensions: { ...(p.cardDimensions || {}), [key]: { ...cd, height: parseInt(e.target.value) || 420 } } }))} />
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+
+              <h3 className="text-md font-semibold text-[#D4AF37] mt-6">Hero Banner Height</h3>
+              {[
+                { key: "tours", label: "Tours" },
+                { key: "hotels", label: "Hotels" },
+                { key: "cars", label: "Cars" },
+                { key: "cruises", label: "Cruises" },
+                { key: "visas", label: "Visas" },
+                { key: "insurance", label: "Insurance" },
+                { key: "mingalar", label: "Sky Lounge" },
+                { key: "about", label: "About" },
+                { key: "blog", label: "Blog" },
+                { key: "contact", label: "Contact" },
+                { key: "faq", label: "FAQ" },
+                { key: "terms", label: "Terms" },
+                { key: "privacy", label: "Privacy" },
+              ].map(({ key, label }) => {
+                const hd = cfg.heroDimensions?.[key] || { mobile: 300, desktop: 450 };
+                return (
+                  <div key={key} className="border border-white/10 bg-white/5 text-white rounded-lg p-4">
+                    <h4 className="font-medium mb-2">{label} Hero</h4>
+                    <div className="grid grid-cols-2 gap-3">
+                      <div>
+                        <label className={labelCls}>Mobile Height (px)</label>
+                        <input type="number" className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }}
+                          value={hd.mobile} min={150} max={600} step={10}
+                          onChange={e => setCfg(p => ({ ...p, heroDimensions: { ...(p.heroDimensions || {}), [key]: { ...hd, mobile: parseInt(e.target.value) || 300 } } }))} />
+                      </div>
+                      <div>
+                        <label className={labelCls}>Desktop Height (px)</label>
+                        <input type="number" className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }}
+                          value={hd.desktop} min={200} max={800} step={10}
+                          onChange={e => setCfg(p => ({ ...p, heroDimensions: { ...(p.heroDimensions || {}), [key]: { ...hd, desktop: parseInt(e.target.value) || 450 } } }))} />
                       </div>
                     </div>
                   </div>

@@ -78,7 +78,7 @@ export default function ToursClient(props) {
   return (
     <main className="min-h-screen bg-white">
       {/* Hero */}
-      <section className="relative pt-24 pb-12 px-4 overflow-hidden">
+      <section className="relative pt-24 pb-12 px-4 overflow-hidden" style={{ height: (siteConfig?.heroDimensions?.["tours"]?.desktop || 480) + "px" }}>
         <div className="absolute inset-0">
           <img src={heroImage} alt="A9 Global Tours" className="w-full h-full object-cover" onError={(e) => { (e.target as HTMLImageElement).src = "/images_v2/hero-tours-v2.jpg"; }} />
           <div className="absolute inset-0 bg-gradient-to-b from-[#0A1628]/80 via-[#0A1628]/40 to-[#0A1628]/60" />

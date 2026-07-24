@@ -84,7 +84,7 @@ export default function ContactClient({ siteConfig }: { siteConfig: any }) {
   return (
     <div className="min-h-screen bg-white">
       {/* ========== HERO ========== */}
-<section className="relative py-20 sm:py-28 px-4 text-center overflow-hidden">
+<section className="relative py-20 sm:py-28 px-4 text-center overflow-hidden" style={{ height: (siteConfig?.heroDimensions?.["contact"]?.desktop || 400) + "px" }}>
         {/* Hero background image */}
         <div
           className="absolute inset-0 bg-cover bg-center"

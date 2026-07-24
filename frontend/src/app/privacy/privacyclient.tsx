@@ -25,7 +25,7 @@ export default function PrivacyClient({ siteConfig }: { siteConfig: any }) {
 
   return (
     <main style={{ minHeight: '100vh', background: '#f8f9fa' }}>
-      <section style={{ position: 'relative', height: 250, overflow: 'hidden' }}>
+      <section className="relative w-full overflow-hidden" style={{ height: (siteConfig?.heroDimensions?.privacy?.desktop || 320) + "px" }}>
         <img src={siteConfig?.heroImages?.privacy || "/images_v2/hero-bagan-v2.jpg"} alt="Privacy" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
         <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(10,22,40,0.9), rgba(10,22,40,0.3))' }} />
         <div style={{ position: 'absolute', bottom: 30, left: 0, right: 0, textAlign: 'center' }}>

@@ -96,7 +96,7 @@ export default function AboutClient({ siteConfig }: { siteConfig: any }) {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* HERO */}
-      <section className="relative pt-28 pb-20 sm:pb-24 px-4 overflow-hidden">
+      <section className="relative pt-28 pb-20 sm:pb-24 px-4 overflow-hidden" style={{ height: (siteConfig?.heroDimensions?.["about"]?.desktop || 450) + "px" }}>
         <div className="absolute inset-0">
           <img src={heroImage || FALLBACK_IMG} alt="A9 Global" className="w-full h-full object-cover" onError={e => { (e.target as HTMLImageElement).src = FALLBACK_IMG; }} />
           <div className="absolute inset-0 bg-gradient-to-b from-[#0A1628]/85 via-[#0A1628]/70 to-[#0A1628]/85" />

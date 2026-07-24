@@ -125,7 +125,7 @@ export default function CruisesClient({ initialCruises, siteConfig }: { initialC
   return (
     <main className="min-h-screen bg-white">
       {/* Hero */}
-      <section className="relative h-[400px] md:h-[500px] w-full overflow-hidden">
+      <section className="relative h-[400px] md:h-[500px] w-full overflow-hidden" style={{ height: (siteConfig?.heroDimensions?.["cruises"]?.desktop || 500) + "px" }}>
         <img
           src={heroImage}
           alt="Luxury Cruises" onError={(e) => { (e.target as HTMLImageElement).src = "/images_v2/hero-cruises-v2.jpg"; }}

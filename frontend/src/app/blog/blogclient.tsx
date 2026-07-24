@@ -89,7 +89,7 @@ export default function BlogClient({ siteConfig }: { siteConfig: any }) {
   return (
     <main className="min-h-screen bg-white">
       {/* Hero */}
-      <section className="relative h-[300px] md:h-[380px] w-full overflow-hidden">
+      <section className="relative h-[300px] md:h-[380px] w-full overflow-hidden" style={{ height: (siteConfig?.heroDimensions?.["blog"]?.desktop || 380) + "px" }}>
         <img src={heroImage} alt="A9 Global Blog" className="w-full h-full object-cover" onError={(e) => { (e.target as HTMLImageElement).src = "https://vydupdjfr38dxlzx.public.blob.vercel-storage.com/uploads/img_1784609799332_6ebnns-hero-blog-mBap03GJD1400JSclYnUjYfHoo3frB.jpg"; }} />
         <div className="absolute inset-0 bg-gradient-to-t from-[#0A1628]/90 via-[#0A1628]/40 to-[#0A1628]/30" />
         <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4">

@@ -238,6 +238,34 @@ const defaultConfig = {
     skyLounge: { desktop: 3, tablet: 2, mobile: 1 },
   },
 
+
+  // Card Dimensions (per-section card width/height in px)
+  cardDimensions: {
+    hotels: { width: 300, height: 420 },
+    tours: { width: 340, height: 460 },
+    cars: { width: 320, height: 400 },
+    cruises: { width: 340, height: 450 },
+    visas: { width: 280, height: 430 },
+    insurance: { width: 300, height: 380 },
+    mingalar: { width: 340, height: 420 },
+  },
+
+  // Hero Dimensions (per-page hero section height in px, mobile+desktop)
+  heroDimensions: {
+    tours: { mobile: 300, desktop: 450 },
+    hotels: { mobile: 250, desktop: 350 },
+    cars: { mobile: 250, desktop: 350 },
+    cruises: { mobile: 300, desktop: 450 },
+    visas: { mobile: 250, desktop: 380 },
+    insurance: { mobile: 250, desktop: 380 },
+    mingalar: { mobile: 300, desktop: 450 },
+    about: { mobile: 280, desktop: 400 },
+    blog: { mobile: 250, desktop: 380 },
+    contact: { mobile: 250, desktop: 380 },
+    faq: { mobile: 220, desktop: 320 },
+    terms: { mobile: 220, desktop: 320 },
+    privacy: { mobile: 220, desktop: 320 },
+  },
   sectionRows: {
     hotels: ["Featured Hotels", "Budget Friendly", "Popular Hotels", "Row 4", "Row 5"],
     tours: ["Featured Tours", "Popular Destinations", "Adventure", "Row 4", "Row 5"],

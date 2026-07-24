@@ -190,7 +190,7 @@ export default function VisasClient({ initialVisas, siteConfig }: VisasClientPro
 
   return (
     <div className="min-h-screen bg-gray-50">
-<section className="relative w-full h-64 sm:h-80 overflow-hidden">
+<section className="relative w-full h-64 sm:h-80 overflow-hidden" style={{ height: (siteConfig?.heroDimensions?.["visas"]?.desktop || 380) + "px" }}>
         <img src={heroImage} alt="Visa Services" className="w-full h-full object-cover" onError={(e) => { (e.target as HTMLImageElement).src = "/images_v2/visa1-v3.jpg"; }} />
         <div className="absolute inset-0 bg-gradient-to-b from-[#0A1628]/70 to-[#0A1628]/40" />
         <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4 mb-8">

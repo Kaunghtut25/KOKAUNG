@@ -76,7 +76,7 @@ export default function HotelsClient({ initialHotels, siteConfig }: HotelsClient
 
   return (
     <main className="min-h-screen bg-white">
-<section className="relative pt-24 pb-12 px-4 overflow-hidden">
+<section className="relative pt-24 pb-12 px-4 overflow-hidden" style={{ height: (siteConfig?.heroDimensions?.["hotels"]?.desktop || 350) + "px" }}>
         <div className="absolute inset-0">
           <img src={heroImage} alt="A9 Global Hotels" className="w-full h-full object-cover" onError={(e) => { (e.target as HTMLImageElement).src = "/images_v2/hero-hotels-v2.jpg"; }} />
           <div className="absolute inset-0 bg-white/75" />

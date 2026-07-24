@@ -163,7 +163,7 @@ export default function InsuranceClient({ initialPlans, siteConfig }: InsuranceC
 
   return (
     <div className="min-h-screen bg-gray-50">
-<section className="relative w-full h-64 sm:h-80 overflow-hidden">
+<section className="relative w-full h-64 sm:h-80 overflow-hidden" style={{ height: (siteConfig?.heroDimensions?.["insurance"]?.desktop || 380) + "px" }}>
         <img src={heroImage} alt="Insurance" className="w-full h-full object-cover" onError={(e) => { (e.target as HTMLImageElement).src = "/images_v2/ins1-v3.jpg"; }} />
         <div className="absolute inset-0 bg-gradient-to-b from-[#0A1628]/70 to-[#0A1628]/40" />
         <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4">

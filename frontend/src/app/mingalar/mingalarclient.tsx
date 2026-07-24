@@ -77,7 +77,7 @@ export default function MingalarClient({ initialCards, siteConfig }: MingalarCli
 
   return (
     <main className="min-h-screen bg-white">
-      <section className="relative h-[400px] md:h-[500px] w-full overflow-hidden">
+      <section className="relative h-[400px] md:h-[500px] w-full overflow-hidden" style={{ height: (siteConfig?.heroDimensions?.["mingalar"]?.desktop || 500) + "px" }}>
         <img src={heroImage} alt="Airport Lounge" className="w-full h-full object-cover" onError={(e) => { (e.target as HTMLImageElement).src = "/images_v2/sky1-v3.jpg"; }} />
         <div className="absolute inset-0 bg-gradient-to-t from-[#0A1628]/90 via-[#0A1628]/40 to-[#0A1628]/30" />
         <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4">
