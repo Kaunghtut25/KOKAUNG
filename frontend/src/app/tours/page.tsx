@@ -114,5 +114,5 @@ export default async function ToursPage() {
     preloadMap[tour._id || tour.slug] = img;
   }
   
-  return <ToursClient initialTours={initialTours} preloadMap={preloadMap} />;
+  return <ToursClient siteConfig={siteConfig} initialTours={initialTours} preloadMap={preloadMap} />;
 }

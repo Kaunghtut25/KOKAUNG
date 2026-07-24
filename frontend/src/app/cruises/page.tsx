@@ -2,10 +2,8 @@ import { getAll } from "@/lib/persistentStore";
 import CruisesClient from "./cruisesclient";
 
 async function fetchSiteConfig() {
-  try {
-    const r = await fetch((process.env.SITE_URL || "http://localhost:3000") + "/api/admin/site-config", { next: { revalidate: 60 }, cache: "no-store" });
-    return await r.json();
-  } catch { return {}; }
+  try { const items = await getAll("site-config" as any); return items?.[0] || {}; }
+  catch { return {}; }
 }
 
 export const dynamic = 'force-dynamic';
