@@ -26,7 +26,7 @@ export default function ContactClient({ siteConfig }: { siteConfig: any }) {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    fetch("/api/admin/settings").then(r => r.json()).then(d => {
+    fetch("/api/admin/site-config").then(r => r.json()).then(d => {
       if (d?.heroImages?.contact) setHeroImage(d.heroImages.contact);
     }).catch(() => {});
   }, []);

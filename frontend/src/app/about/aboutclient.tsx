@@ -84,7 +84,7 @@ export default function AboutClient({ siteConfig }: { siteConfig: any }) {
       if (d?.about) setConfig({ ...defaultAbout, ...d.about });
       else setConfig(defaultAbout);
     }).catch(() => setConfig(defaultAbout));
-    fetch("/api/admin/settings").then(r => r.json()).then(d => {
+    fetch("/api/admin/site-config").then(r => r.json()).then(d => {
       if (d?.heroImages?.about) setConfig(prev => ({ ...prev, heroImage: d.heroImages.about }));
     }).catch(() => {});
   }, []);
