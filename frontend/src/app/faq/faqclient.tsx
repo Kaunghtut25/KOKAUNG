@@ -15,7 +15,7 @@ const defaultFaqs = [
   { q: "Can I customize a tour package?", a: "Absolutely! We specialize in custom itineraries. Contact us with your preferences and our travel experts will create a personalized package for you." },
 ];
 
-export default function FAQPage() {
+export default function FaqClient({ siteConfig }: { siteConfig: any }) {
   const [faqs, setFaqs] = useState(defaultFaqs);
 
   useEffect(() => {
@@ -32,7 +32,7 @@ export default function FAQPage() {
   return (
     <main style={{ minHeight: '100vh', background: '#f8f9fa' }}>
       <section style={{ position: 'relative', height: 300, overflow: 'hidden' }}>
-        <img src="/images_v2/hero-book-now-v2.jpg" alt="FAQ" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+        <img src={siteConfig?.heroImages?.faq || "/images_v2/hero-bagan-v2.jpg"} alt="FAQ" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
         <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(10,22,40,0.9), rgba(10,22,40,0.3))' }} />
         <div style={{ position: 'absolute', bottom: 40, left: 0, right: 0, textAlign: 'center', padding: '0 20px' }}>
           <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: 42, color: 'white', marginBottom: 8 }}>Frequently Asked Questions</h1>

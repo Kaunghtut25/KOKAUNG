@@ -1,6 +1,11 @@
 import { getAll } from '@/lib/persistentStore';
 import InsuranceClient from './insuranceclient';
 
+async function fetchSiteConfig() {
+  try { const items = await getAll('site-config' as any); return items?.[0] || null; }
+  catch { return null; }
+}
+
 export const dynamic = 'force-dynamic';
 
 interface InsurancePlan {
@@ -53,6 +58,6 @@ async function getInitialPlans(): Promise<InsurancePlan[]> {
 }
 
 export default async function InsurancePage() {
-  const initialPlans = await getInitialPlans();
-  return <InsuranceClient initialPlans={initialPlans} />;
+  const [initialPlans, siteConfig] = await Promise.all([getInitialPlans(), fetchSiteConfig()]);
+  return <InsuranceClient initialPlans={initialPlans} siteConfig={siteConfig || {}} />;
 }
