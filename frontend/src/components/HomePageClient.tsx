@@ -229,7 +229,7 @@ export default function HomePageClient({ siteConfig: ssrConfig }: { siteConfig?:
           {slides.map((slide:any, index:number) => (
             <div key={index} className={`transition-all duration-700 ${index === currentSlide ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8 absolute pointer-events-none"}`}>
               {slide.label && <span className="inline-block px-3 py-1 rounded-full bg-[#D4AF37]/20 text-[#D4AF37] text-xs font-semibold uppercase tracking-wider mb-4 border border-[#D4AF37]/30" style={{ fontFamily: slide.labelFont || "inherit", fontSize: slide.labelSize || "0.75rem" }}>{slide.label}</span>}
-              <h1 className="font-bold text-white drop-shadow-lg" style={{ fontFamily: slide.titleFont || "'Playfair Display', Georgia, serif", fontSize: slide.titleSize || "3rem" }}>{slide.title || "𝐀𝟗 𝐆𝐥𝐨𝐛𝐚𝐥 𝐓𝐫𝐚𝐯𝐞𝐥𝐬 & 𝐓𝐨𝐮𝐫𝐬"}</h1>
+              <h1 className="font-bold text-white drop-shadow-lg" style={{ fontFamily: slide.titleFont || "'Playfair Display', Georgia, serif", fontSize: slide.titleSize || "3rem" }}>{slide.title || ""}</h1>
               {slide.subtitle && <p className="text-lg sm:text-xl text-white/80 max-w-2xl mx-auto drop-shadow" style={{ fontSize: slide.subtitleSize || "1.2rem" }}>{slide.subtitle}</p>}
             </div>
           ))}
