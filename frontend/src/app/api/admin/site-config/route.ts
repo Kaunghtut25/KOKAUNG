@@ -209,6 +209,10 @@ const defaultConfig = {
   ],
 
   // Partners
+  
+  // Audit Log — records every module toggle change
+  auditLog: [] as Array<{ module: string; oldState: boolean; newState: boolean; user: string; timestamp: string }>,
+
   partners: [
     "Shangri-La", "Sedona Hotel", "Sule Palace", "Melia Hotel",
     "Myanmar Airways", "Thai Airways", "Singapore Airlines", "Emirates",
@@ -227,6 +231,19 @@ const defaultConfig = {
       ],
     },
   ],
+
+  
+  // Module Toggles — admin can turn entire sections on/off
+  moduleToggles: {
+    tours: true,
+    hotels: true,
+    cars: true,
+    visas: true,
+    insurance: true,
+    cruises: true,
+    skyLounge: true,
+    blog: true,
+  },
 
   sectionLayouts: {
     hotels: { desktop: 4, tablet: 2, mobile: 1 },

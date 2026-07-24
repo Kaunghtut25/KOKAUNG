@@ -127,7 +127,7 @@ const defaultCfg: SiteConfig = {
   },
 };
 
-type Tab = "layout" | "rows" | "faq" | "terms" | "privacy" | "hero" | "heroImages" | "services" | "nav" | "stats" | "why" | "destinations" | "cta" | "contact" | "social" | "footer" | "meta" | "testimonials" | "partners" | "heroText" | "cardDims";
+type Tab = "layout" | "rows" | "faq" | "terms" | "privacy" | "hero" | "heroImages" | "services" | "nav" | "stats" | "why" | "destinations" | "cta" | "contact" | "social" | "footer" | "meta" | "testimonials" | "partners" | "heroText" | "cardDims" | "moduleToggles";
 
 export default function SiteManagerPage() {
   const [cfg, setCfg] = useState(defaultCfg);
@@ -266,7 +266,8 @@ const tabs: { key: Tab; label: string }[] = [
     { key: "hero", label: "Hero Slides" },
     { key: "heroImages", label: "Hero Images" },
     { key: "heroText", label: "Hero Text" },
-    { key: "cardDims", label: "Card & Hero Sizes" }, { key: "services", label: "Service Icons" },
+    { key: "cardDims", label: "Card & Hero Sizes" },
+    { key: "moduleToggles", label: "Module Toggles" }, { key: "services", label: "Service Icons" },
     { key: "nav", label: "Nav Links" }, { key: "stats", label: "Stats Cards" },
     { key: "why", label: "Why Choose Us" }, { key: "destinations", label: "Destinations" },
     { key: "cta", label: "CTA Section" }, { key: "contact", label: "Contact Info" },
@@ -1073,6 +1074,48 @@ const tabs: { key: Tab; label: string }[] = [
                           value={hd.desktop} min={200} max={800} step={10}
                           onChange={e => setCfg(p => ({ ...p, heroDimensions: { ...(p.heroDimensions || {}), [key]: { ...hd, desktop: parseInt(e.target.value) || 450 } } }))} />
                       </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+
+          
+          {tab === "moduleToggles" && (
+            <div className="space-y-6">
+              <h2 className="text-lg font-bold text-white">Module Toggles</h2>
+              <p className="text-sm text-white/40">Turn entire website sections ON or OFF. When OFF, the module disappears from all public pages, navigation, and footer.</p>
+              {[
+                { key: "tours", label: "Tours", desc: "Tour packages, destinations, adventure trips" },
+                { key: "hotels", label: "Hotels", desc: "Hotel listings and booking" },
+                { key: "cars", label: "Cars", desc: "Car rental listings" },
+                { key: "visas", label: "Visas", desc: "Visa services and information" },
+                { key: "insurance", label: "Insurance", desc: "Travel insurance plans" },
+                { key: "cruises", label: "Cruises", desc: "Cruise packages and river trips" },
+                { key: "skyLounge", label: "Sky Lounge (Mingalar)", desc: "Airport lounge services" },
+                { key: "blog", label: "Blog", desc: "Travel articles and news" },
+              ].map(({ key, label, desc }) => {
+                const active = cfg.moduleToggles?.[key] !== false;
+                return (
+                  <div key={key} className="border border-white/10 bg-white/5 text-white rounded-lg p-4">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <h3 className="font-medium text-white text-sm">{label}</h3>
+                        <p className="text-xs text-white/40 mt-0.5">{desc}</p>
+                      </div>
+                      <button
+                        onClick={() => setCfg(p => ({ ...p, moduleToggles: { ...(p.moduleToggles || {}), [key]: !active } }))}
+                        className={"relative inline-flex h-7 w-12 items-center rounded-full transition-colors " + (active ? "bg-[#27AE60]" : "bg-white/20")}
+                        style={{ flexShrink: 0 }}
+                      >
+                        <span className={"inline-block h-5 w-5 transform rounded-full bg-white shadow transition-transform " + (active ? "translate-x-6" : "translate-x-1")} />
+                      </button>
+                    </div>
+                    <div className="mt-2">
+                      <span className={"text-xs px-2 py-0.5 rounded-full font-medium " + (active ? "bg-green-500/20 text-green-400" : "bg-red-500/20 text-red-400")}>
+                        {active ? "ACTIVE" : "OFF"}
+                      </span>
                     </div>
                   </div>
                 );

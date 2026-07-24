@@ -91,5 +91,7 @@ async function getInitialHotels(): Promise<Hotel[]> {
 
 export default async function HotelsPage() {
   const initialHotels = await getInitialHotels();
+  const moduleOn = siteConfig?.moduleToggles?.["hotels"] !== false;
+  if (!moduleOn) return <div className="min-h-screen bg-[#0A1628] flex items-center justify-center"><div className="text-center"><h1 className="text-3xl text-white font-light mb-3">Coming Soon</h1><p className="text-white/40">This section is temporarily unavailable.</p></div></div>;
   return <HotelsClient initialHotels={initialHotels} />;
 }

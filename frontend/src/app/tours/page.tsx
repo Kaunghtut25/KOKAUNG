@@ -99,8 +99,14 @@ async function getInitialTours(): Promise<Tour[]> {
 
 type PreloadMap = Record<string, string>;
 
+async function fetchSiteConfig() {
+  try { const items = await getAll("site-config" as any); return items?.[0] || null; }
+  catch { return null; }
+}
+
 export default async function ToursPage() {
-  const initialTours = await getInitialTours();
+  const [initialTours, siteConfig] = await Promise.all([getInitialTours(), fetchSiteConfig()]);
+  if (siteConfig?.moduleToggles?.tours === false) return <div className="min-h-screen bg-[#0A1628] flex items-center justify-center"><div className="text-center"><h1 className="text-3xl text-white font-light mb-3">Coming Soon</h1><p className="text-white/40">This section is temporarily unavailable.</p></div></div>;
   
   const preloadMap: PreloadMap = {};
   for (const tour of initialTours) {
