@@ -283,6 +283,16 @@ const defaultConfig = {
     terms: { mobile: 220, desktop: 320 },
     privacy: { mobile: 220, desktop: 320 },
   },
+
+  // Detail Page Tab Controls — which tabs appear and in what order
+  detailPageTabs: {
+    tours: [
+      { key: "overview", label: "Overview", visible: true },
+      { key: "itinerary", label: "Itinerary", visible: true },
+      { key: "included", label: "Included / Excluded", visible: true },
+      { key: "reviews", label: "Reviews", visible: false },
+    ],
+  },
   sectionRows: {
     hotels: ["Featured Hotels", "Budget Friendly", "Popular Hotels", "Row 4", "Row 5"],
     tours: ["Featured Tours", "Popular Destinations", "Adventure", "Row 4", "Row 5"],

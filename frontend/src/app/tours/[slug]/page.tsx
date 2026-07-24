@@ -565,12 +565,36 @@ export default function TourDetailPage() {
     [tour?.duration, tour?.destination]
   );
 
-  const tabs: { key: TabKey; label: string }[] = [
-    { key: 'overview', label: 'Overview' },
-    { key: 'itinerary', label: 'Itinerary' },
-    { key: 'included', label: 'Included / Excluded' },
-    { key: 'reviews', label: 'Reviews' },
-  ];
+    // Dynamic tabs from site config — filter visible and respect ordering
+  const [detailPageTabs, setDetailPageTabs] = useState<{ key: string; label: string; visible: boolean }[]>([]);
+  useEffect(() => {
+    fetch('/api/admin/site-config')
+      .then(r => r.json())
+      .then(cfg => {
+        if (cfg?.detailPageTabs?.tours) {
+          setDetailPageTabs(cfg.detailPageTabs.tours);
+        } else {
+          setDetailPageTabs([
+            { key: 'overview', label: 'Overview', visible: true },
+            { key: 'itinerary', label: 'Itinerary', visible: true },
+            { key: 'included', label: 'Included / Excluded', visible: true },
+            { key: 'reviews', label: 'Reviews', visible: false },
+          ]);
+        }
+      })
+      .catch(() => {
+        setDetailPageTabs([
+          { key: 'overview', label: 'Overview', visible: true },
+          { key: 'itinerary', label: 'Itinerary', visible: true },
+          { key: 'included', label: 'Included / Excluded', visible: true },
+          { key: 'reviews', label: 'Reviews', visible: false },
+        ]);
+      });
+  }, []);
+
+  const tabs = detailPageTabs
+    .filter(t => t.visible)
+    .map(t => ({ key: t.key as TabKey, label: t.label }));
 
   // ─── Loading State ────────────────────────────────────────
   if (loading) {
