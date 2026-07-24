@@ -166,6 +166,38 @@ input:-webkit-autofill:active {
   }
 }
 
+/* ── Admin Panel: Select Dropdown Visibility Fix ── */
+@layer components {
+  select.text-white,
+  select[style*="white"] {
+    background-color: #1a2a3a !important;
+    color: #ffffff !important;
+    min-width: 160px;
+    width: auto;
+    max-width: 100%;
+    overflow: visible;
+    text-overflow: clip;
+    white-space: nowrap;
+    cursor: pointer;
+    appearance: auto;
+    -webkit-appearance: auto;
+    padding-right: 32px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27 width%3D%2712%27 height%3D%2712%27 viewBox%3D%270 0 12 12%27%3E%3Cpath fill%3D%27%23D4AF37%27 d%3D%27M6 8L1 3h10z%27%2F%3E%3C%2Fsvg%3E");
+    background-repeat: no-repeat;
+    background-position: right 8px center;
+  }
+  
+  select.text-white option,
+  select[style*="white"] option {
+    background-color: #1a2a3a !important;
+    color: #ffffff !important;
+    padding: 8px 12px;
+    min-height: 32px;
+    line-height: 1.5;
+    font-size: 14px;
+  }
+}
+
 /* ── Custom Scrollbar ───────────────────────── */
 @layer utilities {
   /* Webkit scrollbar */
