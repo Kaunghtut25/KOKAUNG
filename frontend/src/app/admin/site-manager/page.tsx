@@ -1177,6 +1177,65 @@ const tabs: { key: Tab; label: string }[] = [
             </div>
           )}
 
+          {tab === "detailTabs" && (
+            <div className="space-y-6">
+              <h2 className="text-lg font-bold text-white">Tour Detail Page — Tab Controls</h2>
+              <p className="text-sm text-white/40">Toggle which tabs appear on the Tour detail page and set their order. Use the arrows to reorder.</p>
+              {(cfg.detailPageTabs?.tours || []).map((tab: any, i: number) => (
+                <div key={tab.key} className="border border-white/10 bg-white/5 text-white rounded-lg p-4">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <div className="flex flex-col gap-0.5">
+                        <button
+                          onClick={() => {
+                            if (i === 0) return;
+                            const tabs = [...(cfg.detailPageTabs?.tours || [])];
+                            [tabs[i-1], tabs[i]] = [tabs[i], tabs[i-1]];
+                            setCfg((p: any) => ({ ...p, detailPageTabs: { ...p.detailPageTabs, tours: tabs } }));
+                          }}
+                          disabled={i === 0}
+                          className="text-white/50 hover:text-white disabled:opacity-20 text-xs leading-none"
+                          title="Move up"
+                        >▲</button>
+                        <button
+                          onClick={() => {
+                            const tabs = [...(cfg.detailPageTabs?.tours || [])];
+                            if (i >= tabs.length - 1) return;
+                            [tabs[i], tabs[i+1]] = [tabs[i+1], tabs[i]];
+                            setCfg((p: any) => ({ ...p, detailPageTabs: { ...p.detailPageTabs, tours: tabs } }));
+                          }}
+                          disabled={i >= (cfg.detailPageTabs?.tours || []).length - 1}
+                          className="text-white/50 hover:text-white disabled:opacity-20 text-xs leading-none"
+                          title="Move down"
+                        >▼</button>
+                      </div>
+                      <div>
+                        <h3 className="font-medium text-white text-sm">{tab.label}</h3>
+                        <p className="text-xs text-white/40">Key: {tab.key}</p>
+                      </div>
+                    </div>
+                    <button
+                      onClick={() => {
+                        const tabs = (cfg.detailPageTabs?.tours || []).map((t: any, idx: number) =>
+                          idx === i ? { ...t, visible: !t.visible } : t
+                        );
+                        setCfg((p: any) => ({ ...p, detailPageTabs: { ...p.detailPageTabs, tours: tabs } }));
+                      }}
+                      className={"relative inline-flex h-7 w-12 items-center rounded-full transition-colors flex-shrink-0 " + (tab.visible ? "bg-[#27AE60]" : "bg-white/20")}
+                    >
+                      <span className={"inline-block h-5 w-5 transform rounded-full bg-white shadow transition-transform " + (tab.visible ? "translate-x-6" : "translate-x-1")} />
+                    </button>
+                  </div>
+                  <div className="mt-2">
+                    <span className={"text-xs px-2 py-0.5 rounded-full font-medium " + (tab.visible ? "bg-green-500/20 text-green-400" : "bg-red-500/20 text-red-400")}>
+                      {tab.visible ? "VISIBLE" : "HIDDEN"}
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
           {tab === "partners" && (
             <div className="space-y-4">
               <h2 className="text-lg font-bold text-white">Partners</h2>
