@@ -22,7 +22,7 @@ interface PassengerCounts { adults: number; children: number; infants: number; }
 
 // Site config interface (matches admin API)
 interface SiteConfig {
-  heroSlides: { image:string;label:string;title:string;subtitle:string }[];
+  heroSlides: { image:string;label:string;title:string;subtitle:string;titleFont?:string;titleSize?:string;subtitleSize?:string;labelFont?:string;labelSize?:string }[];
   heroHeightMobile: number; heroHeightDesktop: number;
   serviceIcons: { label:string;icon:string;href:string;enabled:boolean }[];
   statsCards: { icon:string;title:string;description:string;imgSrc:string }[];
@@ -32,9 +32,9 @@ interface SiteConfig {
 }
 
 const defaultSlides = [
-  { image: "/images_v2/hero-bagan-v2.jpg", label: "Golden Land", title: "Myanmar — Bagan Temples", subtitle: "Over 2,000 ancient pagodas across a mystical plain" },
-  { image: "/images_v2/hero-singapore-v2.jpg", label: "Lion City", title: "Singapore — Marina Bay", subtitle: "Futuristic skyline meets lush garden city living" },
-  { image: "/images_v2/hero-thailand-v2.jpg", label: "Land of Smiles", title: "Thailand — Grand Palace", subtitle: "Golden spires and ornate temples in Bangkok" },
+  { image: "/images_v2/hero-bagan-v2.jpg", label: "Golden Land", title: "Myanmar — Bagan Temples", subtitle: "Over 2,000 ancient pagodas across a mystical plain", titleFont: "'Playfair Display', Georgia, serif", titleSize: "4rem", subtitleSize: "1.2rem", labelFont: "inherit", labelSize: "0.75rem" },
+  { image: "/images_v2/hero-singapore-v2.jpg", label: "Lion City", title: "Singapore — Marina Bay", subtitle: "Futuristic skyline meets lush garden city living", titleFont: "'Playfair Display', Georgia, serif", titleSize: "4rem", subtitleSize: "1.2rem", labelFont: "inherit", labelSize: "0.75rem" },
+  { image: "/images_v2/hero-thailand-v2.jpg", label: "Land of Smiles", title: "Thailand — Grand Palace", subtitle: "Golden spires and ornate temples in Bangkok", titleFont: "'Playfair Display', Georgia, serif", titleSize: "4rem", subtitleSize: "1.2rem", labelFont: "inherit", labelSize: "0.75rem" },
 ];
 
 const defaultServices = [
@@ -228,9 +228,9 @@ export default function HomePageClient({ siteConfig: ssrConfig }: { siteConfig?:
         <div className="relative z-10 flex flex-col items-center px-4 text-center pt-24">
           {slides.map((slide:any, index:number) => (
             <div key={index} className={`transition-all duration-700 ${index === currentSlide ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8 absolute pointer-events-none"}`}>
-              {slide.label && <span className="inline-block px-3 py-1 rounded-full bg-[#D4AF37]/20 text-[#D4AF37] text-xs font-semibold uppercase tracking-wider mb-4 border border-[#D4AF37]/30">{slide.label}</span>}
-              <h1 className="text-4xl sm:text-5xl lg:text-7xl font-bold mb-4 text-white drop-shadow-lg" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>{slide.title || "𝐀𝟗 𝐆𝐥𝐨𝐛𝐚𝐥 𝐓𝐫𝐚𝐯𝐞𝐥𝐬 & 𝐓𝐨𝐮𝐫𝐬"}</h1>
-              {slide.subtitle && <p className="text-lg sm:text-xl text-white/80 max-w-2xl mx-auto drop-shadow">{slide.subtitle}</p>}
+              {slide.label && <span className="inline-block px-3 py-1 rounded-full bg-[#D4AF37]/20 text-[#D4AF37] text-xs font-semibold uppercase tracking-wider mb-4 border border-[#D4AF37]/30" style={{ fontFamily: slide.labelFont || "inherit", fontSize: slide.labelSize || "0.75rem" }}>{slide.label}</span>}
+              <h1 className="font-bold text-white drop-shadow-lg" style={{ fontFamily: slide.titleFont || "'Playfair Display', Georgia, serif", fontSize: slide.titleSize || "3rem" }}>{slide.title || "𝐀𝟗 𝐆𝐥𝐨𝐛𝐚𝐥 𝐓𝐫𝐚𝐯𝐞𝐥𝐬 & 𝐓𝐨𝐮𝐫𝐬"}</h1>
+              {slide.subtitle && <p className="text-lg sm:text-xl text-white/80 max-w-2xl mx-auto drop-shadow" style={{ fontSize: slide.subtitleSize || "1.2rem" }}>{slide.subtitle}</p>}
             </div>
           ))}
         </div>

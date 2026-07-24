@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState, useRef } from "react";
 
-interface HeroSlide { image: string; label: string; title: string; subtitle: string; }
+interface HeroSlide { image: string; label: string; title: string; subtitle: string; titleFont?: string; titleSize?: string; subtitleSize?: string; labelFont?: string; labelSize?: string; }
 interface ServiceIcon { label: string; icon: string; href: string; enabled: boolean; }
 interface NavLink { label: string; href: string; }
 interface StatsCard { icon: string; title: string; description: string; imgSrc: string; }
@@ -79,7 +79,7 @@ const defaultCfg: SiteConfig = {
   faqs: defaultFaqs,
   terms: defaultTerms,
   privacy: defaultPrivacy,
-  heroSlides: [{ image: "", label: "", title: "", subtitle: "" }], heroHeightMobile: 500, heroHeightDesktop: 680,
+  heroSlides: [{ image: "", label: "", title: "", subtitle: "", titleFont: "'Playfair Display', Georgia, serif", titleSize: "4rem", subtitleSize: "1.2rem", labelFont: "inherit", labelSize: "0.75rem" }], heroHeightMobile: 500, heroHeightDesktop: 680,
   serviceIcons: [], navLinks: [], statsCards: [], whyChooseCards: [], popularDestinations: [],
   testimonials: [
     { name: "John Smith", country: "Australia", tour: "Bagan Explorer", text: "Amazing experience! The hot air balloon ride was breathtaking. Professional team from start to finish.", rating: 5 },
@@ -342,9 +342,63 @@ const tabs: { key: Tab; label: string }[] = [
                     <div><label className={labelCls}>Title</label><input className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} value={slide.title} onChange={e => { const a = [...cfg.heroSlides]; a[i] = { ...slide, title: e.target.value }; set("heroSlides", a); }} /></div>
                   </div>
                   <div><label className={labelCls}>Subtitle</label><input className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} value={slide.subtitle} onChange={e => { const a = [...cfg.heroSlides]; a[i] = { ...slide, subtitle: e.target.value }; set("heroSlides", a); }} /></div>
+
+                  {/* Font & Size Controls */}
+                  <div className="grid grid-cols-1 md:grid-cols-4 gap-3 mt-2">
+                    <div>
+                      <label className={labelCls}>Title Font</label>
+                      <select className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} value={slide.titleFont || "'Playfair Display', Georgia, serif"} onChange={e => { const a = [...cfg.heroSlides]; a[i] = { ...slide, titleFont: e.target.value }; set("heroSlides", a); }}>
+                        <option value="'Playfair Display', Georgia, serif">Playfair Display</option>
+                        <option value="Georgia, serif">Georgia</option>
+                        <option value="Arial, sans-serif">Arial</option>
+                        <option value="Montserrat, sans-serif">Montserrat</option>
+                        <option value="inherit">Inherit</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label className={labelCls}>Title Size</label>
+                      <select className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} value={slide.titleSize || "4rem"} onChange={e => { const a = [...cfg.heroSlides]; a[i] = { ...slide, titleSize: e.target.value }; set("heroSlides", a); }}>
+                        <option value="4rem">4rem</option>
+                        <option value="3rem">3rem</option>
+                        <option value="2.5rem">2.5rem</option>
+                        <option value="2rem">2rem</option>
+                        <option value="1.5rem">1.5rem</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label className={labelCls}>Subtitle Size</label>
+                      <select className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} value={slide.subtitleSize || "1.2rem"} onChange={e => { const a = [...cfg.heroSlides]; a[i] = { ...slide, subtitleSize: e.target.value }; set("heroSlides", a); }}>
+                        <option value="1.5rem">1.5rem</option>
+                        <option value="1.2rem">1.2rem</option>
+                        <option value="1rem">1rem</option>
+                        <option value="0.875rem">0.875rem</option>
+                        <option value="0.75rem">0.75rem</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label className={labelCls}>Label Font</label>
+                      <select className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} value={slide.labelFont || "inherit"} onChange={e => { const a = [...cfg.heroSlides]; a[i] = { ...slide, labelFont: e.target.value }; set("heroSlides", a); }}>
+                        <option value="inherit">Inherit</option>
+                        <option value="Georgia, serif">Georgia</option>
+                        <option value="'Playfair Display', Georgia, serif">Playfair Display</option>
+                        <option value="Arial, sans-serif">Arial</option>
+                        <option value="Montserrat, sans-serif">Montserrat</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                    <div>
+                      <label className={labelCls}>Label Size</label>
+                      <select className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} value={slide.labelSize || "0.75rem"} onChange={e => { const a = [...cfg.heroSlides]; a[i] = { ...slide, labelSize: e.target.value }; set("heroSlides", a); }}>
+                        <option value="1rem">1rem</option>
+                        <option value="0.875rem">0.875rem</option>
+                        <option value="0.75rem">0.75rem</option>
+                      </select>
+                    </div>
+                  </div>
                 </div>
               ))}
-              <button onClick={() => set("heroSlides", [...cfg.heroSlides, { image: "", label: "", title: "", subtitle: "" }])} className="px-4 py-2 bg-white/10 rounded-lg text-sm font-medium text-white/50 hover:bg-white/20">+ Add Slide</button>
+              <button onClick={() => set("heroSlides", [...cfg.heroSlides, { image: "", label: "", title: "", subtitle: "", titleFont: "'Playfair Display', Georgia, serif", titleSize: "4rem", subtitleSize: "1.2rem", labelFont: "inherit", labelSize: "0.75rem" }])} className="px-4 py-2 bg-white/10 rounded-lg text-sm font-medium text-white/50 hover:bg-white/20">+ Add Slide</button>
 
             </div>
           )}
