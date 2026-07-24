@@ -77,14 +77,11 @@ const defaultAbout: AboutConfig = {
 };
 
 export default function AboutClient({ siteConfig }: { siteConfig: any }) {
-  const [config, setConfig] = useState<AboutConfig | null>(() => {
-    if (!siteConfig?.heroImages?.about && !siteConfig?.about) return null;
-    return {
-      ...defaultAbout,
-      ...(siteConfig?.about || {}),
-      heroImage: siteConfig?.heroImages?.about || defaultAbout.heroImage,
-    };
-  });
+  const [config, setConfig] = useState<AboutConfig>(() => ({
+    ...defaultAbout,
+    ...(siteConfig?.about || {}),
+    heroImage: siteConfig?.heroImages?.about || defaultAbout.heroImage,
+  }));
 
   useEffect(() => {
     fetch("/api/admin/site-config").then(r => r.json()).then(d => {
@@ -93,8 +90,6 @@ export default function AboutClient({ siteConfig }: { siteConfig: any }) {
       setConfig(baseConfig);
     }).catch(() => setConfig(defaultAbout));
   }, []);
-
-  if (!config) return <div className="min-h-screen bg-gray-50 flex items-center justify-center"><div className="text-gray-400 animate-pulse">Loading...</div></div>;
 
   const { heroImage, heroTitle, heroSubtitle, whoWeAreText, missionTitle, missionText, visionTitle, visionText, valuesTitle, values, servicesTitle, services, whyChooseUsTitle, whyChooseUs, teamTitle, teamSubtitle, teamMembers, commitmentTitle, commitmentText, commitmentSubtext, commitmentButtonLabel, commitmentButtonHref } = config;
 
