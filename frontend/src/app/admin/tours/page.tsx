@@ -12,10 +12,10 @@ interface Tour {
   priceMMK: number;
   priceUSD: number;
   duration: string;
-  images: string;
-  amenities: string;
-  included: string;
-  excluded: string;
+  images: any;
+  amenities: any;
+  included: any;
+  excluded: any;
   phone: string;
   email: string;
   address: string;
@@ -95,8 +95,10 @@ export default function AdminToursPage() {
     fetchTours();
   }, [fetchTours]);
 
-  const parseImageList = (imagesStr: string): string[] => {
+  const parseImageList = (imagesStr: any): string[] => {
     if (!imagesStr) return [];
+    // Supabase returns actual arrays, seed data returns JSON strings
+    if (Array.isArray(imagesStr)) return imagesStr.filter((s: unknown) => typeof s === "string" && s);
     try {
       const parsed = JSON.parse(imagesStr);
       if (Array.isArray(parsed)) return parsed.filter((u: unknown) => typeof u === "string" && u);
@@ -128,6 +130,13 @@ export default function AdminToursPage() {
     setUploadError("");
     setIsNew(false);
     setModalOpen(true);
+  };
+
+  // Normalize string/array fields (Supabase arrays vs seed strings)
+  const asString = (v: any): string => {
+    if (!v) return "";
+    if (Array.isArray(v)) return v.join(", ");
+    return String(v);
   };
 
   const addImage = () => {
@@ -535,7 +544,7 @@ export default function AdminToursPage() {
         </label>
         <input
           type="text"
-          value={editingTour.amenities}
+          value={asString(editingTour.amenities)}
           onChange={(e) =>
             handleFieldChange("amenities", e.target.value)
           }
@@ -550,7 +559,7 @@ export default function AdminToursPage() {
         </label>
         <input
           type="text"
-          value={editingTour.included}
+          value={asString(editingTour.included)}
           onChange={(e) =>
             handleFieldChange("included", e.target.value)
           }
@@ -565,7 +574,7 @@ export default function AdminToursPage() {
         </label>
         <input
           type="text"
-          value={editingTour.excluded}
+          value={asString(editingTour.excluded)}
           onChange={(e) =>
             handleFieldChange("excluded", e.target.value)
           }
