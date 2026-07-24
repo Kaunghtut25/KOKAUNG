@@ -211,7 +211,7 @@ const defaultConfig = {
   // Partners
   
   // Audit Log — records every module toggle change
-  auditLog: [] as Array<{ module: string; oldState: boolean; newState: boolean; user: string; timestamp: string }>,
+  auditLog: [],
 
   partners: [
     "Shangri-La", "Sedona Hotel", "Sule Palace", "Melia Hotel",
