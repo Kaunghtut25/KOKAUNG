@@ -14,7 +14,7 @@ const subjectOptions = [
 ];
 
 export default function ContactClient({ siteConfig }: { siteConfig: any }) {
-  const [heroImage, setHeroImage] = useState("/images_v2/contact-bg-v2.jpg");
+  const [heroImage, setHeroImage] = useState(siteConfig?.heroImages?.contact || "/images_v2/contact-bg-v2.jpg");
   const [contactData, setContactData] = useState<any>(null);
   const [form, setForm] = useState({
     name: "",

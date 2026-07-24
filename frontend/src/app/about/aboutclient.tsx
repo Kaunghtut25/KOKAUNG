@@ -77,16 +77,21 @@ const defaultAbout: AboutConfig = {
 };
 
 export default function AboutClient({ siteConfig }: { siteConfig: any }) {
-  const [config, setConfig] = useState<AboutConfig | null>(null);
+  const [config, setConfig] = useState<AboutConfig | null>(() => {
+    if (!siteConfig?.heroImages?.about && !siteConfig?.about) return null;
+    return {
+      ...defaultAbout,
+      ...(siteConfig?.about || {}),
+      heroImage: siteConfig?.heroImages?.about || defaultAbout.heroImage,
+    };
+  });
 
   useEffect(() => {
     fetch("/api/admin/site-config").then(r => r.json()).then(d => {
-      if (d?.about) setConfig({ ...defaultAbout, ...d.about });
-      else setConfig(defaultAbout);
+      const baseConfig = d?.about ? { ...defaultAbout, ...d.about } : defaultAbout;
+      if (d?.heroImages?.about) baseConfig.heroImage = d.heroImages.about;
+      setConfig(baseConfig);
     }).catch(() => setConfig(defaultAbout));
-    fetch("/api/admin/site-config").then(r => r.json()).then(d => {
-      if (d?.heroImages?.about) setConfig(prev => ({ ...prev, heroImage: d.heroImages.about }));
-    }).catch(() => {});
   }, []);
 
   if (!config) return <div className="min-h-screen bg-gray-50 flex items-center justify-center"><div className="text-gray-400 animate-pulse">Loading...</div></div>;
