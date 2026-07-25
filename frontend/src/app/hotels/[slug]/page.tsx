@@ -301,7 +301,7 @@ export default async function HotelDetailPage({ params }: { params: Promise<{ sl
         {/* Back to Hotels */}
         <Link href="/hotels" className="block text-center mt-6 text-[#D4AF37] hover:underline">&larr; Back to Hotels</Link>
       </section>
-      <RelatedItems section="hotels" />
+      <RelatedItems section="hotels" excludeSlug={slug} destination={typeof hotel?.location === "string" ? hotel.location : ""} />
 </main>
   );
 }

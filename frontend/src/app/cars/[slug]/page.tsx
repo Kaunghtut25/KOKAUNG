@@ -349,7 +349,7 @@ export default async function CarDetailPage({ params }: { params: { slug: string
           </a>
         </div>
       </section>
-      <RelatedItems section="cars" />
+      <RelatedItems section="cars" excludeSlug={slug} destination={typeof car?.location === "string" ? car.location : ""} />
 </main>
   );
 }

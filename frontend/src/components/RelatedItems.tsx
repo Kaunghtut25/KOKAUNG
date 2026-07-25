@@ -1,31 +1,115 @@
-'use client';
+﻿'use client';
 import { useState, useEffect } from 'react';
 
-export default function RelatedItems({ section, excludeSlug }: { section: string; excludeSlug?: string }) {
+interface RelatedSection {
+  key: string;
+  label: string;
+  apiPath: string;
+  linkPrefix: string;
+  nameField: string;
+  imageField: string;
+  priceField: string;
+  matchField: string;
+}
+
+const CROSS_SECTIONS: RelatedSection[] = [
+  { key: 'tours', label: 'Tours', apiPath: '/api/tours', linkPrefix: '/tours', nameField: 'title', imageField: 'displayImage', priceField: 'priceMMK', matchField: 'destination' },
+  { key: 'hotels', label: 'Hotels', apiPath: '/api/hotels', linkPrefix: '/hotels', nameField: 'name', imageField: 'image', priceField: 'priceMMK', matchField: 'location' },
+  { key: 'cars', label: 'Cars', apiPath: '/api/cars', linkPrefix: '/cars', nameField: 'name', imageField: 'image', priceField: 'priceMMK', matchField: 'location' },
+  { key: 'visas', label: 'Visas', apiPath: '/api/visas', linkPrefix: '/visas', nameField: 'country', imageField: 'image', priceField: 'visaFeeMMK', matchField: 'country' },
+  { key: 'cruises', label: 'Cruises', apiPath: '/api/cruises', linkPrefix: '/cruises', nameField: 'name', imageField: 'image', priceField: 'priceMMK', matchField: 'destination' },
+  { key: 'insurance', label: 'Insurance', apiPath: '/api/insurance', linkPrefix: '/insurance', nameField: 'name', imageField: 'image', priceField: 'priceMMK', matchField: 'destination' },
+  { key: 'mingalar', label: 'Sky Lounge', apiPath: '/api/mingalar', linkPrefix: '/mingalar', nameField: 'title', imageField: 'image', priceField: 'priceMMK', matchField: 'location' },
+];
+
+function matchesDestination(item: any, matchField: string, destination: string, country: string): boolean {
+  if (!destination && !country) return false;
+  const val = (item?.[matchField] || '').toLowerCase();
+  const dest = (destination || '').toLowerCase();
+  const ctry = (country || '').toLowerCase();
+  return (dest && val.includes(dest)) || (ctry && val.includes(ctry));
+}
+
+export default function RelatedItems({ section, excludeSlug, destination, country }: { section: string; excludeSlug?: string; destination?: string; country?: string }) {
   const [items, setItems] = useState<any[]>([]);
+  const [crossItems, setCrossItems] = useState<{section: RelatedSection; items: any[]}[]>([]);
+
+  // Same-section
   useEffect(() => {
     fetch(`/api/${section}`).then(r => r.json()).then(data => {
       const arr = Array.isArray(data) ? data : (data.items || data.data || []);
-      const filtered = arr.filter((x: any) => x?.slug !== excludeSlug).slice(0, 6); setItems(filtered);
+      const filtered = arr.filter((x: any) => x?.slug !== excludeSlug).slice(0, 6);
+      setItems(filtered);
     }).catch(() => setItems([]));
   }, [section, excludeSlug]);
-  if (!items?.length) return null;
+
+  // Cross-section
+  useEffect(() => {
+    if (!destination && !country) return;
+    const fetchCross = async () => {
+      const results: {section: RelatedSection; items: any[]}[] = [];
+      for (const s of CROSS_SECTIONS) {
+        if (s.key === section) continue;
+        try {
+          const res = await fetch(s.apiPath);
+          const data = await res.json();
+          const arr = Array.isArray(data) ? data : (data.items || data.data || []);
+          const matched = arr.filter((x: any) => matchesDestination(x, s.matchField, destination || '', country || '')).slice(0, 4);
+          if (matched.length > 0) {
+            results.push({ section: s, items: matched });
+          }
+        } catch(e) {}
+      }
+      setCrossItems(results);
+    };
+    fetchCross();
+  }, [section, destination, country]);
+
+  if (!items?.length && !crossItems.length) return null;
+
   return (
     <div style={{ maxWidth: 1000, margin: '0 auto', padding: '40px 20px' }}>
-      <h2 style={{ fontFamily: "'Playfair Display',serif", fontSize: 22, color: '#0A1628', marginBottom: 16 }}>You May Also Like</h2>
-      <div style={{ display: 'flex', gap: 16, overflowX: 'auto', paddingBottom: 8 }}>
-        {(items ?? []).map((item, i) => (
-          <a key={i} href={`/${section}/${item.slug}`} style={{ minWidth: 200, maxWidth: 200, textDecoration: 'none' }}>
-            <div style={{ borderRadius: 12, overflow: 'hidden', border: '1px solid #eee' }}>
-              <img src={item.image || item.displayImage || `/images_v2/hero-${section}-v2.jpg`} alt={item.name || item.title} style={{ width: '100%', height: 120, objectFit: 'cover' }} />
-              <div style={{ padding: 10 }}>
-                <div style={{ fontSize: 13, fontWeight: 600, color: '#0A1628', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{item.name || item.title || item.country}</div>
-                <div style={{ fontSize: 12, color: '#D4AF37', fontWeight: 600, marginTop: 4 }}>{item.priceMMK ? 'Ks ' + item.priceMMK.toLocaleString() : item.priceUSD ? '$' + item.priceUSD : ''}</div>
-              </div>
-            </div>
-          </a>
-        ))}
-      </div>
+      {/* Same-section "You May Also Like" */}
+      {items.length > 0 && (
+        <>
+          <h2 style={{ fontFamily: "'Playfair Display',serif", fontSize: 22, color: '#0A1628', marginBottom: 16 }}>You May Also Like</h2>
+          <div style={{ display: 'flex', gap: 16, overflowX: 'auto', paddingBottom: 8 }}>
+            {(items ?? []).map((item, i) => (
+              <a key={i} href={`/${section}/${item.slug}`} style={{ minWidth: 200, maxWidth: 200, textDecoration: 'none' }}>
+                <div style={{ borderRadius: 12, overflow: 'hidden', border: '1px solid #eee' }}>
+                  <img src={item.image || item.displayImage || `/images_v2/hero-${section}-v2.jpg`} alt={item.name || item.title} style={{ width: '100%', height: 120, objectFit: 'cover' }} />
+                  <div style={{ padding: 10 }}>
+                    <div style={{ fontSize: 13, fontWeight: 600, color: '#0A1628', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{item.name || item.title || item.country}</div>
+                    <div style={{ fontSize: 12, color: '#D4AF37', fontWeight: 600, marginTop: 4 }}>{item.priceMMK ? 'Ks ' + item.priceMMK.toLocaleString() : item.priceUSD ? '$' + item.priceUSD : item.visaFeeMMK ? 'Ks ' + item.visaFeeMMK.toLocaleString() : ''}</div>
+                  </div>
+                </div>
+              </a>
+            ))}
+          </div>
+        </>
+      )}
+
+      {/* Cross-section "Explore in [Destination]" */}
+      {crossItems.map(({ section: s, items: sItems }) => (
+        <div key={s.key} style={{ marginTop: 32 }}>
+          <h3 style={{ fontFamily: "'Playfair Display',serif", fontSize: 18, color: '#D4AF37', marginBottom: 12 }}>
+            {s.label} {destination ? `in ${destination}` : country ? `for ${country}` : ''}
+          </h3>
+          <div style={{ display: 'flex', gap: 16, overflowX: 'auto', paddingBottom: 8 }}>
+            {sItems.map((item, i) => (
+              <a key={i} href={`${s.linkPrefix}/${item.slug || item._id || item.id}`} style={{ minWidth: 180, maxWidth: 180, textDecoration: 'none' }}>
+                <div style={{ borderRadius: 12, overflow: 'hidden', border: '1px solid #eee', background: 'white' }}>
+                  <img src={item[s.imageField] || item.image || item.displayImage || `/images_v2/hero-${s.key}-v2.jpg`} alt={item[s.nameField] || ''} style={{ width: '100%', height: 110, objectFit: 'cover' }} />
+                  <div style={{ padding: 8 }}>
+                    <div style={{ fontSize: 12, fontWeight: 600, color: '#0A1628', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{item[s.nameField] || item.name || item.title || ''}</div>
+                    <div style={{ fontSize: 11, color: '#D4AF37', fontWeight: 600, marginTop: 4 }}>{item[s.priceField] ? 'Ks ' + (item[s.priceField] || 0).toLocaleString() : ''}</div>
+                  </div>
+                </div>
+              </a>
+            ))}
+          </div>
+        </div>
+      ))}
     </div>
   );
 }

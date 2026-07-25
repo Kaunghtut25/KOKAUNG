@@ -1154,7 +1154,7 @@ export default function TourDetailPage() {
         </div>
       )}
             <ErrorBoundary fallback={null}>
-        <RelatedItems section="tours" />
+        <RelatedItems section="tours" excludeSlug={slug} destination={typeof tour?.destination === "string" ? tour.destination : ""} />
       </ErrorBoundary>
 </main>
     </ErrorBoundary>

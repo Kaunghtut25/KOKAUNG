@@ -106,7 +106,7 @@ export default async function VisaDetailPage({ params }: PageProps) {
           Book Now
         </Link>
       </section>
-      <RelatedItems section="visas" />
+      <RelatedItems section="visas" excludeSlug={slug} destination={typeof country === "string" ? country : ""} />
 </main>
   );
 }

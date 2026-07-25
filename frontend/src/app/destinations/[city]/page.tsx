@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import RelatedItems from '@/components/RelatedItems';
 import BackButton from "@/components/BackButton";
 import DestImage from "./DestImage";
 

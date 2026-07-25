@@ -69,7 +69,7 @@ export default async function CruiseDetailPage({ params }: PageProps) {
         <Link href={`/book-now?type=cruise&name=${encodeURIComponent(name)}&id=${encodeURIComponent(cruise.id||cruise._id||params.slug)}&priceMMK=${priceMMK}&priceUSD=${priceUSD}&destination=${encodeURIComponent(dest)}`}
           style={{ display: 'block', textAlign: 'center', padding: '16px 0', borderRadius: 14, background: 'linear-gradient(to right, #D4AF37, #F5A623)', color: '#0A1628', fontWeight: 'bold', fontSize: 16, textDecoration: 'none' }}>Book Now</Link>
       </section>
-      <RelatedItems section="cruises" />
+      <RelatedItems section="cruises" excludeSlug={slug} destination={typeof dest === "string" ? dest : ""} />
 </main>
   );
 }

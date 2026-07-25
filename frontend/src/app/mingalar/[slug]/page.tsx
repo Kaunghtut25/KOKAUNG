@@ -91,7 +91,7 @@ export default async function MingalarDetailPage({ params }: PageProps) {
         <Link href={`/book-now?type=lounge&name=${encodeURIComponent(title)}&id=${encodeURIComponent(item.id||item._id||params.slug)}`}
           style={{ display: 'block', textAlign: 'center', padding: '16px 0', borderRadius: 14, background: 'linear-gradient(to right, #D4AF37, #F5A623)', color: '#0A1628', fontWeight: 'bold', fontSize: 16, textDecoration: 'none' }}>Book Now</Link>
       </section>
-      <RelatedItems section="mingalar" />
+      <RelatedItems section="mingalar" excludeSlug={slug} />
 </main>
   );
 }
