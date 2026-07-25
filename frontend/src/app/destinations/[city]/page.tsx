@@ -4,7 +4,6 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import RelatedItems from '@/components/RelatedItems';
-import BackButton from "@/components/BackButton";
 import DestImage from "./DestImage";
 
 interface PopularDestination {
@@ -186,9 +185,9 @@ export default function DestinationPage({ params }: { params: { city: string } }
         <p className="text-gray-600 mb-8">
           We could not find details for "{params.city}". This destination may have been removed or is not yet available.
         </p>
-        <div className="absolute top-4 left-4 z-20">
-          <BackButton />
-        </div>
+        <Link href="/#popular-destinations" className="absolute top-4 left-4 z-20 flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur-md border border-white/20 rounded-full text-white hover:bg-white/20 transition-all text-sm">
+          ← Back to Destinations
+        </Link>
       </main>
     );
   }
@@ -202,9 +201,9 @@ export default function DestinationPage({ params }: { params: { city: string } }
     <main className="min-h-screen bg-white">
       {/* Hero */}
       <div className="relative h-64 md:h-96 overflow-hidden">
-        <div className="absolute top-4 left-4 z-20">
-          <BackButton />
-        </div>
+        <Link href="/#popular-destinations" className="absolute top-4 left-4 z-20 flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur-md border border-white/20 rounded-full text-white hover:bg-white/20 transition-all text-sm">
+          ← Back to Destinations
+        </Link>
 
         <DestImage
           src={dest.image || DEST_HERO}
@@ -226,7 +225,18 @@ export default function DestinationPage({ params }: { params: { city: string } }
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-12 space-y-12">
+      {/* Breadcrumbs */}
+      <nav className="max-w-7xl mx-auto px-4 sm:px-6 pt-4 text-sm">
+        <Link href="/" className="text-gray-500 hover:text-[#D4AF37]">Home</Link>
+        <span className="mx-2 text-gray-300">/</span>
+        <Link href="/#popular-destinations" className="text-gray-500 hover:text-[#D4AF37]">Destinations</Link>
+        <span className="mx-2 text-gray-300">/</span>
+        <span className="text-[#0A1628] font-medium">{dest.city}</span>
+      </nav>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-12">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
+          <div className="lg:col-span-2 space-y-12">
         {/* Description */}
         {dest.description && (
           <section>
@@ -283,6 +293,55 @@ export default function DestinationPage({ params }: { params: { city: string } }
           </section>
         )}
 
+          </div>
+
+          {/* Sidebar */}
+          <div className="lg:col-span-1">
+            <div className="sticky top-28 space-y-6">
+              <div className="bg-white border border-gray-200 rounded-2xl shadow-lg overflow-hidden">
+                <div className="bg-gradient-to-r from-[#0A1628] to-[#162D50] p-6 text-white">
+                  <p className="text-white/60 text-xs uppercase tracking-wider mb-1">Starting from</p>
+                  <div className="flex items-baseline gap-1">
+                    <span className="text-3xl font-bold" style={{"fontFamily": "'Playfair Display', Georgia, serif"}}>
+                      {dest.minPrice}
+                    </span>
+                  </div>
+                  {dest.bestTime && (<p className="text-white/50 text-sm mt-1">Best time: {dest.bestTime}</p>)}
+                </div>
+                <div className="p-6 space-y-4">
+                  <Link
+                    href={`/book-now?type=tour&destination=${encodeURIComponent(dest.city)}`}
+                    className="block w-full py-3.5 rounded-xl text-center font-bold text-base bg-gradient-to-r from-[#D4AF37] to-[#F5A623] text-[#0A1628] shadow-lg shadow-[#D4AF37]/30 hover:shadow-xl hover:shadow-[#D4AF37]/40 hover:scale-[1.02] transition-all duration-300"
+                  >
+                    Explore {dest.city}
+                  </Link>
+                  <div className="space-y-3 pt-4 border-t border-gray-100">
+                    <div className="flex items-center gap-2 text-sm text-gray-600">
+                      <svg className="w-4 h-4 text-[#D4AF37]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                      </svg>
+                      {dest.city}, {dest.country}
+                    </div>
+                    <div className="flex items-center gap-2 text-sm text-gray-600">
+                      <svg className="w-4 h-4 text-[#D4AF37]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
+                      </svg>
+                      {dest.highlights ? dest.highlights.length + " Highlights" : "Popular Destination"}
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <Link
+                href="/#popular-destinations"
+                className="block w-full py-3 rounded-xl text-center font-semibold text-sm border-2 border-[#D4AF37] text-[#D4AF37] hover:bg-[#D4AF37] hover:text-[#0A1628] transition-all duration-300"
+              >
+                ← Back to Destinations
+              </Link>
+            </div>
+          </div>
+        </div>
+
         {/* CTA */}
         <section className="text-center py-12">
           <h2 className="text-2xl font-bold text-[#0A1628] mb-4">
@@ -295,6 +354,7 @@ export default function DestinationPage({ params }: { params: { city: string } }
             Book Your Trip to {dest.city}
           </Link>
         </section>
+      <RelatedItems section="destinations" excludeSlug={params.city} destination={(dest.city || "") + ", " + (dest.country || "")} />
       </div>
     </main>
   );
