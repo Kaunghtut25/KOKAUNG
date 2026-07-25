@@ -80,7 +80,7 @@ export default async function VisaDetailPage({ params }: PageProps) {
   return (
     <main className="min-h-screen bg-white">
       {/* Back Button */}
-      <BackButton />
+      <BackButton bookNowUrl={`/book-now?type=visa&name=${encodeURIComponent(name)}&id=${encodeURIComponent(visa.id || visa._id || slug)}&priceMMK=${priceMMK}&priceUSD=${priceUSD}&destination=${encodeURIComponent(dest)}`} />
 
       {/* Hero Section */}
       <section className="relative w-full h-[50vh] md:h-[60vh] overflow-hidden">

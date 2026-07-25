@@ -77,7 +77,7 @@ export default async function MingalarDetailPage({ params }: PageProps) {
   return (
     <main className="min-h-screen bg-white">
       {/* Back Button */}
-      <BackButton />
+      <BackButton bookNowUrl={`/book-now?type=mingalar&name=${encodeURIComponent(name)}&id=${encodeURIComponent(item.id || item._id || slug)}&priceMMK=${priceMMK}&priceUSD=${priceUSD}&destination=${encodeURIComponent(dest)}`} />
 
       {/* Hero Section */}
       <section className="relative w-full h-[50vh] md:h-[60vh] overflow-hidden">

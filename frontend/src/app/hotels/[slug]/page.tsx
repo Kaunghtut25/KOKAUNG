@@ -154,7 +154,7 @@ export default async function HotelDetailPage({ params }: { params: Promise<{ sl
   return (
     <main className="min-h-screen bg-white">
       {/* Back Button */}
-      <BackButton />
+      <BackButton bookNowUrl={`/book-now?type=hotel&name=${encodeURIComponent(hotel.name)}&id=${encodeURIComponent(hotel.id || hotel._id || slug)}&priceMMK=${hotel.pricePerNightMMK}&priceUSD=${hotel.pricePerNightUSD}&destination=${encodeURIComponent(hotel.location)}`} />
 
       <section className="relative w-full h-[50vh] md:h-[60vh] overflow-hidden">
         <Image src={heroImage} alt={hotel.name} width={1200} height={630} className="w-full h-full object-cover" />
