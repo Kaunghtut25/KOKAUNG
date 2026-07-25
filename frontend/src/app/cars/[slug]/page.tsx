@@ -144,21 +144,16 @@ export default async function CarDetailPage({ params }: { params: { slug: string
   const bookNowHref = '/book-now?type=car&name=' + encodeURIComponent(car.carType) + '&id=' + encodeURIComponent(car.id) + '&priceMMK=' + (cheapestPricing?.priceMMK || 0) + '&priceUSD=' + (cheapestPricing?.priceUSD || 0) + '&features=' + encodeURIComponent(car.features.join(', '));
 
   return (
-    <main className="min-h-screen bg-white">
-      {/* Back link top bar */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 pt-24 pb-2">
-        <Link href="/cars" className="inline-flex items-center gap-2 text-gray-400 hover:text-[#D4AF37] transition-colors text-sm">
-          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M7 16l-4-4m0 0l4-4m-4 4h18" />
-            </svg>
-          Back to All Cars
-        </Link>
-      </div>
+    <main className="min-h-screen bg-white">      {/* Back Button */}
+      <BackButton />
+
       {/* Hero Section */}
       <section className="relative w-full h-[50vh] md:h-[60vh] overflow-hidden">
+        <Link href="/cars" className="absolute top-6 left-4 md:top-8 md:left-8 z-20 flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur-md border border-white/20 rounded-full text-white hover:bg-white/20 transition-all text-sm">
+          ← Back to Cars
+        </Link>
         <Image
-          src={heroImage}
-          alt={car.carType}
+          src={heroImage}          alt={car.carType}
           width={1200}
           height={630}
           className="w-full h-full object-cover"

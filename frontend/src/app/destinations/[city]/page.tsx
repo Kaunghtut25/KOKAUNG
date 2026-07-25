@@ -1,10 +1,9 @@
-"use client";
-
-import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { notFound } from "next/navigation";
 import RelatedItems from '@/components/RelatedItems';
 import DestImage from "./DestImage";
+
+export const dynamic = 'force-dynamic';
 
 interface PopularDestination {
   city: string;
@@ -24,7 +23,7 @@ const FALLBACK_DESTINATIONS: PopularDestination[] = [
     image: "https://vydupdjfr38dxlzx.public.blob.vercel-storage.com/uploads/img_1784609663178_ta1biy-bangkok-x7Q8kUMuXRvj6qMJAZxBbawKS4zkjI.jpg",
     minPrice: "From Ks 120,000",
     bestTime: "November to February (cool season)",
-    description: "Bangkok is a vibrant metropolis where ancient temples meet modern skyscrapers. Explore the Grand Palace, cruise the Chao Phraya River, shop at Chatuchak Market, and experience world-famous Thai street food.",
+    description: "Bangkok is a vibrant metropolis where ancient temples meet modern skyscrapers. Explore the Grand Palace, cruise the Chao Phraya River, shop at Chatuk Market, and experience world-famous Thai street food.",
     highlights: ["Grand Palace", "Wat Arun", "Floating Markets", "Chatuchak Weekend Market", "Khao San Road", "Thai Street Food"],
   },
   {
@@ -121,90 +120,24 @@ function toSlug(text: string): string {
   return (text || "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 }
 
-export default function DestinationPage({ params }: { params: { city: string } }) {
-  const router = useRouter();
+export default async function DestinationPage({ params }: { params: { city: string } }) {
   const key = params.city.toLowerCase();
-  const [dest, setDest] = useState<PopularDestination | null>(null);
-  const [loading, setLoading] = useState(true);
+  const dest = FALLBACK_DESTINATIONS.find(
+    (d) => toSlug(d.city) === key
+  );
 
-  useEffect(() => {
-    const fetchDestinations = async () => {
-      try {
-        const res = await fetch("/api/admin/site-config");
-        if (res.ok) {
-          const data = await res.json();
-          const popularDestinations: PopularDestination[] =
-            data.popularDestinations ||
-            data.data?.popularDestinations ||
-            [];
-          const found = popularDestinations.find(
-            (d: PopularDestination) => toSlug(d.city) === key
-          );
-          if (found) {
-            setDest(found);
-          } else {
-            // Fallback: check static FALLBACK_DESTINATIONS
-            const fb = FALLBACK_DESTINATIONS.find(
-              (d: PopularDestination) => toSlug(d.city) === key
-            );
-            setDest(fb || null);
-          }
-        } else {
-          // API failed, try fallback
-          const fb = FALLBACK_DESTINATIONS.find(
-            (d: PopularDestination) => toSlug(d.city) === key
-          );
-          setDest(fb || null);
-        }
-      } catch (err) {
-        console.error("Failed to fetch destinations:", err);
-        // Try fallback on error
-        const fb = FALLBACK_DESTINATIONS.find(
-          (d: PopularDestination) => toSlug(d.city) === key
-        );
-        setDest(fb || null);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchDestinations();
-  }, [key]);
+  if (!dest) notFound();
 
-  if (loading) {
-    return (
-      <main className="min-h-screen bg-white pt-24 pb-20 flex items-center justify-center">
-        <div className="text-[#D4AF37]/70 animate-pulse text-lg">Loading destination...</div>
-      </main>
-    );
-  }
-
-  if (!dest) {
-    return (
-      <main className="min-h-screen bg-white pt-24 pb-20 text-center">
-        <h1 className="text-4xl font-bold text-[#0A1628] mb-4">Destination Not Found</h1>
-        <p className="text-gray-600 mb-8">
-          We could not find details for "{params.city}". This destination may have been removed or is not yet available.
-        </p>
-        <Link href="/#popular-destinations" className="absolute top-4 left-4 z-20 flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur-md border border-white/20 rounded-full text-white hover:bg-white/20 transition-all text-sm">
-          ← Back to Destinations
-        </Link>
-      </main>
-    );
-  }
-
-  // Build highlights from description or leave empty
   const highlights = dest.highlights || (dest.description
     ? dest.description.split(/[,.]/).map((s: string) => s.trim()).filter((s: string) => s.length > 0).slice(0, 6)
     : []);
 
   return (
     <main className="min-h-screen bg-white">
-      {/* Hero */}
       <div className="relative h-64 md:h-96 overflow-hidden">
         <Link href="/#popular-destinations" className="absolute top-4 left-4 z-20 flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur-md border border-white/20 rounded-full text-white hover:bg-white/20 transition-all text-sm">
           ← Back to Destinations
         </Link>
-
         <DestImage
           src={dest.image || DEST_HERO}
           alt={dest.city}
@@ -225,7 +158,6 @@ export default function DestinationPage({ params }: { params: { city: string } }
         </div>
       </div>
 
-      {/* Breadcrumbs */}
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 pt-4 text-sm">
         <Link href="/" className="text-gray-500 hover:text-[#D4AF37]">Home</Link>
         <span className="mx-2 text-gray-300">/</span>
@@ -237,7 +169,6 @@ export default function DestinationPage({ params }: { params: { city: string } }
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-12">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
           <div className="lg:col-span-2 space-y-12">
-        {/* Description */}
         {dest.description && (
           <section>
             <h2 className="text-2xl font-bold text-[#0A1628] mb-4">
@@ -249,7 +180,6 @@ export default function DestinationPage({ params }: { params: { city: string } }
           </section>
         )}
 
-        {/* Price */}
         {dest.minPrice && (
           <section className="bg-gradient-to-r from-[#D4AF37]/5 to-[#D4AF37]/10 rounded-2xl p-6 md:p-8">
             <h2 className="text-2xl font-bold text-[#0A1628] mb-2">
@@ -261,7 +191,6 @@ export default function DestinationPage({ params }: { params: { city: string } }
           </section>
         )}
 
-        {/* Highlights */}
         {highlights.length > 0 && (
           <section>
             <h2 className="text-2xl font-bold text-[#0A1628] mb-6">
@@ -283,7 +212,6 @@ export default function DestinationPage({ params }: { params: { city: string } }
           </section>
         )}
 
-        {/* Best Time */}
         {dest.bestTime && (
           <section className="bg-gradient-to-r from-[#D4AF37]/5 to-[#D4AF37]/10 rounded-2xl p-6 md:p-8">
             <h2 className="text-2xl font-bold text-[#0A1628] mb-2">
@@ -295,7 +223,6 @@ export default function DestinationPage({ params }: { params: { city: string } }
 
           </div>
 
-          {/* Sidebar */}
           <div className="lg:col-span-1">
             <div className="sticky top-28 space-y-6">
               <div className="bg-white border border-gray-200 rounded-2xl shadow-lg overflow-hidden">
@@ -342,7 +269,6 @@ export default function DestinationPage({ params }: { params: { city: string } }
           </div>
         </div>
 
-        {/* Related Items */}
         <div className="pt-8 border-t border-[#D4AF37]/10">
           <h2 className="text-2xl font-bold text-[#0A1628] mb-6" style={{"fontFamily": "'Playfair Display', Georgia, serif"}}>
             Discover {dest.city}
@@ -350,7 +276,6 @@ export default function DestinationPage({ params }: { params: { city: string } }
           <RelatedItems section="destinations" excludeSlug={params.city} destination={(dest.city || "") + ", " + (dest.country || "")} />
         </div>
 
-        {/* CTA */}
         <section className="text-center py-12">
           <h2 className="text-2xl font-bold text-[#0A1628] mb-4">
             Ready to Explore {dest.city}?
