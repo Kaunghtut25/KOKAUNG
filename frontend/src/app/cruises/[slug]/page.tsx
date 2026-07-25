@@ -3,7 +3,6 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { getAll } from '@/lib/persistentStore';
 import SocialShare from '@/components/SocialShare';
-import BackButton from '@/components/BackButton';
 import RelatedItems from '@/components/RelatedItems';
 export const dynamic = 'force-dynamic';
 
@@ -37,10 +36,16 @@ export default async function CruiseDetailPage({ params }: PageProps) {
 
   return (
     <main style={{ minHeight: '100vh', background: '#f8f9fa' }}>
-      {/* Back Button */}
-      <BackButton />
-
-      <section style={{ position: 'relative', height: 400, overflow: 'hidden' }}>
+      {/* Back link top bar */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 pt-24 pb-2">
+        <Link href="/cruises" className="inline-flex items-center gap-2 text-gray-400 hover:text-[#D4AF37] transition-colors text-sm">
+          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M7 16l-4-4m0 0l4-4m-4 4h18" />
+            </svg>
+          Back to All Cruises
+        </Link>
+      </div>
+<section style={{ position: 'relative', height: 400, overflow: 'hidden' }}>
         <Image src={displayImage} alt={name} width={1200} height={630} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
         <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(10,22,40,0.9), rgba(10,22,40,0.3))' }} />
         <div style={{ position: 'absolute', bottom: 40, left: 0, right: 0, textAlign: 'center', padding: '0 20px' }}>
@@ -69,7 +74,7 @@ export default async function CruiseDetailPage({ params }: PageProps) {
         <Link href={`/book-now?type=cruise&name=${encodeURIComponent(name)}&id=${encodeURIComponent(cruise.id||cruise._id||params.slug)}&priceMMK=${priceMMK}&priceUSD=${priceUSD}&destination=${encodeURIComponent(dest)}`}
           style={{ display: 'block', textAlign: 'center', padding: '16px 0', borderRadius: 14, background: 'linear-gradient(to right, #D4AF37, #F5A623)', color: '#0A1628', fontWeight: 'bold', fontSize: 16, textDecoration: 'none' }}>Book Now</Link>
       </section>
-      <RelatedItems section="cruises" excludeSlug={slug} destination={typeof dest === "string" ? dest : ""} />
+      <RelatedItems section="cruises" excludeSlug={params.slug} destination={typeof dest === "string" ? dest : ""} />
 </main>
   );
 }

@@ -4,7 +4,6 @@ import Image from 'next/image';
 import { getAll } from '@/lib/persistentStore';
 import SocialShare from '@/components/SocialShare';
 import RelatedItems from '@/components/RelatedItems';
-import BackButton from '@/components/BackButton';
 export const dynamic = 'force-dynamic';
 
 interface PageProps { params: { slug: string } }
@@ -50,10 +49,16 @@ export default async function VisaDetailPage({ params }: PageProps) {
 
   return (
     <main style={{ minHeight: '100vh', background: '#f8f9fa' }}>
-      {/* Back Button */}
-      <BackButton />
-
-      <section style={{ position: 'relative', height: 400, overflow: 'hidden' }}>
+      {/* Back link top bar */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 pt-24 pb-2">
+        <Link href="/visas" className="inline-flex items-center gap-2 text-gray-400 hover:text-[#D4AF37] transition-colors text-sm">
+          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M7 16l-4-4m0 0l4-4m-4 4h18" />
+            </svg>
+          Back to All Visas
+        </Link>
+      </div>
+<section style={{ position: 'relative', height: 400, overflow: 'hidden' }}>
         <Image src={displayImage} alt={country} width={1200} height={630} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
         <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(10,22,40,0.9), rgba(10,22,40,0.3))' }} />
         <div style={{ position: 'absolute', bottom: 40, left: 0, right: 0, textAlign: 'center', padding: '0 20px' }}>
@@ -106,7 +111,7 @@ export default async function VisaDetailPage({ params }: PageProps) {
           Book Now
         </Link>
       </section>
-      <RelatedItems section="visas" excludeSlug={slug} destination={typeof country === "string" ? country : ""} />
+      <RelatedItems section="visas" excludeSlug={params.slug} destination={typeof country === "string" ? country : ""} />
 </main>
   );
 }
