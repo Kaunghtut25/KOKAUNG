@@ -1005,6 +1005,12 @@ export default function TourDetailPage() {
 
               <p className="text-center text-gray-500 text-xs">No payment required to book</p>
             </div>
+            <Link
+              href="/tours"
+              className="block w-full py-3 rounded-xl text-center font-semibold text-sm border-2 border-[#D4AF37] text-[#D4AF37] hover:bg-[#D4AF37] hover:text-[#0A1628] transition-all duration-300"
+            >
+              ← Back to All Tours
+            </Link>
           </div>
         </div>
       </section>
