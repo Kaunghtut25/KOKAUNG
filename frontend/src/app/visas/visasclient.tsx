@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
@@ -7,6 +7,7 @@ import BookingModal from '@/components/BookingModal';
 import DealsBanner from '@/components/DealsBanner';
 import FAQAccordion from '@/components/FAQAccordion';
 import TestimonialSlider from '@/components/TestimonialSlider';
+import ScrollingRow from '@/components/ScrollingRow';
 interface VisaService {
   slug?: string;
   _id: string;
@@ -160,6 +161,10 @@ export default function VisasClient({ initialVisas, siteConfig }: VisasClientPro
   const [currency, setCurrency] = useState<'MMK' | 'USD'>('MMK');
   const [selectedVisa, setSelectedVisa] = useState<VisaService | null>(null);
 
+  const cardWidth = siteConfig?.cardDimensions?.visas?.width || 300;
+  const cardHeight = siteConfig?.cardDimensions?.visas?.height || 420;
+  const cardInfo = { width: cardWidth, height: cardHeight, containerWidth: 6 * (cardWidth + 16) };
+
   useEffect(() => {
     if (initialVisas.length > 0) return; // already have server data
     api.get('/visas').then(r => {
@@ -183,10 +188,12 @@ export default function VisasClient({ initialVisas, siteConfig }: VisasClientPro
     }).catch(() => {});
   }, [initialVisas.length]);
 
-  // Cycle through existing visas to fill 3 rows × 10 cards (like Tours)
-  const CARDS_PER_ROW = 4;
-  const ROW_COUNT = 3;
+  // Chunk into rows of 6
   const pool: VisaService[] = [...visas];
+  const visaRows: VisaService[][] = [];
+  for (let i = 0; i < pool.length; i += 6) {
+    visaRows.push(pool.slice(i, i + 6));
+  }
 
 
   return (
@@ -204,8 +211,16 @@ export default function VisasClient({ initialVisas, siteConfig }: VisasClientPro
         </div>
       </section>
 <section className="max-w-7xl mx-auto px-4 sm:px-6 pt-20 pb-20">
-        <div className="grid gap-4 justify-center" style={{ gridTemplateColumns: `repeat(${siteConfig?.sectionLayouts?.visas?.cardsPerRow || 6}, minmax(0, ${(siteConfig?.cardDimensions?.visas?.width || 280)}px))` }}>
-          {pool.map(v => <VisaGridCard key={v._id + '-' + v._id} visa={v} cardWidth={siteConfig?.cardDimensions?.visas?.width} cardHeight={siteConfig?.cardDimensions?.visas?.height} />)}
+        <div className="space-y-8">
+          {visaRows.map((row, rowIdx) => (
+            <ScrollingRow key={rowIdx} containerWidth={cardInfo.containerWidth}>
+              {row.map(v => (
+                <div key={v._id} className="flex-shrink-0 snap-start" style={{ width: cardInfo.width }}>
+                  <VisaGridCard visa={v} cardWidth={cardInfo.width} cardHeight={cardInfo.height} />
+                </div>
+              ))}
+            </ScrollingRow>
+          ))}
         </div>
       </section>
 {selectedVisa && <BookingModal isOpen={!!selectedVisa} onClose={() => setSelectedVisa(null)} title={`Apply for ${selectedVisa.country} Visa`} fields={['Name','Passport No','Travel Date']} />}

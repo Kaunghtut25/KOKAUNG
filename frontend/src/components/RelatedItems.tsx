@@ -1,5 +1,6 @@
 ﻿'use client';
 import { useState, useEffect } from 'react';
+import ScrollingRow from './ScrollingRow';
 
 interface RelatedSection {
   key: string;
@@ -29,6 +30,9 @@ function matchesDestination(item: any, matchField: string, destination: string, 
   const ctry = (country || '').toLowerCase();
   return (dest && val.includes(dest)) || (ctry && val.includes(ctry));
 }
+
+const RELATED_CARD_WIDTH = 200;
+const RELATED_CONTAINER_WIDTH = 4 * (RELATED_CARD_WIDTH + 16) + 4;
 
 export default function RelatedItems({ section, excludeSlug, destination, country }: { section: string; excludeSlug?: string; destination?: string; country?: string }) {
   const [items, setItems] = useState<any[]>([]);
@@ -73,9 +77,9 @@ export default function RelatedItems({ section, excludeSlug, destination, countr
       {items.length > 0 && (
         <>
           <h2 style={{ fontFamily: "'Playfair Display',serif", fontSize: 22, color: '#0A1628', marginBottom: 16 }}>You May Also Like</h2>
-          <div style={{ display: 'flex', gap: 16, overflowX: 'auto', paddingBottom: 8 }}>
+          <ScrollingRow containerWidth={RELATED_CONTAINER_WIDTH}>
             {(items ?? []).map((item, i) => (
-              <a key={i} href={`/${section}/${item.slug}`} style={{ minWidth: 200, maxWidth: 200, textDecoration: 'none' }}>
+              <a key={i} href={`/${section}/${item.slug}`} className="flex-shrink-0 snap-start" style={{ width: RELATED_CARD_WIDTH, textDecoration: 'none' }}>
                 <div style={{ borderRadius: 12, overflow: 'hidden', border: '1px solid #eee' }}>
                   <img src={item.image || item.displayImage || `/images_v2/hero-${section}-v2.jpg`} alt={item.name || item.title} style={{ width: '100%', height: 120, objectFit: 'cover' }} />
                   <div style={{ padding: 10 }}>
@@ -85,7 +89,7 @@ export default function RelatedItems({ section, excludeSlug, destination, countr
                 </div>
               </a>
             ))}
-          </div>
+          </ScrollingRow>
         </>
       )}
 
@@ -95,9 +99,9 @@ export default function RelatedItems({ section, excludeSlug, destination, countr
           <h3 style={{ fontFamily: "'Playfair Display',serif", fontSize: 18, color: '#D4AF37', marginBottom: 12 }}>
             {s.label} {destination ? `in ${destination}` : country ? `for ${country}` : ''}
           </h3>
-          <div style={{ display: 'flex', gap: 16, overflowX: 'auto', paddingBottom: 8 }}>
+          <ScrollingRow containerWidth={RELATED_CONTAINER_WIDTH}>
             {sItems.map((item, i) => (
-              <a key={i} href={`${s.linkPrefix}/${item.slug || item._id || item.id}`} style={{ minWidth: 180, maxWidth: 180, textDecoration: 'none' }}>
+              <a key={i} href={`${s.linkPrefix}/${item.slug || item._id || item.id}`} className="flex-shrink-0 snap-start" style={{ width: 180, textDecoration: 'none' }}>
                 <div style={{ borderRadius: 12, overflow: 'hidden', border: '1px solid #eee', background: 'white' }}>
                   <img src={item[s.imageField] || item.image || item.displayImage || `/images_v2/hero-${s.key}-v2.jpg`} alt={item[s.nameField] || ''} style={{ width: '100%', height: 110, objectFit: 'cover' }} />
                   <div style={{ padding: 8 }}>
@@ -107,7 +111,7 @@ export default function RelatedItems({ section, excludeSlug, destination, countr
                 </div>
               </a>
             ))}
-          </div>
+          </ScrollingRow>
         </div>
       ))}
     </div>

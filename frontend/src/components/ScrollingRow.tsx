@@ -9,9 +9,10 @@ const AUTOPLAY_MS = 4000;
 interface ScrollingRowProps {
   children: React.ReactNode;
   visible?: boolean;
+  containerWidth?: number;
 }
 
-export default function ScrollingRow({ children, visible = true }: ScrollingRowProps) {
+export default function ScrollingRow({ children, visible = true, containerWidth }: ScrollingRowProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
@@ -127,7 +128,7 @@ export default function ScrollingRow({ children, visible = true }: ScrollingRowP
   if (!visible) return null;
 
   return (
-    <div className="relative group/row" onMouseEnter={() => setIsPaused(true)} onMouseLeave={() => setIsPaused(false)}>
+    <div className="relative group/row" style={containerWidth ? { maxWidth: containerWidth, margin: "0 auto" } : undefined} onMouseEnter={() => setIsPaused(true)} onMouseLeave={() => setIsPaused(false)}>
       {/* Left Arrow */}
       <button
         onClick={() => scroll('left')}

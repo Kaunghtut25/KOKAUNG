@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { useState } from 'react';
 import { Car } from '@/lib/api';
@@ -7,6 +7,7 @@ import CurrencyToggle from '@/components/CurrencyToggle';
 import DealsBanner from '@/components/DealsBanner';
 import FAQAccordion from '@/components/FAQAccordion';
 import TestimonialSlider from '@/components/TestimonialSlider';
+import ScrollingRow from '@/components/ScrollingRow';
 
 const CAR_TYPES = ['All', 'SUV', 'Sedan', 'MPV', 'Hatchback', 'Pickup', 'Luxury'];
 
@@ -41,7 +42,10 @@ export default function CarsClient({ initialCars, siteConfig }: CarsClientProps 
   const [currency, setCurrency] = useState<'MMK' | 'USD'>('MMK');
   const layout = siteConfig?.sectionLayouts?.cars || { desktop: 3, tablet: 2, mobile: 1 };
   const rowTitles = siteConfig?.sectionRows?.cars || ["Popular Cars", "More Cars", "Additional Cars"];
-  const cardsPerRow = siteConfig?.sectionLayouts?.cars?.cardsPerRow || 6;
+
+  const cardWidth = siteConfig?.cardDimensions?.cars?.width || 300;
+  const cardHeight = siteConfig?.cardDimensions?.cars?.height || 420;
+  const cardInfo = { width: cardWidth, height: cardHeight, containerWidth: 6 * (cardWidth + 16) };
 
   const [carType, setCarType] = useState('All');
   const [sort, setSort] = useState('');
@@ -53,8 +57,8 @@ export default function CarsClient({ initialCars, siteConfig }: CarsClientProps 
   });
   const pool: Car[] = [...sortedCars];
   const carRows: Car[][] = [];
-  for (let i = 0; i < pool.length; i += ITEMS_PER_ROW) {
-    carRows.push(pool.slice(i, i + ITEMS_PER_ROW));
+  for (let i = 0; i < pool.length; i += 6) {
+    carRows.push(pool.slice(i, i + 6));
   }
 
   return (
@@ -112,13 +116,13 @@ export default function CarsClient({ initialCars, siteConfig }: CarsClientProps 
                     {rowTitles[rowIdx] || `Row ${rowIdx + 1}`}
                   </h2>
                 </div>
-                <div className="grid gap-4 justify-center" style={{ gridTemplateColumns: `repeat(${cardsPerRow}, minmax(0, ${(siteConfig?.cardDimensions?.cars?.width || 300)}px))` }}>
-                  {carRows[carRowIdx].map((car, i) => (
-                    <div key={`car-${carRowIdx}-${i}`}>
-<CarCard car={car} currency={currency} cardWidth={siteConfig?.cardDimensions?.cars?.width} cardHeight={siteConfig?.cardDimensions?.cars?.height} />
-</div>
+                <ScrollingRow containerWidth={cardInfo.containerWidth}>
+                  {row.map((car, i) => (
+                    <div key={`car-${rowIdx}-${i}`} className="flex-shrink-0 snap-start" style={{ width: cardInfo.width }}>
+                      <CarCard car={car} currency={currency} cardWidth={cardInfo.width} cardHeight={cardInfo.height} />
+                    </div>
                   ))}
-                </div>
+                </ScrollingRow>
               </div>
             ))}
           </div>

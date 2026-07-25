@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { useState } from 'react';
 import { Hotel } from '@/lib/api';
@@ -7,6 +7,7 @@ import CurrencyToggle from "@/components/CurrencyToggle";
 import DealsBanner from '@/components/DealsBanner';
 import FAQAccordion from '@/components/FAQAccordion';
 import TestimonialSlider from '@/components/TestimonialSlider';
+import ScrollingRow from '@/components/ScrollingRow';
 
 
 function SkeletonCard() {
@@ -41,7 +42,10 @@ export default function HotelsClient({ initialHotels, siteConfig }: HotelsClient
   const [currency, setCurrency] = useState<'MMK' | 'USD'>('MMK');
   const layout = siteConfig?.sectionLayouts?.hotels || { desktop: 4, tablet: 2, mobile: 1 };
   const rowTitles = siteConfig?.sectionRows?.hotels || ["Featured Hotels", "More Hotels", "Additional Hotels"];
-  const cardsPerRow = siteConfig?.sectionLayouts?.hotels?.cardsPerRow || 6;
+
+  const cardWidth = siteConfig?.cardDimensions?.hotels?.width || 300;
+  const cardHeight = siteConfig?.cardDimensions?.hotels?.height || 420;
+  const cardInfo = { width: cardWidth, height: cardHeight, containerWidth: 6 * (cardWidth + 16) };
 
   const [location, setLocation] = useState('');
   const [rating, setRating] = useState('');
@@ -71,7 +75,7 @@ export default function HotelsClient({ initialHotels, siteConfig }: HotelsClient
   // Sort by row number, limit each row to 6
   const hotelRows: Hotel[][] = [...rowMap.entries()]
     .sort(([a],[b]) => a - b)
-    .map(([,items]) => items);
+    .map(([,items]) => items.slice(0, 6));
 
   return (
     <main className="min-h-screen bg-white">
@@ -146,13 +150,13 @@ export default function HotelsClient({ initialHotels, siteConfig }: HotelsClient
                     {rowTitles[rowIdx] || `Row ${rowIdx + 1}`}
                   </h2>
                 </div>
-                <div className="grid gap-4 justify-center" style={{ gridTemplateColumns: `repeat(${cardsPerRow}, minmax(0, ${(siteConfig?.cardDimensions?.hotels?.width || 300)}px))` }}>
+                <ScrollingRow containerWidth={cardInfo.containerWidth}>
                   {row.map((hotel, i) => (
-                    <div key={`hotel-row-${rowIdx}-card-${i}`}>
-<HotelCard hotel={hotel} currency={currency} cardWidth={siteConfig?.cardDimensions?.hotels?.width} cardHeight={siteConfig?.cardDimensions?.hotels?.height} />
-</div>
+                    <div key={`hotel-row-${rowIdx}-card-${i}`} className="flex-shrink-0 snap-start" style={{ width: cardInfo.width }}>
+                      <HotelCard hotel={hotel} currency={currency} cardWidth={cardInfo.width} cardHeight={cardInfo.height} />
+                    </div>
                   ))}
-                </div>
+                </ScrollingRow>
               </div>
             ))}
           </div>
