@@ -34,6 +34,7 @@ interface SiteConfig {
   ctaTitle: string; ctaDescription: string; ctaButtonLabel: string; ctaButtonHref: string;
   contact: ContactInfo; socialLinks: SocialLink[]; footerSections: FooterSection[];
   sectionLayouts?: Record<string, SectionLayout>;
+  relatedItems?: { maxItems: number; crossSections: Record<string, { enabled: boolean; maxItems: number }> };
   sectionRows?: Record<string, string[]>;
   heroImages?: Record<string, string>;
 }
@@ -127,7 +128,7 @@ const defaultCfg: SiteConfig = {
   },
 };
 
-type Tab = "layout" | "rows" | "faq" | "terms" | "privacy" | "hero" | "heroImages" | "services" | "nav" | "stats" | "why" | "destinations" | "cta" | "contact" | "social" | "footer" | "meta" | "testimonials" | "partners" | "heroText" | "cardDims" | "moduleToggles";
+type Tab = "layout" | "rows" | "faq" | "terms" | "privacy" | "hero" | "heroImages" | "services" | "nav" | "stats" | "why" | "destinations" | "cta" | "contact" | "social" | "footer" | "meta" | "testimonials" | "partners" | "heroText" | "cardDims" | "moduleToggles" | "relatedItems";
 
 export default function SiteManagerPage() {
   const [cfg, setCfg] = useState(defaultCfg);
@@ -267,7 +268,8 @@ const tabs: { key: Tab; label: string }[] = [
     { key: "heroImages", label: "Hero Images" },
     { key: "heroText", label: "Hero Text" },
     { key: "cardDims", label: "Card & Hero Sizes" },
-    { key: "moduleToggles", label: "Module Toggles" }, { key: "services", label: "Service Icons" },
+    { key: "moduleToggles", label: "Module Toggles" },
+    { key: "relatedItems", label: "You May Also Like" }, { key: "services", label: "Service Icons" },
     { key: "nav", label: "Nav Links" }, { key: "stats", label: "Stats Cards" },
     { key: "why", label: "Why Choose Us" }, { key: "destinations", label: "Destinations" },
     { key: "cta", label: "CTA Section" }, { key: "contact", label: "Contact Info" },
@@ -1199,7 +1201,93 @@ const tabs: { key: Tab; label: string }[] = [
             </div>
           )}
 
+          {tab === "relatedItems" && (
+            <div className="space-y-6">
+              <h2 className="text-lg font-bold text-white">You May Also Like — Related Items Controls</h2>
+              <p className="text-sm text-white/40 mb-4">Control how many related items appear on detail pages and which cross-sections are shown.</p>
+              
+              <div className="border border-white/10 bg-white/5 text-white rounded-lg p-4 mb-4">
+                <h3 className="font-medium text-white text-sm mb-3">Same-Section Items</h3>
+                <p className="text-xs text-white/40 mb-2">How many items from the same section to show under "You May Also Like" on detail pages.</p>
+                <div className="flex items-center gap-3">
+                  <span className="text-white/70 text-sm">Max items:</span>
+                  <select
+                    value={cfg.relatedItems?.maxItems ?? 6}
+                    onChange={e => setCfg(p => ({ ...p, relatedItems: { ...(p.relatedItems || { maxItems: 6, crossSections: {} }), maxItems: parseInt(e.target.value) } }))}
+                    className="bg-white/10 border border-white/20 text-white rounded px-2 py-1 text-sm"
+                  >
+                    {[2,3,4,5,6,7,8].map(n => <option key={n} value={n}>{n} items</option>)}
+                  </select>
+                </div>
+              </div>
+
+              <h3 className="font-semibold text-[#D4AF37] mb-3">Cross-Section Items</h3>
+              <p className="text-xs text-white/40 mb-4">Toggle and configure cross-section "Explore in..." recommendations that appear after "You May Also Like".</p>
+              {[
+                { key: "tours", label: "Tours" },
+                { key: "hotels", label: "Hotels" },
+                { key: "cars", label: "Cars" },
+                { key: "visas", label: "Visas" },
+                { key: "cruises", label: "Cruises" },
+                { key: "insurance", label: "Insurance" },
+                { key: "mingalar", label: "Sky Lounge" },
+              ].map(({ key, label }) => {
+                const cs = cfg.relatedItems?.crossSections?.[key] ?? { enabled: true, maxItems: 4 };
+                return (
+                  <div key={key} className="border border-white/10 bg-white/5 text-white rounded-lg p-4 mb-3">
+                    <div className="flex items-center justify-between mb-3">
+                      <h4 className="font-medium text-white text-sm">{label}</h4>
+                      <button
+                        onClick={() => setCfg(p => ({
+                          ...p,
+                          relatedItems: {
+                            ...(p.relatedItems || { maxItems: 6, crossSections: {} }),
+                            crossSections: {
+                              ...(p.relatedItems?.crossSections || {}),
+                              [key]: { ...cs, enabled: !cs.enabled }
+                            }
+                          }
+                        }))}
+                        className={"relative inline-flex h-7 w-12 items-center rounded-full transition-colors " + (cs.enabled ? "bg-[#27AE60]" : "bg-white/20")}
+                        style={{ flexShrink: 0 }}
+                      >
+                        <span className={"inline-block h-5 w-5 transform rounded-full bg-white shadow transition-transform " + (cs.enabled ? "translate-x-6" : "translate-x-1")} />
+                      </button>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className={"text-xs px-2 py-0.5 rounded-full font-medium " + (cs.enabled ? "bg-green-500/20 text-green-400" : "bg-red-500/20 text-red-400")}>
+                        {cs.enabled ? "SHOWN" : "HIDDEN"}
+                      </span>
+                      {cs.enabled && (
+                        <div className="flex items-center gap-2">
+                          <span className="text-white/50 text-xs">Max items:</span>
+                          <select
+                            value={cs.maxItems}
+                            onChange={e => setCfg(p => ({
+                              ...p,
+                              relatedItems: {
+                                ...(p.relatedItems || { maxItems: 6, crossSections: {} }),
+                                crossSections: {
+                                  ...(p.relatedItems?.crossSections || {}),
+                                  [key]: { ...cs, maxItems: parseInt(e.target.value) }
+                                }
+                              }
+                            }))}
+                            className="bg-white/10 border border-white/20 text-white rounded px-2 py-1 text-xs"
+                          >
+                            {[2,3,4,5,6,7,8].map(n => <option key={n} value={n}>{n}</option>)}
+                          </select>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+
           {tab === "detailTabs" && (
+
             <div className="space-y-6">
               <h2 className="text-lg font-bold text-white">Tour Detail Page — Tab Controls</h2>
               <p className="text-sm text-white/40">Toggle which tabs appear on the Tour detail page and set their order. Use the arrows to reorder.</p>

@@ -233,6 +233,19 @@ const defaultConfig = {
   ],
 
   
+  relatedItems: {
+    maxItems: 6,
+    crossSections: {
+      tours: { enabled: true, maxItems: 4 },
+      hotels: { enabled: true, maxItems: 4 },
+      cars: { enabled: true, maxItems: 4 },
+      visas: { enabled: true, maxItems: 4 },
+      cruises: { enabled: true, maxItems: 4 },
+      insurance: { enabled: true, maxItems: 4 },
+      mingalar: { enabled: true, maxItems: 4 },
+    }
+  },
+
   // Module Toggles — admin can turn entire sections on/off
   moduleToggles: {
     tours: true,

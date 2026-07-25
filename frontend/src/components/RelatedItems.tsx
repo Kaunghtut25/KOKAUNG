@@ -1,5 +1,6 @@
-﻿'use client';
+'use client';
 import { useState, useEffect } from 'react';
+import { getAll } from '@/lib/persistentStore';
 import ScrollingRow from './ScrollingRow';
 
 interface RelatedSection {
@@ -40,25 +41,49 @@ export default function RelatedItems({ section, excludeSlug, destination, countr
 
   // Same-section
   useEffect(() => {
-    fetch(`/api/${section}`).then(r => r.json()).then(data => {
-      const arr = Array.isArray(data) ? data : (data.items || data.data || []);
-      const filtered = arr.filter((x: any) => x?.slug !== excludeSlug).slice(0, 6);
-      setItems(filtered);
-    }).catch(() => setItems([]));
+    const fetchSame = async () => {
+      try {
+        // Read site config for maxItems
+        let maxItems = 6;
+        try {
+          const cfgs = await getAll("site-config" as any);
+          const cfg = cfgs?.[0] || {};
+          maxItems = cfg.relatedItems?.maxItems ?? 6;
+        } catch {}
+
+        const r = await fetch(`/api/${section}`);
+        const data = await r.json();
+        const arr = Array.isArray(data) ? data : (data.items || data.data || []);
+        const filtered = arr.filter((x: any) => x?.slug !== excludeSlug).slice(0, maxItems);
+        setItems(filtered);
+      } catch { setItems([]); }
+    };
+    fetchSame();
   }, [section, excludeSlug]);
 
   // Cross-section
   useEffect(() => {
     if (!destination && !country) return;
     const fetchCross = async () => {
+      // Read site config for cross-section settings
+      let crossConfig: Record<string, { enabled: boolean; maxItems: number }> = {};
+      try {
+        const cfgs = await getAll("site-config" as any);
+        const cfg = cfgs?.[0] || {};
+        crossConfig = cfg.relatedItems?.crossSections || {};
+      } catch {}
+
       const results: {section: RelatedSection; items: any[]}[] = [];
       for (const s of CROSS_SECTIONS) {
         if (s.key === section) continue;
+        const sc = crossConfig[s.key] || { enabled: true, maxItems: 4 };
+        if (sc.enabled === false) continue;
+        const sliceCount = sc.maxItems || 4;
         try {
           const res = await fetch(s.apiPath);
           const data = await res.json();
           const arr = Array.isArray(data) ? data : (data.items || data.data || []);
-          const matched = arr.filter((x: any) => matchesDestination(x, s.matchField, destination || '', country || '')).slice(0, 4);
+          const matched = arr.filter((x: any) => matchesDestination(x, s.matchField, destination || '', country || '')).slice(0, sliceCount);
           if (matched.length > 0) {
             results.push({ section: s, items: matched });
           }
