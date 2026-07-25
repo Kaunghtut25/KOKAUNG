@@ -3,6 +3,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { getAll } from '@/lib/persistentStore';
 import SocialShare from '@/components/SocialShare';
+import BackButton from '@/components/BackButton';
 import RelatedItems from '@/components/RelatedItems';
 export const dynamic = 'force-dynamic';
 
@@ -42,7 +43,7 @@ export default async function CruiseDetailPage({ params }: PageProps) {
 
   return (
     <main className="min-h-screen bg-white">
-      {/* Back Button */}
+      <BackButton />
 
       {/* Hero Section */}
       <section className="relative w-full h-[50vh] md:h-[60vh] overflow-hidden">
