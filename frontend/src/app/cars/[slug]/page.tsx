@@ -114,7 +114,7 @@ export default async function CarDetailPage({ params }: { params: { slug: string
     return (
       <main className="min-h-screen bg-white flex items-center justify-center">
       {/* Back Button */}
-      <BackButton />
+      <BackButton bookNowUrl={`/book-now?type=car&name=${encodeURIComponent(car.name)}&id=${encodeURIComponent(car.id || car._id || slug)}&priceMMK=${car.priceMMK || 0}&priceUSD=${car.priceUSD || 0}&destination=${encodeURIComponent(car.location || "")}`} />
 
         <div className="text-center space-y-4 px-4">
           <div className="w-20 h-20 mx-auto rounded-full bg-red-500/10 flex items-center justify-center">

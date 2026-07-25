@@ -135,7 +135,7 @@ export default async function DestinationPage({ params }: { params: { city: stri
 
   return (
     <main className="min-h-screen bg-white">
-      <BackButton />
+      <BackButton bookNowUrl={`/book-now?type=destination&name=${encodeURIComponent(dest.city)}&destination=${encodeURIComponent(dest.city + ", " + dest.country)}`} />
       <div className="relative h-64 md:h-96 overflow-hidden">
         <Link href="/#popular-destinations" className="absolute top-4 left-4 z-20 flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur-md border border-white/20 rounded-full text-white hover:bg-white/20 transition-all text-sm">
           ← Back to Destinations
