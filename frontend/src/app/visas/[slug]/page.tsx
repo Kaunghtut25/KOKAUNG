@@ -1,12 +1,14 @@
-import { notFound } from 'next/navigation';
+﻿import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
+import type { Metadata } from 'next';
 import { getAll } from '@/lib/persistentStore';
 import SocialShare from '@/components/SocialShare';
+import BackButton from '@/components/BackButton';
 import RelatedItems from '@/components/RelatedItems';
 export const dynamic = 'force-dynamic';
 
-interface PageProps { params: { slug: string } }
+interface PageProps { params: Promise<{ slug: string }> }
 
 const FALLBACK_VISAS = [
   { _id: 'v1', country: 'Thailand', processingTime: '3-5 Days', visaFeeMMK: 85000, visaFeeUSD: 40, requirements: ['Passport 6m','2 Photos'] },
@@ -34,10 +36,36 @@ const FALLBACK_VISAS = [
   { _id: 'v23', country: 'UAE', processingTime: '3-5 Days', visaFeeMMK: 140000, visaFeeUSD: 67, requirements: ['Passport 6m','Bank Statement'] },
 ];
 
-export default async function VisaDetailPage({ params }: PageProps) {
+async function getVisaBySlug(slug: string) {
   let visas = await getAll('visas') as any[];
   if (visas.length === 0) visas = FALLBACK_VISAS;
-  const visa = visas.find((v: any) => ((v.country || '').toLowerCase().replace(/[^a-z0-9]+/g, '-')) === params.slug || v.id === params.slug || v._id === params.slug);
+  const visa = visas.find((v: any) => ((v.country || '').toLowerCase().replace(/[^a-z0-9]+/g, '-')) === slug || v.id === slug || v._id === slug);
+  return visa || null;
+}
+
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const { slug } = await params;
+  const visa = await getVisaBySlug(slug);
+  if (!visa) return { title: 'Visa Not Found' };
+  const country = visa.country || visa.title || '';
+  const title = 'Visa to ' + country + ' - A9 Global Travel';
+  const description = 'Visa processing service for ' + country + '. Fast and reliable visa assistance with A9 Global Travel.';
+  const imageUrl = (visa.images && Array.isArray(visa.images) && visa.images[0]) || '/images_v2/visa1-v2.jpg';
+  return {
+    title,
+    description: description.substring(0, 160),
+    openGraph: {
+      title,
+      description: description.substring(0, 160),
+      images: [{ url: imageUrl, width: 1200, height: 630 }],
+      type: 'website',
+    },
+  };
+}
+
+export default async function VisaDetailPage({ params }: PageProps) {
+  const { slug } = await params;
+  const visa = await getVisaBySlug(slug);
   if (!visa) notFound();
 
   const country = visa.country || visa.title || '';
@@ -45,73 +73,186 @@ export default async function VisaDetailPage({ params }: PageProps) {
   const feeMMK = visa.visaFeeMMK || visa.priceMMK || 0;
   const feeUSD = visa.visaFeeUSD || visa.priceUSD || 0;
   const processing = visa.processingTime || '3-5 Business Days';
-  const requirements = visa.requirements || [];
+  const requirements: string[] = Array.isArray(visa.requirements) ? visa.requirements : (typeof visa.requirements === 'string' ? visa.requirements.split(',').map((s: string) => s.trim()).filter(Boolean) : []);
+
+  const bookNowUrl = '/book-now?type=visa&country=' + encodeURIComponent(country) + '&id=' + encodeURIComponent(visa.id || visa._id || slug) + '&feeMMK=' + feeMMK + '&feeUSD=' + feeUSD + '&processingTime=' + encodeURIComponent(processing);
 
   return (
-    <main style={{ minHeight: '100vh', background: '#f8f9fa' }}>
-      {/* Back link top bar */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 pt-24 pb-2">
-        <Link href="/visas" className="inline-flex items-center gap-2 text-gray-400 hover:text-[#D4AF37] transition-colors text-sm">
-          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M7 16l-4-4m0 0l4-4m-4 4h18" />
-            </svg>
-          Back to All Visas
+    <main className="min-h-screen bg-white">
+      {/* Back Button */}
+      <BackButton />
+
+      {/* Hero Section */}
+      <section className="relative w-full h-[50vh] md:h-[60vh] overflow-hidden">
+        <Image src={displayImage} alt={country} width={1200} height={630} className="w-full h-full object-cover" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#0A1628] via-[#0A1628]/40 to-transparent" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(212,175,55,0.06),transparent_70%)]" />
+        <Link href="/visas" className="absolute top-6 left-4 md:top-8 md:left-8 z-20 flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur-md border border-white/20 rounded-full text-white hover:bg-white/20 transition-all text-sm">
+          ← Back to Visas
         </Link>
-      </div>
-<section style={{ position: 'relative', height: 400, overflow: 'hidden' }}>
-        <Image src={displayImage} alt={country} width={1200} height={630} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(10,22,40,0.9), rgba(10,22,40,0.3))' }} />
-        <div style={{ position: 'absolute', bottom: 40, left: 0, right: 0, textAlign: 'center', padding: '0 20px' }}>
-          <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: 42, color: 'white', marginBottom: 8 }}>Visa to {country}</h1>
-          <p style={{ color: '#D4AF37', fontSize: 18 }}>Visa Processing Service</p>
+        <div className="absolute bottom-0 left-0 right-0 p-6 md:p-10 z-10">
+          <div className="max-w-7xl mx-auto">
+            <div className="flex flex-wrap items-center gap-2 mb-2">
+              <span className="px-3 py-1 rounded-full bg-[#D4AF37]/20 text-[#D4AF37] text-xs font-semibold border border-[#D4AF37]/30 backdrop-blur-sm">
+                📍 {country}
+              </span>
+              <span className="px-3 py-1 rounded-full bg-[#D4AF37]/10 text-white/80 text-xs font-semibold border border-[#D4AF37]/30 backdrop-blur-sm">
+                ⏱ {processing}
+              </span>
+            </div>
+            <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold text-white mb-3 drop-shadow-lg" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
+              Visa to {country}
+            </h1>
+            <p className="text-white/60 text-base md:text-lg">Professional Visa Processing Service</p>
+          </div>
         </div>
       </section>
 
-      
-        <SocialShare url={typeof window !== "undefined" ? window.location.href : ""} title={"A9 Global Travel - Visas"} />
-<section style={{ maxWidth: 800, margin: '0 auto', padding: '40px 20px' }}>
-        {/* Price */}
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
-          <div>
-            <div style={{ color: '#0A1628', fontSize: 24, fontWeight: 'bold' }}>Ks {feeMMK.toLocaleString()}</div>
-            <div style={{ color: '#D4AF37', fontSize: 16 }}>${feeUSD}</div>
+      {/* Breadcrumbs */}
+      <nav className="max-w-7xl mx-auto px-4 py-4 text-sm">
+        <Link href="/" className="text-gray-500 hover:text-[#D4AF37]">Home</Link>
+        <span className="mx-2 text-gray-300">/</span>
+        <Link href="/visas" className="text-gray-500 hover:text-[#D4AF37]">Visas</Link>
+        <span className="mx-2 text-gray-300">/</span>
+        <span className="text-[#0A1628] font-medium">{country}</span>
+      </nav>
+
+      <SocialShare url={typeof window !== "undefined" ? window.location.href : ""} title={"A9 Global Travel - Visas"} />
+
+      {/* Content */}
+      <section className="max-w-7xl mx-auto px-4 py-10 md:py-16">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
+          {/* Main Content */}
+          <div className="lg:col-span-2 space-y-10">
+            {/* Quick Stats */}
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+              <div className="p-5 rounded-2xl bg-gray-50 border border-[#D4AF37]/10 text-center hover:border-[#D4AF37]/30 transition-colors">
+                <svg className="w-8 h-8 mx-auto text-[#D4AF37] mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <p className="text-[#D4AF37] text-2xl font-bold">Ks {feeMMK.toLocaleString()}</p>
+                <p className="text-gray-400 text-xs uppercase tracking-wider mt-1">Visa Fee</p>
+              </div>
+              <div className="p-5 rounded-2xl bg-gray-50 border border-[#D4AF37]/10 text-center hover:border-[#D4AF37]/30 transition-colors">
+                <svg className="w-8 h-8 mx-auto text-[#D4AF37] mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <p className="text-[#D4AF37] text-2xl font-bold">{processing}</p>
+                <p className="text-gray-400 text-xs uppercase tracking-wider mt-1">Processing</p>
+              </div>
+              <div className="p-5 rounded-2xl bg-gray-50 border border-[#D4AF37]/10 text-center hover:border-[#D4AF37]/30 transition-colors">
+                <svg className="w-8 h-8 mx-auto text-[#D4AF37] mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <p className="text-[#D4AF37] text-2xl font-bold">{country}</p>
+                <p className="text-gray-400 text-xs uppercase tracking-wider mt-1">Country</p>
+              </div>
+            </div>
+
+            {/* Description */}
+            {visa.description && (
+              <div>
+                <h2 className="text-2xl font-bold text-[#0A1628] mb-4" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
+                  About This Visa
+                </h2>
+                <p className="text-gray-600 leading-relaxed text-base">
+                  {visa.description}
+                </p>
+              </div>
+            )}
+
+            {/* Processing Time */}
+            <div className="bg-[#0A1628] rounded-2xl p-6 md:p-8">
+              <h2 className="text-2xl font-bold text-white mb-2" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
+                Processing Time
+              </h2>
+              <p className="text-white/60 text-sm mb-4">
+                Estimated processing: <span className="text-[#D4AF37] font-semibold">{processing}</span>
+              </p>
+              <p className="text-white/40 text-xs">
+                Processing time may vary depending on embassy workload and document completeness.
+              </p>
+            </div>
+
+            {/* Requirements */}
+            {requirements.length > 0 && (
+              <div>
+                <h2 className="text-2xl font-bold text-[#0A1628] mb-4" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
+                  Required Documents
+                </h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  {requirements.map((req: string, idx: number) => (
+                    <div key={idx} className="flex items-center gap-3 px-4 py-3 rounded-xl bg-[#D4AF37]/5 border border-[#D4AF37]/15 text-[#0A1628] text-sm font-medium hover:bg-[#D4AF37]/10 transition-colors">
+                      <svg className="w-4 h-4 text-[#D4AF37] flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                      </svg>
+                      {req}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
-          <span style={{ padding: '8px 16px', borderRadius: 20, background: 'rgba(212,175,55,0.15)', color: '#B8960F', fontSize: 14, fontWeight: 600 }}>
-            ⏱ {processing}
-          </span>
-        </div>
 
-        {/* Processing Time */}
-        <div style={{ background: 'white', borderRadius: 16, padding: 24, marginBottom: 20, boxShadow: '0 1px 3px rgba(0,0,0,0.1)' }}>
-          <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 22, color: '#0A1628', marginBottom: 12 }}>Processing Time</h2>
-          <p style={{ color: '#555', fontSize: 18 }}>Estimated processing: <strong>{processing}</strong></p>
-          <p style={{ color: '#888', marginTop: 8, fontSize: 14 }}>Processing time may vary depending on embassy workload and document completeness.</p>
-        </div>
+          {/* Sidebar — Booking Card */}
+          <div className="lg:col-span-1">
+            <div className="sticky top-28 space-y-6">
+              <div className="rounded-2xl border border-[#D4AF37]/20 bg-gray-50 p-6 space-y-5">
+                {/* Price Header */}
+                <div className="bg-gradient-to-r from-[#0A1628] to-[#162D50] -mx-6 -mt-6 p-6 rounded-t-2xl text-white">
+                  <p className="text-white/60 text-xs uppercase tracking-wider mb-1">Visa Fee</p>
+                  <div className="flex items-baseline gap-1">
+                    <span className="text-3xl font-bold" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
+                      Ks {feeMMK.toLocaleString()}
+                    </span>
+                  </div>
+                  <p className="text-white/50 text-sm mt-1">
+                    ≈ ${feeUSD.toLocaleString()} USD
+                  </p>
+                </div>
 
-        {/* Requirements */}
-        <div style={{ background: 'white', borderRadius: 16, padding: 24, marginBottom: 20, boxShadow: '0 1px 3px rgba(0,0,0,0.1)' }}>
-          <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 22, color: '#0A1628', marginBottom: 12 }}>Required Documents</h2>
-          <ul style={{ paddingLeft: 20 }}>
-            {(Array.isArray(requirements) ? requirements : [requirements]).map((req: string, i: number) => (
-              <li key={i} style={{ color: '#555', padding: '6px 0', borderBottom: '1px solid #eee' }}>📋 {req}</li>
-            ))}
-          </ul>
-        </div>
+                {/* Info Rows */}
+                <div className="space-y-2.5 text-sm">
+                  <div className="flex justify-between py-1 border-b border-gray-100">
+                    <span className="text-gray-400">Country</span>
+                    <span className="text-[#0A1628] font-medium">{country}</span>
+                  </div>
+                  <div className="flex justify-between py-1 border-b border-gray-100">
+                    <span className="text-gray-400">Processing</span>
+                    <span className="text-[#0A1628] font-medium">{processing}</span>
+                  </div>
+                  <div className="flex justify-between py-1 border-b border-gray-100">
+                    <span className="text-gray-400">Fee (USD)</span>
+                    <span className="text-[#0A1628] font-medium">${feeUSD}</span>
+                  </div>
+                  <div className="flex justify-between py-1 border-b border-gray-100">
+                    <span className="text-gray-400">Documents</span>
+                    <span className="text-[#0A1628] font-medium">{requirements.length} required</span>
+                  </div>
+                </div>
 
-        {/* Description if available */}
-        {visa.description && (
-          <div style={{ background: 'white', borderRadius: 16, padding: 24, marginBottom: 20, boxShadow: '0 1px 3px rgba(0,0,0,0.1)' }}>
-            <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 22, color: '#0A1628', marginBottom: 12 }}>About This Visa</h2>
-            <p style={{ color: '#555', lineHeight: 1.8 }}>{visa.description}</p>
+                {/* Book Now Button */}
+                <Link
+                  href={bookNowUrl}
+                  className="block w-full py-3.5 rounded-xl text-center font-bold text-base bg-gradient-to-r from-[#D4AF37] to-[#F5A623] text-[#0A1628] shadow-lg shadow-[#D4AF37]/30 hover:shadow-xl hover:shadow-[#D4AF37]/40 hover:scale-[1.02] transition-all duration-300"
+                >
+                  Book Now
+                </Link>
+                <p className="text-center text-gray-400 text-xs">No payment required to inquire</p>
+              </div>
+
+              <Link
+                href="/visas"
+                className="block w-full py-3 rounded-xl text-center font-semibold text-sm border-2 border-[#D4AF37] text-[#D4AF37] hover:bg-[#D4AF37] hover:text-[#0A1628] transition-all duration-300"
+              >
+                ← Back to All Visas
+              </Link>
+            </div>
           </div>
-        )}
-
-        <Link href={`/book-now?type=visa&country=${encodeURIComponent(country)}&id=${encodeURIComponent(visa.id||visa._id||params.slug)}&feeMMK=${feeMMK}&feeUSD=${feeUSD}&processingTime=${encodeURIComponent(processing)}`}
-          style={{ display: 'block', textAlign: 'center', padding: '16px 0', borderRadius: 14, background: 'linear-gradient(to right, #D4AF37, #F5A623)', color: '#0A1628', fontWeight: 'bold', fontSize: 16, textDecoration: 'none' }}>
-          Book Now
-        </Link>
+        </div>
       </section>
-      <RelatedItems section="visas" excludeSlug={params.slug} destination={typeof country === "string" ? country : ""} />
-</main>
+
+      <RelatedItems section="visas" excludeSlug={slug} destination={typeof country === "string" ? country : ""} />
+    </main>
   );
 }
