@@ -342,6 +342,14 @@ export default function DestinationPage({ params }: { params: { city: string } }
           </div>
         </div>
 
+        {/* Related Items */}
+        <div className="pt-8 border-t border-[#D4AF37]/10">
+          <h2 className="text-2xl font-bold text-[#0A1628] mb-6" style={{"fontFamily": "'Playfair Display', Georgia, serif"}}>
+            Discover {dest.city}
+          </h2>
+          <RelatedItems section="destinations" excludeSlug={params.city} destination={(dest.city || "") + ", " + (dest.country || "")} />
+        </div>
+
         {/* CTA */}
         <section className="text-center py-12">
           <h2 className="text-2xl font-bold text-[#0A1628] mb-4">
@@ -354,7 +362,6 @@ export default function DestinationPage({ params }: { params: { city: string } }
             Book Your Trip to {dest.city}
           </Link>
         </section>
-      <RelatedItems section="destinations" excludeSlug={params.city} destination={(dest.city || "") + ", " + (dest.country || "")} />
       </div>
     </main>
   );
