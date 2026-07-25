@@ -655,6 +655,9 @@ export default function TourDetailPage() {
 
       {/* Hero image */}
       <section className="relative w-full h-[60vh] overflow-hidden">
+        <Link href="/tours" className="absolute top-24 left-4 z-20 flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur-md border border-white/20 rounded-full text-white hover:bg-white/20 transition-all text-sm">
+          ← Back to Tours
+        </Link>
         <Image
           src={displayHero}
           alt={tour.title}
