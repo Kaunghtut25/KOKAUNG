@@ -6,12 +6,7 @@ async function fetchSiteConfig() {
   catch { return null; }
 }
 
-export default async function HomePage({ searchParams }: { searchParams?: Promise<{ mode?: string }> }) {
+export default async function HomePage() {
   const siteConfig = await fetchSiteConfig();
-  let initialMode: 'flights' | 'buses' = 'flights';
-  if (searchParams) {
-    const params = await searchParams;
-    if (params.mode === 'buses') initialMode = 'buses';
-  }
-  return <HomePageClient siteConfig={siteConfig} initialMode={initialMode} />;
+  return <HomePageClient siteConfig={siteConfig} />;
 }

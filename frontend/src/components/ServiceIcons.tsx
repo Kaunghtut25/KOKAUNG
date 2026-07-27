@@ -1,8 +1,8 @@
 'use client';
 
-import Link from 'next/link';
+import { useSearchMode } from '@/providers/SearchModeContext';
 import { usePathname } from 'next/navigation';
-import { useState, useEffect } from 'react';
+import Link from 'next/link';
 
 const defaultServices = [
   { label: 'Flights', icon: '✈️', href: '/' },
@@ -18,78 +18,68 @@ const defaultServices = [
 
 export default function ServiceIcons() {
   const pathname = usePathname();
-  const [services, setServices] = useState(defaultServices);
+  const { mode, setMode } = useSearchMode();
 
-  useEffect(() => {
-    fetch('/api/admin/site-config').then(r => r.json()).then(d => {
-      if (d?.serviceIcons?.length) {
-        const filtered = d.serviceIcons.filter((s: any) => {
-          if (s.enabled === false) return false;
-          const keyMap = {
-            Tours: "tours", Hotels: "hotels", Cars: "cars",
-            Visas: "visas", Insurance: "insurance",
-            Cruises: "cruises", "Sky Lounge": "skyLounge"
-          } as Record<string,string>;
-          const k = keyMap[s.label] || "";
-          return k ? (d.moduleToggles || {})[k] !== false : true;
-        });
-        // Always ensure 🚌 Buses stays after ✈️ Flights
-        if (!filtered.some((s: any) => s.label === 'Buses')) {
-          const flightsIdx = filtered.findIndex((s: any) => s.label === 'Flights');
-          if (flightsIdx >= 0) {
-            filtered.splice(flightsIdx + 1, 0, { label: 'Buses', icon: '🚌', href: '/?mode=buses' });
-          }
-        }
-        if (!filtered.some((s: any) => s.label === 'Flights')) {
-          filtered.unshift({ label: 'Flights', icon: '✈️', href: '/' });
-        }
-        setServices(filtered);
-      }
-    }).catch(() => {});
-  }, []);
-
-  // Fixed bar always visible under navbar, plus a spacer to prevent content jump
-  const iconBar = (
-    <div className="w-full bg-white/80 backdrop-blur-md border-b border-gray-200 py-2 px-2 shadow-sm">
-      <div className="max-w-6xl mx-auto flex flex-wrap justify-center gap-1 md:gap-2">
-        {services.map((item) => {
-          const isActive = item.href !== '/' && (pathname === item.href || pathname.startsWith(item.href + '/'));
-          return (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={
-                'flex items-center gap-1.5 py-1.5 px-3 rounded-lg border transition-all duration-200 group cursor-pointer ' +
-                (isActive
-                  ? 'bg-[#D4AF37] border-[#D4AF37]'
-                  : 'border-transparent hover:bg-[#D4AF37]/20 hover:border-[#D4AF37]/40')
-              }
-            >
-              <span className="text-sm group-hover:scale-110 transition-transform">
-                {item.icon}
-              </span>
-              <span
-                className={
-                  'text-xs font-semibold transition-colors hidden sm:inline ' +
-                  (isActive ? 'text-white' : 'text-gray-700 group-hover:text-[#D4AF37]')
-                }
-              >
-                {item.label}
-              </span>
-            </Link>
-          );
-        })}
-      </div>
-    </div>
-  );
+  const isFlightsActive = mode === 'flights';
+  const isBusesActive = mode === 'buses';
 
   return (
     <>
-      {/* Fixed bar — always visible at top */}
       <div className="fixed top-20 left-0 right-0 z-50">
-        {iconBar}
+        <div className="w-full bg-white/80 backdrop-blur-md border-b border-gray-200 py-2 px-2 shadow-sm">
+          <div className="max-w-6xl mx-auto flex flex-wrap justify-center gap-1 md:gap-2">
+            {defaultServices.map((item) => {
+              // Flights / Buses are toggle buttons, others are Links
+              const isToggle = item.label === 'Flights' || item.label === 'Buses';
+              let isActive = false;
+              if (isToggle) {
+                isActive = (item.label === 'Flights' && isFlightsActive) || (item.label === 'Buses' && isBusesActive);
+              } else {
+                isActive = item.href !== '/' && (pathname === item.href || pathname.startsWith(item.href + '/'));
+              }
+
+              const btnClass =
+                'flex items-center gap-1.5 py-1.5 px-3 rounded-lg border transition-all duration-200 group cursor-pointer ' +
+                (isActive
+                  ? 'bg-[#D4AF37] border-[#D4AF37]'
+                  : 'border-transparent hover:bg-[#D4AF37]/20 hover:border-[#D4AF37]/40');
+
+              if (isToggle) {
+                return (
+                  <button
+                    key={item.label}
+                    onClick={() => {
+                      if (item.label === 'Flights') setMode('flights');
+                      else setMode('buses');
+                    }}
+                    type="button"
+                    aria-pressed={isActive}
+                    className={btnClass}
+                  >
+                    <span className="text-sm group-hover:scale-110 transition-transform">
+                      {item.icon}
+                    </span>
+                    <span className={'text-xs font-semibold transition-colors hidden sm:inline ' + (isActive ? 'text-white' : 'text-gray-700 group-hover:text-[#D4AF37]')}>
+                      {item.label}
+                    </span>
+                  </button>
+                );
+              }
+
+              return (
+                <Link key={item.href} href={item.href} className={btnClass}>
+                  <span className="text-sm group-hover:scale-110 transition-transform">
+                    {item.icon}
+                  </span>
+                  <span className={'text-xs font-semibold transition-colors hidden sm:inline ' + (isActive ? 'text-white' : 'text-gray-700 group-hover:text-[#D4AF37]')}>
+                    {item.label}
+                  </span>
+                </Link>
+              );
+            })}
+          </div>
+        </div>
       </div>
-      {/* Spacer — pushes content down so nothing is hidden behind the fixed bar */}
       <div className="h-[3.5rem]" aria-hidden="true" />
     </>
   );

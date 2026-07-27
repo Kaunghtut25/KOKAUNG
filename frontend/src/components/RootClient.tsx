@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { SearchModeProvider } from "@/providers/SearchModeContext";
 import { usePathname } from "next/navigation";
 import Navbar from "@/components/Navbar";
 import ServiceIcons from "@/components/ServiceIcons";
@@ -39,7 +40,7 @@ export default function RootClient({ children }: { children: React.ReactNode }) 
   }
 
   return (
-    <>
+    <SearchModeProvider>
       <Navbar />
       <ServiceIcons />
       <main>{children}</main>
@@ -63,6 +64,6 @@ export default function RootClient({ children }: { children: React.ReactNode }) 
           },
         }}
       />
-    </>
+    </SearchModeProvider>
   );
 }

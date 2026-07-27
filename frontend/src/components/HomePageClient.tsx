@@ -1,11 +1,13 @@
 // A9 v3.0 — Fully Dynamic Homepage from Admin Site Manager
 "use client";
 import Link from "next/link";
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useSearchMode } from '@/providers/SearchModeContext';
+import { useState, useEffect, useCallback, useRef, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import PopularDestinations from "@/components/PopularDestinations"
 import { Airport, airports } from '@/data/airports';
+import { getBusCities } from '@/data/busCities';
 import Image from 'next/image';
 import TrustBadges from '@/components/TrustBadges';
 import DealsBanner from '@/components/DealsBanner';
@@ -140,7 +142,7 @@ function PassengerSelector({ passengers, onChange }: { passengers: PassengerCoun
   );
 }
 
-export default function HomePageClient({ siteConfig: ssrConfig, initialMode = 'flights' }: { siteConfig?: any; initialMode?: 'flights' | 'buses' }) {
+export default function HomePageClient({ siteConfig: ssrConfig }: { siteConfig?: any }) {
   const router = useRouter();
   const [siteConfig, setSiteConfig] = useState<any>(ssrConfig || null);
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -156,21 +158,13 @@ export default function HomePageClient({ siteConfig: ssrConfig, initialMode = 'f
   const ctaBg = ssrConfig?.heroImages?.bookNow || ssrConfig?.heroImages?.flights || '/images_v2/cta-bg-v2.jpg';
   const [ctaBgImage, setCtaBgImage] = useState(ctaBg);
   const [searchQuery, setSearchQuery] = useState("");
-  const [searchMode, setSearchMode] = useState<'flights' | 'buses'>(initialMode);
-  // Log search mode switches to localStorage
-  useEffect(() => {
-    try {
-      const events = JSON.parse(localStorage.getItem('a9_search_mode_events') || '[]');
-      events.push({ mode: searchMode, timestamp: new Date().toISOString() });
-      if (events.length > 100) events.splice(0, events.length - 100);
-      localStorage.setItem('a9_search_mode_events', JSON.stringify(events));
-    } catch(e) {}
-  }, [searchMode]);
+  const { mode: searchMode, setMode: setSearchMode } = useSearchMode();
   const [busFrom, setBusFrom] = useState("");
   const [busTo, setBusTo] = useState("");
   const [busDate, setBusDate] = useState("");
   const [busPassengers, setBusPassengers] = useState({ adults: 1, children: 0 });
   const [busClientType, setBusClientType] = useState('local');
+  const busCities = useMemo(() => getBusCities(), []);
 
   // Fetch dynamic site config
   useEffect(() => {
@@ -319,8 +313,8 @@ export default function HomePageClient({ siteConfig: ssrConfig, initialMode = 'f
             {searchMode==='buses' && (()=>{const bp=busPassengers;const totalPax=bp.adults+bp.children;return (
               <form onSubmit={(e)=>{e.preventDefault();try{const events=JSON.parse(localStorage.getItem('a9_search_submit_events')||'[]');events.push({type:'bus',from:busFrom,to:busTo,date:busDate,adults:bp.adults,children:bp.children,client:busClientType,timestamp:new Date().toISOString()});if(events.length>100)events.splice(0,events.length-100);localStorage.setItem('a9_search_submit_events',JSON.stringify(events))}catch(e){};router.push('/book-now?type=bus&from='+encodeURIComponent(busFrom)+'&to='+encodeURIComponent(busTo)+'&date='+encodeURIComponent(busDate)+'&adults='+bp.adults+'&children='+bp.children+'&client='+encodeURIComponent(busClientType))}} className="space-y-3">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                  <div><label className="block text-gray-500 text-xs uppercase tracking-wider mb-1">🚍 From City</label><input type="text" value={busFrom} onChange={e=>setBusFrom(e.target.value)} placeholder="Yangon" className="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 text-gray-900 outline-none focus:border-[#D4AF37] transition-all" required /></div>
-                  <div><label className="block text-gray-500 text-xs uppercase tracking-wider mb-1">🚍 To City</label><input type="text" value={busTo} onChange={e=>setBusTo(e.target.value)} placeholder="Mandalay" className="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 text-gray-900 outline-none focus:border-[#D4AF37] transition-all" required /></div>
+                  <div><label className="block text-gray-500 text-xs uppercase tracking-wider mb-1">🚍 From City</label><select value={busFrom} onChange={e=>setBusFrom(e.target.value)} className="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 text-gray-900 outline-none focus:border-[#D4AF37] transition-all cursor-pointer" required><option value="">Select city</option>{busCities.map(c=><option key={"from-"+c.city} value={c.city}>{c.popular?'★ ':''}{c.city} ({c.region})</option>)}</select></div>
+                  <div><label className="block text-gray-500 text-xs uppercase tracking-wider mb-1">🚍 To City</label><select value={busTo} onChange={e=>setBusTo(e.target.value)} className="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 text-gray-900 outline-none focus:border-[#D4AF37] transition-all cursor-pointer" required><option value="">Select city</option>{busCities.map(c=><option key={"to-"+c.city} value={c.city}>{c.popular?'★ ':''}{c.city} ({c.region})</option>)}</select></div>
                   <div><label className="block text-gray-500 text-xs uppercase tracking-wider mb-1">📅 Travel Date</label><input type="date" value={busDate} onChange={e=>setBusDate(e.target.value)} min={new Date().toISOString().split('T')[0]} className="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 text-gray-900 outline-none focus:border-[#D4AF37] transition-all" required /></div>
                 </div>
                 <div className="flex flex-col md:flex-row gap-3 items-end flex-wrap">
