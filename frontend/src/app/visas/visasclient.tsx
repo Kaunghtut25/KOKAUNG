@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
@@ -204,13 +204,13 @@ export default function VisasClient({ initialVisas, siteConfig }: VisasClientPro
         <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4 mb-8">
           {vTitle ? (<h1 className="font-bold text-white mb-2" style={{ fontFamily: vTitleFont, fontSize: vTitleSize }}>{vTitle}</h1>) : null}
           {vSubtitle ? (<p className="text-white/70 max-w-xl text-xs sm:text-sm" style={{ fontSize: vSubtitleSize }}>{vSubtitle}</p>) : null}
-          <div className="flex gap-2 mt-3">
-            <button onClick={() => setCurrency('MMK')} className={`px-3 py-1 rounded-full text-[11px] font-semibold transition-all ${currency==='MMK'?'bg-gold text-white':'bg-white/20 text-white/70'}`}>🇲🇲 MMK</button>
-            <button onClick={() => setCurrency('USD')} className={`px-3 py-1 rounded-full text-[11px] font-semibold transition-all ${currency==='USD'?'bg-gold text-white':'bg-white/20 text-white/70'}`}>💵 USD</button>
-          </div>
         </div>
       </section>
-<section className="max-w-7xl mx-auto px-4 sm:px-6 pt-20 pb-20">
+      <div className="flex justify-center gap-2 pt-8 pb-2">
+        <button onClick={() => setCurrency('MMK')} className={`px-3 py-1 rounded-full text-[11px] font-semibold transition-all ${currency==='MMK'?'bg-gold text-white':'bg-white/20 text-gray-600 border border-gray-200'}`}>🇲🇲 MMK</button>
+        <button onClick={() => setCurrency('USD')} className={`px-3 py-1 rounded-full text-[11px] font-semibold transition-all ${currency==='USD'?'bg-gold text-white':'bg-white/20 text-gray-600 border border-gray-200'}`}>💵 USD</button>
+      </div>
+<section className="max-w-7xl mx-auto px-4 sm:px-6 pt-4 pb-20">
         <div className="space-y-8">
           {visaRows.map((row, rowIdx) => (
             <ScrollingRow key={rowIdx} containerWidth={cardInfo.containerWidth}>

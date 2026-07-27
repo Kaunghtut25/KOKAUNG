@@ -169,13 +169,13 @@ export default function InsuranceClient({ initialPlans, siteConfig }: InsuranceC
         <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4">
           {iTitle ? (<h1 className="font-bold text-white mb-2" style={{ fontFamily: iTitleFont, fontSize: iTitleSize }}>{iTitle}</h1>) : null}
           {iSubtitle ? (<p className="text-white/70 max-w-xl text-xs sm:text-sm" style={{ fontSize: iSubtitleSize }}>{iSubtitle}</p>) : null}
-          <div className="flex gap-2 mt-3">
-            <button onClick={() => setCurrency('MMK')} className={`px-3 py-1 rounded-full text-[11px] font-semibold transition-all ${currency==='MMK'?'bg-gold text-white':'bg-white/20 text-white/70'}`}>🇲🇲 MMK</button>
-            <button onClick={() => setCurrency('USD')} className={`px-3 py-1 rounded-full text-[11px] font-semibold transition-all ${currency==='USD'?'bg-gold text-white':'bg-white/20 text-white/70'}`}>💵 USD</button>
-          </div>
         </div>
       </section>
-<section className="max-w-7xl mx-auto px-4 sm:px-6 pt-20 pb-12">
+      <div className="flex justify-center gap-2 pt-8 pb-2">
+        <button onClick={() => setCurrency('MMK')} className={`px-3 py-1 rounded-full text-[11px] font-semibold transition-all ${currency==='MMK'?'bg-gold text-white':'bg-white/20 text-gray-600 border border-gray-200'}`}>🇲🇲 MMK</button>
+        <button onClick={() => setCurrency('USD')} className={`px-3 py-1 rounded-full text-[11px] font-semibold transition-all ${currency==='USD'?'bg-gold text-white':'bg-white/20 text-gray-600 border border-gray-200'}`}>💵 USD</button>
+      </div>
+<section className="max-w-7xl mx-auto px-4 sm:px-6 pt-4 pb-12">
         {loading ? (
           <div className={`grid grid-cols-${layout.mobile} sm:grid-cols-${layout.tablet} lg:grid-cols-${layout.desktop} gap-4`}>
             {[1,2,3,4,5,6,7,8,9].map(i => <SkeletonCard key={i} />)}
