@@ -160,6 +160,8 @@ export default function HomePageClient({ siteConfig: ssrConfig }: { siteConfig?:
   const [busFrom, setBusFrom] = useState("");
   const [busTo, setBusTo] = useState("");
   const [busDate, setBusDate] = useState("");
+  const [busPassengers, setBusPassengers] = useState({ adults: 1, children: 0 });
+  const [busClientType, setBusClientType] = useState('local');
 
   // Fetch dynamic site config
   useEffect(() => {
@@ -308,17 +310,49 @@ export default function HomePageClient({ siteConfig: ssrConfig }: { siteConfig?:
               </form>
             </>)}
 
-            {/* BUSES FORM */}
-            {searchMode==='buses' && (
-              <form onSubmit={(e)=>{e.preventDefault();router.push('/book-now?type=bus&from='+encodeURIComponent(busFrom)+'&to='+encodeURIComponent(busTo)+'&date='+encodeURIComponent(busDate))}} className="space-y-3">
+            {searchMode==='buses' && (()=>{const bp=busPassengers;const totalPax=bp.adults+bp.children;return (
+              <form onSubmit={(e)=>{e.preventDefault();router.push('/book-now?type=bus&from='+encodeURIComponent(busFrom)+'&to='+encodeURIComponent(busTo)+'&date='+encodeURIComponent(busDate)+'&adults='+bp.adults+'&children='+bp.children+'&client='+encodeURIComponent(busClientType))}} className="space-y-3">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                  <div><label className="block text-gray-500 text-xs uppercase tracking-wider mb-1">🚍 From City</label><input type="text" value={busFrom} onChange={e=>setBusFrom(e.target.value)} placeholder="Yangon" className="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 text-gray-900 outline-none focus:border-[#D4AF37] transition-all" /></div>
-                  <div><label className="block text-gray-500 text-xs uppercase tracking-wider mb-1">🚍 To City</label><input type="text" value={busTo} onChange={e=>setBusTo(e.target.value)} placeholder="Mandalay" className="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 text-gray-900 outline-none focus:border-[#D4AF37] transition-all" /></div>
-                  <div><label className="block text-gray-500 text-xs uppercase tracking-wider mb-1">📅 Travel Date</label><input type="date" value={busDate} onChange={e=>setBusDate(e.target.value)} min={new Date().toISOString().split('T')[0]} className="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 text-gray-900 outline-none focus:border-[#D4AF37] transition-all" /></div>
+                  <div><label className="block text-gray-500 text-xs uppercase tracking-wider mb-1">🚍 From City</label><input type="text" value={busFrom} onChange={e=>setBusFrom(e.target.value)} placeholder="Yangon" className="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 text-gray-900 outline-none focus:border-[#D4AF37] transition-all" required /></div>
+                  <div><label className="block text-gray-500 text-xs uppercase tracking-wider mb-1">🚍 To City</label><input type="text" value={busTo} onChange={e=>setBusTo(e.target.value)} placeholder="Mandalay" className="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 text-gray-900 outline-none focus:border-[#D4AF37] transition-all" required /></div>
+                  <div><label className="block text-gray-500 text-xs uppercase tracking-wider mb-1">📅 Travel Date</label><input type="date" value={busDate} onChange={e=>setBusDate(e.target.value)} min={new Date().toISOString().split('T')[0]} className="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 text-gray-900 outline-none focus:border-[#D4AF37] transition-all" required /></div>
                 </div>
-                <button type="submit" className="w-full md:w-auto bg-gradient-to-r from-[#D4AF37] to-[#F5A623] text-white font-bold px-8 py-3 rounded-lg hover:shadow-xl hover:shadow-[#D4AF37]/40 hover:scale-105 active:scale-95 transition-all duration-300 cursor-pointer">🔍 Search Buses</button>
+                <div className="flex flex-col md:flex-row gap-3 items-end flex-wrap">
+                  <div className="w-full md:w-auto">
+                    <label className="block text-gray-500 text-xs uppercase tracking-wider mb-1"><span className="text-[#D4AF37]">👥</span> Passengers (max 9)</label>
+                    <div className="flex gap-1 bg-gray-50 border border-gray-200 rounded-lg p-1">
+                      <button type="button" onClick={()=>{if(totalPax>1)setBusPassengers({...bp,adults:Math.max(1,bp.adults-1)})}} disabled={totalPax<=1} className="w-8 h-8 rounded-md bg-white text-gray-600 font-bold hover:bg-gray-100 disabled:opacity-30 transition-all cursor-pointer">−</button>
+                      <span className="flex items-center justify-center min-w-[60px] text-xs font-medium text-gray-700">{totalPax} Pax</span>
+                      <button type="button" onClick={()=>{if(totalPax<9)setBusPassengers({...bp,adults:bp.adults+1})}} disabled={totalPax>=9} className="w-8 h-8 rounded-md bg-white text-gray-600 font-bold hover:bg-gray-100 disabled:opacity-30 transition-all cursor-pointer">+</button>
+                    </div>
+                  </div>
+                  <div className="w-full md:w-auto">
+                    <label className="block text-gray-500 text-xs uppercase tracking-wider mb-1">🧑 Adults</label>
+                    <div className="flex gap-1 bg-gray-50 border border-gray-200 rounded-lg p-1">
+                      <button type="button" onClick={()=>{if(bp.adults>1&&totalPax>1)setBusPassengers({...bp,adults:bp.adults-1})}} disabled={bp.adults<=1} className="w-8 h-8 rounded-md bg-white text-gray-600 font-bold hover:bg-gray-100 disabled:opacity-30 transition-all cursor-pointer">−</button>
+                      <span className="flex items-center justify-center min-w-[30px] text-xs font-medium text-gray-700">{bp.adults}</span>
+                      <button type="button" onClick={()=>{if(totalPax<9)setBusPassengers({...bp,adults:bp.adults+1})}} disabled={totalPax>=9} className="w-8 h-8 rounded-md bg-white text-gray-600 font-bold hover:bg-gray-100 disabled:opacity-30 transition-all cursor-pointer">+</button>
+                    </div>
+                  </div>
+                  <div className="w-full md:w-auto">
+                    <label className="block text-gray-500 text-xs uppercase tracking-wider mb-1">👶 Children</label>
+                    <div className="flex gap-1 bg-gray-50 border border-gray-200 rounded-lg p-1">
+                      <button type="button" onClick={()=>setBusPassengers({...bp,children:Math.max(0,bp.children-1)})} disabled={bp.children<=0} className="w-8 h-8 rounded-md bg-white text-gray-600 font-bold hover:bg-gray-100 disabled:opacity-30 transition-all cursor-pointer">−</button>
+                      <span className="flex items-center justify-center min-w-[30px] text-xs font-medium text-gray-700">{bp.children}</span>
+                      <button type="button" onClick={()=>{if(totalPax<9)setBusPassengers({...bp,children:bp.children+1})}} disabled={totalPax>=9} className="w-8 h-8 rounded-md bg-white text-gray-600 font-bold hover:bg-gray-100 disabled:opacity-30 transition-all cursor-pointer">+</button>
+                    </div>
+                  </div>
+                  <div className="w-full md:w-[180px]">
+                    <label className="block text-gray-500 text-xs uppercase tracking-wider mb-1"><span className="text-[#D4AF37]">🛂</span> Client</label>
+                    <div className="flex bg-gray-50 border border-gray-200 rounded-lg p-1">
+                      <button type="button" onClick={()=>setBusClientType('local')} className={busClientType==='local'?'flex-1 py-1.5 text-xs font-medium rounded-md bg-[#D4AF37] text-white shadow-sm transition-all':'flex-1 py-1.5 text-xs font-medium rounded-md text-gray-500 hover:text-gray-900 transition-all'}>🇲🇲 Local</button>
+                      <button type="button" onClick={()=>setBusClientType('foreigner')} className={busClientType==='foreigner'?'flex-1 py-1.5 text-xs font-medium rounded-md bg-[#D4AF37] text-white shadow-sm transition-all':'flex-1 py-1.5 text-xs font-medium rounded-md text-gray-500 hover:text-gray-900 transition-all'}>🌏 Foreigner</button>
+                    </div>
+                  </div>
+                  <button type="submit" className="w-full md:w-auto bg-gradient-to-r from-[#D4AF37] to-[#F5A623] text-white font-bold px-8 py-3 rounded-lg hover:shadow-xl hover:shadow-[#D4AF37]/40 hover:scale-105 active:scale-95 transition-all duration-300 cursor-pointer">🔍 Search Buses</button>
+                </div>
               </form>
-            )}
+            );})()}
           </div>
         </div>
       </div>
