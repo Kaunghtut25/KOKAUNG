@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { HiSearch, HiArrowRight, HiCalendar, HiUser, HiGlobe, HiClock } from "react-icons/hi";
+import { HiSearch, HiArrowRight, HiCalendar, HiUser, HiGlobe, HiClock, HiStar, HiShieldCheck, HiLocationMarker } from "react-icons/hi";
 
 // ── types ──
 interface FlightOffer {
@@ -72,6 +72,38 @@ const cabinLabels: Record<string, string> = {
   BUSINESS: "Business",
   FIRST: "First",
 };
+
+// ── static data ──
+const popularRoutes = [
+  { from: "Yangon (RGN)", to: "Bangkok (BKK)", fromCity: "Yangon", toCity: "Bangkok", price: "From $120", duration: "1h 30m", airline: "Thai Airways", stops: "Nonstop", featured: true },
+  { from: "Yangon (RGN)", to: "Singapore (SIN)", fromCity: "Yangon", toCity: "Singapore", price: "From $180", duration: "3h 10m", airline: "Singapore Airlines", stops: "Nonstop", featured: true },
+  { from: "Yangon (RGN)", to: "Dubai (DXB)", fromCity: "Yangon", toCity: "Dubai", price: "From $420", duration: "6h 20m", airline: "Emirates", stops: "1 Stop", featured: true },
+  { from: "Yangon (RGN)", to: "Tokyo (NRT)", fromCity: "Yangon", toCity: "Tokyo", price: "From $380", duration: "7h 45m", airline: "ANA", stops: "1 Stop", featured: false },
+  { from: "Yangon (RGN)", to: "Kuala Lumpur (KUL)", fromCity: "Yangon", toCity: "Kuala Lumpur", price: "From $95", duration: "2h 25m", airline: "AirAsia", stops: "Nonstop", featured: false },
+  { from: "Yangon (RGN)", to: "Seoul (ICN)", fromCity: "Yangon", toCity: "Seoul", price: "From $340", duration: "5h 40m", airline: "Korean Air", stops: "1 Stop", featured: false },
+  { from: "Yangon (RGN)", to: "London (LHR)", fromCity: "Yangon", toCity: "London", price: "From $520", duration: "14h 20m", airline: "Qatar Airways", stops: "1 Stop", featured: false },
+  { from: "Mandalay (MDL)", to: "Bangkok (BKK)", fromCity: "Mandalay", toCity: "Bangkok", price: "From $105", duration: "2h 10m", airline: "Bangkok Airways", stops: "Nonstop", featured: false },
+];
+
+const airlinePartners = [
+  { name: "Singapore Airlines", code: "SQ", logo: "✈️", tier: "premier" },
+  { name: "Emirates", code: "EK", logo: "🌍", tier: "premier" },
+  { name: "Qatar Airways", code: "QR", logo: "🏆", tier: "premier" },
+  { name: "Thai Airways", code: "TG", logo: "🌸", tier: "gold" },
+  { name: "ANA", code: "NH", logo: "🎌", tier: "gold" },
+  { name: "Korean Air", code: "KE", logo: "🇰🇷", tier: "gold" },
+  { name: "AirAsia", code: "AK", logo: "🛫", tier: "silver" },
+  { name: "Bangkok Airways", code: "PG", logo: "🏝️", tier: "silver" },
+  { name: "China Airlines", code: "CI", logo: "🐉", tier: "silver" },
+  { name: "Malaysia Airlines", code: "MH", logo: "🌺", tier: "silver" },
+];
+
+const whyBookWithUs = [
+  { icon: "💰", title: "Best Price Guarantee", desc: "We match or beat any published fare for the same itinerary" },
+  { icon: "🎫", title: "IATA Accredited", desc: "Licensed and bonded IATA travel agency since 2015" },
+  { icon: "📞", title: "24/7 Support", desc: "Round-the-clock assistance before, during, and after your flight" },
+  { icon: "🔄", title: "Free Cancellation", desc: "Flexible booking options with free cancellation on most fares" },
+];
 
 // ── component ──
 export default function FlightsPage() {
@@ -438,7 +470,6 @@ export default function FlightsPage() {
                       </div>
                     </div>
 
-                    {/* Expandable segments detail (optional: subtle) */}
                     {itin.segments.length > 1 && (
                       <details className="mt-4 pt-4 border-t border-[#D4AF37]/10">
                         <summary className="text-[#D4AF37] text-xs cursor-pointer hover:text-[#F5A623] transition-colors inline-block">
@@ -466,6 +497,171 @@ export default function FlightsPage() {
             </div>
           </div>
         )}
+      </section>
+
+      {/* ── Why Book With Us ── */}
+      <section className="py-16 border-t border-[#D4AF37]/10">
+        <div className="max-w-6xl mx-auto px-4">
+          <div className="text-center mb-12">
+            <span className="text-[#D4AF37] text-sm font-semibold uppercase tracking-widest">Why Choose A9</span>
+            <h2 className="font-['Playfair_Display',serif] text-3xl md:text-4xl font-bold text-white mt-2">
+              Why Book Flights With Us
+            </h2>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {whyBookWithUs.map((item, i) => (
+              <div key={i} className="bg-white/5 backdrop-blur-sm border border-[#D4AF37]/10 rounded-2xl p-6 text-center hover:border-[#D4AF37]/30 hover:bg-white/[0.07] transition-all group">
+                <div className="text-4xl mb-4">{item.icon}</div>
+                <h3 className="text-white font-semibold text-lg mb-2">{item.title}</h3>
+                <p className="text-gray-400 text-sm leading-relaxed">{item.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── Popular Routes ── */}
+      <section className="py-16 border-t border-[#D4AF37]/10">
+        <div className="max-w-6xl mx-auto px-4">
+          <div className="text-center mb-12">
+            <span className="text-[#D4AF37] text-sm font-semibold uppercase tracking-widest">Trending Now</span>
+            <h2 className="font-['Playfair_Display',serif] text-3xl md:text-4xl font-bold text-white mt-2">
+              Popular Flight Routes
+            </h2>
+            <p className="text-gray-400 mt-3 max-w-2xl mx-auto">
+              Discover our most-booked routes from Myanmar to destinations across Asia and beyond
+            </p>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {popularRoutes.map((route, i) => (
+              <div
+                key={i}
+                className={`rounded-2xl p-5 border transition-all group cursor-pointer hover:scale-[1.02] ${
+                  route.featured
+                    ? "bg-gradient-to-br from-[#D4AF37]/15 to-[#D4AF37]/5 border-[#D4AF37]/30"
+                    : "bg-white/5 border-[#D4AF37]/10 hover:border-[#D4AF37]/20"
+                }`}
+              >
+                {route.featured && (
+                  <span className="inline-block bg-[#D4AF37] text-[#0A1628] text-[10px] font-bold uppercase px-2 py-0.5 rounded-full mb-3">
+                    Best Seller
+                  </span>
+                )}
+                <div className="flex items-center gap-2 mb-3">
+                  <HiLocationMarker className="w-4 h-4 text-[#D4AF37]" />
+                  <span className="text-gray-400 text-xs">{route.airline}</span>
+                </div>
+                <div className="flex items-center gap-2 text-sm mb-3">
+                  <span className="text-white font-bold">{route.fromCity}</span>
+                  <HiArrowRight className="w-3 h-3 text-[#D4AF37] flex-shrink-0" />
+                  <span className="text-white font-bold">{route.toCity}</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-[#D4AF37] text-lg font-bold font-['Playfair_Display',serif]">{route.price}</p>
+                    <p className="text-gray-500 text-xs">{route.duration} · {route.stops}</p>
+                  </div>
+                  <Link
+                    href={`/flights?from=${encodeURIComponent(route.from)}&to=${encodeURIComponent(route.to)}`}
+                    className="text-[#D4AF37] text-xs font-semibold hover:text-white transition-colors flex items-center gap-1"
+                  >
+                    Search <HiArrowRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
+                  </Link>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── Airline Partners ── */}
+      <section className="py-16 border-t border-[#D4AF37]/10">
+        <div className="max-w-6xl mx-auto px-4">
+          <div className="text-center mb-12">
+            <span className="text-[#D4AF37] text-sm font-semibold uppercase tracking-widest">Trusted Partners</span>
+            <h2 className="font-['Playfair_Display',serif] text-3xl md:text-4xl font-bold text-white mt-2">
+              Our Airline Partners
+            </h2>
+            <p className="text-gray-400 mt-3 max-w-2xl mx-auto">
+              We work with over 50+ airlines worldwide to find you the best routes and prices
+            </p>
+          </div>
+
+          {/* Premier Tier */}
+          <div className="mb-10">
+            <h3 className="text-[#D4AF37] text-sm font-semibold uppercase tracking-wider text-center mb-6">
+              ⭐ Premier Partners
+            </h3>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              {airlinePartners.filter(a => a.tier === "premier").map((airline, i) => (
+                <div key={i} className="bg-gradient-to-br from-[#D4AF37]/10 to-transparent border border-[#D4AF37]/20 rounded-2xl p-6 text-center hover:border-[#D4AF37]/40 transition-all group">
+                  <div className="text-4xl mb-3">{airline.logo}</div>
+                  <h4 className="text-white font-semibold">{airline.name}</h4>
+                  <p className="text-[#D4AF37] text-xs mt-1 font-medium">{airline.code}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Gold Tier */}
+          <div className="mb-10">
+            <h3 className="text-gray-400 text-sm font-semibold uppercase tracking-wider text-center mb-6">
+              🥇 Gold Partners
+            </h3>
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-3 gap-4">
+              {airlinePartners.filter(a => a.tier === "gold").map((airline, i) => (
+                <div key={i} className="bg-white/5 border border-[#D4AF37]/10 rounded-2xl p-5 text-center hover:border-[#D4AF37]/20 transition-all">
+                  <div className="text-3xl mb-2">{airline.logo}</div>
+                  <h4 className="text-white/80 text-sm font-medium">{airline.name}</h4>
+                  <p className="text-gray-500 text-xs mt-0.5">{airline.code}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Silver Tier */}
+          <div>
+            <h3 className="text-gray-500 text-sm font-semibold uppercase tracking-wider text-center mb-6">
+              🥈 Silver Partners
+            </h3>
+            <div className="flex flex-wrap justify-center gap-4">
+              {airlinePartners.filter(a => a.tier === "silver").map((airline, i) => (
+                <div key={i} className="bg-white/[0.03] border border-white/5 rounded-xl px-5 py-3 text-center hover:border-[#D4AF37]/20 transition-all min-w-[130px]">
+                  <div className="text-2xl mb-1">{airline.logo}</div>
+                  <h4 className="text-white/60 text-xs font-medium">{airline.name}</h4>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── CTA Banner ── */}
+      <section className="py-16 border-t border-[#D4AF37]/10">
+        <div className="max-w-4xl mx-auto px-4 text-center">
+          <div className="bg-gradient-to-r from-[#D4AF37]/10 via-[#D4AF37]/5 to-[#D4AF37]/10 border border-[#D4AF37]/20 rounded-2xl p-10 md:p-14">
+            <h2 className="font-['Playfair_Display',serif] text-2xl md:text-3xl font-bold text-white mb-4">
+              Ready to Take Off?
+            </h2>
+            <p className="text-gray-400 mb-8 max-w-xl mx-auto">
+              Search hundreds of airlines and thousands of routes. Your next adventure starts here.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-3 justify-center">
+              <Link
+                href="/contact"
+                className="px-8 py-3 border border-[#D4AF37] text-[#D4AF37] font-semibold rounded-xl hover:bg-[#D4AF37] hover:text-[#0A1628] transition-all"
+              >
+                Contact Us
+              </Link>
+              <Link
+                href="/destinations"
+                className="px-8 py-3 bg-[#D4AF37] text-[#0A1628] font-bold rounded-xl hover:bg-[#C5A028] transition-all shadow-md"
+              >
+                Explore Destinations
+              </Link>
+            </div>
+          </div>
+        </div>
       </section>
     </main>
   );

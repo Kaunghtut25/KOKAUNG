@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+﻿import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import RootClient from "@/components/RootClient";
@@ -22,6 +22,9 @@ export const metadata: Metadata = {
     "Hotel Booking Yangon", "Visa Services Myanmar", "Car Rental Myanmar",
     "Travel Insurance Myanmar", "Luxury Travel Myanmar",
   ],
+  alternates: {
+    canonical: "/",
+  },
   openGraph: {
     type: "website",
     siteName: "𝐀𝟗 𝐆𝐥𝐨𝐛𝐚𝐥 𝐓𝐫𝐚𝐯𝐞𝐥𝐬 & 𝐓𝐨𝐮𝐫𝐬",

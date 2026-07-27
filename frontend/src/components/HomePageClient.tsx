@@ -155,6 +155,7 @@ export default function HomePageClient({ siteConfig: ssrConfig }: { siteConfig?:
   const [clientType, setClientType] = useState<'local' | 'foreigner'>('local');
   const ctaBg = ssrConfig?.heroImages?.bookNow || ssrConfig?.heroImages?.flights || '/images_v2/cta-bg-v2.jpg';
   const [ctaBgImage, setCtaBgImage] = useState(ctaBg);
+  const [searchQuery, setSearchQuery] = useState("");
 
   // Fetch dynamic site config
   useEffect(() => {
@@ -292,6 +293,52 @@ export default function HomePageClient({ siteConfig: ssrConfig }: { siteConfig?:
           </div>
         </div>
       </div>
+      {/* ========== Site Search Bar ========== */}
+      <section className="py-10 px-4">
+        <div className="max-w-3xl mx-auto">
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              if (searchQuery.trim()) {
+                router.push("/search?q=" + encodeURIComponent(searchQuery.trim()));
+              }
+            }}
+            className="relative group"
+          >
+            <div className="absolute -inset-0.5 bg-gradient-to-r from-[#D4AF37] via-[#F5A623] to-[#D4AF37] rounded-xl opacity-30 group-hover:opacity-50 blur transition duration-300">
+            </div>
+            <div className="relative flex items-center bg-white rounded-xl border-2 border-[#D4AF37]/20 shadow-lg overflow-hidden transition-all duration-300 group-hover:border-[#D4AF37]/50 group-hover:shadow-xl">
+              <div className="flex items-center pl-5 text-[#D4AF37]">
+                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+              </div>
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search destinations, tours, hotels..."
+                className="flex-1 px-4 py-5 text-gray-700 placeholder-gray-400 bg-transparent border-none outline-none text-lg"
+                aria-label="Search destinations, tours, hotels"
+              />
+              <button
+                type="submit"
+                className="m-2 px-6 py-3 bg-gradient-to-r from-[#D4AF37] to-[#F5A623] text-white font-semibold rounded-lg hover:shadow-lg hover:shadow-[#D4AF37]/30 hover:scale-105 active:scale-95 transition-all duration-300 cursor-pointer flex items-center gap-2"
+                aria-label="Search"
+              >
+                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+                <span className="hidden sm:inline">Search</span>
+              </button>
+            </div>
+            <p className="text-center text-gray-400 text-sm mt-3">
+              Find tours, hotels, cars, visas, cruises and more
+            </p>
+          </form>
+        </div>
+      </section>
+
 
       {/* ========== Trust Badges ========== */}
       <PopularDestinations siteConfig={siteConfig} />

@@ -6,6 +6,7 @@ import Link from 'next/link';
 import DealsBanner from '@/components/DealsBanner';
 import FAQAccordion from '@/components/FAQAccordion';
 import TestimonialSlider from '@/components/TestimonialSlider';
+
 interface LoungeItem {
   slug?: string;
   id?: string;
@@ -28,9 +29,7 @@ export default function MingalarClient({ initialCards, siteConfig }: MingalarCli
   const mTitleFont = mt.titleFont || "'Playfair Display', Georgia, serif";
   const mTitleSize = mt.titleSize || "3rem";
   const mSubtitleSize = mt.subtitleSize || "1.2rem";
-  const layout = siteConfig?.sectionLayouts?.skyLounge || { desktop: 3, tablet: 2, mobile: 1 };
   const [loungeCards, setLoungeCards] = useState<LoungeItem[]>(initialCards);
-
 
   const renderCard = (item: LoungeItem, i: number) => {
     const slug = item.slug || item.id || ('m' + (i + 1));
@@ -57,19 +56,19 @@ export default function MingalarClient({ initialCards, siteConfig }: MingalarCli
             >
               View Details
             </Link>
-            <button
-              onClick={() => router.push('/book-now?type=lounge&name=' + encodeURIComponent(item.title) + '&id=' + slug)}
-              className="flex-1 px-3 py-2 bg-[#D4AF37] text-white text-sm font-semibold rounded-full hover:bg-[#C19B2F] transition-colors"
+            <Link
+              href={'/book-now?type=lounge&name=' + encodeURIComponent(item.title) + '&id=' + slug}
+              className="flex-1 px-3 py-2 bg-[#D4AF37] text-white text-sm font-semibold rounded-full text-center hover:bg-[#C19B2F] transition-colors"
             >
               Book Now
-            </button>
+            </Link>
           </div>
-          <button
-            onClick={() => router.push('/contact?subject=' + encodeURIComponent('Sky Lounge Inquiry') + '&item=' + encodeURIComponent(item.title))}
-            className="w-full mt-2 py-2 text-sm text-gray-600 hover:text-[#D4AF37] transition-colors"
+          <Link
+            href={'/contact?subject=' + encodeURIComponent('Sky Lounge Inquiry') + '&item=' + encodeURIComponent(item.title)}
+            className="w-full mt-2 py-2 text-sm text-gray-600 hover:text-[#D4AF37] transition-colors inline-block"
           >
             Contact Us
-          </button>
+          </Link>
         </div>
       </div>
     );
@@ -77,21 +76,24 @@ export default function MingalarClient({ initialCards, siteConfig }: MingalarCli
 
   return (
     <main className="min-h-screen bg-white">
+      {/* ── Hero ── */}
       <section className="relative h-[400px] md:h-[500px] w-full overflow-hidden" style={{ height: (siteConfig?.heroDimensions?.["mingalar"]?.desktop || 500) + "px" }}>
         <img src={heroImage} alt="Airport Lounge" className="w-full h-full object-cover" onError={(e) => { (e.target as HTMLImageElement).src = "/images_v2/sky1-v3.jpg"; }} />
         <div className="absolute inset-0 bg-gradient-to-t from-[#0A1628]/90 via-[#0A1628]/40 to-[#0A1628]/30" />
         <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4">
-          {mTitle ? (<h1 className="font-bold text-white mb-4" style={{ fontFamily: mTitleFont, fontSize: mTitleSize }}>✨ {mTitle}</h1>) : null}
+          {mTitle ? (<h1 className="font-bold text-white mb-4" style={{ fontFamily: mTitleFont, fontSize: mTitleSize }}>{mTitle}</h1>) : null}
           {mSubtitle ? (<p className="text-gray-300 text-lg max-w-2xl" style={{ fontSize: mSubtitleSize }}>{mSubtitle}</p>) : null}
         </div>
       </section>
+
+      {/* ── Lounge Services ── */}
       <section className="max-w-6xl mx-auto px-4 py-12">
         {/* Row 1 */}
-        <div className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-6`}>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
           {loungeCards.slice(0, 3).map((item, i) => renderCard(item, i))}
         </div>
         {/* Row 2 */}
-        <div className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-10`}>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
           {loungeCards.slice(3, 6).map((item, i) => renderCard(item, i + 3))}
         </div>
         <div className="text-center">
@@ -100,6 +102,7 @@ export default function MingalarClient({ initialCards, siteConfig }: MingalarCli
           </Link>
         </div>
       </section>
+
       <DealsBanner />
       <FAQAccordion section="mingalar" />
       <TestimonialSlider />
