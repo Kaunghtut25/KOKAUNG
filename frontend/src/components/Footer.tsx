@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
@@ -8,7 +8,8 @@ const quickLinks = [
   { label: "Home", href: "/" },
   { label: "Tours", href: "/tours" },
   { label: "Hotels", href: "/hotels" },
-  { label: "Car Rentals", href: "/cars" },`r`n  { label: "Buses", href: "/buses" },
+  { label: "Car Rentals", href: "/cars" },
+  { label: "Buses", href: "/buses" },
   { label: "Visa Services", href: "/visas" },
   { label: "Travel Insurance", href: "/insurance" },
   { label: "Cruises", href: "/cruises" },
