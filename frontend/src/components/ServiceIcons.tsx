@@ -58,12 +58,12 @@ export default function ServiceIcons() {
                     }}
                     type="button"
                     aria-pressed={isActive}
-                    className={btnClass}
+                    className={'flex items-center gap-1.5 py-1.5 px-3 rounded-lg border transition-all duration-200 cursor-pointer ' + (isActive ? 'bg-[#D4AF37] border-[#D4AF37] shadow-sm' : 'border-gray-200 hover:bg-gray-100 hover:border-gray-300')}
                   >
                     <span className="text-sm group-hover:scale-110 transition-transform">
                       {item.icon}
                     </span>
-                    <span className={'text-xs font-semibold transition-colors hidden sm:inline ' + (isActive ? 'text-white' : 'text-gray-700 group-hover:text-[#D4AF37]')}>
+                    <span className={'text-xs font-semibold transition-colors hidden sm:inline ' + (isActive ? 'text-white' : 'text-gray-600')}>
                       {item.label}
                     </span>
                   </button>
