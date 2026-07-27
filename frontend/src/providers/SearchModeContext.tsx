@@ -1,3 +1,4 @@
+// v2 — context-driven instant toggle with localStorage logging
 'use client';
 
 import React, { createContext, useContext, useState, useCallback, useEffect } from 'react';

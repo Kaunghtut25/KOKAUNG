@@ -1,3 +1,4 @@
+// v2 — instant toggle, gray hover on inactive, gold on active
 'use client';
 
 import { useSearchMode } from '@/providers/SearchModeContext';
