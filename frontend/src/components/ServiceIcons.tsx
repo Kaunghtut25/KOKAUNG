@@ -23,7 +23,27 @@ export default function ServiceIcons() {
   useEffect(() => {
     fetch('/api/admin/site-config').then(r => r.json()).then(d => {
       if (d?.serviceIcons?.length) {
-        setServices(d.serviceIcons.filter((s: any) => { if (s.enabled === false) return false; const keyMap = { Tours: "tours", Hotels: "hotels", Cars: "cars", Visas: "visas", Insurance: "insurance", Cruises: "cruises", "Sky Lounge": "skyLounge" } as Record<string,string>; const k = keyMap[s.label] || ""; return k ? (d.moduleToggles || {})[k] !== false : true; }));
+        const filtered = d.serviceIcons.filter((s: any) => {
+          if (s.enabled === false) return false;
+          const keyMap = {
+            Tours: "tours", Hotels: "hotels", Cars: "cars",
+            Visas: "visas", Insurance: "insurance",
+            Cruises: "cruises", "Sky Lounge": "skyLounge"
+          } as Record<string,string>;
+          const k = keyMap[s.label] || "";
+          return k ? (d.moduleToggles || {})[k] !== false : true;
+        });
+        // Always ensure 🚌 Buses stays after ✈️ Flights
+        if (!filtered.some((s: any) => s.label === 'Buses')) {
+          const flightsIdx = filtered.findIndex((s: any) => s.label === 'Flights');
+          if (flightsIdx >= 0) {
+            filtered.splice(flightsIdx + 1, 0, { label: 'Buses', icon: '🚌', href: '/?mode=buses' });
+          }
+        }
+        if (!filtered.some((s: any) => s.label === 'Flights')) {
+          filtered.unshift({ label: 'Flights', icon: '✈️', href: '/' });
+        }
+        setServices(filtered);
       }
     }).catch(() => {});
   }, []);
