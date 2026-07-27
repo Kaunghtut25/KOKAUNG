@@ -51,6 +51,10 @@ export default function ServiceIcons() {
                     onClick={() => {
                       if (item.label === 'Flights') setMode('flights');
                       else setMode('buses');
+                      setTimeout(() => {
+                        const el = document.getElementById('search-engine');
+                        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                      }, 50);
                     }}
                     type="button"
                     aria-pressed={isActive}
