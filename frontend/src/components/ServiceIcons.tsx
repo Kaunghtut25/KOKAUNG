@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -11,6 +11,7 @@ const defaultServices = [
   { label: 'Cars', icon: '🚗', href: '/cars' },
   { label: 'Visas', icon: '🛂', href: '/visas' },
   { label: 'Insurance', icon: '🛡️', href: '/insurance' },
+  { label: 'Buses', icon: '🚌', href: '/buses' },
   { label: 'Cruises', icon: '🚢', href: '/cruises' },
   { label: 'Sky Lounge', icon: '✨', href: '/mingalar' },
 ];
