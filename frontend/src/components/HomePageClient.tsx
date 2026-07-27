@@ -157,6 +157,15 @@ export default function HomePageClient({ siteConfig: ssrConfig, initialMode = 'f
   const [ctaBgImage, setCtaBgImage] = useState(ctaBg);
   const [searchQuery, setSearchQuery] = useState("");
   const [searchMode, setSearchMode] = useState<'flights' | 'buses'>(initialMode);
+  // Log search mode switches to localStorage
+  useEffect(() => {
+    try {
+      const events = JSON.parse(localStorage.getItem('a9_search_mode_events') || '[]');
+      events.push({ mode: searchMode, timestamp: new Date().toISOString() });
+      if (events.length > 100) events.splice(0, events.length - 100);
+      localStorage.setItem('a9_search_mode_events', JSON.stringify(events));
+    } catch(e) {}
+  }, [searchMode]);
   const [busFrom, setBusFrom] = useState("");
   const [busTo, setBusTo] = useState("");
   const [busDate, setBusDate] = useState("");
@@ -192,6 +201,13 @@ export default function HomePageClient({ siteConfig: ssrConfig, initialMode = 'f
   const handleRemoveLeg = (idx:number) => setMultiCityLegs(multiCityLegs.filter((_,i)=>i!==idx));
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
+    // Log flight search to localStorage
+    try {
+      const events = JSON.parse(localStorage.getItem('a9_search_submit_events') || '[]');
+      events.push({ type: 'flight', from, to, departDate, returnDate, passengers: passengers.adults + passengers.children, timestamp: new Date().toISOString() });
+      if (events.length > 100) events.splice(0, events.length - 100);
+      localStorage.setItem('a9_search_submit_events', JSON.stringify(events));
+    } catch(e) {}
     const totalPax = passengers.adults + passengers.children + passengers.infants;
     const params = new URLSearchParams();
     params.set("type", activeTab === "oneway" ? "flight" : activeTab === "roundtrip" ? "flight" : "flight");
@@ -301,7 +317,7 @@ export default function HomePageClient({ siteConfig: ssrConfig, initialMode = 'f
             </>)}
 
             {searchMode==='buses' && (()=>{const bp=busPassengers;const totalPax=bp.adults+bp.children;return (
-              <form onSubmit={(e)=>{e.preventDefault();router.push('/book-now?type=bus&from='+encodeURIComponent(busFrom)+'&to='+encodeURIComponent(busTo)+'&date='+encodeURIComponent(busDate)+'&adults='+bp.adults+'&children='+bp.children+'&client='+encodeURIComponent(busClientType))}} className="space-y-3">
+              <form onSubmit={(e)=>{e.preventDefault();try{const events=JSON.parse(localStorage.getItem('a9_search_submit_events')||'[]');events.push({type:'bus',from:busFrom,to:busTo,date:busDate,adults:bp.adults,children:bp.children,client:busClientType,timestamp:new Date().toISOString()});if(events.length>100)events.splice(0,events.length-100);localStorage.setItem('a9_search_submit_events',JSON.stringify(events))}catch(e){};router.push('/book-now?type=bus&from='+encodeURIComponent(busFrom)+'&to='+encodeURIComponent(busTo)+'&date='+encodeURIComponent(busDate)+'&adults='+bp.adults+'&children='+bp.children+'&client='+encodeURIComponent(busClientType))}} className="space-y-3">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                   <div><label className="block text-gray-500 text-xs uppercase tracking-wider mb-1">🚍 From City</label><input type="text" value={busFrom} onChange={e=>setBusFrom(e.target.value)} placeholder="Yangon" className="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 text-gray-900 outline-none focus:border-[#D4AF37] transition-all" required /></div>
                   <div><label className="block text-gray-500 text-xs uppercase tracking-wider mb-1">🚍 To City</label><input type="text" value={busTo} onChange={e=>setBusTo(e.target.value)} placeholder="Mandalay" className="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 text-gray-900 outline-none focus:border-[#D4AF37] transition-all" required /></div>
