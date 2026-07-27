@@ -6,7 +6,7 @@ import { useState, useEffect } from 'react';
 
 const defaultServices = [
   { label: 'Flights', icon: '✈️', href: '/' },
-  { label: 'Buses', icon: '🚌', href: '/buses' },
+  { label: 'Buses', icon: '🚌', href: '/?mode=buses' },
   { label: 'Tours', icon: '🏔️', href: '/tours' },
   { label: 'Hotels', icon: '🏨', href: '/hotels' },
   { label: 'Cars', icon: '🚗', href: '/cars' },

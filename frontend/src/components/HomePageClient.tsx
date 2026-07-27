@@ -140,7 +140,7 @@ function PassengerSelector({ passengers, onChange }: { passengers: PassengerCoun
   );
 }
 
-export default function HomePageClient({ siteConfig: ssrConfig }: { siteConfig?: any }) {
+export default function HomePageClient({ siteConfig: ssrConfig, initialMode = 'flights' }: { siteConfig?: any; initialMode?: 'flights' | 'buses' }) {
   const router = useRouter();
   const [siteConfig, setSiteConfig] = useState<any>(ssrConfig || null);
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -156,7 +156,7 @@ export default function HomePageClient({ siteConfig: ssrConfig }: { siteConfig?:
   const ctaBg = ssrConfig?.heroImages?.bookNow || ssrConfig?.heroImages?.flights || '/images_v2/cta-bg-v2.jpg';
   const [ctaBgImage, setCtaBgImage] = useState(ctaBg);
   const [searchQuery, setSearchQuery] = useState("");
-  const [searchMode, setSearchMode] = useState<'flights' | 'buses'>('flights');
+  const [searchMode, setSearchMode] = useState<'flights' | 'buses'>(initialMode);
   const [busFrom, setBusFrom] = useState("");
   const [busTo, setBusTo] = useState("");
   const [busDate, setBusDate] = useState("");
@@ -260,16 +260,6 @@ export default function HomePageClient({ siteConfig: ssrConfig }: { siteConfig?:
       <div className="relative -mt-24 md:-mt-32 z-40 px-4">
         <div className="max-w-5xl mx-auto">
           <div className="bg-white rounded-2xl border-2 border-[#D4AF37]/30 shadow-xl p-5 md:p-7 overflow-visible">
-            {/* Search Mode Toggle */}
-            <div className="flex gap-2 mb-5 bg-gray-100 rounded-lg p-1 w-fit">
-              <button onClick={()=>setSearchMode('flights')} className={`px-4 py-2 rounded-md text-sm font-medium transition-all ${searchMode==='flights'?'bg-[#D4AF37] text-white shadow-md':'text-gray-500 hover:text-gray-900'}`}>
-                ✈️ Flights
-              </button>
-              <button onClick={()=>setSearchMode('buses')} className={`px-4 py-2 rounded-md text-sm font-medium transition-all ${searchMode==='buses'?'bg-[#D4AF37] text-white shadow-md':'text-gray-500 hover:text-gray-900'}`}>
-                🚌 Buses
-              </button>
-            </div>
-
             {/* FLIGHTS FORM */}
             {searchMode==='flights' && (<>
               <div className="flex gap-1 mb-5 bg-gray-100 rounded-lg p-1 w-fit">
