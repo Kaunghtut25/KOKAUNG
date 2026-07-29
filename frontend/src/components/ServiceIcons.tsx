@@ -4,9 +4,9 @@ import { useSearchMode } from '@/providers/SearchModeContext';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 
-const defaultServices = [
-  { label: 'Flights', icon: '✈️', href: '/' },
-  { label: 'Buses', icon: '🚌', href: '/' },
+const services = [
+  { label: 'Flights', icon: '✈️', key: 'flights' as const },
+  { label: 'Buses', icon: '🚌', key: 'buses' as const },
   { label: 'Tours', icon: '🏔️', href: '/tours' },
   { label: 'Hotels', icon: '🏨', href: '/hotels' },
   { label: 'Cars', icon: '🚗', href: '/cars' },
@@ -16,7 +16,45 @@ const defaultServices = [
   { label: 'Sky Lounge', icon: '✨', href: '/mingalar' },
 ];
 
-export default function ServiceIcons() {
+function ToggleButton({ label, icon, active, onToggle }: { label: string; icon: string; active: boolean; onToggle: () => void }) {
+  return (
+    <button
+      type="button"
+      aria-pressed={active}
+      onClick={onToggle}
+      className={
+        active
+          ? 'flex items-center gap-1.5 py-1.5 px-3 rounded-lg border bg-[#D4AF37] border-[#D4AF37] shadow-sm transition-all duration-200 cursor-pointer'
+          : 'flex items-center gap-1.5 py-1.5 px-3 rounded-lg border border-gray-200 hover:bg-gray-100 hover:border-gray-300 transition-all duration-200 cursor-pointer'
+      }
+    >
+      <span className="text-sm hover:scale-110 transition-transform">{icon}</span>
+      <span className={'text-xs font-semibold hidden sm:inline ' + (active ? 'text-white' : 'text-gray-600')}>
+        {label}
+      </span>
+    </button>
+  );
+}
+
+function NavLink({ label, icon, href, active }: { label: string; icon: string; href: string; active: boolean }) {
+  return (
+    <Link
+      href={href}
+      className={
+        active
+          ? 'flex items-center gap-1.5 py-1.5 px-3 rounded-lg border bg-[#D4AF37] border-[#D4AF37] transition-all duration-200 cursor-pointer'
+          : 'flex items-center gap-1.5 py-1.5 px-3 rounded-lg border border-transparent hover:bg-[#D4AF37]/20 hover:border-[#D4AF37]/40 transition-all duration-200 group cursor-pointer'
+      }
+    >
+      <span className="text-sm group-hover:scale-110 transition-transform">{icon}</span>
+      <span className={'text-xs font-semibold transition-colors hidden sm:inline ' + (active ? 'text-white' : 'text-gray-700 group-hover:text-[#D4AF37]')}>
+        {label}
+      </span>
+    </Link>
+  );
+}
+
+export default function ServiceIcons___FINALV4() {
   const pathname = usePathname();
   const { mode, setMode } = useSearchMode();
 
@@ -25,62 +63,27 @@ export default function ServiceIcons() {
       <div className="fixed top-20 left-0 right-0 z-50">
         <div className="w-full bg-white/80 backdrop-blur-md border-b border-gray-200 py-2 px-2 shadow-sm">
           <div className="max-w-6xl mx-auto flex flex-wrap justify-center gap-1 md:gap-2">
-            {defaultServices.map((item) => {
-              const isToggle = item.label === 'Flights' || item.label === 'Buses';
-              const isFlightsActive = item.label === 'Flights' && mode === 'flights';
-              const isBusesActive = item.label === 'Buses' && mode === 'buses';
-
-              if (isToggle) {
-                const isActive = isFlightsActive || isBusesActive;
+            {services.map((item) => {
+              if ('key' in item) {
+                const active = mode === item.key;
                 return (
-                  <button
+                  <ToggleButton
                     key={item.label}
-                    onClick={() => {
-                      if (item.label === 'Flights') setMode('flights');
-                      else setMode('buses');
+                    label={item.label}
+                    icon={item.icon}
+                    active={active}
+                    onToggle={() => {
+                      setMode(item.key);
                       setTimeout(() => {
                         const el = document.getElementById('search-engine');
                         if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
                       }, 50);
                     }}
-                    type="button"
-                    aria-pressed={isActive}
-                    className={'flex items-center gap-1.5 py-1.5 px-3 rounded-lg border transition-all duration-200 cursor-pointer ' +
-                      (isActive
-                        ? 'bg-[#D4AF37] border-[#D4AF37] shadow-sm'
-                        : 'border-gray-200 hover:bg-gray-100 hover:border-gray-300')}
-                  >
-                    <span className="text-sm group-hover:scale-110 transition-transform">
-                      {item.icon}
-                    </span>
-                    <span className={'text-xs font-semibold transition-colors hidden sm:inline ' +
-                      (isActive ? 'text-white' : 'text-gray-600')}>
-                      {item.label}
-                    </span>
-                  </button>
+                  />
                 );
               }
-
-              // Other services: use gold hover
-              const isActive = item.href !== '/' && (pathname === item.href || pathname.startsWith(item.href + '/'));
-              return (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className={'flex items-center gap-1.5 py-1.5 px-3 rounded-lg border transition-all duration-200 group cursor-pointer ' +
-                    (isActive
-                      ? 'bg-[#D4AF37] border-[#D4AF37]'
-                      : 'border-transparent hover:bg-[#D4AF37]/20 hover:border-[#D4AF37]/40')}
-                >
-                  <span className="text-sm group-hover:scale-110 transition-transform">
-                    {item.icon}
-                  </span>
-                  <span className={'text-xs font-semibold transition-colors hidden sm:inline ' +
-                    (isActive ? 'text-white' : 'text-gray-700 group-hover:text-[#D4AF37]')}>
-                    {item.label}
-                  </span>
-                </Link>
-              );
+              const active = item.href !== '/' && (pathname === item.href || pathname.startsWith(item.href + '/'));
+              return <NavLink key={item.href} label={item.label} icon={item.icon} href={item.href} active={active} />;
             })}
           </div>
         </div>
