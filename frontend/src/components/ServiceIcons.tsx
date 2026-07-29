@@ -24,7 +24,7 @@ function ToggleButton({ label, icon, active, onToggle }: { label: string; icon: 
       onClick={onToggle}
       className={
         active
-          ? 'flex items-center gap-1.5 py-1.5 px-3 rounded-lg border bg-[#D4AF37] border-[#D4AF37] shadow-sm transition-all duration-200 cursor-pointer'
+          ? 'flex items-center gap-1.5 py-1.5 px-3 rounded-lg border bg-[#D4AF37] border-[#D4AF37] transition-all duration-200 cursor-pointer'
           : 'flex items-center gap-1.5 py-1.5 px-3 rounded-lg border border-gray-200 hover:bg-gray-100 hover:border-gray-300 transition-all duration-200 cursor-pointer'
       }
     >
@@ -54,9 +54,10 @@ function NavLink({ label, icon, href, active }: { label: string; icon: string; h
   );
 }
 
-export default function ServiceIcons___FINALV4() {
+export default function ServiceIcons___FINALV5() {
   const pathname = usePathname();
   const { mode, setMode } = useSearchMode();
+  const isHomePage = pathname === "/";
 
   return (
     <>
@@ -65,7 +66,7 @@ export default function ServiceIcons___FINALV4() {
           <div className="max-w-6xl mx-auto flex flex-wrap justify-center gap-1 md:gap-2">
             {services.map((item) => {
               if ('key' in item) {
-                const active = mode === item.key;
+                const active = isHomePage && mode === item.key;
                 return (
                   <ToggleButton
                     key={item.label}
