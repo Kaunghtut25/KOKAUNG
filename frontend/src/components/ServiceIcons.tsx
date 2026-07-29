@@ -25,7 +25,7 @@ function ToggleButton({ label, icon, active, onToggle }: { label: string; icon: 
       className={
         active
           ? 'flex items-center gap-1.5 py-1.5 px-3 rounded-lg border bg-[#D4AF37] border-[#D4AF37] transition-all duration-200 cursor-pointer'
-          : 'flex items-center gap-1.5 py-1.5 px-3 rounded-lg border border-gray-200 hover:bg-gray-100 hover:border-gray-300 transition-all duration-200 cursor-pointer'
+          : 'flex items-center gap-1.5 py-1.5 px-3 rounded-lg border border-transparent hover:bg-gray-100 hover:border-transparent transition-all duration-200 cursor-pointer'
       }
     >
       <span className="text-sm hover:scale-110 transition-transform">{icon}</span>
