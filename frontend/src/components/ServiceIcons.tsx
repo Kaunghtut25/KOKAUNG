@@ -1,6 +1,7 @@
 'use client';
 
 import { useSearchMode } from '@/providers/SearchModeContext';
+import { useState, useEffect } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import Link from 'next/link';
 
@@ -59,13 +60,27 @@ export default function ServiceIcons___FINALV5() {
   const router = useRouter();
   const { mode, setMode } = useSearchMode();
   const isHomePage = pathname === "/";
+  const [moduleToggles, setModuleToggles] = useState<Record<string, boolean>>({});
+
+  useEffect(() => {
+    fetch('/api/admin/site-config')
+      .then(r => r.json())
+      .then(d => setModuleToggles(d.moduleToggles || {}))
+      .catch(() => {});
+  }, []);
 
   return (
     <>
       <div className="fixed top-20 left-0 right-0 z-50">
         <div className="w-full bg-white/80 backdrop-blur-md border-b border-gray-200 py-2 px-2 shadow-sm">
           <div className="max-w-6xl mx-auto flex flex-wrap justify-center gap-1 md:gap-2">
-            {services.map((item) => {
+            {services.filter(item => {
+              if ('key' in item) {
+                if (item.key === 'flights') return moduleToggles.flights !== false;
+                if (item.key === 'buses') return moduleToggles.buses !== false;
+              }
+              return true;
+            }).map((item) => {
               if ('key' in item) {
                 const active = isHomePage && mode === item.key;
                 return (
