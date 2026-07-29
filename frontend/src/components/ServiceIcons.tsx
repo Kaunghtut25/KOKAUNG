@@ -1,7 +1,7 @@
 'use client';
 
 import { useSearchMode } from '@/providers/SearchModeContext';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import Link from 'next/link';
 
 const services = [
@@ -56,6 +56,7 @@ function NavLink({ label, icon, href, active }: { label: string; icon: string; h
 
 export default function ServiceIcons___FINALV5() {
   const pathname = usePathname();
+  const router = useRouter();
   const { mode, setMode } = useSearchMode();
   const isHomePage = pathname === "/";
 
@@ -75,10 +76,13 @@ export default function ServiceIcons___FINALV5() {
                     active={active}
                     onToggle={() => {
                       setMode(item.key);
+                      if (!isHomePage) {
+                        router.push('/');
+                      }
                       setTimeout(() => {
                         const el = document.getElementById('search-engine');
                         if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                      }, 50);
+                      }, 100);
                     }}
                   />
                 );
