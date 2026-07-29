@@ -242,6 +242,46 @@ function BusDatePicker({ value, onChange }: { value: string; onChange: (v: strin
   );
 }
 
+
+function CityDropdown({ cities, value, onChange, placeholder }: { cities: Array<{ city: string; cityMY: string; region: string; popular: boolean }>; value: string; onChange: (v: string) => void; placeholder: string }) {
+  const [open, setOpen] = useState(false);
+  const [query, setQuery] = useState("");
+  const ref = useRef<HTMLDivElement>(null!);
+  const selected = cities.find(c => c.city === value);
+  
+  useEffect(() => {
+    const h = (e: MouseEvent) => { if (ref.current && !ref.current.contains(e.target as Node)) { setOpen(false); setQuery(""); } };
+    document.addEventListener("mousedown", h);
+    return () => document.removeEventListener("mousedown", h);
+  }, []);
+  
+  const filtered = query ? cities.filter(c => c.city.toLowerCase().includes(query.toLowerCase()) || c.cityMY.includes(query)) : cities;
+  
+  return (
+    <div ref={ref} className="relative">
+      {open ? (
+        <div className="bg-white border border-[#D4AF37] rounded-lg shadow-lg">
+          <input autoFocus value={query} onChange={e => setQuery(e.target.value)} placeholder={"Search city..."} className="w-full bg-transparent px-4 py-3 text-sm text-gray-900 outline-none border-b border-gray-100" />
+          <div className="max-h-36 overflow-y-auto">
+            {filtered.map(c => (
+              <div key={c.city} onClick={() => { onChange(c.city); setOpen(false); setQuery(""); }}
+                className={"px-4 py-2 text-sm cursor-pointer hover:bg-[#D4AF37]/10 border-b border-gray-50 last:border-0 " + (c.city === value ? "bg-[#D4AF37]/20 font-semibold" : "text-gray-700")}>
+                {c.popular ? "★ " : ""}{c.city} ({c.cityMY}) — {c.region}
+              </div>
+            ))}
+            {filtered.length === 0 && <div className="px-4 py-2 text-sm text-gray-400">No cities found</div>}
+          </div>
+        </div>
+      ) : (
+        <button type="button" onClick={() => setOpen(true)}
+          className="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 text-sm text-left outline-none focus:border-[#D4AF37] transition-all cursor-pointer">
+          {selected ? <>{selected.popular ? "★ " : ""}{selected.city} ({selected.cityMY}) — {selected.region}</> : <span className="text-gray-400">{placeholder}</span>}
+        </button>
+      )}
+    </div>
+  );
+}
+
 export default function HomePageClient({ siteConfig: ssrConfig }: { siteConfig?: any }) {
   const router = useRouter();
   const [siteConfig, setSiteConfig] = useState<any>(ssrConfig || null);
@@ -413,8 +453,8 @@ export default function HomePageClient({ siteConfig: ssrConfig }: { siteConfig?:
             {searchMode==='buses' && (()=>{const bp=busPassengers;const totalPax=bp.adults+bp.children;return (
               <form onSubmit={(e)=>{e.preventDefault();try{const events=JSON.parse(localStorage.getItem('a9_search_submit_events')||'[]');events.push({type:'bus',from:busFrom,to:busTo,date:busDate,adults:bp.adults,children:bp.children,client:busClientType,timestamp:new Date().toISOString()});if(events.length>100)events.splice(0,events.length-100);localStorage.setItem('a9_search_submit_events',JSON.stringify(events))}catch(e){};router.push('/book-now?type=bus&from='+encodeURIComponent(busFrom)+'&to='+encodeURIComponent(busTo)+'&date='+encodeURIComponent(busDate)+'&adults='+bp.adults+'&children='+bp.children+'&client='+encodeURIComponent(busClientType))}} className="space-y-3">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                  <div><label className="block text-gray-500 text-xs uppercase tracking-wider mb-1">🚍 From City</label><select value={busFrom} onChange={e=>setBusFrom(e.target.value)} className="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-900 outline-none focus:border-[#D4AF37] transition-all cursor-pointer" required><option value="">Select city</option>{busCities.map(c=><option key={"from-"+c.city} value={c.city}>{c.popular?'★ ':''}{c.city} ({c.cityMY}) — {c.region}</option>)}</select></div>
-                  <div><label className="block text-gray-500 text-xs uppercase tracking-wider mb-1">🚍 To City</label><select value={busTo} onChange={e=>setBusTo(e.target.value)} className="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-900 outline-none focus:border-[#D4AF37] transition-all cursor-pointer" required><option value="">Select city</option>{busCities.map(c=><option key={"to-"+c.city} value={c.city}>{c.popular?'★ ':''}{c.city} ({c.cityMY}) — {c.region}</option>)}</select></div>
+                  <div><label className="block text-gray-500 text-xs uppercase tracking-wider mb-1">🚍 From City</label><CityDropdown cities={busCities} value={busFrom} onChange={setBusFrom} placeholder="Select city" /></div>
+                  <div><label className="block text-gray-500 text-xs uppercase tracking-wider mb-1">🚍 To City</label><CityDropdown cities={busCities.filter(c => c.city !== busFrom)} value={busTo} onChange={setBusTo} placeholder="Select city" /></div>
                   <div><label className="block text-gray-500 text-xs uppercase tracking-wider mb-1">📅 Travel Date</label><BusDatePicker value={busDate} onChange={setBusDate} /></div>
                 </div>
                 <div className="flex flex-col md:flex-row gap-3 items-end flex-wrap">
