@@ -1,4 +1,3 @@
-// deploy-v3 — 20260729-1111
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
@@ -87,6 +86,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${inter.variable} overflow-x-hidden`}>
       <head>
+        <meta name="x-version" content="v4-toggle-fix-20260729-1255" />
         <meta name="google-site-verification" content="5Jm0-k00otih6d0kErhwREEJ5NNdqCUyCt2Cr9n7ZCs" />
         <link rel="icon" href="/favicon.ico" sizes="any" />
         <script
