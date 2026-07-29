@@ -187,7 +187,7 @@ export async function create(collection: Collection, data: Record<string, any>):
   const redisResult = await redisSet(collection, item);
   if (redisResult) { console.warn(`[Store] Saved ${collection}/${id} to Upstash Redis`); return redisResult; }
   console.warn(`[Store] Saving ${collection}/${id} to memory (won't survive cold start)`);
-  const items = SEEDS[collection] || []; items.push(item); return item;
+  const items = [...(SEEDS[collection] || [])]; items.push(item); return item;
 }
 
 export async function update(collection: Collection, id: string, data: Record<string, any>): Promise<any | null> {

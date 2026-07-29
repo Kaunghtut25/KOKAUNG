@@ -3,9 +3,9 @@
 "use client";
 import Link from "next/link";
 import { useSearchMode } from '@/providers/SearchModeContext';
-import { useState, useEffect, useCallback, useRef, useMemo } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import { useRouter } from "next/navigation";
-import toast from "react-hot-toast";
+
 import PopularDestinations from "@/components/PopularDestinations"
 import { Airport, airports } from '@/data/airports';
 import { getBusCities } from '@/data/busCities';
@@ -181,7 +181,7 @@ function BusDatePicker({ value, onChange }: { value: string; onChange: (v: strin
 
   // Parse value to show selected
   const selectedDate = value ? new Date(value + "T00:00:00") : null;
-  const displayDay = selectedDate && selectedDate.getFullYear() === viewYear && selectedDate.getMonth() === viewMonth ? selectedDate.getDate() : null;
+  const displayDay = selectedDate && selectedDate.getFullYear() === viewYear && selectedDate.getMonth() === viewMonth ? selectedDate.getDate() : (selectedDay || null);
 
   const prevMonth = () => { if (viewMonth === 0) { setViewMonth(11); setViewYear(viewYear - 1); } else setViewMonth(viewMonth - 1); };
   const nextMonth = () => { if (viewMonth === 11) { setViewMonth(0); setViewYear(viewYear + 1); } else setViewMonth(viewMonth + 1); };
@@ -260,7 +260,7 @@ function CityDropdown({ cities, value, onChange, placeholder }: { cities: Array<
   return (
     <div ref={ref} className="relative">
       {open ? (
-        <div className="bg-white border border-[#D4AF37] rounded-lg shadow-lg">
+        <div className="absolute top-full left-0 right-0 z-50 mt-1 bg-white border border-[#D4AF37] rounded-lg shadow-lg">
           <input autoFocus value={query} onChange={e => setQuery(e.target.value)} placeholder={"Search city..."} className="w-full bg-transparent px-4 py-3 text-sm text-gray-900 outline-none border-b border-gray-100" />
           <div className="max-h-36 overflow-y-auto">
             {filtered.map(c => (

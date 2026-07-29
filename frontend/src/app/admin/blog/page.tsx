@@ -148,7 +148,7 @@ export default function AdminBlogPage() {
   return (
     <div className="min-h-screen bg-[#0A1628] text-white pt-6 px-4 max-w-5xl mx-auto" style={{ paddingTop: '5rem' }}>
       <div className="flex items-center justify-between mb-8">
-        <h1 className="text-3xl font-bold text-[#0A1628]">📝 Blog Management</h1>
+        <h1 className="text-3xl font-bold text-white">📝 Blog Management</h1>
         <Link href="/admin/dashboard" className="text-[#D4AF37] hover:text-[#C5A028] text-sm">← Dashboard</Link>
       </div>
 
