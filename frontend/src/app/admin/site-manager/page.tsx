@@ -1165,6 +1165,8 @@ const tabs: { key: Tab; label: string }[] = [
               <h2 className="text-lg font-bold text-white">Module Toggles</h2>
               <p className="text-sm text-white/40">Turn entire website sections ON or OFF. When OFF, the module disappears from all public pages, navigation, and footer.</p>
               {[
+                { key: "flights", label: "Flights", desc: "Flight search and booking on homepage" },
+                { key: "buses", label: "Buses", desc: "Bus ticket search and booking" },
                 { key: "tours", label: "Tours", desc: "Tour packages, destinations, adventure trips" },
                 { key: "hotels", label: "Hotels", desc: "Hotel listings and booking" },
                 { key: "cars", label: "Cars", desc: "Car rental listings" },
