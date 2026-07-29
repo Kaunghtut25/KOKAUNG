@@ -371,8 +371,8 @@ export { DEDUPED as BUS_CITIES };
 
 export function getBusCities(): BusCity[] {
   return [...DEDUPED].sort((a, b) => {
+    // Popular cities at the top, then strict A–Z
     if (a.popular !== b.popular) return a.popular ? -1 : 1;
-    if (a.region !== b.region) return a.region.localeCompare(b.region);
     return a.city.localeCompare(b.city);
   });
 }
