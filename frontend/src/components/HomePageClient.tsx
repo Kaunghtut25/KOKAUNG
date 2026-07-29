@@ -282,6 +282,24 @@ function CityDropdown({ cities, value, onChange, placeholder }: { cities: Array<
   );
 }
 
+
+  function showValidationMsg(msg: string) { alert(msg); }
+  
+  function validateBusSearch(from: string, to: string, date: string): boolean {
+    if (!from) { showValidationMsg('Please select a departure city.'); return false; }
+    if (!to) { showValidationMsg('Please select a destination city.'); return false; }
+    if (from === to) { showValidationMsg('Departure and destination cities must be different.'); return false; }
+    if (!date) { showValidationMsg('Please select a travel date.'); return false; }
+    return true;
+  }
+  
+  function validateFlightSearch(from: string, to: string, date: string): boolean {
+    if (!from) { showValidationMsg('Please enter a departure city.'); return false; }
+    if (!to) { showValidationMsg('Please enter a destination city.'); return false; }
+    if (!date) { showValidationMsg('Please select a departure date.'); return false; }
+    return true;
+  }
+
 export default function HomePageClient({ siteConfig: ssrConfig }: { siteConfig?: any }) {
   const router = useRouter();
   const [siteConfig, setSiteConfig] = useState<any>(ssrConfig || null);

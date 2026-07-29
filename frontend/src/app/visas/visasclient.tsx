@@ -189,7 +189,7 @@ export default function VisasClient({ initialVisas, siteConfig }: VisasClientPro
   }, [initialVisas.length]);
 
   // Chunk into rows of 6
-  const pool: VisaService[] = [...visas];
+  
   const visaRows: VisaService[][] = [];
   for (let i = 0; i < pool.length; i += 6) {
     visaRows.push(pool.slice(i, i + 6));

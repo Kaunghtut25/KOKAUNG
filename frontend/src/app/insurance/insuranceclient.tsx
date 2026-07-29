@@ -159,7 +159,7 @@ export default function InsuranceClient({ initialPlans, siteConfig }: InsuranceC
     fetchInsurance();
   }, [initialPlans.length]);
 
-  const displayPlans = plans.slice(0, 9);
+  const displayPlans = plans;
 
   return (
     <div className="min-h-screen bg-gray-50">

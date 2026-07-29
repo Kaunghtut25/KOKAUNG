@@ -75,7 +75,7 @@ const jsonLd = {
     "telephone": "+959123456789",
     "contactType": "customer service"
   },
-  "sameAs": []
+  "sameAs": ["https://facebook.com/a9globaltravel", "https://instagram.com/a9globaltravel"]
 };
 
 export default function RootLayout({
