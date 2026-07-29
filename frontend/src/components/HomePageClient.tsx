@@ -143,6 +143,105 @@ function PassengerSelector({ passengers, onChange }: { passengers: PassengerCoun
   );
 }
 
+
+function BusDatePicker({ value, onChange }: { value: string; onChange: (v: string) => void }) {
+  const today = new Date();
+  const [showCalendar, setShowCalendar] = useState(false);
+  const [viewYear, setViewYear] = useState(today.getFullYear());
+  const [viewMonth, setViewMonth] = useState(today.getMonth());
+  const [selectedDay, setSelectedDay] = useState<number | null>(null);
+  const ref = useRef<HTMLDivElement>(null!);
+  const months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+  
+  const todayStr = today.toISOString().split("T")[0];
+  const daysInMonth = new Date(viewYear, viewMonth + 1, 0).getDate();
+  const firstDow = new Date(viewYear, viewMonth, 1).getDay();
+  
+  const formatDisplay = (d: number) => {
+    const dt = new Date(viewYear, viewMonth, d);
+    return dt.toLocaleDateString("en-US", { weekday: "short", day: "numeric", month: "short", year: "numeric" });
+  };
+
+  // Sync: when selectedDay changes, emit the date
+  useEffect(() => {
+    if (selectedDay) {
+      const dateStr = viewYear + "-" + String(viewMonth + 1).padStart(2, "0") + "-" + String(selectedDay).padStart(2, "0");
+      onChange(dateStr);
+    }
+  }, [selectedDay, viewYear, viewMonth]);
+
+  // Close on outside click
+  useEffect(() => {
+    const h = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) setShowCalendar(false);
+    };
+    if (showCalendar) document.addEventListener("mousedown", h);
+    return () => document.removeEventListener("mousedown", h);
+  }, [showCalendar]);
+
+  // Parse value to show selected
+  const selectedDate = value ? new Date(value + "T00:00:00") : null;
+  const displayDay = selectedDate && selectedDate.getFullYear() === viewYear && selectedDate.getMonth() === viewMonth ? selectedDate.getDate() : null;
+
+  const prevMonth = () => { if (viewMonth === 0) { setViewMonth(11); setViewYear(viewYear - 1); } else setViewMonth(viewMonth - 1); };
+  const nextMonth = () => { if (viewMonth === 11) { setViewMonth(0); setViewYear(viewYear + 1); } else setViewMonth(viewMonth + 1); };
+
+  return (
+    <div ref={ref} className="relative">
+      <button type="button" onClick={() => setShowCalendar(!showCalendar)}
+        className="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 text-sm text-left outline-none focus:border-[#D4AF37] transition-all cursor-pointer flex items-center justify-between group">
+        <span className={selectedDay ? "text-gray-900" : "text-gray-400"}>
+          {selectedDay ? formatDisplay(selectedDay) : "Select travel date"}
+        </span>
+        <svg className="w-4 h-4 text-[#D4AF37] flex-shrink-0 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+        </svg>
+      </button>
+      
+      {showCalendar && (
+        <div className="absolute top-full left-0 mt-1 z-50 bg-white border border-gray-200 rounded-xl shadow-2xl p-4 w-72" style={{minWidth:"280px"}}>
+          {/* Header */}
+          <div className="flex items-center justify-between mb-3">
+            <button onClick={prevMonth} className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100 text-gray-500 transition-colors">
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7"/></svg>
+            </button>
+            <span className="text-sm font-semibold text-gray-800">{months[viewMonth]} {viewYear}</span>
+            <button onClick={nextMonth} className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100 text-gray-500 transition-colors">
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7"/></svg>
+            </button>
+          </div>
+          {/* Day headers */}
+          <div className="grid grid-cols-7 mb-1">
+            {["Su","Mo","Tu","We","Th","Fr","Sa"].map(d => <div key={d} className="text-center text-[10px] font-medium text-gray-400 py-1">{d}</div>)}
+          </div>
+          {/* Day grid */}
+          <div className="grid grid-cols-7 gap-0.5">
+            {Array.from({ length: firstDow }).map((_, i) => <div key={"empty"+i} className="h-9" />)}
+            {Array.from({ length: daysInMonth }).map((_, i) => {
+              const day = i + 1;
+              const dateStr = viewYear + "-" + String(viewMonth + 1).padStart(2, "0") + "-" + String(day).padStart(2, "0");
+              const isPast = dateStr < todayStr;
+              const isToday = dateStr === todayStr;
+              const isSel = displayDay === day;
+              return (
+                <button key={day} type="button" disabled={isPast}
+                  onClick={() => { setSelectedDay(day); setShowCalendar(false); }}
+                  className={"h-9 text-xs rounded-lg transition-all " +
+                    (isSel ? "bg-[#D4AF37] text-white font-bold shadow-md" :
+                     isToday ? "bg-[#D4AF37]/10 text-[#D4AF37] font-semibold" :
+                     isPast ? "text-gray-300 cursor-not-allowed" :
+                     "text-gray-700 hover:bg-[#D4AF37]/10 hover:text-[#D4AF37]")}>
+                  {day}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
 export default function HomePageClient({ siteConfig: ssrConfig }: { siteConfig?: any }) {
   const router = useRouter();
   const [siteConfig, setSiteConfig] = useState<any>(ssrConfig || null);
@@ -316,7 +415,7 @@ export default function HomePageClient({ siteConfig: ssrConfig }: { siteConfig?:
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                   <div><label className="block text-gray-500 text-xs uppercase tracking-wider mb-1">🚍 From City</label><select value={busFrom} onChange={e=>setBusFrom(e.target.value)} className="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-900 outline-none focus:border-[#D4AF37] transition-all cursor-pointer" required><option value="">Select city</option>{busCities.map(c=><option key={"from-"+c.city} value={c.city}>{c.popular?'★ ':''}{c.city} ({c.cityMY}) — {c.region}</option>)}</select></div>
                   <div><label className="block text-gray-500 text-xs uppercase tracking-wider mb-1">🚍 To City</label><select value={busTo} onChange={e=>setBusTo(e.target.value)} className="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-900 outline-none focus:border-[#D4AF37] transition-all cursor-pointer" required><option value="">Select city</option>{busCities.map(c=><option key={"to-"+c.city} value={c.city}>{c.popular?'★ ':''}{c.city} ({c.cityMY}) — {c.region}</option>)}</select></div>
-                  <div><label className="block text-gray-500 text-xs uppercase tracking-wider mb-1">📅 Travel Date</label><input type="date" value={busDate} onChange={e=>setBusDate(e.target.value)} min={new Date().toISOString().split('T')[0]} className="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 text-gray-900 outline-none focus:border-[#D4AF37] transition-all" required /></div>
+                  <div><label className="block text-gray-500 text-xs uppercase tracking-wider mb-1">📅 Travel Date</label><BusDatePicker value={busDate} onChange={setBusDate} /></div>
                 </div>
                 <div className="flex flex-col md:flex-row gap-3 items-end flex-wrap">
                   <div className="w-full md:w-auto">
