@@ -1,3 +1,4 @@
+// deploy-v3 — 20260729-1111
 // A9 v3.0 — Fully Dynamic Homepage from Admin Site Manager
 "use client";
 import Link from "next/link";

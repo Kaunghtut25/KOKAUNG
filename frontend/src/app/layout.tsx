@@ -1,4 +1,5 @@
-﻿import type { Metadata } from "next";
+// deploy-v3 — 20260729-1111
+import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import RootClient from "@/components/RootClient";
