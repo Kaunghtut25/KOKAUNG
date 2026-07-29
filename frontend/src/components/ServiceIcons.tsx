@@ -25,11 +25,11 @@ function ToggleButton({ label, icon, active, onToggle }: { label: string; icon: 
       className={
         active
           ? 'flex items-center gap-1.5 py-1.5 px-3 rounded-lg border bg-[#D4AF37] border-[#D4AF37] transition-all duration-200 cursor-pointer'
-          : 'flex items-center gap-1.5 py-1.5 px-3 rounded-lg border border-transparent hover:bg-gray-100 hover:border-transparent transition-all duration-200 cursor-pointer'
+          : 'flex items-center gap-1.5 py-1.5 px-3 rounded-lg border border-transparent hover:bg-[#D4AF37]/20 hover:border-[#D4AF37]/40 transition-all duration-200 group cursor-pointer'
       }
     >
       <span className="text-sm hover:scale-110 transition-transform">{icon}</span>
-      <span className={'text-xs font-semibold hidden sm:inline ' + (active ? 'text-white' : 'text-gray-600')}>
+      <span className={'text-xs font-semibold hidden sm:inline ' + (active ? 'text-white' : 'text-gray-700 group-hover:text-[#D4AF37]')}>
         {label}
       </span>
     </button>
