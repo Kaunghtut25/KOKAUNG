@@ -16,7 +16,7 @@ const defaultServices = [
   { label: 'Sky Lounge', icon: '✨', href: '/mingalar' },
 ];
 
-export default function ServiceIcons() {
+export default function ServiceIcons___V3_JUL29_1133() {
   const pathname = usePathname();
   const { mode, setMode } = useSearchMode();
 
