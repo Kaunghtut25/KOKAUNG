@@ -144,36 +144,6 @@ function PassengerSelector({ passengers, onChange }: { passengers: PassengerCoun
 }
 
 
-function BusCityCombobox({ cities, value, onChange, label }: { cities: Array<{ city: string; cityMY: string; region: string; popular: boolean }>; value: string; onChange: (v: string) => void; label: string }) {
-  const [open, setOpen] = useState(false);
-  const ref = React.useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    const handler = (e: MouseEvent) => { if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false); };
-    document.addEventListener('mousedown', handler);
-    return () => document.removeEventListener('mousedown', handler);
-  }, []);
-  const selected = cities.find(c => c.city === value);
-  return (
-    <div ref={ref} className="relative">
-      <button type="button" onClick={() => setOpen(!open)} className="w-full bg-gray-50 border border-gray-200 rounded-lg px-2 py-1 text-xs text-gray-900 outline-none focus:border-[#D4AF37] transition-all cursor-pointer text-left flex items-center justify-between">
-        <span className={selected ? 'text-gray-900' : 'text-gray-400'}>{selected ? (selected.popular ? '★ ' : '') + selected.city + ' (' + selected.cityMY + ') — ' + selected.region : 'Select city'}</span>
-        <span className="text-gray-400 ml-1">{open ? '▲' : '▼'}</span>
-      </button>
-      {open && (
-        <div className="absolute top-full left-0 right-0 z-50 mt-1 bg-white border border-gray-200 rounded-lg shadow-xl max-h-28 overflow-y-auto">
-          {cities.map(c => (
-            <div key={c.city} onClick={() => { onChange(c.city); setOpen(false); }} className={cn('px-2 py-1 text-xs cursor-pointer hover:bg-[#D4AF37]/10 transition-colors', c.city === value ? 'bg-[#D4AF37]/20 font-semibold' : 'text-gray-700')}>
-              {c.popular ? '★ ' : ''}{c.city} ({c.cityMY}) — {c.region}
-            </div>
-          ))}
-        </div>
-      )}
-    </div>
-  );
-}
-
-function cn(...classes: (string | boolean | undefined | null)[]) { return classes.filter(Boolean).join(' '); }
-
 export default function HomePageClient({ siteConfig: ssrConfig }: { siteConfig?: any }) {
   const router = useRouter();
   const [siteConfig, setSiteConfig] = useState<any>(ssrConfig || null);
@@ -345,8 +315,8 @@ export default function HomePageClient({ siteConfig: ssrConfig }: { siteConfig?:
             {searchMode==='buses' && (()=>{const bp=busPassengers;const totalPax=bp.adults+bp.children;return (
               <form onSubmit={(e)=>{e.preventDefault();try{const events=JSON.parse(localStorage.getItem('a9_search_submit_events')||'[]');events.push({type:'bus',from:busFrom,to:busTo,date:busDate,adults:bp.adults,children:bp.children,client:busClientType,timestamp:new Date().toISOString()});if(events.length>100)events.splice(0,events.length-100);localStorage.setItem('a9_search_submit_events',JSON.stringify(events))}catch(e){};router.push('/book-now?type=bus&from='+encodeURIComponent(busFrom)+'&to='+encodeURIComponent(busTo)+'&date='+encodeURIComponent(busDate)+'&adults='+bp.adults+'&children='+bp.children+'&client='+encodeURIComponent(busClientType))}} className="space-y-3">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                  <div><label className="block text-gray-500 text-xs uppercase tracking-wider mb-1">🚍 From City</label><BusCityCombobox cities={busCities} value={busFrom} onChange={setBusFrom} label="From City" /></div>
-                  <div><label className="block text-gray-500 text-xs uppercase tracking-wider mb-1">🚍 To City</label><BusCityCombobox cities={busCities.filter(c => c.city !== busFrom)} value={busTo} onChange={setBusTo} label="To City" /></div>
+                  <div><label className="block text-gray-500 text-xs uppercase tracking-wider mb-1">🚍 From City</label><input list="bus-from-list" value={busFrom} onChange={e=>setBusFrom(e.target.value)} placeholder="Search city..." className="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-900 outline-none focus:border-[#D4AF37] transition-all cursor-pointer" required /><datalist id="bus-from-list">{busCities.map(c=><option key={"from-"+c.city} value={c.city}>{c.popular?"★ ":""}{c.city} ({c.cityMY}) — {c.region}</option>)}</datalist></div>
+                  <div><label className="block text-gray-500 text-xs uppercase tracking-wider mb-1">🚍 To City</label><input list="bus-to-list" value={busTo} onChange={e=>setBusTo(e.target.value)} placeholder="Search city..." className="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-900 outline-none focus:border-[#D4AF37] transition-all cursor-pointer" required /><datalist id="bus-to-list">{busCities.map(c=><option key={"to-"+c.city} value={c.city}>{c.popular?"★ ":""}{c.city} ({c.cityMY}) — {c.region}</option>)}</datalist></div>
                   <div><label className="block text-gray-500 text-xs uppercase tracking-wider mb-1">📅 Travel Date</label><input type="date" value={busDate} onChange={e=>setBusDate(e.target.value)} min={new Date().toISOString().split('T')[0]} className="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 text-gray-900 outline-none focus:border-[#D4AF37] transition-all" required /></div>
                 </div>
                 <div className="flex flex-col md:flex-row gap-3 items-end flex-wrap">
