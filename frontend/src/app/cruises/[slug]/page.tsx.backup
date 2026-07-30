@@ -1,16 +1,13 @@
-'use client';
-
-import React, { useState } from 'react';
-import { notFound } from 'next/navigation';
+﻿import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 import { getAll } from '@/lib/persistentStore';
-import CurrencyToggle from '@/components/CurrencyToggle';
 import SocialShare from '@/components/SocialShare';
 import BackButton from '@/components/BackButton';
 import RelatedItems from '@/components/RelatedItems';
-import ErrorBoundary from '@/components/ErrorBoundary';
 export const dynamic = 'force-dynamic';
+
+interface PageProps { params: { slug: string } }
 
 const FALLBACK_CRUISES = [
   { id: "cr1", title: "Halong Bay Cruise", destination: "Vietnam", description: "Luxury overnight cruise through Halong Bay.", priceMMK: 650000, priceUSD: 310, duration: "3 Days / 2 Nights", images: ["/images_v2/hero-cruises-v2.jpg"] },
@@ -25,15 +22,14 @@ const FALLBACK_CRUISES = [
   { id: "cr10", title: "Antarctic Expedition", destination: "Antarctica", description: "The ultimate adventure to the last wilderness.", priceMMK: 8500000, priceUSD: 4050, duration: "12 Days / 11 Nights", images: ["/images_v2/hero-cruises-v2.jpg"] },
 ];
 
-interface CruiseDetailPageProps {
-  cruise: any;
-  slug: string;
-}
 
-function CruiseDetailClient({ cruise, slug }: CruiseDetailPageProps) {
-  const [currency, setCurrency] = useState<'MMK' | 'USD'>('MMK');
-  const [travelers, setTravelers] = useState(1);
-  const [travelDate, setTravelDate] = useState('');
+
+export default async function CruiseDetailPage({ params }: PageProps) {
+  const slug = params.slug;
+  let cruises = await getAll('cruises') as any[];
+  if (cruises.length === 0) cruises = FALLBACK_CRUISES;
+  const cruise = cruises.find((c: any) => ((c.title || c.name || '').toLowerCase().replace(/[^a-z0-9]+/g, '-') === slug || c.id === slug || c._id === slug || c.slug === slug)) || null;
+  if (!cruise) notFound();
 
   const name = cruise.title || cruise.name || '';
   const displayImage = (cruise.images && Array.isArray(cruise.images) && cruise.images[0]) || '/images_v2/hero-cruises-v2.jpg';
@@ -42,39 +38,8 @@ function CruiseDetailClient({ cruise, slug }: CruiseDetailPageProps) {
   const dest = cruise.destination || '';
   const duration = cruise.duration || '';
   const description = cruise.description || '';
-  const rating = cruise.rating || 4.5;
 
-  const price = currency === 'MMK' ? priceMMK : priceUSD;
-  const currencySymbol = currency === 'MMK' ? 'Ks' : '$';
-  const totalPrice = price * travelers;
-
-  const handleBookNow = () => {
-    const bookUrl = new URL('/book-now', window.location.origin);
-    bookUrl.searchParams.set('type', 'cruise');
-    bookUrl.searchParams.set('title', name);
-    bookUrl.searchParams.set('destination', dest);
-    bookUrl.searchParams.set('duration', duration);
-    bookUrl.searchParams.set('price', String(price));
-    bookUrl.searchParams.set('currency', currency);
-    bookUrl.searchParams.set('travelers', String(travelers));
-    bookUrl.searchParams.set('travelDate', travelDate);
-    window.location.href = bookUrl.toString();
-  };
-
-  const renderStars = (r: number) => {
-    return Array.from({ length: 5 }, (_, i) => (
-      <svg
-        key={i}
-        className={`w-5 h-5 ${i < Math.round(r) ? 'text-[#D4AF37]' : 'text-gray-600'}`}
-        fill="currentColor"
-        viewBox="0 0 20 20"
-      >
-        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-      </svg>
-    ));
-  };
-
-  const maxGroupSize = cruise.groupSize || 12;
+  const bookNowUrl = '/book-now?type=cruise&name=' + encodeURIComponent(name) + '&id=' + encodeURIComponent(cruise.id || cruise._id || slug) + '&priceMMK=' + priceMMK + '&priceUSD=' + priceUSD + '&destination=' + encodeURIComponent(dest);
 
   return (
     <main className="min-h-screen bg-white">
@@ -130,7 +95,7 @@ function CruiseDetailClient({ cruise, slug }: CruiseDetailPageProps) {
                 <svg className="w-8 h-8 mx-auto text-[#D4AF37] mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
-                <p className="text-[#D4AF37] text-2xl font-bold">{currencySymbol} {price.toLocaleString()}</p>
+                <p className="text-[#D4AF37] text-2xl font-bold">Ks {priceMMK.toLocaleString()}</p>
                 <p className="text-gray-400 text-xs uppercase tracking-wider mt-1">Price</p>
               </div>
               {duration && (
@@ -223,99 +188,53 @@ function CruiseDetailClient({ cruise, slug }: CruiseDetailPageProps) {
             </div>
           </div>
 
-          {/* Sidebar — Interactive Booking Card */}
+          {/* Sidebar — Booking Card */}
           <div className="lg:col-span-1">
-            <div className="sticky top-28">
-              <div className="rounded-2xl border border-[#D4AF37]/20 bg-white p-6 space-y-5 shadow-lg shadow-[#D4AF37]/5 mb-4">
+            <div className="sticky top-28 space-y-6">
+              <div className="rounded-2xl border border-[#D4AF37]/20 bg-gray-50 p-6 space-y-5">
                 {/* Price Header */}
-                <div className="flex items-center justify-between">
-                  <div>
-                    <span className="text-3xl font-bold text-[#D4AF37]" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
-                      {currencySymbol} {price.toLocaleString()}
+                <div className="bg-gradient-to-r from-[#0A1628] to-[#162D50] -mx-6 -mt-6 p-6 rounded-t-2xl text-white">
+                  <p className="text-white/60 text-xs uppercase tracking-wider mb-1">Cruise Price</p>
+                  <div className="flex items-baseline gap-1">
+                    <span className="text-3xl font-bold" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
+                      Ks {priceMMK.toLocaleString()}
                     </span>
-                    <span className="text-gray-500 text-sm ml-1">/ person</span>
                   </div>
-                  <CurrencyToggle activeCurrency={currency} onToggle={setCurrency} />
+                  <p className="text-white/50 text-sm mt-1">
+                    ≈ ${priceUSD.toLocaleString()} USD
+                  </p>
                 </div>
-
-                <hr className="border-[#D4AF37]/10" />
 
                 {/* Info Rows */}
-                <div className="space-y-2 text-sm">
-                  <div className="flex justify-between py-1">
-                    <span className="text-gray-500">Duration</span>
-                    <span className="text-[#0A1628] font-medium">{duration}</span>
-                  </div>
-                  <div className="flex justify-between py-1">
-                    <span className="text-gray-500">Destination</span>
+                <div className="space-y-2.5 text-sm">
+                  <div className="flex justify-between py-1 border-b border-gray-100">
+                    <span className="text-gray-400">Destination</span>
                     <span className="text-[#0A1628] font-medium">{dest}</span>
                   </div>
-                  <div className="flex justify-between py-1">
-                    <span className="text-gray-500">Group Size</span>
-                    <span className="text-[#0A1628] font-medium">Up to {maxGroupSize} people</span>
+                  <div className="flex justify-between py-1 border-b border-gray-100">
+                    <span className="text-gray-400">Duration</span>
+                    <span className="text-[#0A1628] font-medium">{duration}</span>
                   </div>
-                  <div className="flex justify-between py-1">
-                    <span className="text-gray-500">Rating</span>
-                    <span className="text-[#0A1628] font-medium flex items-center gap-1">
-                      {renderStars(rating)}
-                    </span>
+                  <div className="flex justify-between py-1 border-b border-gray-100">
+                    <span className="text-gray-400">Price (MMK)</span>
+                    <span className="text-[#0A1628] font-medium">Ks {priceMMK.toLocaleString()}</span>
                   </div>
-                </div>
-
-                <hr className="border-[#D4AF37]/10" />
-
-                {/* Booking Form */}
-                <div className="space-y-3">
-                  <div>
-                    <label className="text-gray-600 text-xs mb-1 block">Travel Date</label>
-                    <input
-                      type="date"
-                      value={travelDate}
-                      onChange={(e) => setTravelDate(e.target.value)}
-                      className="w-full px-3 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-gray-900 text-sm focus:outline-none focus:border-[#D4AF37]/50 [color-scheme:dark]"
-                    />
+                  <div className="flex justify-between py-1 border-b border-gray-100">
+                    <span className="text-gray-400">Price (USD)</span>
+                    <span className="text-[#0A1628] font-medium">${priceUSD.toLocaleString()}</span>
                   </div>
-                  <div>
-                    <label className="text-gray-600 text-xs mb-1 block">Travelers</label>
-                    <div className="flex items-center gap-2">
-                      <button
-                        type="button"
-                        onClick={() => setTravelers(Math.max(1, travelers - 1))}
-                        className="w-9 h-9 rounded-lg border border-gray-300 text-gray-600 hover:bg-gray-100 transition-colors flex items-center justify-center"
-                      >
-                        −
-                      </button>
-                      <span className="w-12 text-center text-[#0A1628] font-semibold">{travelers}</span>
-                      <button
-                        type="button"
-                        onClick={() => setTravelers(Math.min(maxGroupSize, travelers + 1))}
-                        className="w-9 h-9 rounded-lg border border-gray-300 text-gray-600 hover:bg-gray-100 transition-colors flex items-center justify-center"
-                      >
-                        +
-                      </button>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Total */}
-                <div className="flex justify-between items-center py-3 border-t border-[#D4AF37]/10">
-                  <span className="text-gray-700 font-medium">Total ({travelers} {travelers === 1 ? 'traveler' : 'travelers'})</span>
-                  <span className="text-2xl font-bold text-[#D4AF37]" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
-                    {currencySymbol} {totalPrice.toLocaleString()}
-                  </span>
                 </div>
 
                 {/* Book Now Button */}
-                <button
-                  onClick={handleBookNow}
-                  className="block w-full py-3.5 rounded-xl text-center font-bold text-lg bg-gradient-to-r from-[#D4AF37] to-[#F5A623] text-[#0A1628] shadow-lg shadow-[#D4AF37]/30 hover:shadow-xl hover:shadow-[#D4AF37]/40 hover:scale-[1.02] transition-all duration-300 active:scale-[0.98]"
+                <Link
+                  href={bookNowUrl}
+                  className="block w-full py-3.5 rounded-xl text-center font-bold text-base bg-gradient-to-r from-[#D4AF37] to-[#F5A623] text-[#0A1628] shadow-lg shadow-[#D4AF37]/30 hover:shadow-xl hover:shadow-[#D4AF37]/40 hover:scale-[1.02] transition-all duration-300"
                 >
                   Book Now
-                </button>
-                <p className="text-center text-gray-400 text-xs">No payment required to book</p>
+                </Link>
+                <p className="text-center text-gray-400 text-xs">No payment required to inquire</p>
               </div>
 
-              {/* Back Link */}
               <Link
                 href="/cruises"
                 className="block w-full py-3 rounded-xl text-center font-semibold text-sm border-2 border-[#D4AF37] text-[#D4AF37] hover:bg-[#D4AF37] hover:text-[#0A1628] transition-all duration-300"
@@ -327,19 +246,7 @@ function CruiseDetailClient({ cruise, slug }: CruiseDetailPageProps) {
         </div>
       </section>
 
-      <ErrorBoundary fallback={null}>
-        <RelatedItems section="cruises" excludeSlug={slug} destination={typeof dest === "string" ? dest : ""} />
-      </ErrorBoundary>
+      <RelatedItems section="cruises" excludeSlug={slug} destination={typeof dest === "string" ? dest : ""} />
     </main>
   );
-}
-
-export default async function CruiseDetailPage({ params }: { params: { slug: string } }) {
-  const slug = params.slug;
-  let cruises = await getAll('cruises') as any[];
-  if (cruises.length === 0) cruises = FALLBACK_CRUISES;
-  const cruise = cruises.find((c: any) => ((c.title || c.name || '').toLowerCase().replace(/[^a-z0-9]+/g, '-') === slug || c.id === slug || c._id === slug || c.slug === slug)) || null;
-  if (!cruise) notFound();
-
-  return <CruiseDetailClient cruise={cruise} slug={slug} />;
 }

@@ -1,9 +1,13 @@
+'use client';
+
 import { getAll } from '@/lib/persistentStore';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import type { Metadata } from 'next';
-import { notFound } from 'next/navigation';
+import { notFound, useParams } from 'next/navigation';
 import SocialShare from '@/components/SocialShare';
+import CurrencyToggle from '@/components/CurrencyToggle';
 import BackButton from '@/components/BackButton';
 import RelatedItems from '@/components/RelatedItems';
 export const dynamic = 'force-dynamic';
@@ -93,36 +97,73 @@ async function getHotelBySlug(slug: string): Promise<HotelDetail | null> {
 }
 
 
-export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
-  const { slug } = await params;
-  const hotel = await getHotelBySlug(slug);
-  if (!hotel) return { title: 'Hotel Not Found' };
-  const title = hotel.name + ' - A9 Global Travel';
-  const description = hotel.description || 'Book ' + hotel.name + ' at best rates. Premium hotel booking with A9 Global Travel.';
-  const imageUrl = hotel.images[0] || '/images_v2/hotel1-v2.jpg';
-  return {
-    title,
-    description: description.substring(0, 160),
-    openGraph: {
-      title,
-      description: description.substring(0, 160),
-      images: [{ url: imageUrl, width: 1200, height: 630 }],
-      type: 'website',
-    },
-  };
-}
 
-export default async function HotelDetailPage({ params }: { params: Promise<{ slug: string }> }) {
-  const { slug } = await params;
-  const hotel = await getHotelBySlug(slug);
-  if (!hotel) notFound();
+export default function HotelDetailPage() {
+  const params = useParams();
+  const slug = params?.slug as string;
 
-  const bookNowUrl = '/book-now?type=hotel&name=' + encodeURIComponent(hotel.name) +
-    '&id=' + encodeURIComponent(hotel._id) +
-    '&priceMMK=' + hotel.pricePerNightMMK +
-    '&priceUSD=' + hotel.pricePerNightUSD +
-    '&location=' + encodeURIComponent(hotel.location);
+  const [hotel, setHotel] = useState<HotelDetail | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [currency, setCurrency] = useState<'MMK' | 'USD'>('MMK');
+  const [rooms, setRooms] = useState(1);
+  const [travelDate, setTravelDate] = useState('');
 
+  useEffect(() => {
+    if (!slug) return;
+    setLoading(true);
+    getHotelBySlug(slug)
+      .then((h) => {
+        if (h) setHotel(h);
+        setLoading(false);
+      })
+      .catch(() => setLoading(false));
+  }, [slug]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-white">
+        <div className="max-w-7xl mx-auto px-4 pt-24 pb-4">
+          <BackButton />
+        </div>
+        <div className="h-[60vh] bg-gray-100 animate-pulse" />
+        <div className="max-w-7xl mx-auto px-4 py-12">
+          <div className="h-8 bg-gray-200 rounded w-1/3 mb-4 animate-pulse" />
+          <div className="h-4 bg-gray-200 rounded w-1/4 mb-8 animate-pulse" />
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div className="lg:col-span-2 space-y-4">
+              <div className="h-4 bg-gray-200 rounded animate-pulse" />
+              <div className="h-4 bg-gray-200 rounded w-3/4 animate-pulse" />
+              <div className="h-4 bg-gray-200 rounded w-1/2 animate-pulse" />
+            </div>
+            <div className="h-64 bg-gray-200 rounded-xl animate-pulse" />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (!hotel) {
+    return (
+      <div className="min-h-screen bg-white">
+        <div className="max-w-7xl mx-auto px-4 pt-24 pb-8">
+          <BackButton />
+        </div>
+        <div className="flex items-center justify-center flex-1 py-20">
+          <div className="text-center space-y-4">
+            <h2 className="text-xl text-[#0A1628] font-semibold">Hotel Not Found</h2>
+            <p className="text-gray-500">The hotel you are looking for does not exist.</p>
+            <Link href="/hotels" className="px-6 py-2 rounded-xl bg-gradient-to-r from-[#D4AF37] to-[#C5A028] text-gray-900 font-semibold inline-block">
+              Back to Hotels
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  const price = currency === 'MMK' ? hotel.pricePerNightMMK : hotel.pricePerNightUSD;
+  const currencySymbol = currency === 'MMK' ? 'Ks' : '$';
+  const totalPrice = price * rooms;
   const heroImage = hotel.images[0] || '/images_v2/hotel1-v2.jpg';
 
   function renderStars(rating: number) {
@@ -132,6 +173,20 @@ export default async function HotelDetailPage({ params }: { params: Promise<{ sl
       </svg>
     ));
   }
+
+  const handleBookNow = () => {
+    const bookUrl = new URL('/book-now', window.location.origin);
+    bookUrl.searchParams.set('type', 'hotel');
+    bookUrl.searchParams.set('title', hotel.name);
+    bookUrl.searchParams.set('location', hotel.location);
+    bookUrl.searchParams.set('price', String(price));
+    bookUrl.searchParams.set('currency', currency);
+    bookUrl.searchParams.set('guests', String(rooms));
+    bookUrl.searchParams.set('checkIn', travelDate);
+    window.location.href = bookUrl.toString();
+  };
+
+  const bookNowUrl = `/book-now?type=hotel&name=${encodeURIComponent(hotel.name)}&id=${encodeURIComponent(hotel._id)}&priceMMK=${hotel.pricePerNightMMK}&priceUSD=${hotel.pricePerNightUSD}&location=${encodeURIComponent(hotel.location)}`;
 
   const roomsLabel = hotel.availableRooms === 0
     ? 'Sold Out'
@@ -154,7 +209,7 @@ export default async function HotelDetailPage({ params }: { params: Promise<{ sl
   return (
     <main className="min-h-screen bg-white">
       {/* Back Button */}
-      <BackButton bookNowUrl={`/book-now?type=hotel&name=${encodeURIComponent(hotel.name)}&id=${encodeURIComponent(hotel.id || hotel._id || slug)}&priceMMK=${hotel.pricePerNightMMK}&priceUSD=${hotel.pricePerNightUSD}&destination=${encodeURIComponent(hotel.location)}`} />
+      <BackButton bookNowUrl={bookNowUrl} />
 
       <section className="relative w-full h-[50vh] md:h-[60vh] overflow-hidden">
         <Image src={heroImage} alt={hotel.name} width={1200} height={630} className="w-full h-full object-cover" />
@@ -193,9 +248,9 @@ export default async function HotelDetailPage({ params }: { params: Promise<{ sl
         <span className="text-[#0A1628] font-medium">{hotel.name}</span>
       </nav>
 
-      
-        <SocialShare url={typeof window !== "undefined" ? window.location.href : ""} title={"A9 Global Travel - Hotels"} />
-<section className="max-w-7xl mx-auto px-4 py-10 md:py-16">
+      <SocialShare url={typeof window !== "undefined" ? window.location.href : ""} title={"A9 Global Travel - Hotels"} />
+
+      <section className="max-w-7xl mx-auto px-4 py-10 md:py-16">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
           <div className="lg:col-span-2 space-y-10">
             <div>
@@ -244,64 +299,103 @@ export default async function HotelDetailPage({ params }: { params: Promise<{ sl
             </div>
           </div>
 
+          {/* Interactive Booking Sidebar — Tours-style */}
           <div className="lg:col-span-1">
-            <div className="sticky top-28 space-y-6">
-              <div className="bg-white border border-gray-200 rounded-2xl shadow-lg overflow-hidden">
-                <div className="bg-gradient-to-r from-[#0A1628] to-[#162D50] p-6 text-white">
-                  <p className="text-white/60 text-xs uppercase tracking-wider mb-1">Price per night</p>
-                  <div className="flex items-baseline gap-1">
-                    <span className="text-3xl font-bold" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
-                      Ks {hotel.pricePerNightMMK.toLocaleString()}
-                    </span>
-                  </div>
-                  <p className="text-white/50 text-sm mt-1">
-                    ≈ ${hotel.pricePerNightUSD.toLocaleString()} USD
-                  </p>
+            <div className="sticky top-28 rounded-2xl border border-[#D4AF37]/20 bg-white shadow-lg p-6 space-y-6">
+              {/* Price + Currency Toggle */}
+              <div className="flex items-center justify-between">
+                <div>
+                  <span className="text-3xl font-bold text-[#D4AF37]">
+                    {currencySymbol} {price.toLocaleString()}
+                  </span>
+                  <span className="text-gray-500 text-sm ml-1">/ night</span>
                 </div>
-                <div className="p-6 space-y-4">
-                  <Link
-                    href={bookNowUrl}
-                    className="block w-full py-3.5 rounded-xl text-center font-bold text-base bg-gradient-to-r from-[#D4AF37] to-[#F5A623] text-[#0A1628] shadow-lg shadow-[#D4AF37]/30 hover:shadow-xl hover:shadow-[#D4AF37]/40 hover:scale-[1.02] transition-all duration-300"
-                  >
-                    Book Now
-                  </Link>
+                <CurrencyToggle activeCurrency={currency} onToggle={setCurrency} />
+              </div>
 
-                  <div className="space-y-3 pt-4 border-t border-gray-100">
-                    <div className="flex items-center gap-2 text-sm text-gray-600">
-                      <svg className="w-4 h-4 text-[#D4AF37]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                      </svg>
-                      {hotel.location}{hotel.address ? ', ' + hotel.address : ''}
-                    </div>
-                    <div className="flex items-center gap-2 text-sm text-gray-600">
-                      <svg className="w-4 h-4 text-[#D4AF37]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-4 0a1 1 0 01-1-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 01-1 1" />
-                      </svg>
-                      {hotel.totalRooms} Total Rooms
-                    </div>
-                    <div className="flex items-center gap-2 text-sm text-gray-600">
-                      <svg className="w-4 h-4 text-[#D4AF37]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
-                      </svg>
-                      {hotel.rating.toFixed(1)} Rating · {hotel.reviewCount} Reviews
-                    </div>
+              <hr className="border-[#D4AF37]/10" />
+
+              {/* Quick info */}
+              <div className="space-y-2 text-sm">
+                <div className="flex justify-between">
+                  <span className="text-gray-600">Per Night</span>
+                  <span className="text-[#0A1628]">{currencySymbol} {price.toLocaleString()}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-600">Rating</span>
+                  <span className="text-[#0A1628] flex items-center gap-1">★ {hotel.rating.toFixed(1)} ({hotel.reviewCount} reviews)</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-600">Available Rooms</span>
+                  <span className="text-[#0A1628]">{hotel.availableRooms}</span>
+                </div>
+              </div>
+
+              <hr className="border-[#D4AF37]/10" />
+
+              {/* Booking inputs */}
+              <div className="space-y-3">
+                <div>
+                  <label className="text-gray-600 text-xs mb-1 block">Check-in Date</label>
+                  <input
+                    type="date"
+                    value={travelDate}
+                    onChange={(e) => setTravelDate(e.target.value)}
+                    className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-gray-900 text-sm focus:outline-none focus:border-[#D4AF37]/50"
+                  />
+                </div>
+                <div>
+                  <label className="text-gray-600 text-xs mb-1 block">Rooms</label>
+                  <div className="flex items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={() => setRooms(Math.max(1, rooms - 1))}
+                      className="w-8 h-8 rounded-lg border border-gray-300 text-gray-600 hover:bg-gray-100 transition-colors flex items-center justify-center"
+                    >
+                      −
+                    </button>
+                    <span className="w-12 text-center text-[#0A1628] font-semibold">{rooms}</span>
+                    <button
+                      type="button"
+                      onClick={() => setRooms(Math.min(hotel.availableRooms, rooms + 1))}
+                      className="w-8 h-8 rounded-lg border border-gray-300 text-gray-600 hover:bg-gray-100 transition-colors flex items-center justify-center"
+                    >
+                      +
+                    </button>
                   </div>
                 </div>
               </div>
-              <Link
-                href="/hotels"
-                className="block w-full py-3 rounded-xl text-center font-semibold text-sm border-2 border-[#D4AF37] text-[#D4AF37] hover:bg-[#D4AF37] hover:text-[#0A1628] transition-all duration-300"
+
+              {/* Total */}
+              <div className="flex justify-between items-center py-3 border-t border-[#D4AF37]/10">
+                <span className="text-gray-700 font-medium">Total ({rooms} room{rooms > 1 ? 's' : ''})</span>
+                <span className="text-2xl font-bold text-[#D4AF37]">
+                  {currencySymbol} {totalPrice.toLocaleString()}
+                </span>
+              </div>
+
+              {/* Book Now */}
+              <button
+                onClick={handleBookNow}
+                disabled={!hotel || hotel.availableRooms === 0}
+                className="w-full py-3.5 rounded-xl bg-gradient-to-r from-[#D4AF37] to-[#F5A623] text-[#0A1628] font-bold text-base shadow-lg shadow-[#D4AF37]/30 hover:shadow-xl hover:shadow-[#D4AF37]/40 hover:scale-[1.02] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                ← Back to All Hotels
-              </Link>
+                Book Now
+              </button>
+
+              <p className="text-center text-gray-500 text-xs">No payment required to book</p>
             </div>
+
+            <Link
+              href="/hotels"
+              className="block w-full py-3 rounded-xl text-center font-semibold text-sm border-2 border-[#D4AF37] text-[#D4AF37] hover:bg-[#D4AF37] hover:text-[#0A1628] transition-all duration-300 mt-4"
+            >
+              ← Back to All Hotels
+            </Link>
           </div>
         </div>
-        {/* Back to Hotels */}
-        <Link href="/hotels" className="block text-center mt-6 text-[#D4AF37] hover:underline">&larr; Back to Hotels</Link>
       </section>
       <RelatedItems section="hotels" excludeSlug={slug} destination={typeof hotel?.location === "string" ? hotel.location : ""} />
-</main>
+    </main>
   );
 }

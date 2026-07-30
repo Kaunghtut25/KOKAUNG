@@ -1,12 +1,14 @@
-﻿import Link from "next/link";
-import { notFound } from "next/navigation";
+'use client';
+
+﻿import React, { useState } from 'react';
+import Link from "next/link";
+import { useRouter, useParams } from 'next/navigation';
 import RelatedItems from '@/components/RelatedItems';
 import BackButton from '@/components/BackButton';
+import CurrencyToggle from '@/components/CurrencyToggle';
 import DestImage from "./DestImage";
 
 /* FIX: 2026-07-30 add-rating-reviews-tags-duration-to-detail-page */
-
-export const dynamic = 'force-dynamic';
 
 interface PopularDestination {
   city: string;
@@ -151,24 +153,67 @@ function toSlug(text: string): string {
   return (text || "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 }
 
-export default async function DestinationPage({ params }: { params: { city: string } }) {
-  const key = params.city.toLowerCase();
+export default function DestinationPage() {
+  const router = useRouter();
+  const routeParams = useParams();
+  const cityParam = (routeParams?.city as string) || '';
+
+  // ─── Booking sidebar state ───
+  const [currency, setCurrency] = useState<'MMK' | 'USD'>('MMK');
+  const [travelers, setTravelers] = useState(1);
+  const [travelDate, setTravelDate] = useState('');
+
+  const key = cityParam.toLowerCase();
   const dest = FALLBACK_DESTINATIONS.find(
     (d) => toSlug(d.city) === key
   );
 
-  if (!dest) notFound();
+  if (!dest) {
+    return (
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-[#0A1628] mb-2">Destination Not Found</h1>
+          <p className="text-gray-500 mb-4">The destination you're looking for does not exist.</p>
+          <Link href="/destinations" className="text-[#D4AF37] hover:underline font-semibold">
+            ← Back to Destinations
+          </Link>
+        </div>
+      </div>
+    );
+  }
 
   const rating = dest.rating ?? 4.5;
   const reviews = dest.reviews ?? 1000;
   const duration = dest.duration ?? "5 Days";
   const tags = dest.tags ?? [];
 
+  // Parse numeric price from minPrice string like "Ks 850,000" or "From Ks 150,000"
+  const parsePriceMMK = (priceStr: string): number => {
+    const match = priceStr.match(/([\d,]+)/);
+    if (!match) return 0;
+    return parseInt(match[1].replace(/,/g, ''), 10);
+  };
+
+  const priceMMK = parsePriceMMK(dest.minPrice);
+  const priceUSD = Math.round(priceMMK / 2100);
+  const price = currency === 'MMK' ? priceMMK : priceUSD;
+  const currencySymbol = currency === 'MMK' ? 'Ks' : '$';
+  const totalPrice = price * travelers;
+
   const highlights = dest.highlights || (dest.description
-    ? dest.description.split(/[,.]/).map((s: string) => s.trim()).filter((s: string) => s.length > 0).slice(0, 6)
+    ? dest.description.split(/[,.]/).map(s => s.trim()).filter(s => s.length > 0).slice(0, 6)
     : []);
 
-  const bookNowUrl = `/book-now?type=destination&name=${encodeURIComponent(dest.city)}&destination=${encodeURIComponent(dest.city + ", " + dest.country)}`;
+  const handleBookNow = () => {
+    const bookUrl = new URL('/book-now', window.location.origin);
+    bookUrl.searchParams.set('type', 'destination');
+    bookUrl.searchParams.set('title', dest.city);
+    bookUrl.searchParams.set('destination', dest.country);
+    bookUrl.searchParams.set('duration', dest.duration || '');
+    bookUrl.searchParams.set('price', String(price));
+    bookUrl.searchParams.set('currency', currency);
+    window.location.href = bookUrl.toString();
+  };
 
   return (
     <main className="min-h-screen bg-white">
@@ -267,15 +312,15 @@ export default async function DestinationPage({ params }: { params: { city: stri
           )}
 
           {/* Book Now Button */}
-          <Link
-            href={bookNowUrl}
+          <button
+            onClick={handleBookNow}
             className="ml-auto inline-flex items-center gap-2 px-6 py-3 rounded-xl text-center font-bold text-sm bg-gradient-to-r from-[#D4AF37] to-[#F5A623] text-[#0A1628] shadow-lg shadow-[#D4AF37]/30 hover:shadow-xl hover:shadow-[#D4AF37]/40 hover:scale-[1.02] transition-all duration-300"
           >
             Book Now
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
             </svg>
-          </Link>
+          </button>
         </div>
       </div>
 
@@ -301,7 +346,7 @@ export default async function DestinationPage({ params }: { params: { city: stri
                   Top Highlights
                 </h2>
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                  {highlights.map((h: string, i: number) => (
+                  {highlights.map((h, i) => (
                     <div
                       key={i}
                       className="flex items-center gap-3 bg-gray-50 rounded-xl p-4 border border-gray-100 hover:border-[#D4AF37]/30 transition-colors"
@@ -326,56 +371,110 @@ export default async function DestinationPage({ params }: { params: { city: stri
             )}
           </div>
 
-          {/* Sidebar */}
+          {/* Sidebar — Booking Card */}
           <div className="lg:col-span-1">
             <div className="sticky top-28 space-y-6">
-              <div className="bg-white border border-gray-200 rounded-2xl shadow-lg overflow-hidden">
-                <div className="bg-gradient-to-r from-[#0A1628] to-[#162D50] p-6 text-white">
-                  <p className="text-white/60 text-xs uppercase tracking-wider mb-1">Starting from</p>
-                  <div className="flex items-baseline gap-1">
-                    <span className="text-3xl font-bold" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
-                      {dest.minPrice}
+              <div className="bg-white border border-gray-200 rounded-2xl shadow-lg p-6 space-y-6">
+                {/* Price */}
+                <div>
+                  <p className="text-gray-500 text-xs uppercase tracking-wider mb-1">Starting from</p>
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <span className="text-3xl font-bold text-[#D4AF37]" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
+                        {currencySymbol} {price.toLocaleString()}
+                      </span>
+                      <span className="text-gray-400 text-sm ml-1">/ person</span>
+                    </div>
+                    <CurrencyToggle activeCurrency={currency} onToggle={setCurrency} />
+                  </div>
+                </div>
+
+                <hr className="border-gray-100" />
+
+                {/* Quick info */}
+                <div className="space-y-3 text-sm">
+                  <div className="flex justify-between">
+                    <span className="text-gray-500">Duration</span>
+                    <span className="text-[#0A1628] font-medium">{duration}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-500">Group Size</span>
+                    <span className="text-[#0A1628] font-medium">Up to 10 people</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-500">Rating</span>
+                    <span className="text-[#0A1628] font-medium flex items-center gap-1">
+                      <svg className="w-4 h-4 text-[#D4AF37]" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                      </svg>
+                      {rating}
                     </span>
                   </div>
-                  {dest.bestTime && (<p className="text-white/50 text-sm mt-1">Best time: {dest.bestTime}</p>)}
                 </div>
-                <div className="p-6 space-y-4">
-                  <Link
-                    href={bookNowUrl}
-                    className="block w-full py-3.5 rounded-xl text-center font-bold text-base bg-gradient-to-r from-[#D4AF37] to-[#F5A623] text-[#0A1628] shadow-lg shadow-[#D4AF37]/30 hover:shadow-xl hover:shadow-[#D4AF37]/40 hover:scale-[1.02] transition-all duration-300"
-                  >
-                    Book Now
-                  </Link>
-                  <Link
-                    href="/destinations"
-                    className="block w-full py-3 rounded-xl text-center font-semibold text-sm border-2 border-[#D4AF37] text-[#D4AF37] hover:bg-[#D4AF37] hover:text-[#0A1628] transition-all duration-300"
-                  >
-                    ← Back to Destinations
-                  </Link>
-                  <div className="space-y-3 pt-4 border-t border-gray-100">
-                    <div className="flex items-center gap-2 text-sm text-gray-600">
-                      <svg className="w-4 h-4 text-[#D4AF37]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                      </svg>
-                      {dest.city}, {dest.country}
-                    </div>
-                    <div className="flex items-center gap-2 text-sm text-gray-600">
-                      <svg className="w-4 h-4 text-[#D4AF37]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
-                      </svg>
-                      {rating} Rating - {reviews.toLocaleString()} Reviews
-                    </div>
-                    <div className="flex items-center gap-2 text-sm text-gray-600">
-                      <svg className="w-4 h-4 text-[#D4AF37]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                      </svg>
-                      {duration} Trip
+
+                <hr className="border-gray-100" />
+
+                {/* Booking form */}
+                <div className="space-y-4">
+                  <div>
+                    <label className="text-gray-500 text-xs mb-1.5 block">Travel Date</label>
+                    <input
+                      type="date"
+                      value={travelDate}
+                      onChange={(e) => setTravelDate(e.target.value)}
+                      className="w-full px-3 py-2.5 border border-gray-200 rounded-lg text-gray-900 text-sm focus:outline-none focus:border-[#D4AF37] focus:ring-1 focus:ring-[#D4AF37]/30 transition-all"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-gray-500 text-xs mb-1.5 block">Travelers</label>
+                    <div className="flex items-center gap-3">
+                      <button
+                        type="button"
+                        onClick={() => setTravelers(Math.max(1, travelers - 1))}
+                        className="w-9 h-9 rounded-lg border border-gray-300 text-gray-600 hover:bg-gray-100 hover:border-[#D4AF37] transition-all flex items-center justify-center text-lg"
+                      >
+                        −
+                      </button>
+                      <span className="w-12 text-center text-[#0A1628] font-bold text-lg">{travelers}</span>
+                      <button
+                        type="button"
+                        onClick={() => setTravelers(travelers + 1)}
+                        className="w-9 h-9 rounded-lg border border-gray-300 text-gray-600 hover:bg-gray-100 hover:border-[#D4AF37] transition-all flex items-center justify-center text-lg"
+                      >
+                        +
+                      </button>
                     </div>
                   </div>
                 </div>
+
+                {/* Total */}
+                <div className="flex justify-between items-center py-3 border-t border-gray-100">
+                  <span className="text-gray-700 font-medium">Total</span>
+                  <span className="text-2xl font-bold text-[#D4AF37]" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
+                    {currencySymbol} {totalPrice.toLocaleString()}
+                  </span>
+                </div>
+
+                {/* Book Now */}
+                <button
+                  onClick={handleBookNow}
+                  className="w-full py-3.5 rounded-xl bg-gradient-to-r from-[#D4AF37] to-[#F5A623] hover:from-[#E5C048] hover:to-[#FFB833] text-[#0A1628] font-bold text-base shadow-lg shadow-[#D4AF37]/30 hover:shadow-xl hover:shadow-[#D4AF37]/40 transition-all duration-300 active:scale-[0.98]"
+                >
+                  Book Now
+                </button>
+
+                <p className="text-center text-gray-400 text-xs">No payment required to book</p>
               </div>
 
+              {/* Back link */}
+              <Link
+                href="/destinations"
+                className="block w-full py-3 rounded-xl text-center font-semibold text-sm border-2 border-[#D4AF37] text-[#D4AF37] hover:bg-[#D4AF37] hover:text-[#0A1628] transition-all duration-300"
+              >
+                ← Back to All Destinations
+              </Link>
+
+              {/* Trip Style tags */}
               {tags.length > 0 && (
                 <div className="bg-white border border-gray-200 rounded-2xl shadow-lg p-6">
                   <h3 className="text-sm font-bold text-[#0A1628] mb-3 uppercase tracking-wider">Trip Style</h3>
@@ -397,7 +496,7 @@ export default async function DestinationPage({ params }: { params: { city: stri
           <h2 className="text-2xl font-bold text-[#0A1628] mb-6" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
             Discover {dest.city}
           </h2>
-          <RelatedItems section="destinations" excludeSlug={params.city} destination={(dest.city || "") + ", " + (dest.country || "")} />
+          <RelatedItems section="destinations" excludeSlug={cityParam} destination={(dest.city || "") + ", " + (dest.country || "")} />
         </div>
 
         {/* Bottom CTA */}
@@ -408,15 +507,15 @@ export default async function DestinationPage({ params }: { params: { city: stri
           <p className="text-gray-500 mb-6 max-w-xl mx-auto">
             Book your trip today and experience the best of {dest.city} with A9 Global Travels.
           </p>
-          <Link
-            href={bookNowUrl}
+          <button
+            onClick={handleBookNow}
             className="inline-flex items-center gap-2 px-8 py-3.5 rounded-xl text-center font-bold text-base bg-gradient-to-r from-[#D4AF37] to-[#F5A623] text-[#0A1628] shadow-lg shadow-[#D4AF37]/30 hover:shadow-xl hover:shadow-[#D4AF37]/40 hover:scale-[1.02] transition-all duration-300"
           >
             Book Your Trip to {dest.city}
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
             </svg>
-          </Link>
+          </button>
         </section>
       </div>
     </main>

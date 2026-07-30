@@ -1,11 +1,14 @@
-import type { Metadata } from 'next';
+'use client';
+
+import React, { useState, useEffect } from 'react';
+import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 import { getAll } from "@/lib/persistentStore";
+import CurrencyToggle from '@/components/CurrencyToggle';
 import SocialShare from '@/components/SocialShare';
 import BackButton from '@/components/BackButton';
 import RelatedItems from '@/components/RelatedItems';
-export const dynamic = 'force-dynamic';
 
 interface CarData {
   id: string;
@@ -29,7 +32,6 @@ const CAR_IMAGE_FALLBACKS: Record<string, string> = {
   c6: "/images_v2/car6-v2.jpg",
 };
 const DEFAULT_CAR_IMG = "/images_v2/car1-v2.jpg";
-
 async function getCarBySlug(slug: string): Promise<CarData | null> {
   try {
     const rawCars = await getAll("cars") as any[];
@@ -88,34 +90,64 @@ async function getCarBySlug(slug: string): Promise<CarData | null> {
   }
 }
 
+export default function CarDetailPage() {
+  const params = useParams();
+  const router = useRouter();
+  const slug = params?.slug as string;
 
-export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
-  const car = await getCarBySlug(params.slug);
-  if (!car) return { title: 'Car Not Found' };
-  const title = car.carType + ' - A9 Global Travel';
-  const description = car.description || 'Rent ' + car.carType + ' with professional driver. Premium car rental with A9 Global Travel.';
-  const imageUrl = car.images[0] || '/images_v2/car1-v2.jpg';
-  return {
-    title,
-    description: description.substring(0, 160),
-    openGraph: {
-      title,
-      description: description.substring(0, 160),
-      images: [{ url: imageUrl, width: 1200, height: 630 }],
-      type: 'website',
-    },
-  };
-}
+  const [car, setCar] = useState<CarData | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+  const [currency, setCurrency] = useState<'MMK' | 'USD'>('MMK');
+  const [days, setDays] = useState(1);
+  const [travelDate, setTravelDate] = useState('');
 
-export default async function CarDetailPage({ params }: { params: { slug: string } }) {
-  const car = await getCarBySlug(params.slug);
+  useEffect(() => {
+    if (!slug) return;
+    const fetchCar = async () => {
+      setLoading(true);
+      setError('');
+      try {
+        const fetched = await getCarBySlug(slug);
+        if (!fetched) throw new Error('Not found');
+        setCar(fetched);
+      } catch (err) {
+        console.error('Failed to fetch car:', err);
+        setError('Car not found');
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchCar();
+  }, [slug]);
 
-  if (!car) {
+  // ─── Loading State ────────────────────────────────────────
+  if (loading) {
+    return (
+      <main className="min-h-screen bg-white">
+        <BackButton />
+        <div className="h-[60vh] bg-gray-100 animate-pulse" />
+        <div className="max-w-7xl mx-auto px-4 py-12">
+          <div className="h-8 bg-gray-200 rounded w-1/3 mb-4 animate-pulse" />
+          <div className="h-4 bg-gray-200 rounded w-1/4 mb-8 animate-pulse" />
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div className="lg:col-span-2 space-y-4">
+              <div className="h-4 bg-gray-200 rounded animate-pulse" />
+              <div className="h-4 bg-gray-200 rounded w-3/4 animate-pulse" />
+              <div className="h-4 bg-gray-200 rounded w-1/2 animate-pulse" />
+            </div>
+            <div className="h-64 bg-gray-100 rounded-xl animate-pulse" />
+          </div>
+        </div>
+      </main>
+    );
+  }
+
+  // ─── Error / Not Found State ─────────────────────────────
+  if (error || !car) {
     return (
       <main className="min-h-screen bg-white flex items-center justify-center">
-      {/* Back Button */}
-      <BackButton bookNowUrl={`/book-now?type=car&name=${encodeURIComponent(car.name)}&id=${encodeURIComponent(car.id || car._id || slug)}&priceMMK=${car.priceMMK || 0}&priceUSD=${car.priceUSD || 0}&destination=${encodeURIComponent(car.location || "")}`} />
-
+        <BackButton />
         <div className="text-center space-y-4 px-4">
           <div className="w-20 h-20 mx-auto rounded-full bg-red-500/10 flex items-center justify-center">
             <svg className="w-10 h-10 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
@@ -133,18 +165,32 @@ export default async function CarDetailPage({ params }: { params: { slug: string
   }
 
   const heroImage = car.images[0] || DEFAULT_CAR_IMG;
-  const cheapestPricing = car.pricing.reduce((prev, curr) =>
-    curr.priceMMK < prev.priceMMK ? curr : prev, car.pricing[0]);
+  const defaultPricing = car.pricing[0];
+  const price = currency === 'MMK' ? (defaultPricing?.priceMMK || 0) : (defaultPricing?.priceUSD || 0);
+  const currencySymbol = currency === 'MMK' ? 'Ks' : '$';
+  const totalPrice = price * days;
+
   const fuelTypes = car.features.filter(f =>
     /diesel|petrol|gasoline|electric|hybrid|fuel/i.test(f)
   );
   const fuelType = fuelTypes.length > 0 ? fuelTypes[0] : 'Not specified';
   const otherFeatures = car.features.filter(f => !fuelTypes.includes(f));
 
-  const bookNowHref = '/book-now?type=car&name=' + encodeURIComponent(car.carType) + '&id=' + encodeURIComponent(car.id) + '&priceMMK=' + (cheapestPricing?.priceMMK || 0) + '&priceUSD=' + (cheapestPricing?.priceUSD || 0) + '&features=' + encodeURIComponent(car.features.join(', '));
+  const handleBookNow = () => {
+    const bookUrl = new URL('/book-now', window.location.origin);
+    bookUrl.searchParams.set('type', 'car');
+    bookUrl.searchParams.set('title', car.carType);
+    bookUrl.searchParams.set('carId', car.id);
+    bookUrl.searchParams.set('price', String(price));
+    bookUrl.searchParams.set('currency', currency);
+    bookUrl.searchParams.set('days', String(days));
+    bookUrl.searchParams.set('pickupDate', travelDate);
+    window.location.href = bookUrl.toString();
+  };
 
   return (
-    <main className="min-h-screen bg-white">      {/* Back Button */}
+    <main className="min-h-screen bg-white">
+      {/* Back Button */}
       <BackButton />
 
       {/* Hero Section */}
@@ -153,7 +199,8 @@ export default async function CarDetailPage({ params }: { params: { slug: string
           ← Back to Cars
         </Link>
         <Image
-          src={heroImage}          alt={car.carType}
+          src={heroImage}
+          alt={car.carType}
           width={1200}
           height={630}
           className="w-full h-full object-cover"
@@ -183,9 +230,8 @@ export default async function CarDetailPage({ params }: { params: { slug: string
       </section>
 
       {/* Content */}
-      
-        <SocialShare url={typeof window !== "undefined" ? window.location.href : ""} title={"A9 Global Travel - Cars"} />
-<section className="max-w-7xl mx-auto px-4 py-10 md:py-16">
+      <SocialShare url={typeof window !== "undefined" ? window.location.href : ""} title={"A9 Global Travel - Cars"} />
+      <section className="max-w-7xl mx-auto px-4 py-10 md:py-16">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12">
 
           {/* Main Content */}
@@ -279,18 +325,21 @@ export default async function CarDetailPage({ params }: { params: { slug: string
             )}
           </div>
 
-          {/* Sidebar — Booking Card */}
+          {/* Sidebar - Interactive Booking Card */}
           <div className="lg:col-span-1">
             <div className="sticky top-24 rounded-2xl border border-[#D4AF37]/20 bg-gray-50 backdrop-blur-sm p-6 space-y-5 relative">
               {/* Price Header */}
-              <div className="text-center">
-                <p className="text-gray-400 text-xs uppercase tracking-wider mb-1">Starting from</p>
-                <p className="text-3xl font-bold text-[#D4AF37]">
-                  {cheapestPricing.priceMMK.toLocaleString()} <span className="text-lg">Ks</span>
-                </p>
-                <p className="text-gray-500 text-sm mt-0.5">
-                  ${cheapestPricing.priceUSD.toLocaleString()} USD / {cheapestPricing.duration}
-                </p>
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-gray-400 text-xs uppercase tracking-wider mb-1">Starting from</p>
+                  <p className="text-3xl font-bold text-[#D4AF37]">
+                    {currencySymbol}{price.toLocaleString()}
+                  </p>
+                  <p className="text-gray-500 text-xs mt-0.5">
+                    Per Day
+                  </p>
+                </div>
+                <CurrencyToggle activeCurrency={currency} onToggle={setCurrency} />
               </div>
 
               {/* Divider with gold */}
@@ -299,6 +348,15 @@ export default async function CarDetailPage({ params }: { params: { slug: string
                 <div className="w-1.5 h-1.5 rounded-full bg-[#D4AF37]" />
                 <div className="h-px flex-1 bg-gradient-to-r from-transparent via-[#D4AF37]/30 to-transparent" />
               </div>
+
+              {/* Duration options info */}
+              {car.pricing.length > 1 && (
+                <div className="text-center">
+                  <span className="text-gray-500 text-xs">
+                    Duration options: {car.pricing.length} available
+                  </span>
+                </div>
+              )}
 
               {/* Info Rows */}
               <div className="space-y-2.5 text-sm">
@@ -330,20 +388,75 @@ export default async function CarDetailPage({ params }: { params: { slug: string
                 )}
               </div>
 
+              <hr className="border-[#D4AF37]/10" />
+
+              {/* Booking inputs */}
+              <div className="space-y-3">
+                {/* Travel Date */}
+                <div>
+                  <label className="text-gray-600 text-xs mb-1 block">Pickup Date</label>
+                  <input
+                    type="date"
+                    value={travelDate}
+                    onChange={(e) => setTravelDate(e.target.value)}
+                    className="w-full px-3 py-2 bg-white border border-gray-200 rounded-lg text-gray-900 text-sm focus:outline-none focus:border-[#D4AF37]/50"
+                  />
+                </div>
+
+                {/* Days counter */}
+                <div>
+                  <label className="text-gray-600 text-xs mb-1 block">Days</label>
+                  <div className="flex items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={() => setDays(Math.max(1, days - 1))}
+                      className="w-8 h-8 rounded-lg border border-gray-300 text-gray-600 hover:bg-gray-100 transition-colors flex items-center justify-center"
+                    >
+                      −
+                    </button>
+                    <span className="w-12 text-center text-[#0A1628] font-semibold">{days}</span>
+                    <button
+                      type="button"
+                      onClick={() => setDays(Math.min(30, days + 1))}
+                      className="w-8 h-8 rounded-lg border border-gray-300 text-gray-600 hover:bg-gray-100 transition-colors flex items-center justify-center"
+                    >
+                      +
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              {/* Total */}
+              <div className="flex justify-between items-center py-3 border-t border-[#D4AF37]/10">
+                <span className="text-gray-700 font-medium">Total</span>
+                <span className="text-2xl font-bold text-[#D4AF37]">
+                  {currencySymbol}{totalPrice.toLocaleString()}
+                </span>
+              </div>
+
               {/* Book Now Button */}
-              <a
-                href={bookNowHref}
-                className="block w-full py-3.5 rounded-xl text-center font-bold text-base bg-gradient-to-r from-[#D4AF37] to-[#C5A028] hover:from-[#E5C048] hover:to-[#D4AF37] text-[#0A1628] shadow-lg shadow-[#D4AF37]/20 hover:shadow-[#D4AF37]/40 transition-all duration-300"
+              <button
+                onClick={handleBookNow}
+                disabled={!car}
+                className="block w-full py-3.5 rounded-xl text-center font-bold text-base bg-gradient-to-r from-[#D4AF37] to-[#C5A028] hover:from-[#E5C048] hover:to-[#D4AF37] text-[#0A1628] shadow-lg shadow-[#D4AF37]/20 hover:shadow-[#D4AF37]/40 transition-all duration-300 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 Book Now
-              </a>
+              </button>
 
               <p className="text-center text-gray-500 text-xs">No payment required to book</p>
+
+              {/* Back to All Cars link */}
+              <Link
+                href="/cars"
+                className="block w-full py-3 rounded-xl text-center font-semibold text-sm border-2 border-[#D4AF37] text-[#D4AF37] hover:bg-[#D4AF37] hover:text-[#0A1628] transition-all duration-300"
+              >
+                ← Back to All Cars
+              </Link>
             </div>
           </div>
         </div>
 
-        {/* Back Link */}
+        {/* Bottom Back Link */}
         <div className="mt-12 pt-8 border-t border-[#D4AF37]/10 text-center">
           <a href="/cars" className="inline-flex items-center gap-2 text-gray-400 hover:text-[#D4AF37] transition-colors text-sm">
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -353,7 +466,7 @@ export default async function CarDetailPage({ params }: { params: { slug: string
           </a>
         </div>
       </section>
-      <RelatedItems section="cars" excludeSlug={params.slug} destination={typeof car?.location === "string" ? car.location : ""} />
-</main>
+      <RelatedItems section="cars" excludeSlug={slug} destination={typeof (car as any)?.location === "string" ? (car as any).location : ""} />
+    </main>
   );
 }

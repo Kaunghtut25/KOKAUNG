@@ -1,14 +1,14 @@
-﻿import { notFound } from 'next/navigation';
+'use client';
+
+import React, { useState, useEffect } from 'react';
+import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
-import type { Metadata } from 'next';
-import { getAll } from '@/lib/persistentStore';
+import CurrencyToggle from '@/components/CurrencyToggle';
 import SocialShare from '@/components/SocialShare';
 import BackButton from '@/components/BackButton';
 import RelatedItems from '@/components/RelatedItems';
-export const dynamic = 'force-dynamic';
-
-interface PageProps { params: Promise<{ slug: string }> }
+import { getAll } from '@/lib/persistentStore';
 
 const FALLBACK_VISAS = [
   { _id: 'v1', country: 'Thailand', processingTime: '3-5 Days', visaFeeMMK: 85000, visaFeeUSD: 40, requirements: ['Passport 6m','2 Photos'] },
@@ -36,46 +36,121 @@ const FALLBACK_VISAS = [
   { _id: 'v23', country: 'UAE', processingTime: '3-5 Days', visaFeeMMK: 140000, visaFeeUSD: 67, requirements: ['Passport 6m','Bank Statement'] },
 ];
 
-async function getVisaBySlug(slug: string) {
-  let visas = await getAll('visas') as any[];
-  if (visas.length === 0) visas = FALLBACK_VISAS;
-  const visa = visas.find((v: any) => ((v.country || '').toLowerCase().replace(/[^a-z0-9]+/g, '-')) === slug || v.id === slug || v._id === slug);
-  return visa || null;
-}
+export default function VisaDetailPage() {
+  const params = useParams();
+  const slug = params?.slug as string;
 
-export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
-  const { slug } = await params;
-  const visa = await getVisaBySlug(slug);
-  if (!visa) return { title: 'Visa Not Found' };
-  const country = visa.country || visa.title || '';
-  const title = 'Visa to ' + country + ' - A9 Global Travel';
-  const description = 'Visa processing service for ' + country + '. Fast and reliable visa assistance with A9 Global Travel.';
-  const imageUrl = (visa.images && Array.isArray(visa.images) && visa.images[0]) || '/images_v2/visa1-v2.jpg';
-  return {
-    title,
-    description: description.substring(0, 160),
-    openGraph: {
-      title,
-      description: description.substring(0, 160),
-      images: [{ url: imageUrl, width: 1200, height: 630 }],
-      type: 'website',
-    },
-  };
-}
+  const [visa, setVisa] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+  const [currency, setCurrency] = useState<'MMK' | 'USD'>('MMK');
+  const [travelers, setTravelers] = useState(1);
+  const [travelDate, setTravelDate] = useState('');
 
-export default async function VisaDetailPage({ params }: PageProps) {
-  const { slug } = await params;
-  const visa = await getVisaBySlug(slug);
-  if (!visa) notFound();
+  useEffect(() => {
+    if (!slug) return;
+
+    const fetchVisa = async () => {
+      setLoading(true);
+      setError('');
+      try {
+        let visas = await getAll('visas') as any[];
+        if (visas.length === 0) visas = FALLBACK_VISAS;
+        const found = visas.find((v: any) =>
+          ((v.country || '').toLowerCase().replace(/[^a-z0-9]+/g, '-')) === slug ||
+          v.id === slug ||
+          v._id === slug
+        );
+        if (found) {
+          setVisa(found);
+        } else {
+          setError('Visa not found');
+        }
+      } catch (err) {
+        console.error('Failed to fetch visa:', err);
+        setError('Visa not found');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchVisa();
+  }, [slug]);
+
+  // ─── Loading State ────────────────────────────────────────
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-white">
+        <div className="max-w-7xl mx-auto px-4 pt-24 pb-4">
+          <BackButton />
+        </div>
+        <div className="h-[60vh] bg-gray-100 animate-pulse" />
+        <div className="max-w-7xl mx-auto px-4 py-12">
+          <div className="h-8 bg-gray-200 rounded w-1/3 mb-4 animate-pulse" />
+          <div className="h-4 bg-gray-200 rounded w-1/4 mb-8 animate-pulse" />
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div className="lg:col-span-2 space-y-4">
+              <div className="h-4 bg-gray-200 rounded animate-pulse" />
+              <div className="h-4 bg-gray-200 rounded w-3/4 animate-pulse" />
+              <div className="h-4 bg-gray-200 rounded w-1/2 animate-pulse" />
+            </div>
+            <div className="h-64 bg-gray-100 rounded-xl animate-pulse" />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // ─── Error State ─────────────────────────────────────────
+  if (error || !visa) {
+    return (
+      <div className="min-h-screen bg-white">
+        <div className="max-w-7xl mx-auto px-4 pt-24 pb-8">
+          <BackButton />
+        </div>
+        <div className="flex items-center justify-center flex-1">
+          <div className="text-center space-y-4">
+            <svg className="w-16 h-16 mx-auto text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z" />
+            </svg>
+            <h2 className="text-xl text-[#0A1628] font-semibold">Something went wrong</h2>
+            <p className="text-gray-500">{error || 'Visa not found'}</p>
+            <Link
+              href="/visas"
+              className="px-6 py-2 rounded-xl bg-gradient-to-r from-[#D4AF37] to-[#C5A028] text-gray-900 font-semibold inline-block"
+            >
+              Back to Visas
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   const country = visa.country || visa.title || '';
   const displayImage = (visa.images && Array.isArray(visa.images) && visa.images[0]) || '/images_v2/visa1-v2.jpg';
-  const feeMMK = visa.visaFeeMMK || visa.priceMMK || 0;
-  const feeUSD = visa.visaFeeUSD || visa.priceUSD || 0;
   const processing = visa.processingTime || '3-5 Business Days';
-  const requirements: string[] = Array.isArray(visa.requirements) ? visa.requirements : (typeof visa.requirements === 'string' ? visa.requirements.split(',').map((s: string) => s.trim()).filter(Boolean) : []);
+  const requirements: string[] = Array.isArray(visa.requirements)
+    ? visa.requirements
+    : (typeof visa.requirements === 'string'
+      ? visa.requirements.split(',').map((s: string) => s.trim()).filter(Boolean)
+      : []);
 
-  const bookNowUrl = '/book-now?type=visa&country=' + encodeURIComponent(country) + '&id=' + encodeURIComponent(visa.id || visa._id || slug) + '&feeMMK=' + feeMMK + '&feeUSD=' + feeUSD + '&processingTime=' + encodeURIComponent(processing);
+  const price = currency === 'MMK' ? (visa.visaFeeMMK || visa.priceMMK || 0) : (visa.visaFeeUSD || visa.priceUSD || 0);
+  const currencySymbol = currency === 'MMK' ? 'Ks' : '$';
+  const totalPrice = price * travelers;
+
+  const handleBookNow = () => {
+    const bookUrl = new URL('/book-now', window.location.origin);
+    bookUrl.searchParams.set('type', 'visa');
+    bookUrl.searchParams.set('title', visa.country);
+    bookUrl.searchParams.set('destination', visa.country);
+    bookUrl.searchParams.set('price', String(price));
+    bookUrl.searchParams.set('currency', currency);
+    bookUrl.searchParams.set('travelers', String(travelers));
+    bookUrl.searchParams.set('travelDate', travelDate);
+    window.location.href = bookUrl.toString();
+  };
 
   return (
     <main className="min-h-screen bg-white">
@@ -130,7 +205,7 @@ export default async function VisaDetailPage({ params }: PageProps) {
                 <svg className="w-8 h-8 mx-auto text-[#D4AF37] mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
-                <p className="text-[#D4AF37] text-2xl font-bold">Ks {feeMMK.toLocaleString()}</p>
+                <p className="text-[#D4AF37] text-2xl font-bold">{currencySymbol} {price.toLocaleString()}</p>
                 <p className="text-gray-400 text-xs uppercase tracking-wider mt-1">Visa Fee</p>
               </div>
               <div className="p-5 rounded-2xl bg-gray-50 border border-[#D4AF37]/10 text-center hover:border-[#D4AF37]/30 transition-colors">
@@ -194,21 +269,22 @@ export default async function VisaDetailPage({ params }: PageProps) {
             )}
           </div>
 
-          {/* Sidebar — Booking Card */}
+          {/* Sidebar — Interactive Booking Card */}
           <div className="lg:col-span-1">
             <div className="sticky top-28 space-y-6">
               <div className="rounded-2xl border border-[#D4AF37]/20 bg-gray-50 p-6 space-y-5">
                 {/* Price Header */}
                 <div className="bg-gradient-to-r from-[#0A1628] to-[#162D50] -mx-6 -mt-6 p-6 rounded-t-2xl text-white">
                   <p className="text-white/60 text-xs uppercase tracking-wider mb-1">Visa Fee</p>
-                  <div className="flex items-baseline gap-1">
-                    <span className="text-3xl font-bold" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
-                      Ks {feeMMK.toLocaleString()}
-                    </span>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-baseline gap-1">
+                      <span className="text-3xl font-bold" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
+                        {currencySymbol} {price.toLocaleString()}
+                      </span>
+                      <span className="text-white/50 text-sm ml-1">/ person</span>
+                    </div>
+                    <CurrencyToggle activeCurrency={currency} onToggle={setCurrency} />
                   </div>
-                  <p className="text-white/50 text-sm mt-1">
-                    ≈ ${feeUSD.toLocaleString()} USD
-                  </p>
                 </div>
 
                 {/* Info Rows */}
@@ -218,27 +294,66 @@ export default async function VisaDetailPage({ params }: PageProps) {
                     <span className="text-[#0A1628] font-medium">{country}</span>
                   </div>
                   <div className="flex justify-between py-1 border-b border-gray-100">
-                    <span className="text-gray-400">Processing</span>
+                    <span className="text-gray-400">Processing Time</span>
                     <span className="text-[#0A1628] font-medium">{processing}</span>
                   </div>
                   <div className="flex justify-between py-1 border-b border-gray-100">
-                    <span className="text-gray-400">Fee (USD)</span>
-                    <span className="text-[#0A1628] font-medium">${feeUSD}</span>
-                  </div>
-                  <div className="flex justify-between py-1 border-b border-gray-100">
-                    <span className="text-gray-400">Documents</span>
-                    <span className="text-[#0A1628] font-medium">{requirements.length} required</span>
+                    <span className="text-gray-400">Requirements</span>
+                    <span className="text-[#0A1628] font-medium">{requirements.length} documents</span>
                   </div>
                 </div>
 
+                <hr className="border-[#D4AF37]/10" />
+
+                {/* Travel Date */}
+                <div>
+                  <label className="text-gray-600 text-xs mb-1 block">Travel Date</label>
+                  <input
+                    type="date"
+                    value={travelDate}
+                    onChange={(e) => setTravelDate(e.target.value)}
+                    className="w-full px-3 py-2 bg-white border border-gray-200 rounded-lg text-gray-900 text-sm focus:outline-none focus:border-[#D4AF37]/50"
+                  />
+                </div>
+
+                {/* Travelers Counter */}
+                <div>
+                  <label className="text-gray-600 text-xs mb-1 block">Travelers</label>
+                  <div className="flex items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={() => setTravelers(Math.max(1, travelers - 1))}
+                      className="w-8 h-8 rounded-lg border border-gray-300 text-gray-600 hover:bg-gray-100 transition-colors flex items-center justify-center"
+                    >
+                      −
+                    </button>
+                    <span className="w-12 text-center text-[#0A1628] font-semibold">{travelers}</span>
+                    <button
+                      type="button"
+                      onClick={() => setTravelers(travelers + 1)}
+                      className="w-8 h-8 rounded-lg border border-gray-300 text-gray-600 hover:bg-gray-100 transition-colors flex items-center justify-center"
+                    >
+                      +
+                    </button>
+                  </div>
+                </div>
+
+                {/* Total */}
+                <div className="flex justify-between items-center py-3 border-t border-[#D4AF37]/10">
+                  <span className="text-gray-700 font-medium">Total</span>
+                  <span className="text-2xl font-bold text-[#D4AF37]">
+                    {currencySymbol} {totalPrice.toLocaleString()}
+                  </span>
+                </div>
+
                 {/* Book Now Button */}
-                <Link
-                  href={bookNowUrl}
+                <button
+                  onClick={handleBookNow}
                   className="block w-full py-3.5 rounded-xl text-center font-bold text-base bg-gradient-to-r from-[#D4AF37] to-[#F5A623] text-[#0A1628] shadow-lg shadow-[#D4AF37]/30 hover:shadow-xl hover:shadow-[#D4AF37]/40 hover:scale-[1.02] transition-all duration-300"
                 >
                   Book Now
-                </Link>
-                <p className="text-center text-gray-400 text-xs">No payment required to inquire</p>
+                </button>
+                <p className="text-center text-gray-400 text-xs">No payment required to book</p>
               </div>
 
               <Link

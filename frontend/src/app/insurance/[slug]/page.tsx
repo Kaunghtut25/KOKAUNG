@@ -1,13 +1,14 @@
-﻿import { notFound } from 'next/navigation';
+'use client';
+
+import React, { useState, useEffect } from 'react';
+import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
-import { getAll } from '@/lib/persistentStore';
+import CurrencyToggle from '@/components/CurrencyToggle';
 import SocialShare from '@/components/SocialShare';
 import BackButton from '@/components/BackButton';
 import RelatedItems from '@/components/RelatedItems';
-export const dynamic = 'force-dynamic';
-
-interface PageProps { params: { slug: string } }
+import ErrorBoundary from '@/components/ErrorBoundary';
 
 const FALLBACK_PLANS = [
   { _id: 'i1', planName: 'Basic Travel Shield', coverage: 'Medical + Trip Delay', priceMMK: 15000, priceUSD: 7, duration: 'Per trip', benefits: ['Medical Emergency', 'Trip Cancellation', 'Lost Baggage'] },
@@ -21,52 +22,182 @@ const FALLBACK_PLANS = [
   { _id: 'i9', planName: 'Cruise Coverage', coverage: 'Medical + Missed Port', priceMMK: 95000, priceUSD: 45, duration: 'Per trip', benefits: ['Medical Emergency', 'Missed Port', 'Cabin Cover'] },
 ];
 
+interface InsurancePlan {
+  _id: string;
+  planName: string;
+  coverage: string;
+  priceMMK: number;
+  priceUSD: number;
+  duration: string;
+  benefits: string[];
+  description?: string;
+  image?: string;
+  images?: string[];
+}
 
+export default function InsuranceDetailPage() {
+  const params = useParams();
+  const router = useRouter();
+  const slug = params?.slug as string;
 
-export default async function InsuranceDetailPage({ params }: PageProps) {
-  const slug = params.slug;
-  let plans = await getAll('insurances') as any[];
-  if (plans.length === 0) plans = FALLBACK_PLANS;
-  const plan = plans.find((p: any) => ((p.planName || p.title || '').toLowerCase().replace(/[^a-z0-9]+/g, '-') === slug || p.id === slug || p._id === slug)) || null;
-  if (!plan) notFound();
+  const [plan, setPlan] = useState<InsurancePlan | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+  const [currency, setCurrency] = useState<'MMK' | 'USD'>('MMK');
+  const [travelers, setTravelers] = useState(1);
+  const [travelDate, setTravelDate] = useState('');
+  const [imgError, setImgError] = useState(false);
 
-  const name = plan.planName || plan.title || '';
-  const displayImage = (plan.images && Array.isArray(plan.images) && plan.images[0]) || plan.image || '/images_v2/ins1-v2.jpg';
-  const priceMMK = plan.priceMMK || 0;
-  const priceUSD = plan.priceUSD || 0;
+  useEffect(() => {
+    if (!slug) return;
+
+    const fetchPlan = async () => {
+      setLoading(true);
+      setError('');
+      try {
+        const res = await fetch('/api/insurance');
+        const json = await res.json();
+        const plans: InsurancePlan[] = json?.data || [];
+        const found = plans.find((p: InsurancePlan) => {
+          const planSlug = (p.planName || '').toLowerCase().replace(/[^a-z0-9]+/g, '-');
+          return planSlug === slug || p._id === slug;
+        }) || null;
+        if (found) {
+          setPlan(found);
+        } else {
+          const fallback = FALLBACK_PLANS.find(p => p._id === slug || (p.planName || '').toLowerCase().replace(/[^a-z0-9]+/g, '-') === slug);
+          if (fallback) {
+            setPlan(fallback as InsurancePlan);
+          } else {
+            setError('Insurance plan not found');
+          }
+        }
+      } catch (err) {
+        console.error('Failed to fetch insurance plan:', err);
+        const fallback = FALLBACK_PLANS.find(p => p._id === slug || (p.planName || '').toLowerCase().replace(/[^a-z0-9]+/g, '-') === slug);
+        if (fallback) {
+          setPlan(fallback as InsurancePlan);
+        } else {
+          setError('Insurance plan not found');
+        }
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPlan();
+  }, [slug]);
+
+  const heroImage = plan?.images?.[0] || plan?.image || '/images_v2/ins1-v2.jpg';
+  const displayHero = imgError ? '/images_v2/ins1-v2.jpg' : heroImage;
+  const price = currency === 'MMK' ? (plan?.priceMMK ?? 0) : (plan?.priceUSD ?? 0);
+  const currencySymbol = currency === 'MMK' ? 'Ks' : '$';
+  const totalPrice = price * travelers;
+
+  const handleBookNow = () => {
+    if (!plan) return;
+    const bookUrl = new URL('/book-now', window.location.origin);
+    bookUrl.searchParams.set('type', 'insurance');
+    bookUrl.searchParams.set('title', plan.planName);
+    bookUrl.searchParams.set('duration', plan.duration);
+    bookUrl.searchParams.set('price', String(price));
+    bookUrl.searchParams.set('currency', currency);
+    bookUrl.searchParams.set('travelers', String(travelers));
+    bookUrl.searchParams.set('travelDate', travelDate);
+    window.location.href = bookUrl.toString();
+  };
+
+  // --- Loading State ---
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-b from-white via-gray-50 to-white">
+        <div className="max-w-7xl mx-auto px-4 pt-24 pb-4">
+          <BackButton />
+        </div>
+        <div className="h-[60vh] bg-white/5 animate-pulse" />
+        <div className="max-w-7xl mx-auto px-4 py-12">
+          <div className="h-8 bg-white/10 rounded w-1/3 mb-4 animate-pulse" />
+          <div className="h-4 bg-white/10 rounded w-1/4 mb-8 animate-pulse" />
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div className="lg:col-span-2 space-y-4">
+              <div className="h-4 bg-white/10 rounded animate-pulse" />
+              <div className="h-4 bg-white/10 rounded w-3/4 animate-pulse" />
+              <div className="h-4 bg-white/10 rounded w-1/2 animate-pulse" />
+            </div>
+            <div className="h-64 bg-white/5 rounded-xl animate-pulse" />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // --- Error State ---
+  if (error || !plan) {
+    return (
+      <div className="min-h-screen bg-gradient-to-b from-white via-gray-50 to-white">
+        <div className="max-w-7xl mx-auto px-4 pt-24 pb-8">
+          <BackButton />
+        </div>
+        <div className="flex items-center justify-center flex-1">
+          <div className="text-center space-y-4">
+            <svg className="w-16 h-16 mx-auto text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z" />
+            </svg>
+            <h2 className="text-xl text-[#0A1628] font-semibold">Something went wrong</h2>
+            <p className="text-gray-500">{error || 'Insurance plan not found'}</p>
+            <button
+              onClick={() => router.push('/insurance')}
+              className="px-6 py-2 rounded-xl bg-gradient-to-r from-[#D4AF37] to-[#C5A028] text-gray-900 font-semibold"
+            >
+              Back to Insurance
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  const name = plan.planName || '';
   const coverage = plan.coverage || '';
   const benefits: string[] = Array.isArray(plan.benefits) ? plan.benefits : (typeof plan.benefits === 'string' ? plan.benefits.split(',').map((s: string) => s.trim()).filter(Boolean) : []);
-  const duration = plan.duration || 'Per Trip';
-
-  const bookNowUrl = '/book-now?type=insurance&plan=' + encodeURIComponent(name) + '&id=' + encodeURIComponent(plan.id || plan._id || slug) + '&priceMMK=' + priceMMK + '&priceUSD=' + priceUSD;
+  const duration = plan.duration || 'Per trip';
 
   return (
-    <main className="min-h-screen bg-white">
+    <ErrorBoundary>
+    <main className="min-h-screen bg-gradient-to-b from-white via-gray-50 to-white">
       <BackButton />
 
-      {/* Hero Section */}
+      {/* Hero image */}
       <section className="relative w-full h-[50vh] md:h-[60vh] overflow-hidden">
-        <Image src={displayImage} alt={name} width={1200} height={630} className="w-full h-full object-cover" />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#0A1628] via-[#0A1628]/40 to-transparent" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(212,175,55,0.06),transparent_70%)]" />
-        <Link href="/insurance" className="absolute top-6 left-4 md:top-8 md:left-8 z-20 flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur-md border border-white/20 rounded-full text-white hover:bg-white/20 transition-all text-sm">
+        <Link href="/insurance" className="absolute top-24 left-4 z-20 flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur-md border border-white/20 rounded-full text-white hover:bg-white/20 transition-all text-sm">
           ← Back to Insurance
         </Link>
-        <div className="absolute bottom-0 left-0 right-0 p-6 md:p-10 z-10">
-          <div className="max-w-7xl mx-auto">
-            <div className="flex flex-wrap items-center gap-2 mb-2">
-              <span className="px-3 py-1 rounded-full bg-[#D4AF37]/20 text-[#D4AF37] text-xs font-semibold border border-[#D4AF37]/30 backdrop-blur-sm">
-                🛡️ Travel Insurance
-              </span>
-              <span className="px-3 py-1 rounded-full bg-[#D4AF37]/10 text-white/80 text-xs font-semibold border border-[#D4AF37]/30 backdrop-blur-sm">
-                {duration}
-              </span>
-            </div>
-            <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold text-white mb-3 drop-shadow-lg" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
-              {name}
-            </h1>
-            <p className="text-white/60 text-base md:text-lg">{coverage}</p>
+        <Image
+          src={displayHero}
+          alt={name}
+          fill
+          sizes="100vw"
+          className="object-cover"
+          priority
+          onError={() => setImgError(true)}
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-gray-950 via-gray-950/40 to-transparent" />
+        <div className="absolute bottom-0 left-0 right-0 p-8 md:p-16 max-w-7xl mx-auto">
+          <div className="flex flex-wrap items-center gap-3 mb-4">
+            <span className="px-3 py-1 rounded-full bg-[#D4AF37]/90 text-gray-900 text-sm font-semibold">
+              🛡️ Travel Insurance
+            </span>
+            <span className="px-3 py-1 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white text-sm">
+              {duration}
+            </span>
           </div>
+          <h1
+            className="text-4xl md:text-5xl lg:text-6xl text-white font-bold mb-2"
+            style={{ fontFamily: "'Playfair Display', Georgia, serif" }}
+          >
+            {name}
+          </h1>
+          <p className="text-white/80 text-lg">{coverage}</p>
         </div>
       </section>
 
@@ -81,10 +212,10 @@ export default async function InsuranceDetailPage({ params }: PageProps) {
 
       <SocialShare url={typeof window !== "undefined" ? window.location.href : ""} title={"A9 Global Travel - Insurance"} />
 
-      {/* Content */}
+      {/* Content + Sidebar */}
       <section className="max-w-7xl mx-auto px-4 py-10 md:py-16">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
-          {/* Main Content */}
+          {/* Main content */}
           <div className="lg:col-span-2 space-y-10">
             {/* Quick Stats */}
             <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
@@ -92,8 +223,8 @@ export default async function InsuranceDetailPage({ params }: PageProps) {
                 <svg className="w-8 h-8 mx-auto text-[#D4AF37] mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
-                <p className="text-[#D4AF37] text-2xl font-bold">Ks {priceMMK.toLocaleString()}</p>
-                <p className="text-gray-400 text-xs uppercase tracking-wider mt-1">Price</p>
+                <p className="text-[#D4AF37] text-2xl font-bold">Ks {plan.priceMMK.toLocaleString()}</p>
+                <p className="text-gray-400 text-xs uppercase tracking-wider mt-1">Price (MMK)</p>
               </div>
               <div className="p-5 rounded-2xl bg-gray-50 border border-[#D4AF37]/10 text-center hover:border-[#D4AF37]/30 transition-colors">
                 <svg className="w-8 h-8 mx-auto text-[#D4AF37] mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
@@ -140,7 +271,7 @@ export default async function InsuranceDetailPage({ params }: PageProps) {
               </div>
             )}
 
-            {/* Plan Info Card */}
+            {/* Plan Summary Card */}
             <div className="bg-[#0A1628] rounded-2xl p-6 md:p-8">
               <h2 className="text-2xl font-bold text-white mb-4" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
                 Plan Summary
@@ -154,7 +285,7 @@ export default async function InsuranceDetailPage({ params }: PageProps) {
                   </div>
                   <div>
                     <p className="text-white/50 text-xs uppercase tracking-wider">Price (MMK)</p>
-                    <p className="text-white font-medium">Ks {priceMMK.toLocaleString()}</p>
+                    <p className="text-white font-medium">Ks {plan.priceMMK.toLocaleString()}</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
@@ -165,7 +296,7 @@ export default async function InsuranceDetailPage({ params }: PageProps) {
                   </div>
                   <div>
                     <p className="text-white/50 text-xs uppercase tracking-wider">Price (USD)</p>
-                    <p className="text-white font-medium">${priceUSD.toLocaleString()}</p>
+                    <p className="text-white font-medium">${plan.priceUSD.toLocaleString()}</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
@@ -183,65 +314,107 @@ export default async function InsuranceDetailPage({ params }: PageProps) {
             </div>
           </div>
 
-          {/* Sidebar — Booking Card */}
+          {/* Sidebar Booking Card — Tours-style interactive booking */}
           <div className="lg:col-span-1">
-            <div className="sticky top-28 space-y-6">
-              <div className="rounded-2xl border border-[#D4AF37]/20 bg-gray-50 p-6 space-y-5">
-                {/* Price Header */}
-                <div className="bg-gradient-to-r from-[#0A1628] to-[#162D50] -mx-6 -mt-6 p-6 rounded-t-2xl text-white">
-                  <p className="text-white/60 text-xs uppercase tracking-wider mb-1">Plan Price</p>
-                  <div className="flex items-baseline gap-1">
-                    <span className="text-3xl font-bold" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
-                      Ks {priceMMK.toLocaleString()}
-                    </span>
-                  </div>
-                  <p className="text-white/50 text-sm mt-1">
-                    ≈ ${priceUSD.toLocaleString()} USD
-                  </p>
+            <div className="sticky top-24 rounded-2xl border border-gold/20 bg-white/5 backdrop-blur-sm p-6 space-y-6">
+              {/* Price */}
+              <div className="flex items-center justify-between">
+                <div>
+                  <span className="text-3xl font-bold text-[#D4AF37]">
+                    {currencySymbol}{' '}{price.toLocaleString()}
+                  </span>
+                  <span className="text-gray-500 text-sm ml-1">/ person</span>
                 </div>
-
-                {/* Info Rows */}
-                <div className="space-y-2.5 text-sm">
-                  <div className="flex justify-between py-1 border-b border-gray-100">
-                    <span className="text-gray-400">Plan Name</span>
-                    <span className="text-[#0A1628] font-medium">{name}</span>
-                  </div>
-                  <div className="flex justify-between py-1 border-b border-gray-100">
-                    <span className="text-gray-400">Duration</span>
-                    <span className="text-[#0A1628] font-medium">{duration}</span>
-                  </div>
-                  <div className="flex justify-between py-1 border-b border-gray-100">
-                    <span className="text-gray-400">Coverage</span>
-                    <span className="text-[#0A1628] font-medium">{coverage}</span>
-                  </div>
-                  <div className="flex justify-between py-1 border-b border-gray-100">
-                    <span className="text-gray-400">Benefits</span>
-                    <span className="text-[#0A1628] font-medium">{benefits.length} included</span>
-                  </div>
-                </div>
-
-                {/* Book Now Button */}
-                <Link
-                  href={bookNowUrl}
-                  className="block w-full py-3.5 rounded-xl text-center font-bold text-base bg-gradient-to-r from-[#D4AF37] to-[#F5A623] text-[#0A1628] shadow-lg shadow-[#D4AF37]/30 hover:shadow-xl hover:shadow-[#D4AF37]/40 hover:scale-[1.02] transition-all duration-300"
-                >
-                  Book Now
-                </Link>
-                <p className="text-center text-gray-400 text-xs">No payment required to inquire</p>
+                <CurrencyToggle activeCurrency={currency} onToggle={setCurrency} />
               </div>
 
-              <Link
-                href="/insurance"
-                className="block w-full py-3 rounded-xl text-center font-semibold text-sm border-2 border-[#D4AF37] text-[#D4AF37] hover:bg-[#D4AF37] hover:text-[#0A1628] transition-all duration-300"
+              <hr className="border-gold/10" />
+
+              {/* Quick info */}
+              <div className="space-y-2 text-sm">
+                <div className="flex justify-between">
+                  <span className="text-gray-600">Duration</span>
+                  <span className="text-[#0A1628]">{duration}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-600">Coverage</span>
+                  <span className="text-[#0A1628]">{coverage}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-600">Benefits</span>
+                  <span className="text-[#0A1628]">{benefits.length} coverages</span>
+                </div>
+              </div>
+
+              <hr className="border-gold/10" />
+
+              {/* Booking form */}
+              <div className="space-y-3">
+                <div>
+                  <label className="text-gray-600 text-xs mb-1 block">Travel Date</label>
+                  <input
+                    type="date"
+                    value={travelDate}
+                    onChange={(e) => setTravelDate(e.target.value)}
+                    className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-gray-900 text-sm focus:outline-none focus:border-gold/50 [color-scheme:dark]"
+                  />
+                </div>
+                <div>
+                  <label className="text-gray-600 text-xs mb-1 block">Travelers</label>
+                  <div className="flex items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={() => setTravelers(Math.max(1, travelers - 1))}
+                      className="w-8 h-8 rounded-lg border border-gray-300 text-gray-600 hover:bg-gray-100 transition-colors flex items-center justify-center"
+                    >
+                      −
+                    </button>
+                    <span className="w-12 text-center text-[#0A1628] font-semibold">{travelers}</span>
+                    <button
+                      type="button"
+                      onClick={() => setTravelers(Math.min(50, travelers + 1))}
+                      className="w-8 h-8 rounded-lg border border-gray-300 text-gray-600 hover:bg-gray-100 transition-colors flex items-center justify-center"
+                    >
+                      +
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              {/* Total */}
+              <div className="flex justify-between items-center py-3 border-t border-gold/10">
+                <span className="text-gray-700 font-medium">Total</span>
+                <span className="text-2xl font-bold text-[#D4AF37]">
+                  {currencySymbol}{' '}{totalPrice.toLocaleString()}
+                </span>
+              </div>
+
+              {/* Book Now */}
+              <button
+                onClick={handleBookNow}
+                disabled={!plan}
+                className="w-full py-3.5 rounded-xl bg-gradient-to-r from-[#D4AF37] to-[#C5A028] hover:from-[#E5C048] hover:to-[#D4AF37] text-gray-900 font-bold text-lg shadow-lg shadow-[#D4AF37]/20 hover:shadow-[#D4AF37]/40 transition-all duration-300 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:from-[#D4AF37] disabled:hover:to-[#C5A028]"
               >
-                ← Back to All Insurance
-              </Link>
+                Book Now
+              </button>
+
+              <p className="text-center text-gray-500 text-xs">No payment required to book</p>
             </div>
+
+            <Link
+              href="/insurance"
+              className="block w-full py-3 rounded-xl text-center font-semibold text-sm border-2 border-[#D4AF37] text-[#D4AF37] hover:bg-[#D4AF37] hover:text-[#0A1628] transition-all duration-300"
+            >
+              ← Back to All Insurance
+            </Link>
           </div>
         </div>
       </section>
 
-      <RelatedItems section="insurance" excludeSlug={slug} />
+      <ErrorBoundary fallback={null}>
+        <RelatedItems section="insurance" excludeSlug={slug} />
+      </ErrorBoundary>
     </main>
+    </ErrorBoundary>
   );
 }
