@@ -7,7 +7,7 @@ import BookingModal from '@/components/BookingModal';
 import DealsBanner from '@/components/DealsBanner';
 import FAQAccordion from '@/components/FAQAccordion';
 import TestimonialSlider from '@/components/TestimonialSlider';
-import ScrollingRow from '@/components/ScrollingRow';
+
 interface VisaService {
   slug?: string;
   _id: string;
@@ -87,7 +87,7 @@ const FALLBACK_VISAS: VisaService[] = [
 
 
 
-function VisaGridCard({ visa, cardWidth, cardHeight }: { visa: VisaService; cardWidth?: number; cardHeight?: number }) {
+function VisaGridCard({ visa }: { visa: VisaService }) {
   const router = useRouter();
   const flag = COUNTRY_FLAGS[visa.country] || '🌏';
   const imageUrl = visa.image || COUNTRY_IMAGES[visa.country];
@@ -96,10 +96,10 @@ function VisaGridCard({ visa, cardWidth, cardHeight }: { visa: VisaService; card
     <div
       onClick={() => router.push("/visas/" + (visa.slug||visa._id||visa.id))}
       className="rounded-2xl overflow-hidden group cursor-pointer border border-gray-100 hover:border-gold/40 transition-all duration-300 bg-white shadow-sm flex flex-col"
-      style={{ height: cardHeight || 430, width: cardWidth || undefined }}
+      style={{ minHeight: 380 }}
     >
       {imageUrl ? (
-        <div className="relative overflow-hidden" style={{ height: cardHeight ? Math.round(cardHeight * 0.4) : 176 }}>
+        <div className="relative overflow-hidden" style={{ height: 176 }}>
           <img src={imageUrl} alt={visa.country} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" loading="lazy" />
           <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
           <div className="absolute bottom-1.5 left-2 flex items-center gap-1.5">
@@ -156,14 +156,14 @@ export default function VisasClient({ initialVisas, siteConfig }: VisasClientPro
   const vTitleFont = vt.titleFont || "'Playfair Display', serif";
   const vTitleSize = vt.titleSize || "2.5rem";
   const vSubtitleSize = vt.subtitleSize || "1rem";
-  const layout = siteConfig?.sectionLayouts?.visas || { desktop: 4, tablet: 3, mobile: 2 };
+  
   const [visas, setVisas] = useState<VisaService[]>(initialVisas.length > 0 ? initialVisas : FALLBACK_VISAS);
   const [currency, setCurrency] = useState<'MMK' | 'USD'>('MMK');
   const [selectedVisa, setSelectedVisa] = useState<VisaService | null>(null);
 
-  const cardWidth = siteConfig?.cardDimensions?.visas?.width || 300;
-  const cardHeight = siteConfig?.cardDimensions?.visas?.height || 420;
-  const cardInfo = { width: cardWidth, height: cardHeight, containerWidth: 6 * (cardWidth + 16) };
+  
+  
+  
 
   useEffect(() => {
     if (initialVisas.length > 0) return; // already have server data
@@ -188,15 +188,7 @@ export default function VisasClient({ initialVisas, siteConfig }: VisasClientPro
     }).catch(() => {});
   }, [initialVisas.length]);
 
-  // Chunk into rows of 6
-  
-  const visaRows: VisaService[][] = [];
-  for (let i = 0; i < pool.length; i += 6) {
-    visaRows.push(pool.slice(i, i + 6));
-  }
-
-
-  return (
+    return (
     <div className="min-h-screen bg-gray-50">
 <section className="relative w-full h-64 sm:h-80 overflow-hidden" style={{ height: (siteConfig?.heroDimensions?.["visas"]?.desktop || 380) + "px" }}>
         <img src={heroImage} alt="Visa Services" className="w-full h-full object-cover" onError={(e) => { (e.target as HTMLImageElement).src = "/images_v2/visa1-v3.jpg"; }} />
@@ -211,15 +203,9 @@ export default function VisasClient({ initialVisas, siteConfig }: VisasClientPro
         <button onClick={() => setCurrency('USD')} className={`px-3 py-1 rounded-full text-[11px] font-semibold transition-all ${currency==='USD'?'bg-gold text-white':'bg-white/20 text-gray-600 border border-gray-200'}`}>💵 USD</button>
       </div>
 <section className="max-w-7xl mx-auto px-4 sm:px-6 pt-4 pb-20">
-        <div className="space-y-8">
-          {visaRows.map((row, rowIdx) => (
-            <ScrollingRow key={rowIdx} containerWidth={cardInfo.containerWidth}>
-              {row.map(v => (
-                <div key={v._id} className="flex-shrink-0 snap-start" style={{ width: cardInfo.width }}>
-                  <VisaGridCard visa={v} cardWidth={cardInfo.width} cardHeight={cardInfo.height} />
-                </div>
-              ))}
-            </ScrollingRow>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          {visas.map(v => (
+            <VisaGridCard key={v._id} visa={v} />
           ))}
         </div>
       </section>
