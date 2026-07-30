@@ -654,7 +654,8 @@ const tabs: { key: Tab; label: string }[] = [
               <h2 className="text-lg font-bold text-white">Contact Information</h2>
               <p className="text-sm text-white/40">This controls phone/email/address shown on Contact page, Footer, and LiveChat widget.</p>
               <div className="grid grid-cols-2 gap-3">
-                <div><label className={`labelCls labelCls`}>Phone</label><input className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} value={cfg.contact.phone} onChange={e => set("contact", { ...cfg.contact, phone: e.target.value })} /></div>
+                <div><label className={`labelCls labelCls`}>Phone</label><input className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} value={cfg.contact.phone} onChange={e => set("contact", { ...cfg.contact, phone: e.target.value })} />
+                <div><label className={labelCls}>Email</label><input className={inputCls} type="email" style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} value={cfg.contact.email || ""} onChange={e => set("contact", { ...cfg.contact, email: e.target.value })} /></div>
               </div>
               <div><label className={labelCls}>Address</label><input className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} value={cfg.contact.address} onChange={e => set("contact", { ...cfg.contact, address: e.target.value })} /></div>
               <div className="grid grid-cols-2 gap-3">
@@ -663,33 +664,40 @@ const tabs: { key: Tab; label: string }[] = [
               
               <div className="mt-6 border-t border-white/10 pt-4">
                 <h3 className="text-sm font-semibold text-[#D4AF37] mb-3">Department Phone Numbers</h3>
-                <div className="grid grid-cols-2 gap-3">
-                  <div><label className={labelCls}>Ticket Department</label>
-                    <input className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }}
-                      value={(cfg.departmentPhones && cfg.departmentPhones.ticket) || ""}
-                      onChange={e => setCfg(p => ({ ...p, departmentPhones: { ...(p.departmentPhones || {}), ticket: e.target.value } }))} />
-                  </div>
-                  <div><label className={labelCls}>Visa Department</label>
-                    <input className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }}
-                      value={(cfg.departmentPhones && cfg.departmentPhones.visa) || ""}
-                      onChange={e => setCfg(p => ({ ...p, departmentPhones: { ...(p.departmentPhones || {}), visa: e.target.value } }))} />
-                  </div>
-                  <div><label className={labelCls}>Hotel Department</label>
-                    <input className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }}
-                      value={(cfg.departmentPhones && cfg.departmentPhones.hotel) || ""}
-                      onChange={e => setCfg(p => ({ ...p, departmentPhones: { ...(p.departmentPhones || {}), hotel: e.target.value } }))} />
-                  </div>
-                  <div><label className={labelCls}>Outbound Department</label>
-                    <input className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }}
-                      value={(cfg.departmentPhones && cfg.departmentPhones.outbound) || ""}
-                      onChange={e => setCfg(p => ({ ...p, departmentPhones: { ...(p.departmentPhones || {}), outbound: e.target.value } }))} />
-                  </div>
-                  <div><label className={labelCls}>Inbound Department</label>
-                    <input className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }}
-                      value={(cfg.departmentPhones && cfg.departmentPhones.inbound) || ""}
-                      onChange={e => setCfg(p => ({ ...p, departmentPhones: { ...(p.departmentPhones || {}), inbound: e.target.value } }))} />
-                  </div>
-                </div>
+<p className="text-xs text-white/40 mb-3">Add department names and phone numbers. These display on the website footer.</p>
+<div className="space-y-2 mb-3">
+{(cfg.departmentPhones && typeof cfg.departmentPhones === "object"
+  ? Object.entries(cfg.departmentPhones).filter(([k]: [string, any]) => k !== "__proto__" && typeof k === "string")
+  : []).map(([dept, phone]: [string, any]) => (
+<div key={dept} className="flex items-center gap-2">
+<input className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white", width: "30%" }} placeholder="Department"
+  value={dept}
+  onChange={e => {
+    const newName = e.target.value;
+    const phones = { ...(cfg.departmentPhones || {}) };
+    const oldVal = phones[dept];
+    delete phones[dept];
+    if (newName) phones[newName] = oldVal;
+    setCfg((p: any) => ({ ...p, departmentPhones: phones }));
+  }} />
+<input className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white", flex: 1 }} placeholder="Phone"
+  value={typeof phone === "string" ? phone : ""}
+  onChange={e => setCfg((p: any) => ({ ...p, departmentPhones: { ...(p.departmentPhones || {}), [dept]: e.target.value } }))} />
+<button onClick={() => {
+  const phones = { ...(cfg.departmentPhones || {}) };
+  delete phones[dept];
+  setCfg((p: any) => ({ ...p, departmentPhones: phones }));
+}} className="text-red-400 hover:text-red-300 p-1 rounded hover:bg-red-400/10" title="Remove">&times;</button>
+</div>
+))}
+</div>
+<button onClick={() => {
+  const name = prompt("Department name (e.g. \"Inbound\", \"Visa\"):");
+  if (name && name.trim()) {
+    setCfg((p: any) => ({ ...p, departmentPhones: { ...(p.departmentPhones || {}), [name.trim()]: "" } }));
+  }
+}} className="text-xs text-[#D4AF37] hover:text-[#C19B2F] border border-[#D4AF37]/30 rounded px-3 py-1.5 hover:bg-[#D4AF37]/10 transition-colors">+ Add Department Phone</button>
+            </div>
               </div>
             <ImageZone field="logoUrl" label="Site Logo" />
             </div>

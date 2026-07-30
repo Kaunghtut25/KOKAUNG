@@ -187,6 +187,21 @@ export default function Footer() {
                   {workingHours}
                 </p>
               </div>
+              {/* Department Phone Numbers */}
+              {config?.departmentPhones && typeof config.departmentPhones === "object" &&
+                Object.entries(config.departmentPhones)
+                  .filter(([k, v]: [string, any]) => k !== "__proto__" && v)
+                  .map(([dept, phoneNum]: [string, any]) => (
+                    <div key={dept} className="flex items-start space-x-3">
+                      <FaPhoneAlt className="text-[#D4AF37] mt-1 flex-shrink-0 text-xs" />
+                      <div className="leading-tight">
+                        <span className="text-[10px] text-white/30 uppercase tracking-wider block">{dept}</span>
+                        <a href={`tel:${String(phoneNum).replace(/\s/g, "")}`} className="text-sm text-white/60 hover:text-[#D4AF37] transition-colors">{phoneNum}</a>
+                      </div>
+                    </div>
+                  ))}
+              
+
             </div>
           </div>
         </div>
