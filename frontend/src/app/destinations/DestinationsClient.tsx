@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import DealsBanner from '@/components/DealsBanner';
@@ -28,6 +28,8 @@ function toSlug(text: string): string {
 
 export default function DestinationsClient({ initialDestinations, siteConfig }: Props) {
   const router = useRouter();
+  const [selectedDest, setSelectedDest] = useState<Destination | null>(null);
+
   const heroImage = siteConfig?.heroImages?.destinations || "/images_v2/hero-destinations-v2.jpg";
   const dt = siteConfig?.heroText?.destinations || {};
   const dTitle = dt.title || "";
@@ -82,7 +84,7 @@ export default function DestinationsClient({ initialDestinations, siteConfig }: 
               <div
                 key={i}
                 className="bg-white rounded-xl border border-gray-200 overflow-hidden hover:shadow-xl hover:border-[#D4AF37]/40 transition-all group cursor-pointer"
-                onClick={() => router.push("/destinations/" + slug)}
+                onClick={(e) => { if (!(e.target as HTMLElement).closest("a, button")) setSelectedDest(dest); }}
               >
                 {/* Card Image */}
                 <div className="relative w-full h-48 overflow-hidden">
@@ -139,6 +141,50 @@ export default function DestinationsClient({ initialDestinations, siteConfig }: 
       <DealsBanner />
       <FAQAccordion section="destinations" />
       <TestimonialSlider />
+    
+      {/* Quick View Modal */}
+      {selectedDest && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm" onClick={() => setSelectedDest(null)}>
+          <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
+            <div className="relative h-56">
+              <img src={selectedDest.image} alt={selectedDest.city} className="w-full h-full object-cover" onError={(e) => { (e.target as HTMLImageElement).src = "https://vydupdjfr38dxlzx.public.blob.vercel-storage.com/uploads/img_1784609663178_ta1biy-bangkok-x7Q8kUMuXRvj6qMJAZxBbawKS4zkjI.jpg"; }} />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+              <button onClick={() => setSelectedDest(null)} className="absolute top-3 right-3 w-8 h-8 bg-white/20 backdrop-blur rounded-full flex items-center justify-center text-white hover:bg-white/40 transition-all">✕</button>
+              <div className="absolute bottom-4 left-6">
+                <h2 className="text-2xl font-bold text-white" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>{selectedDest.city}</h2>
+                <p className="text-white/80 text-sm">{selectedDest.country}</p>
+              </div>
+            </div>
+            <div className="p-6 space-y-4">
+              <p className="text-gray-700 leading-relaxed">{selectedDest.description || "A fascinating destination waiting to be explored. Rich in culture, history, and unforgettable experiences."}</p>
+              {selectedDest.bestTime && (
+                <div className="flex items-center gap-2 text-sm text-gray-600">
+                  <span className="text-[#D4AF37]">☀️</span> Best time: <span className="font-medium">{selectedDest.bestTime}</span>
+                </div>
+              )}
+              {selectedDest.minPrice && (
+                <div className="flex items-center gap-2 text-sm text-gray-600">
+                  <span className="text-[#D4AF37]">💰</span> Starting from: <span className="font-medium text-[#D4AF37]">{selectedDest.minPrice}</span>
+                </div>
+              )}
+              {selectedDest.highlights && selectedDest.highlights.length > 0 && (
+                <div>
+                  <h4 className="font-semibold text-gray-800 mb-2">Highlights</h4>
+                  <div className="flex flex-wrap gap-2">
+                    {selectedDest.highlights.map((h, i) => (
+                      <span key={i} className="px-3 py-1 bg-[#D4AF37]/10 text-[#B8960F] text-xs rounded-full">{h}</span>
+                    ))}
+                  </div>
+                </div>
+              )}
+              <div className="flex gap-3 pt-2">
+                <Link href={"/destinations/" + toSlug(selectedDest.city)} className="flex-1 px-4 py-2.5 border border-[#D4AF37] text-[#D4AF37] text-sm font-semibold rounded-full text-center hover:bg-[#D4AF37] hover:text-white transition-colors">Full Details</Link>
+                <Link href={"/book-now?type=tour&destination=" + encodeURIComponent(selectedDest.city)} className="flex-1 px-4 py-2.5 bg-[#D4AF37] text-white text-sm font-semibold rounded-full text-center hover:bg-[#C19B2F] transition-colors">Book Trip</Link>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </main>
   );
 }
