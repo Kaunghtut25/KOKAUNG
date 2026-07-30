@@ -160,7 +160,8 @@ function DestinationCard({ dest, destText = {} }: { dest: { city: string; countr
 }
 
 export default function PopularDestinations({ siteConfig }: { siteConfig?: any } = {}) {
-  const [dests, setDests] = useState<any[]>(FALLBACK_DESTS);
+  const [dests, setDests] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
   const [destText, setDestText] = useState<any>({});
 
   const cardWidth = 300;
@@ -177,7 +178,7 @@ export default function PopularDestinations({ siteConfig }: { siteConfig?: any }
       } else {
         setDests(FALLBACK_DESTS);
       }
-    }).catch(() => { setDests(FALLBACK_DESTS); }).finally(() => { setLoaded(true); });
+    }).catch(() => { setDests(FALLBACK_DESTS); }).finally(() => { setLoaded(true); setLoading(false); });
   }, []);
 
 
@@ -187,7 +188,24 @@ export default function PopularDestinations({ siteConfig }: { siteConfig?: any }
         <h2 className="font-bold mb-2" style={{ fontFamily: destText?.titleFont || "'Playfair Display', Georgia, serif", fontSize: destText?.titleSize || "2.5rem", color: destText?.titleColor || "#0A1628" }}>{destText?.title || "Explore The World"}</h2>
         <p style={{ fontSize: destText?.subtitleSize || "1rem" }} className="text-gray-500">{destText?.subtitle || "Popular Destinations"}</p>
       </div>
-      {dests.length > 0 ? (
+      {loading && dests.length === 0 ? (
+        <div className="flex gap-4 overflow-hidden">
+          {Array.from({ length: 4 }, (_, i) => (
+            <div key={i} className="flex-shrink-0 animate-pulse" style={{ width: cardWidth, height: cardHeight }}>
+              <div className="rounded-2xl overflow-hidden bg-white h-full flex flex-col shadow-lg shadow-black/10">
+                <div className="h-[280px] bg-gray-300 rounded-t-2xl" />
+                <div className="h-4 bg-gradient-to-b from-gray-200 to-transparent" />
+                <div className="px-4 pt-4 pb-3 space-y-3 flex-1">
+                  <div className="h-5 bg-gray-300 rounded w-2/3" />
+                  <div className="h-3 bg-gray-200 rounded w-1/2" />
+                  <div className="h-3 bg-gray-200 rounded w-3/4" />
+                  <div className="h-3 bg-gray-200 rounded w-1/3" />
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      ) : dests.length > 0 ? (
         <ScrollingRow containerWidth={containerWidth}>
           {dests.map((d, i) => (
             <div key={i} className="flex-shrink-0 snap-start" style={{ width: cardWidth }}>

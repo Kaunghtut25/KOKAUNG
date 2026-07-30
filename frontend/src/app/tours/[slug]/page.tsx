@@ -602,7 +602,7 @@ export default function TourDetailPage() {
     return (
       <div className="min-h-screen bg-gradient-to-b from-white via-gray-50 to-white">
         <div className="max-w-7xl mx-auto px-4 pt-24 pb-4">
-          <BackButton bookNowUrl={`/book-now?type=tour&name=${encodeURIComponent(tour.title)}&id=${encodeURIComponent(tour.id || tour._id || slug)}&priceMMK=${tour.priceMMK || 0}&priceUSD=${tour.priceUSD || 0}&destination=${encodeURIComponent(tour.destination || "")}`} />
+          <BackButton bookNowUrl={`/book-now?type=tour&name=${encodeURIComponent(tour?.title || "")}&id=${encodeURIComponent(tour?._id || slug)}&priceMMK=${tour?.priceMMK ?? 0}&priceUSD=${tour?.priceUSD ?? 0}&destination=${encodeURIComponent(tour?.destination || "")}`} />
         </div>
         <div className="h-[60vh] bg-white/5 animate-pulse" />
         <div className="max-w-7xl mx-auto px-4 py-12">
