@@ -66,7 +66,7 @@ export default function BlogDetailPage() {
   if (!post) {
     return (
       <main className="min-h-screen bg-white pt-24 text-center">
-      <BackButton bookNowUrl={`/book-now?type=blog&title=${encodeURIComponent(post?.title || "")}&destination=${encodeURIComponent(post ? (post.tags || []).join(", ") : "")}`} />
+      <BackButton />
 
         <h1 className="text-4xl font-bold text-[#0A1628] mb-4">Post Not Found</h1>
         <p className="text-gray-600 mb-8">The blog post you are looking for does not exist.</p>
@@ -97,6 +97,7 @@ export default function BlogDetailPage() {
 
   return (
     <main className="min-h-screen bg-white">
+      <BackButton />
       {/* Hero */}
       <div className="relative h-64 md:h-96 overflow-hidden">
         <img

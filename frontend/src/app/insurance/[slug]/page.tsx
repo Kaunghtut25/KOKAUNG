@@ -42,7 +42,7 @@ export default async function InsuranceDetailPage({ params }: PageProps) {
 
   return (
     <main className="min-h-screen bg-white">
-      <BackButton bookNowUrl={`/book-now?type=insurance&name=${encodeURIComponent(name || planName || slug)}&id=${encodeURIComponent(plan.id || plan._id || slug)}&priceMMK=${priceMMK || 0}&priceUSD=${priceUSD || 0}&destination=${encodeURIComponent(plan.planName || plan.title || plan.country || slug)}`} />
+      <BackButton />
 
       {/* Hero Section */}
       <section className="relative w-full h-[50vh] md:h-[60vh] overflow-hidden">

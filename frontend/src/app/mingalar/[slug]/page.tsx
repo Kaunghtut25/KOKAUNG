@@ -72,19 +72,19 @@ export default async function MingalarDetailPage({ params }: PageProps) {
   const desc = item.desc || item.description || '';
   const icon = item.icon || '✨';
 
-  const bookNowUrl = '/book-now?type=lounge&name=' + encodeURIComponent(title) + '&id=' + encodeURIComponent(item.id || item._id || slug);
+  const bookNowUrl = '/book-now?type=mingalar&name=' + encodeURIComponent(title) + '&id=' + encodeURIComponent(item.id || item._id || slug);
 
   return (
     <main className="min-h-screen bg-white">
       {/* Back Button */}
-      <BackButton bookNowUrl={`/book-now?type=mingalar&name=${encodeURIComponent(title || slug)}&id=${encodeURIComponent(item.id || item._id || slug)}&destination=${encodeURIComponent(title || slug)}`} />
+      <BackButton />
 
       {/* Hero Section */}
       <section className="relative w-full h-[50vh] md:h-[60vh] overflow-hidden">
         <Image src={displayImage} alt={title} width={1200} height={630} className="w-full h-full object-cover" />
         <div className="absolute inset-0 bg-gradient-to-t from-[#0A1628] via-[#0A1628]/40 to-transparent" />
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(212,175,55,0.06),transparent_70%)]" />
-        <Link href="/mingalar" className="absolute top-6 left-4 md:top-8 md:left-8 z-20 flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur-md border border-white/20 rounded-full text-white hover:bg-white/20 transition-all text-sm">
+        <Link href="/mingalar" className="absolute top-24 left-4 md:top-24 md:left-8 z-20 flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur-md border border-white/20 rounded-full text-white hover:bg-white/20 transition-all text-sm">
           ← Back to Sky Lounge
         </Link>
         <div className="absolute bottom-0 left-0 right-0 p-6 md:p-10 z-10">
