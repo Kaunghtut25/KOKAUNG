@@ -12,12 +12,14 @@ interface MingalarItem {
 
 
 const FALLBACK_MINGALAR: MingalarItem[] = [
-  { id: "m1", _id: "m1", title: "Sky Lounge Yangon", desc: "Premium lounge at Yangon International Airport. Complimentary food, drinks, WiFi, and shower facilities for departing passengers.", icon: "✈️", img: "/images_v2/mingalar-v2.jpg", slug: "sky-lounge-yangon" },
-  { id: "m2", _id: "m2", title: "Sky Lounge Mandalay", desc: "Relax before your flight at Mandalay International Airport. Quiet space with refreshments, newspapers, and charging stations.", icon: "🍸", img: "/images_v2/mingalar-v2.jpg", slug: "sky-lounge-mandalay" },
-  { id: "m3", _id: "m3", title: "VIP Meet & Greet", desc: "Personalized airport assistance — fast track through immigration, baggage handling, and private transfer to your destination.", icon: "🤝", img: "/images_v2/mingalar-v2.jpg", slug: "vip-meet-greet" },
-  { id: "m4", _id: "m4", title: "Airport Transfer Express", desc: "Premium private transfers to and from airports in Yangon, Mandalay, and Nay Pyi Taw. Professional drivers, meet & greet, flight tracking.", icon: "🚗", img: "/images_v2/mingalar-v2.jpg", slug: "airport-transfer-express" },
-  { id: "m5", _id: "m5", title: "Business Lounge Pass", desc: "Access to premium business lounges across major Asian airports. Perfect for frequent flyers needing workspace and refreshments between flights.", icon: "💼", img: "/images_v2/mingalar-v2.jpg", slug: "business-lounge-pass" },
-  { id: "m6", _id: "m6", title: "Family Lounge Package", desc: "Family-friendly lounge access with kids play areas, family seating, and child-friendly meals. Make airport waiting fun for the whole family.", icon: "👨‍👩‍👧", img: "/images_v2/mingalar-v2.jpg", slug: "family-lounge-package" },
+  { id: "m1", _id: "m1", title: "Fine Dining", desc: "Premium buffet with international cuisine and a la carte menu", icon: "🍽️", img: "https://vydupdjfr38dxlzx.public.blob.vercel-storage.com/uploads/img_1784609571752_1e7bt9-fine-dining-4jxXMQKzbQzKIbXm4mcE1z3zQR0oJM.jpg", slug: "fine-dining" },
+  { id: "m2", _id: "m2", title: "Open Bar", desc: "Complimentary premium drinks, cocktails and mocktails", icon: "🍸", img: "https://vydupdjfr38dxlzx.public.blob.vercel-storage.com/uploads/img_1784609572987_j5u2mo-open-bar-hxaaHaxfeopFIZLffZWqTuWxukB3PU.jpg", slug: "open-bar" },
+  { id: "m3", _id: "m3", title: "Workspace", desc: "High-speed WiFi, work stations and private meeting pods", icon: "💻", img: "https://vydupdjfr38dxlzx.public.blob.vercel-storage.com/uploads/img_1784609574070_alr2wx-workspace-YQe7TYFmvPD3EGLaSpVrT2fYJT7RqJ.jpg", slug: "workspace" },
+  { id: "m4", _id: "m4", title: "Shower Suites", desc: "Refresh with premium toiletries before your flight", icon: "🚿", img: "https://vydupdjfr38dxlzx.public.blob.vercel-storage.com/uploads/img_1784609575245_w0hq5r-shower-suites-KIW0G94JlVbzJpyaA6szYb6IF1uah7.jpg", slug: "shower-suites" },
+  { id: "m5", _id: "m5", title: "Business Center", desc: "Meeting rooms, printing and executive services", icon: "💼", img: "https://vydupdjfr38dxlzx.public.blob.vercel-storage.com/uploads/img_1784609576449_bra3sd-business-center-6YrWwQ9wheGpdtcqdLvdsbo1oL5R9T.jpg", slug: "business-center" },
+  { id: "m6", _id: "m6", title: "VIP Lounge", desc: "Exclusive VIP area with personalized butler service", icon: "👑", img: "https://vydupdjfr38dxlzx.public.blob.vercel-storage.com/uploads/img_1784609577709_scuw7m-vip-lounge-O01NOtpjZppBUGNp37lGP7MLx4g8yv.jpg", slug: "vip-lounge" },
+  { id: "m7", _id: "m7", title: "Nap Pods", desc: "Private sleeping pods for restful pre-flight naps", icon: "😴", img: "https://vydupdjfr38dxlzx.public.blob.vercel-storage.com/uploads/img_1784609578940_mfhzqa-nap-pods-Bz8sXDKlTJj8UNWi0XnaW8fwA0Oluz.jpg", slug: "nap-pods" },
+  { id: "m8", _id: "m8", title: "Concierge", desc: "Priority check-in, boarding and personalized assistance", icon: "🛎️", img: "https://vydupdjfr38dxlzx.public.blob.vercel-storage.com/uploads/img_1784609580087_1bkb16-concierge-VB9tbHBZZcIjevepAWjyO5YzsNpbbn.jpg", slug: "concierge" },
 ];
 
 export default function MingalarDetailPage({ params }: { params: { slug: string } }) {

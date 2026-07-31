@@ -31,6 +31,8 @@ async function getInitialLounge(): Promise<LoungeItem[]> {
     const raw = await getAll("mingalar") as any[];
     if (!raw || raw.length === 0) return FALLBACK_MINGALAR;
     return raw.map((item: any) => ({
+      id: item.id || item._id || "",
+      slug: item.slug || "",
       img: item.img || item.image || "https://vydupdjfr38dxlzx.public.blob.vercel-storage.com/uploads/img_1784609571752_1e7bt9-fine-dining-4jxXMQKzbQzKIbXm4mcE1z3zQR0oJM.jpg",
       icon: item.icon || "✨",
       title: item.title || "Sky Lounge",

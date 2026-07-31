@@ -104,6 +104,15 @@ export default function BlogDetailPage() {
 
   const post = found;
 
+  // Gate on API load to avoid flashing stale hardcoded ALL_POSTS content
+  if (!postsLoaded) {
+    return (
+      <main className="min-h-screen bg-white pt-24 text-center">
+        <div className="text-gray-500 py-16">Loading post...</div>
+      </main>
+    );
+  }
+
   if (!post) {
     return (
       <main className="min-h-screen bg-white pt-24 text-center">
