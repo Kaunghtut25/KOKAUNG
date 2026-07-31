@@ -114,7 +114,7 @@ export default function BlogDetailPage() {
       {/* Hero */}
       <div className="relative h-64 md:h-96 overflow-hidden">
         <img
-          src={post.image}
+          src={post.image || '/images_v2/hero-blog-v2.jpg'}
           alt={post.title}
           className="w-full h-full object-cover"
           onError={(e) => { (e.target as HTMLImageElement).src = '/images_v2/hero-blog-v2.jpg'; }}
