@@ -1,6 +1,6 @@
 'use client';
 import { useState, useEffect } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useParams } from 'next/navigation';
 import BackButton from '@/components/BackButton';
 import Link from 'next/link';
 
@@ -57,8 +57,10 @@ const FALLBACK_BLOG_POSTS: any[] = [
 ];
 
 export default function BlogDetailPage() {
-  const router = useRouter();
-  const searchParams = useSearchParams();
+  const params = useParams();
+  const paramSlug = params?.slug as string;
+
+
   const [post, setPost] = useState<BlogPost | null>(null);
 
   useEffect(() => {
