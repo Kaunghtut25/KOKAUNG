@@ -76,7 +76,9 @@ export default function BlogDetailPage() {
     });
   }
 
-  if (!found) {
+  const post = found;
+
+  if (!post) {
     return (
       <main className="min-h-screen bg-white pt-24 text-center">
       <BackButton />
