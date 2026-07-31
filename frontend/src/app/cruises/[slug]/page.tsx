@@ -336,7 +336,7 @@ function CruiseDetailClient({ cruise, slug }: CruiseDetailPageProps) {
 export default async function CruiseDetailPage({ params }: { params: { slug: string } }) {
   const slug = params.slug;
   let cruises = await getAll('cruises') as any[];
-  if (cruises.length === 0) cruises = FALLBACK_CRUISES;
+  if (cruises.length < 5) cruises = FALLBACK_CRUISES;
   const cruise = cruises.find((c: any) => ((c.title || c.name || '').toLowerCase().replace(/[^a-z0-9]+/g, '-') === slug || c.id === slug || c._id === slug || c.slug === slug)) || null;
   if (!cruise) notFound();
 

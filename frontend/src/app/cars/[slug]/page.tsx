@@ -36,7 +36,7 @@ const DEFAULT_CAR_IMG = "/images_v2/car1-v2.jpg";
 async function getCarBySlug(slug: string): Promise<CarData | null> {
   try {
     const rawCars = await getAll("cars") as any[];
-  if (rawCars.length === 0) {
+  if (rawCars.length < 5) {
     const fallbackCars: any[] = [
       { id: "c1", _id: "c1", carType: "Toyota Alphard Hybrid", capacity: 7, seats: 7, features: "AC, Leather Seats, WiFi, USB Charging, Premium Sound System, Privacy Glass", transmission: "Automatic", status: "active", pricing: JSON.stringify([{ duration: "Full Day", priceMMK: 250000, priceUSD: 119 }]) },
       { id: "c2", _id: "c2", carType: "Toyota Probox", capacity: 4, seats: 4, features: "AC, USB Charging, Power Windows, ABS, Fuel Efficient", transmission: "Automatic", status: "active", pricing: JSON.stringify([{ duration: "Full Day", priceMMK: 120000, priceUSD: 57 }]) },

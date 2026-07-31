@@ -31,7 +31,7 @@ export default function MingalarDetailPage({ params }: { params: { slug: string 
     fetch('/api/admin/mingalar')
       .then(r => r.json())
       .then((data: MingalarItem[]) => {
-        const items = data.length > 0 ? data : FALLBACK_MINGALAR;
+        const items = [...data, ...FALLBACK_MINGALAR];
         const found = items.find(
           (d: MingalarItem) =>
             d.slug === slug ||

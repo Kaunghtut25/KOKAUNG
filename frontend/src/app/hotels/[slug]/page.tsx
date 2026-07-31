@@ -35,7 +35,7 @@ interface HotelDetail {
 async function getHotelBySlug(slug: string): Promise<HotelDetail | null> {
   try {
     const rawHotels = await getAll('hotels') as any[];
-  if (rawHotels.length === 0) {
+  if (rawHotels.length < 5) {
     // Fallback hotels when store is empty
     const fallbackHotels: any[] = [
       { id: "h1", _id: "h1", name: "Sedona Hotel Yangon", location: "Yangon", address: "1 Kaba Aye Pagoda Road, Yangon", description: "Luxury 5-star hotel with stunning views of Inya Lake, world-class spa, and fine dining restaurants. Perfect for business and leisure travelers.", rating: 4.5, reviewCount: 128, pricePerNightMMK: 185000, pricePerNightUSD: 88, availableRooms: 45, totalRooms: 120, amenities: "Pool, Spa, Gym, Restaurant, WiFi, Bar, Room Service", row: 1, status: "active", featured: true },
