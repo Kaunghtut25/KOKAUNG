@@ -36,6 +36,17 @@ const DEFAULT_CAR_IMG = "/images_v2/car1-v2.jpg";
 async function getCarBySlug(slug: string): Promise<CarData | null> {
   try {
     const rawCars = await getAll("cars") as any[];
+  if (rawCars.length === 0) {
+    const fallbackCars: any[] = [
+      { id: "c1", _id: "c1", carType: "Toyota Alphard Hybrid", capacity: 7, seats: 7, features: "AC, Leather Seats, WiFi, USB Charging, Premium Sound System, Privacy Glass", transmission: "Automatic", status: "active", pricing: JSON.stringify([{ duration: "Full Day", priceMMK: 250000, priceUSD: 119 }]) },
+      { id: "c2", _id: "c2", carType: "Toyota Probox", capacity: 4, seats: 4, features: "AC, USB Charging, Power Windows, ABS, Fuel Efficient", transmission: "Automatic", status: "active", pricing: JSON.stringify([{ duration: "Full Day", priceMMK: 120000, priceUSD: 57 }]) },
+      { id: "c3", _id: "c3", carType: "Toyota HiAce", capacity: 12, seats: 12, features: "AC, Ample Luggage Space, Reclining Seats, USB Charging", transmission: "Manual", status: "active", pricing: JSON.stringify([{ duration: "Full Day", priceMMK: 180000, priceUSD: 86 }]) },
+      { id: "c4", _id: "c4", carType: "Mercedes-Benz S-Class", capacity: 4, seats: 4, features: "AC, Leather Seats, WiFi, Privacy Glass, Premium Sound, Massage Seats", transmission: "Automatic", status: "active", pricing: JSON.stringify([{ duration: "Full Day", priceMMK: 450000, priceUSD: 214 }]) },
+      { id: "c5", _id: "c5", carType: "Toyota Land Cruiser 4x4", capacity: 7, seats: 7, features: "4x4, AC, GPS, WiFi, Leather Seats, Sunroof, Off-road Ready", transmission: "Automatic", status: "active", pricing: JSON.stringify([{ duration: "Full Day", priceMMK: 280000, priceUSD: 133 }]) },
+      { id: "c6", _id: "c6", carType: "Hyundai Starex", capacity: 10, seats: 10, features: "AC, Leather Seats, WiFi, DVD Player, USB Charging, Comfort Ride", transmission: "Automatic", status: "active", pricing: JSON.stringify([{ duration: "Full Day", priceMMK: 200000, priceUSD: 95 }]) },
+    ].filter(function(c: any) { return c.id === slug || c._id === slug || (c.carType||"").toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"") === slug; });
+    rawCars.push(...fallbackCars);
+  }
     const found = rawCars.find((c: any) => {
       const s = (c.carType || "").toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
       return s === slug || c.id === slug || c._id === slug;

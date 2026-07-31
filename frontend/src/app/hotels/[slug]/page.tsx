@@ -35,6 +35,18 @@ interface HotelDetail {
 async function getHotelBySlug(slug: string): Promise<HotelDetail | null> {
   try {
     const rawHotels = await getAll('hotels') as any[];
+  if (rawHotels.length === 0) {
+    // Fallback hotels when store is empty
+    const fallbackHotels: any[] = [
+      { id: "h1", _id: "h1", name: "Sedona Hotel Yangon", location: "Yangon", address: "1 Kaba Aye Pagoda Road, Yangon", description: "Luxury 5-star hotel with stunning views of Inya Lake, world-class spa, and fine dining restaurants. Perfect for business and leisure travelers.", rating: 4.5, reviewCount: 128, pricePerNightMMK: 185000, pricePerNightUSD: 88, availableRooms: 45, totalRooms: 120, amenities: "Pool, Spa, Gym, Restaurant, WiFi, Bar, Room Service", row: 1, status: "active", featured: true },
+      { id: "h2", _id: "h2", name: "Aureum Palace Bagan", location: "Bagan", address: "Bagan Archaeological Zone", description: "Luxury resort nestled among ancient temples with breathtaking views of the Bagan plains. Features a stunning infinity pool and award-winning spa.", rating: 4.7, reviewCount: 95, pricePerNightMMK: 245000, pricePerNightUSD: 118, availableRooms: 20, totalRooms: 80, amenities: "Pool, Spa, Restaurant, WiFi, Bar, Temple View", row: 2, status: "active", featured: true },
+      { id: "h3", _id: "h3", name: "Inle Princess Resort", location: "Inle Lake", address: "East Inle Lake, Shan State", description: "Beautiful lakeside resort featuring traditional Myanmar architecture with modern luxury. Each bungalow offers stunning lake views and private terraces.", rating: 4.6, reviewCount: 72, pricePerNightMMK: 220000, pricePerNightUSD: 105, availableRooms: 15, totalRooms: 50, amenities: "Lake View, Spa, Restaurant, WiFi, Boat Tours", row: 2, status: "active", featured: true },
+      { id: "h4", _id: "h4", name: "Mandalay Hill Resort", location: "Mandalay", address: "At the foot of Mandalay Hill", description: "Elegant resort at the base of sacred Mandalay Hill with panoramic views of the city. Walking distance to major pagodas and the Royal Palace.", rating: 4.4, reviewCount: 63, pricePerNightMMK: 195000, pricePerNightUSD: 93, availableRooms: 30, totalRooms: 90, amenities: "Pool, Gym, Restaurant, WiFi, Spa, Hill View", row: 2, status: "active", featured: true },
+      { id: "h5", _id: "h5", name: "Ngapali Bay Villas", location: "Ngapali", address: "Ngapali Beach, Rakhine State", description: "Beachfront villas with private pools overlooking the pristine Bay of Bengal. The ultimate tropical getaway with white sand and crystal waters.", rating: 4.8, reviewCount: 54, pricePerNightMMK: 320000, pricePerNightUSD: 152, availableRooms: 10, totalRooms: 25, amenities: "Beach, Pool, Restaurant, WiFi, Spa, Diving", row: 3, status: "active", featured: true },
+      { id: "h6", _id: "h6", name: "The Strand Yangon", location: "Yangon", address: "92 Strand Road, Yangon", description: "Iconic colonial-era luxury hotel in downtown Yangon. Built in 1901, this heritage landmark offers timeless elegance and world-renowned butler service.", rating: 4.6, reviewCount: 210, pricePerNightMMK: 280000, pricePerNightUSD: 134, availableRooms: 12, totalRooms: 32, amenities: "Restaurant, Bar, Spa, WiFi, Butler, Heritage Wing", row: 3, status: "active", featured: true },
+    ].filter(function(h: any) { return h.id === slug || h._id === slug || (h.name||"").toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"") === slug; });
+    rawHotels.push(...fallbackHotels);
+  }
     const found = rawHotels.find((h: any) => {
       const hSlug = (h.name || h.location || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
       return hSlug === slug || h.id === slug || h._id === slug;

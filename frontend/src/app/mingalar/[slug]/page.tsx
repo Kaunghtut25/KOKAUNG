@@ -10,6 +10,16 @@ interface MingalarItem {
   slug?: string;
 }
 
+
+const FALLBACK_MINGALAR: MingalarItem[] = [
+  { id: "m1", _id: "m1", title: "Sky Lounge Yangon", desc: "Premium lounge at Yangon International Airport. Complimentary food, drinks, WiFi, and shower facilities for departing passengers.", icon: "✈️", img: "/images_v2/mingalar-v2.jpg", slug: "sky-lounge-yangon" },
+  { id: "m2", _id: "m2", title: "Sky Lounge Mandalay", desc: "Relax before your flight at Mandalay International Airport. Quiet space with refreshments, newspapers, and charging stations.", icon: "🍸", img: "/images_v2/mingalar-v2.jpg", slug: "sky-lounge-mandalay" },
+  { id: "m3", _id: "m3", title: "VIP Meet & Greet", desc: "Personalized airport assistance — fast track through immigration, baggage handling, and private transfer to your destination.", icon: "🤝", img: "/images_v2/mingalar-v2.jpg", slug: "vip-meet-greet" },
+  { id: "m4", _id: "m4", title: "Airport Transfer Express", desc: "Premium private transfers to and from airports in Yangon, Mandalay, and Nay Pyi Taw. Professional drivers, meet & greet, flight tracking.", icon: "🚗", img: "/images_v2/mingalar-v2.jpg", slug: "airport-transfer-express" },
+  { id: "m5", _id: "m5", title: "Business Lounge Pass", desc: "Access to premium business lounges across major Asian airports. Perfect for frequent flyers needing workspace and refreshments between flights.", icon: "💼", img: "/images_v2/mingalar-v2.jpg", slug: "business-lounge-pass" },
+  { id: "m6", _id: "m6", title: "Family Lounge Package", desc: "Family-friendly lounge access with kids play areas, family seating, and child-friendly meals. Make airport waiting fun for the whole family.", icon: "👨‍👩‍👧", img: "/images_v2/mingalar-v2.jpg", slug: "family-lounge-package" },
+];
+
 export default function MingalarDetailPage({ params }: { params: { slug: string } }) {
   const { slug } = params;
   const [travelers, setTravelers] = useState(1);
@@ -21,7 +31,8 @@ export default function MingalarDetailPage({ params }: { params: { slug: string 
     fetch('/api/admin/mingalar')
       .then(r => r.json())
       .then((data: MingalarItem[]) => {
-        const found = data.find(
+        const items = data.length > 0 ? data : FALLBACK_MINGALAR;
+        const found = items.find(
           (d: MingalarItem) =>
             d.slug === slug ||
             (d.title || '').toLowerCase().replace(/\s+/g, '-') === slug

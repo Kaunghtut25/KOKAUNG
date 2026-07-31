@@ -11,30 +11,12 @@ import BackButton from '@/components/BackButton';
 import RelatedItems from '@/components/RelatedItems';
 import { getAll } from '@/lib/persistentStore';
 
-const FALLBACK_VISAS = [
-  { _id: 'v1', country: 'Thailand', processingTime: '3-5 Days', visaFeeMMK: 85000, visaFeeUSD: 40, requirements: ['Passport 6m','2 Photos'] },
-  { _id: 'v2', country: 'Singapore', processingTime: '5-7 Days', visaFeeMMK: 120000, visaFeeUSD: 57, requirements: ['Passport 6m','Bank Statement'] },
-  { _id: 'v3', country: 'Vietnam', processingTime: '3-5 Days', visaFeeMMK: 95000, visaFeeUSD: 45, requirements: ['Passport 6m','Flight Booking'] },
-  { _id: 'v4', country: 'China', processingTime: '5-7 Days', visaFeeMMK: 150000, visaFeeUSD: 71, requirements: ['Passport 6m','Hotel Reservation'] },
-  { _id: 'v5', country: 'Malaysia', processingTime: '3-5 Days', visaFeeMMK: 75000, visaFeeUSD: 36, requirements: ['Passport 6m','Photos'] },
-  { _id: 'v6', country: 'Japan', processingTime: '5-7 Days', visaFeeMMK: 130000, visaFeeUSD: 62, requirements: ['Passport 6m','Employment Letter'] },
-  { _id: 'v7', country: 'South Korea', processingTime: '5-7 Days', visaFeeMMK: 115000, visaFeeUSD: 55, requirements: ['Passport 6m','Bank Statement'] },
-  { _id: 'v8', country: 'India', processingTime: '5-7 Days', visaFeeMMK: 110000, visaFeeUSD: 52, requirements: ['Passport 6m','eVisa'] },
-  { _id: 'v9', country: 'Cambodia', processingTime: '2-3 Days', visaFeeMMK: 65000, visaFeeUSD: 31, requirements: ['Passport 6m','Flight'] },
-  { _id: 'v10', country: 'Indonesia', processingTime: '3-5 Days', visaFeeMMK: 80000, visaFeeUSD: 38, requirements: ['Passport 6m','Bank Statement'] },
-  { _id: 'v11', country: 'Myanmar', processingTime: '3-5 Days', visaFeeMMK: 90000, visaFeeUSD: 43, requirements: ['Passport 6m','Hotel'] },
-  { _id: 'v12', country: 'Australia', processingTime: '10-15 Days', visaFeeMMK: 280000, visaFeeUSD: 133, requirements: ['Passport 6m','Bank 6m'] },
-  { _id: 'v13', country: 'UK', processingTime: '10-15 Days', visaFeeMMK: 320000, visaFeeUSD: 152, requirements: ['Passport 6m','Bank 6m'] },
-  { _id: 'v14', country: 'Hong Kong', processingTime: '3-5 Days', visaFeeMMK: 85000, visaFeeUSD: 40, requirements: ['Passport 6m','Hotel'] },
-  { _id: 'v15', country: 'Maldives', processingTime: '2-3 Days', visaFeeMMK: 70000, visaFeeUSD: 33, requirements: ['Passport 6m','Hotel'] },
-  { _id: 'v16', country: 'Sri Lanka', processingTime: '3-5 Days', visaFeeMMK: 95000, visaFeeUSD: 45, requirements: ['Passport 6m','Bank'] },
-  { _id: 'v17', country: 'Nepal', processingTime: '3-5 Days', visaFeeMMK: 75000, visaFeeUSD: 36, requirements: ['Passport 6m','Flight'] },
-  { _id: 'v18', country: 'Laos', processingTime: '2-3 Days', visaFeeMMK: 60000, visaFeeUSD: 29, requirements: ['Passport 6m','Flight'] },
-  { _id: 'v19', country: 'Brunei', processingTime: '5-7 Days', visaFeeMMK: 100000, visaFeeUSD: 48, requirements: ['Passport 6m','Bank'] },
-  { _id: 'v20', country: 'Philippines', processingTime: '5-7 Days', visaFeeMMK: 90000, visaFeeUSD: 43, requirements: ['Passport 6m','Photos'] },
-  { _id: 'v21', country: 'Taiwan', processingTime: '5-7 Days', visaFeeMMK: 105000, visaFeeUSD: 50, requirements: ['Passport 6m','Employment'] },
-  { _id: 'v22', country: 'Macau', processingTime: '3-5 Days', visaFeeMMK: 80000, visaFeeUSD: 38, requirements: ['Passport 6m','Flight'] },
-  { _id: 'v23', country: 'UAE', processingTime: '3-5 Days', visaFeeMMK: 140000, visaFeeUSD: 67, requirements: ['Passport 6m','Bank Statement'] },
+const FALLBACK_VISAS: any[] = [
+  { id: "myanmar-visa", _id: "v1", country: "Myanmar", description: "Comprehensive Myanmar visa services for tourists and business travelers. Fast processing and expert guidance through the entire application process.", process: "eVisa available online", priceMMK: 85000, priceUSD: 40, duration: "28 Days (Single Entry)", requirements: "Passport, Digital Photo, Completed Application, Hotel Booking", status: "active" },
+  { id: "thailand-visa", _id: "v2", country: "Thailand", description: "Hassle-free Thailand visa processing. Tourist and business visas with expedited options available.", process: "eVisa or Visa on Arrival", priceMMK: 120000, priceUSD: 57, duration: "60 Days (Tourist)", requirements: "Passport, Digital Photo, Flight Itinerary, Bank Statement", status: "active" },
+  { id: "vietnam-visa", _id: "v3", country: "Vietnam", description: "Quick and reliable Vietnam visa services. eVisa processing within 3 business days for tourists.", process: "eVisa online", priceMMK: 95000, priceUSD: 45, duration: "30 Days (Single Entry)", requirements: "Passport, Digital Photo, Travel Itinerary", status: "active" },
+  { id: "cambodia-visa", _id: "v4", country: "Cambodia", description: "Cambodia visa services including eVisa and Visa on Arrival support for all nationalities.", process: "eVisa or Visa on Arrival", priceMMK: 105000, priceUSD: 50, duration: "30 Days (Tourist)", requirements: "Passport, Digital Photo, USD 30 Fee", status: "active" },
+  { id: "singapore-visa", _id: "v5", country: "Singapore", description: "Singapore visa application assistance for Myanmar citizens. Complete documentation support.", process: "e-Visa application", priceMMK: 150000, priceUSD: 71, duration: "30 Days (Multiple Entry)", requirements: "Passport, Form 14A, Digital Photo, Invitation Letter, Bank Statement", status: "active" },
 ];
 
 export default function VisaDetailPage() {

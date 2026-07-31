@@ -11,16 +11,12 @@ import BackButton from '@/components/BackButton';
 import RelatedItems from '@/components/RelatedItems';
 import ErrorBoundary from '@/components/ErrorBoundary';
 
-const FALLBACK_PLANS = [
-  { _id: 'i1', planName: 'Basic Travel Shield', coverage: 'Medical + Trip Delay', priceMMK: 15000, priceUSD: 7, duration: 'Per trip', benefits: ['Medical Emergency', 'Trip Cancellation', 'Lost Baggage'] },
-  { _id: 'i2', planName: 'Standard Travel Guard', coverage: 'Medical + Baggage', priceMMK: 25000, priceUSD: 12, duration: 'Per trip', benefits: ['Medical Emergency', 'Baggage Loss', 'Flight Delay'] },
-  { _id: 'i3', planName: 'Premium Travel Protect', coverage: 'Medical + Cancellation', priceMMK: 45000, priceUSD: 21, duration: 'Annual', benefits: ['Unlimited Medical', 'Trip Cancellation', 'Concierge'] },
-  { _id: 'i4', planName: 'Family Travel Plan', coverage: 'Family Medical + Trip', priceMMK: 60000, priceUSD: 29, duration: 'Per trip', benefits: ['Full Family Cover', 'Child Medical', 'Trip Cancellation'] },
-  { _id: 'i5', planName: 'Senior Travel Cover', coverage: 'Medical + Evacuation', priceMMK: 55000, priceUSD: 26, duration: 'Per trip', benefits: ['Medical Emergency', 'Emergency Evacuation', 'Repatriation'] },
-  { _id: 'i6', planName: 'Adventure Sports Pack', coverage: 'Extreme Sports + Medical', priceMMK: 85000, priceUSD: 40, duration: 'Per trip', benefits: ['Sports Injury', 'Helicopter Rescue', 'Equipment Cover'] },
-  { _id: 'i7', planName: 'Business Travel Pro', coverage: 'Medical + Productivity', priceMMK: 75000, priceUSD: 36, duration: 'Annual', benefits: ['Medical Emergency', 'Trip Delay', 'Document Replacement'] },
-  { _id: 'i8', planName: 'Student Travel Basic', coverage: 'Medical + Baggage', priceMMK: 12000, priceUSD: 6, duration: 'Per trip', benefits: ['Medical Emergency', 'Baggage Loss', 'Trip Cancellation'] },
-  { _id: 'i9', planName: 'Cruise Coverage', coverage: 'Medical + Missed Port', priceMMK: 95000, priceUSD: 45, duration: 'Per trip', benefits: ['Medical Emergency', 'Missed Port', 'Cabin Cover'] },
+const FALLBACK_PLANS: any[] = [
+  { _id: "basic-travel-shield", id: "i1", planName: "Basic Travel Shield", coverage: "Medical Emergency + Trip Delay", priceMMK: 15000, priceUSD: 7, duration: "Per trip", benefits: "Medical Emergency up to $50,000, Trip Cancellation, Lost Baggage, 24/7 Assistance", status: "active" },
+  { _id: "silver-travel-guard", id: "i2", planName: "Silver Travel Guard", coverage: "Medical + Trip Cancellation + Baggage", priceMMK: 28000, priceUSD: 13, duration: "Per trip", benefits: "Medical up to $100,000, Trip Cancellation, Lost Baggage, Flight Delay, Personal Liability", status: "active" },
+  { _id: "gold-comprehensive", id: "i3", planName: "Gold Comprehensive", coverage: "Full Medical + Trip Protection + Evacuation", priceMMK: 45000, priceUSD: 21, duration: "Per trip", benefits: "Medical up to $250,000, Emergency Evacuation, Trip Cancellation, Lost Baggage, Flight Delay, Personal Accident", status: "active" },
+  { _id: "platinum-global", id: "i4", planName: "Platinum Global", coverage: "Ultimate Worldwide Coverage", priceMMK: 75000, priceUSD: 36, duration: "Annual", benefits: "Medical Unlimited, Emergency Evacuation, Trip Cancellation, Lost Baggage, Flight Delay, Personal Liability, Adventure Sports, Pre-existing Conditions", status: "active" },
+  { _id: "student-travel", id: "i5", planName: "Student Travel Plan", coverage: "Study Abroad Protection", priceMMK: 22000, priceUSD: 10, duration: "Semester", benefits: "Medical up to $75,000, Emergency Evacuation, Study Interruption, Lost Documents, Personal Liability", status: "active" },
 ];
 
 interface InsurancePlan {
