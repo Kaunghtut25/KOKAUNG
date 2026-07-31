@@ -35,7 +35,13 @@ const CAR_IMAGE_FALLBACKS: Record<string, string> = {
 const DEFAULT_CAR_IMG = "/images_v2/car1-v2.jpg";
 async function getCarBySlug(slug: string): Promise<CarData | null> {
   try {
-    const rawCars = await getAll("cars") as any[];
+    let rawCars: any[] = [];
+    try {
+      const res = await fetch("/api/cars", { cache: "no-store" });
+      const j = await res.json();
+      rawCars = (j && (j.data || j)) || [];
+    } catch (e) { console.error("cars api fetch failed", e); }
+    if (!Array.isArray(rawCars)) rawCars = [];
   if (rawCars.length < 5) {
     const fallbackCars: any[] = [
       { id: "c1", _id: "c1", carType: "Toyota Alphard Hybrid", capacity: 7, seats: 7, features: "AC, Leather Seats, WiFi, USB Charging, Premium Sound System, Privacy Glass", transmission: "Automatic", status: "active", pricing: JSON.stringify([{ duration: "Full Day", priceMMK: 250000, priceUSD: 119 }]) },

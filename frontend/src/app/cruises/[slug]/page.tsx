@@ -1,7 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
-import { notFound } from 'next/navigation';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { getAll } from '@/lib/persistentStore';
@@ -333,12 +332,47 @@ function CruiseDetailClient({ cruise, slug }: CruiseDetailPageProps) {
   );
 }
 
-export default async function CruiseDetailPage({ params }: { params: { slug: string } }) {
+export default function CruiseDetailPage({ params }: { params: { slug: string } }) {
   const slug = params.slug;
-  let cruises = await getAll('cruises') as any[];
-  if (cruises.length < 5) cruises = FALLBACK_CRUISES;
-  const cruise = cruises.find((c: any) => ((c.title || c.name || '').toLowerCase().replace(/[^a-z0-9]+/g, '-') === slug || c.id === slug || c._id === slug || c.slug === slug)) || null;
-  if (!cruise) notFound();
+  const [cruise, setCruise] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    let cancelled = false;
+    fetch('/api/cruises', { cache: 'no-store' })
+      .then(function(r) { return r.json(); })
+      .then(function(j: any) {
+        if (cancelled) return;
+        var arr = (j && (j.data || j)) || [];
+        var list = (Array.isArray(arr) && arr.length >= 5) ? arr : FALLBACK_CRUISES;
+        var found = list.find(function(c: any) {
+          return ((c.title || c.name || '').toLowerCase().replace(/[^a-z0-9]+/g, '-') === slug ||
+            c.id === slug || c._id === slug || c.slug === slug);
+        });
+        setCruise(found || null);
+      })
+      .catch(function(e) { console.error('cruises api fetch failed', e); setCruise(null); })
+      .finally(function() { if (!cancelled) setLoading(false); });
+    return function() { cancelled = true; };
+  }, [slug]);
+
+  if (loading) {
+    return (
+      <main className="min-h-screen bg-white pt-24 text-center">
+        <div className="text-gray-500 py-16">Loading cruise details...</div>
+      </main>
+    );
+  }
+  if (!cruise) {
+    return (
+      <main className="min-h-screen bg-white pt-24 text-center">
+        <BackButton />
+        <h1 className="text-4xl font-bold text-[#0A1628] mb-4">Cruise Not Found</h1>
+        <p className="text-gray-600 mb-8">The cruise you are looking for does not exist.</p>
+        <Link href="/cruises" className="text-[#D4AF37] font-semibold hover:underline">← Back to Cruises</Link>
+      </main>
+    );
+  }
 
   return <CruiseDetailClient cruise={cruise} slug={slug} />;
 }

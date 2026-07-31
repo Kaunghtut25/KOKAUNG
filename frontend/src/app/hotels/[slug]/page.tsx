@@ -34,7 +34,13 @@ interface HotelDetail {
 
 async function getHotelBySlug(slug: string): Promise<HotelDetail | null> {
   try {
-    const rawHotels = await getAll('hotels') as any[];
+    let rawHotels: any[] = [];
+    try {
+      const res = await fetch('/api/hotels', { cache: 'no-store' });
+      const j = await res.json();
+      rawHotels = (j && (j.data || j)) || [];
+    } catch (e) { console.error('hotels api fetch failed', e); }
+    if (!Array.isArray(rawHotels)) rawHotels = [];
   if (rawHotels.length < 5) {
     // Fallback hotels when store is empty
     const fallbackHotels: any[] = [

@@ -37,12 +37,19 @@ export default function VisaDetailPage() {
       setLoading(true);
       setError('');
       try {
-        let visas = await getAll('visas') as any[];
-        if (visas.length === 0) visas = FALLBACK_VISAS;
+        let visas: any[] = [];
+        try {
+          const res = await fetch('/api/visas', { cache: 'no-store' });
+          const j = await res.json();
+          visas = (j && (j.data || j)) || [];
+        } catch (e) { console.error("visa api fetch failed", e); }
+        if (!Array.isArray(visas) || visas.length === 0) visas = FALLBACK_VISAS;
         const found = visas.find((v: any) =>
           ((v.country || '').toLowerCase().replace(/[^a-z0-9]+/g, '-')) === slug ||
+          ((v.country || '').toLowerCase().replace(/\s+/g, '-')) === slug ||
           v.id === slug ||
-          v._id === slug
+          v._id === slug ||
+          v.slug === slug
         );
         if (found) {
           setVisa(found);

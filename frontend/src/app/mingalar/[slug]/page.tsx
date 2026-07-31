@@ -28,13 +28,16 @@ export default function MingalarDetailPage({ params }: { params: { slug: string 
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch('/api/admin/mingalar')
+    fetch('/api/mingalar', { cache: 'no-store' })
       .then(r => r.json())
-      .then((data: MingalarItem[]) => {
+      .then((j: any) => {
+        const data: MingalarItem[] = (j && (j.data || j)) || [];
         const items = [...data, ...FALLBACK_MINGALAR];
         const found = items.find(
           (d: MingalarItem) =>
             d.slug === slug ||
+            d.id === slug ||
+            d._id === slug ||
             (d.title || '').toLowerCase().replace(/\s+/g, '-') === slug
         );
         setItem(found || null);

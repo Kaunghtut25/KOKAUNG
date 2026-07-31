@@ -59,9 +59,34 @@ const FALLBACK_BLOG_POSTS: any[] = [
 export default function BlogDetailPage() {
   const params = useParams();
   const slug = params?.slug as string;
+  const [apiPosts, setApiPosts] = useState<Record<string, BlogPost>>({});
+  const [postsLoaded, setPostsLoaded] = useState(false);
 
-  // Merge ALL_POSTS with FALLBACK_BLOG_POSTS
-  const allPosts: Record<string, BlogPost> = { ...ALL_POSTS };
+  // Fetch real blog posts from API (server-side Redis) so list-page slugs resolve
+  useEffect(() => {
+    let cancelled = false;
+    fetch('/api/blog', { cache: 'no-store' })
+      .then(function(r) { return r.json(); })
+      .then(function(j: any) {
+        if (cancelled) return;
+        var arr = (j && (j.data || j)) || [];
+        if (!Array.isArray(arr)) return;
+        var map: Record<string, BlogPost> = {};
+        arr.forEach(function(p: any) {
+          var ps = p.slug || (p.title || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+          if (ps) map[ps] = p;
+          if (p._id) map[p._id] = p;
+          if (p.id) map[p.id] = p;
+        });
+        setApiPosts(map);
+      })
+      .catch(function(e) { console.error('blog api fetch failed', e); })
+      .finally(function() { if (!cancelled) setPostsLoaded(true); });
+    return function() { cancelled = true; };
+  }, []);
+
+  // Merge ALL_POSTS with FALLBACK_BLOG_POSTS and API posts
+  const allPosts: Record<string, BlogPost> = { ...ALL_POSTS, ...apiPosts };
   FALLBACK_BLOG_POSTS.forEach(function(p: any) {
     var key = p.slug || p._id || p.id;
     if (key && !allPosts[key]) allPosts[key] = p;
@@ -72,7 +97,8 @@ export default function BlogDetailPage() {
   if (!found && slug) {
     found = Object.values(allPosts).find(function(p: any) {
       return (p.slug || '').includes(slug) || 
-        (p.title || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').includes(slug);
+        (p.title || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').includes(slug) ||
+        (p._id || '').includes(slug);
     });
   }
 
