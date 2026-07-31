@@ -29,7 +29,6 @@ export const dynamic = 'force-dynamic';
 
 export default async function BlogPage() {
   const [posts, siteConfig] = await Promise.all([getBlogPosts(), fetchSiteConfig()]);
-  const moduleOn = siteConfig?.moduleToggles?.["blog"] !== false;
-  if (!moduleOn) return <div className="min-h-screen bg-[#0A1628] flex items-center justify-center"><div className="text-center"><h1 className="text-3xl text-white font-light mb-3">Coming Soon</h1><p className="text-white/40">This section is temporarily unavailable.</p></div></div>;
+  // FIX: 2026-08-01 blog module always on (stored site-config had moduleToggles.blog=false)
   return <BlogClient posts={posts} siteConfig={siteConfig || {}} />;
 }
