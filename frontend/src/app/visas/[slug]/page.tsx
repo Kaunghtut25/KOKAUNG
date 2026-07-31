@@ -309,7 +309,7 @@ export default function VisaDetailPage() {
                 {/* Travel Date */}
                 <div>
                   <label className="text-gray-600 text-xs mb-1 block">Travel Date</label>
-                  <Calendar selected={travelDate} onDateSelect={setTravelDate} />
+                  <Calendar value={travelDate} onChange={setTravelDate} label="Travel Date" />
                 </div>
 
                 {/* Travelers Counter */}

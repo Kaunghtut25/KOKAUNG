@@ -397,6 +397,7 @@ export default function CarDetailPage() {
                 <div>
                   <Calendar
                     value={travelDate}
+                    onChange={setTravelDate}
                     label="Travel Date"
                   />
                     className="w-full px-3 py-2 bg-white border border-gray-200 rounded-lg text-gray-900 text-sm focus:outline-none focus:border-[#D4AF37]/50"
