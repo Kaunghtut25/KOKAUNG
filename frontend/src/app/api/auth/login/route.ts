@@ -1,12 +1,82 @@
 import { NextRequest, NextResponse } from "next/server";
+import { signToken } from "@/lib/auth";
 
 export const runtime = "nodejs";
 
-const ADMIN_EMAIL = process.env.ADMIN_EMAIL || "admin@a9global.com";
-const PASS = process.env.ADMIN_PASSWORD || "a9admin2026";
+// Fail closed: no hardcoded fallback credentials. Must be configured via env.
+const ADMIN_EMAIL = process.env.ADMIN_EMAIL;
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
+const credsConfigured = Boolean(ADMIN_EMAIL && ADMIN_PASSWORD);
+
+// ── Rate limiting (Upstash Redis when available; in-memory fallback) ──
+const WINDOW_MS = 15 * 60 * 1000; // 15 minutes
+const MAX_ATTEMPTS = 10;
+
+let redisClient: any = null;
+function getRedis(): any {
+  if (redisClient) return redisClient;
+  const url = process.env.UPSTASH_REDIS_REST_URL;
+  const token = process.env.UPSTASH_REDIS_REST_TOKEN;
+  if (!url || !token) return null;
+  // Lazy require to keep middleware import graph clean (Node runtime here)
+  try {
+    const { Redis } = require("@upstash/redis");
+    redisClient = new Redis({ url, token });
+    return redisClient;
+  } catch {
+    return null;
+  }
+}
+
+const memoryBuckets = new Map<string, { count: number; resetAt: number }>();
+
+function clientIp(request: NextRequest): string {
+  const fwd = request.headers.get("x-forwarded-for");
+  if (fwd) return fwd.split(",")[0].trim();
+  return request.headers.get("x-real-ip") || "unknown";
+}
+
+async function isRateLimited(ip: string): Promise<boolean> {
+  const key = "a9:rl:login:" + ip;
+  const redis = getRedis();
+  if (redis) {
+    try {
+      const [count] = await redis.pipeline()
+        .incr(key)
+        .expire(key, Math.ceil(WINDOW_MS / 1000))
+        .exec();
+      return count > MAX_ATTEMPTS;
+    } catch {
+      // fall through to memory
+    }
+  }
+  const now = Date.now();
+  const bucket = memoryBuckets.get(key);
+  if (!bucket || bucket.resetAt < now) {
+    memoryBuckets.set(key, { count: 1, resetAt: now + WINDOW_MS });
+    return false;
+  }
+  bucket.count += 1;
+  return bucket.count > MAX_ATTEMPTS;
+}
 
 export async function POST(request: NextRequest) {
   try {
+    if (!credsConfigured) {
+      return NextResponse.json(
+        { message: "Admin credentials are not configured on this server. Set ADMIN_EMAIL and ADMIN_PASSWORD." },
+        { status: 503 }
+      );
+    }
+
+    const ip = clientIp(request);
+    if (await isRateLimited(ip)) {
+      return NextResponse.json(
+        { message: "Too many login attempts. Please try again later." },
+        { status: 429 }
+      );
+    }
+
     const text = await request.text();
     let body: any;
     try {
@@ -22,7 +92,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ message: "Email and password are required" }, { status: 400 });
     }
 
-    if (email !== ADMIN_EMAIL || password !== PASS) {
+    if (email !== ADMIN_EMAIL || password !== ADMIN_PASSWORD) {
       return NextResponse.json({ message: "Invalid email or password" }, { status: 401 });
     }
 
@@ -33,16 +103,15 @@ export async function POST(request: NextRequest) {
       role: "admin",
     };
 
-    // Create token — use Buffer (Node runtime, safe here)
-    const payload = JSON.stringify({
+    const token = await signToken({
       ...user,
       iat: Date.now(),
       exp: Date.now() + 86400000,
     });
-    const token = Buffer.from(payload, "utf-8").toString("base64");
 
     return NextResponse.json({ success: true, token, user });
   } catch (err) {
+    console.error("[login] error:", err);
     return NextResponse.json({ message: "Server error" }, { status: 500 });
   }
 }

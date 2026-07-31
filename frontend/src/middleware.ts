@@ -1,21 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
+import { isAdminToken } from "@/lib/auth";
 
-function isAdminToken(token: string | undefined): boolean {
-  if (!token) return false;
-  try {
-    // Edge runtime doesn't have Buffer — use atob
-    const binary = atob(token);
-    const bytes = new Uint8Array(binary.length);
-    for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
-    const jsonStr = new TextDecoder("utf-8").decode(bytes);
-    const decoded = JSON.parse(jsonStr);
-    return decoded.role === "admin" && decoded.exp > Date.now();
-  } catch {
-    return false;
-  }
-}
-
-export function middleware(request: NextRequest) {
+export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   // Protect /admin pages
@@ -30,7 +16,7 @@ export function middleware(request: NextRequest) {
       token = header.slice(7);
     }
 
-    if (!isAdminToken(token)) {
+    if (!(await isAdminToken(token))) {
       const loginUrl = new URL("/auth/login", request.url);
       loginUrl.searchParams.set("redirect", pathname);
       return NextResponse.redirect(loginUrl);
@@ -50,7 +36,7 @@ export function middleware(request: NextRequest) {
       const header = request.headers.get("authorization");
       const token = header?.startsWith("Bearer ") ? header.slice(7) : undefined;
 
-      if (!isAdminToken(token)) {
+      if (!(await isAdminToken(token))) {
         return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
       }
     }
