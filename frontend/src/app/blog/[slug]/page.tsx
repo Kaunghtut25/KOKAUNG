@@ -62,17 +62,20 @@ export default function BlogDetailPage() {
   const [post, setPost] = useState<BlogPost | null>(null);
 
   useEffect(() => {
+    // Merge ALL_POSTS with FALLBACK_BLOG_POSTS
+    const allPosts = { ...ALL_POSTS };
+    FALLBACK_BLOG_POSTS.forEach(function(p: any) { if (!allPosts[p.slug]) allPosts[p.slug] = p; });
     const slug = window.location.pathname.split('/blog/')[1]?.split('?')[0];
     const id = searchParams.get('id');
     
     // Try by slug first, then by id
-    let found = slug ? ALL_POSTS[slug] : undefined;
+    let found = slug ? allPosts[slug] : undefined;
     if (!found && id) {
-      found = Object.values(ALL_POSTS).find(p => p._id === id);
+      found = Object.values(allPosts).find(function(p: any) { return p._id === id || p.id === id; });
     }
     if (!found && slug) {
       // Try partial match
-      found = Object.values(ALL_POSTS).find(p => p.slug.includes(slug) || p.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').includes(slug));
+      found = Object.values(allPosts).find(function(p: any) { return (p.slug || '').includes(slug) || (p.title || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').includes(slug); });
     }
     setPost(found || null);
   }, [searchParams]);
