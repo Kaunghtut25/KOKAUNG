@@ -58,31 +58,25 @@ const FALLBACK_BLOG_POSTS: any[] = [
 
 export default function BlogDetailPage() {
   const params = useParams();
-  const paramSlug = params?.slug as string;
+  const slug = params?.slug as string;
 
+  // Merge ALL_POSTS with FALLBACK_BLOG_POSTS
+  const allPosts: Record<string, BlogPost> = { ...ALL_POSTS };
+  FALLBACK_BLOG_POSTS.forEach(function(p: any) {
+    var key = p.slug || p._id || p.id;
+    if (key && !allPosts[key]) allPosts[key] = p;
+  });
 
-  const [post, setPost] = useState<BlogPost | null>(null);
+  // Find post by slug (works during SSR)
+  var found: BlogPost | undefined = slug ? allPosts[slug] : undefined;
+  if (!found && slug) {
+    found = Object.values(allPosts).find(function(p: any) {
+      return (p.slug || '').includes(slug) || 
+        (p.title || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').includes(slug);
+    });
+  }
 
-  useEffect(() => {
-    // Merge ALL_POSTS with FALLBACK_BLOG_POSTS
-    const allPosts = { ...ALL_POSTS };
-    FALLBACK_BLOG_POSTS.forEach(function(p: any) { if (!allPosts[p.slug]) allPosts[p.slug] = p; });
-    const slug = window.location.pathname.split('/blog/')[1]?.split('?')[0];
-    const id = searchParams.get('id');
-    
-    // Try by slug first, then by id
-    let found = slug ? allPosts[slug] : undefined;
-    if (!found && id) {
-      found = Object.values(allPosts).find(function(p: any) { return p._id === id || p.id === id; });
-    }
-    if (!found && slug) {
-      // Try partial match
-      found = Object.values(allPosts).find(function(p: any) { return (p.slug || '').includes(slug) || (p.title || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').includes(slug); });
-    }
-    setPost(found || null);
-  }, [searchParams]);
-
-  if (!post) {
+  if (!found) {
     return (
       <main className="min-h-screen bg-white pt-24 text-center">
       <BackButton />
