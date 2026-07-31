@@ -1,8 +1,8 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'next/navigation';
 import Calendar from '@/components/Calendar';
+import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 import CurrencyToggle from '@/components/CurrencyToggle';
@@ -309,8 +309,7 @@ export default function VisaDetailPage() {
                 {/* Travel Date */}
                 <div>
                   <label className="text-gray-600 text-xs mb-1 block">Travel Date</label>
-                  <input
-                    <Calendar selected={travelDate} onDateSelect={setTravelDate} />
+                  <Calendar selected={travelDate} onDateSelect={setTravelDate} />
                 </div>
 
                 {/* Travelers Counter */}

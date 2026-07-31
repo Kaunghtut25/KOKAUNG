@@ -1,8 +1,8 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { useParams, useRouter } from 'next/navigation';
 import Calendar from '@/components/Calendar';
+import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 import CurrencyToggle from '@/components/CurrencyToggle';
@@ -353,8 +353,7 @@ export default function InsuranceDetailPage() {
               <div className="space-y-3">
                 <div>
                   <label className="text-gray-600 text-xs mb-1 block">Travel Date</label>
-                  <input
-                    <Calendar selected={travelDate} onDateSelect={setTravelDate} />
+                  <Calendar selected={travelDate} onDateSelect={setTravelDate} />
                 </div>
                 <div>
                   <label className="text-gray-600 text-xs mb-1 block">Travelers</label>
