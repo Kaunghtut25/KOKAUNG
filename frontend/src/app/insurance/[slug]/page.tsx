@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
+import Calendar from '@/components/Calendar';
 import Link from 'next/link';
 import Image from 'next/image';
 import CurrencyToggle from '@/components/CurrencyToggle';
@@ -353,11 +354,7 @@ export default function InsuranceDetailPage() {
                 <div>
                   <label className="text-gray-600 text-xs mb-1 block">Travel Date</label>
                   <input
-                    type="date"
-                    value={travelDate}
-                    onChange={(e) => setTravelDate(e.target.value)}
-                    className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-gray-900 text-sm focus:outline-none focus:border-gold/50 [color-scheme:dark]"
-                  />
+                    <Calendar selected={travelDate} onDateSelect={setTravelDate} />
                 </div>
                 <div>
                   <label className="text-gray-600 text-xs mb-1 block">Travelers</label>

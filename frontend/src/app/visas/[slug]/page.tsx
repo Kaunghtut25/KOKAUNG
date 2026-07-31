@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
+import Calendar from '@/components/Calendar';
 import Link from 'next/link';
 import Image from 'next/image';
 import CurrencyToggle from '@/components/CurrencyToggle';
@@ -309,11 +310,7 @@ export default function VisaDetailPage() {
                 <div>
                   <label className="text-gray-600 text-xs mb-1 block">Travel Date</label>
                   <input
-                    type="date"
-                    value={travelDate}
-                    onChange={(e) => setTravelDate(e.target.value)}
-                    className="w-full px-3 py-2 bg-white border border-gray-200 rounded-lg text-gray-900 text-sm focus:outline-none focus:border-[#D4AF37]/50"
-                  />
+                    <Calendar selected={travelDate} onDateSelect={setTravelDate} />
                 </div>
 
                 {/* Travelers Counter */}
