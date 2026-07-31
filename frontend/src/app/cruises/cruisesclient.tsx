@@ -11,9 +11,16 @@ interface Cruise {
   id?: string;
   slug?: string;
   name?: string;
-  id: string; title: string; destination: string; description: string;
-  priceMMK: number; priceUSD: number; duration: string;
-  images: string[]; amenities: string; included: string; excluded: string;
+  title: string;
+  destination: string;
+  description: string;
+  priceMMK: number;
+  priceUSD: number;
+  duration: string;
+  images: string[];
+  amenities: string;
+  included: string;
+  excluded: string;
 }
 
 const FALLBACK_CRUISES: Cruise[] = [

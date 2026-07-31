@@ -64,6 +64,7 @@ export default function AdminToursPage() {
   const [imageUrlInput, setImageUrlInput] = useState("");
   const [imagePreviewUrl, setImagePreviewUrl] = useState("");
   const [imageList, setImageList] = useState<string[]>([]);
+  const [itineraryDays, setItineraryDays] = useState<{day:number;title:string;description:string;meals:string;accommodation:string}[]>([]);
   const [uploading, setUploading] = useState(false);
   const [uploadError, setUploadError] = useState("");
   const fileInputRef = React.useRef<HTMLInputElement>(null);
@@ -103,7 +104,16 @@ export default function AdminToursPage() {
       const parsed = JSON.parse(imagesStr);
       if (Array.isArray(parsed)) return parsed.filter((u: unknown) => typeof u === "string" && u);
     } catch { /* not JSON */ }
-    return imagesStr.split(",").map((s) => s.trim()).filter((s) => s && (s.startsWith("http") || s.startsWith("/")));
+    return imagesStr.split(",").map((s: string) => s.trim()).filter((s: string) => s && (s.startsWith("http") || s.startsWith("/")));
+  };
+
+  const parseItinerary = (raw: any): {day:number;title:string;description:string;meals:string;accommodation:string}[] => {
+    if (!raw) return [];
+    if (Array.isArray(raw) && raw.length > 0 && typeof raw[0] === "object") {
+      return raw.map((d:any,i:number) => ({day:d.day||i+1,title:d.title||"",description:d.description||"",meals:Array.isArray(d.meals)?d.meals.join(", "):(d.meals||""),accommodation:d.accommodation||""}));
+    }
+    try { const p=JSON.parse(raw); if(Array.isArray(p)) return p.map((d:any,i:number)=>({day:d.day||i+1,title:d.title||"",description:d.description||"",meals:Array.isArray(d.meals)?d.meals.join(", "):(d.meals||""),accommodation:d.accommodation||""})); } catch {}
+    return [];
   };
 
   const getFirstImage = (imagesStr: any): string => {
@@ -161,6 +171,22 @@ export default function AdminToursPage() {
     [newList[fromIndex], newList[toIndex]] = [newList[toIndex], newList[fromIndex]];
     setImageList(newList);
     setEditingTour((prev) => ({ ...prev, images: JSON.stringify(newList) }));
+  };
+
+  const addItineraryDay = () => {
+    const newDay = itineraryDays.length + 1;
+    setItineraryDays([...itineraryDays, { day: newDay, title: `Day ${newDay}`, description: "", meals: "Breakfast", accommodation: "" }]);
+  };
+
+  const removeItineraryDay = (index: number) => {
+    const updated = itineraryDays.filter((_,i) => i !== index).map((d,i) => ({ ...d, day: i+1 }));
+    setItineraryDays(updated);
+  };
+
+  const updateItineraryDay = (index: number, field: string, value: string) => {
+    const updated = [...itineraryDays];
+    updated[index] = { ...updated[index], [field]: field === "day" ? parseInt(value)||1 : value };
+    setItineraryDays(updated);
   };
 
   const handleFieldChange = (field: keyof Tour, value: string | number) => {
@@ -230,7 +256,7 @@ export default function AdminToursPage() {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify(editingTour),
+        body: JSON.stringify({ ...editingTour, itinerary: itineraryDays.length > 0 ? itineraryDays.map(d => ({day:d.day,title:d.title,description:d.description,meals:d.meals.split(",").map((m:any)=>m.trim()).filter((m:any)=>m),accommodation:d.accommodation||undefined})) : [] }),
       });
 
       if (res.ok) {

@@ -51,8 +51,9 @@ export default function CarsClient({ initialCars, siteConfig }: CarsClientProps 
   const [sort, setSort] = useState('');
   // Apply sort
   const sortedCars = [...initialCars].sort((a, b) => {
-    if (sort === 'price_asc') return (a.priceMMK || 0) - (b.priceMMK || 0);
-    if (sort === 'price_desc') return (b.priceMMK || 0) - (a.priceMMK || 0);
+    const getMinPrice = (car: any) => { if (car.pricingWithDriver?.length) return Math.min(...car.pricingWithDriver.map((p: any) => p.priceMMK || 0)); return car.priceMMK || 0; };
+    if (sort === 'price_asc') return getMinPrice(a) - getMinPrice(b);
+    if (sort === 'price_desc') return getMinPrice(b) - getMinPrice(a);
     return 0;
   });
   const pool: Car[] = [...sortedCars];

@@ -5,7 +5,7 @@ export const dynamic = 'force-dynamic';
 
 export async function GET() {
   try {
-    const items = await getAll("mingalar");
+    const items = await getAll("destinations");
     return NextResponse.json(items);
   } catch (err: any) {
     return NextResponse.json({ message: err.message || "Server error" }, { status: 500 });
@@ -15,7 +15,7 @@ export async function GET() {
 export async function POST(req: NextRequest) {
   try {
     const data = await req.json();
-    const item = await create("mingalar", data);
+    const item = await create("destinations", data);
     return NextResponse.json(item, { status: 201 });
   } catch (err: any) {
     return NextResponse.json({ message: err.message || "Server error" }, { status: 500 });
@@ -28,7 +28,7 @@ export async function PUT(req: NextRequest) {
     const id = searchParams.get("id");
     if (!id) return NextResponse.json({ message: "Missing id" }, { status: 400 });
     const data = await req.json();
-    const item = await update("mingalar", id, data);
+    const item = await update("destinations", id, data);
     return NextResponse.json(item);
   } catch (err: any) {
     return NextResponse.json({ message: err.message || "Server error" }, { status: 500 });
@@ -40,9 +40,8 @@ export async function DELETE(req: NextRequest) {
     const { searchParams } = new URL(req.url);
     const id = searchParams.get("id");
     if (!id) return NextResponse.json({ message: "Missing id" }, { status: 400 });
-    // Mark as inactive since persistentStore has no remove export yet
-    const item = await update("mingalar", id, { status: "inactive" });
-    return NextResponse.json({ success: true, item });
+    await update("destinations", id, { status: "inactive" });
+    return NextResponse.json({ success: true });
   } catch (err: any) {
     return NextResponse.json({ message: err.message || "Server error" }, { status: 500 });
   }

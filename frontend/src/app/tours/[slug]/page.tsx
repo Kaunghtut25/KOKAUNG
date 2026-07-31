@@ -9,6 +9,7 @@ import SocialShare from '@/components/SocialShare';
 import { getTour, Tour, ItineraryDay } from '@/lib/api';
 import RelatedItems from '@/components/RelatedItems';
 import BackButton from '@/components/BackButton';
+import Calendar from '@/components/Calendar';
 import ErrorBoundary from '@/components/ErrorBoundary';
 type TabKey = 'overview' | 'itinerary' | 'included' | 'reviews';
 
@@ -602,7 +603,7 @@ export default function TourDetailPage() {
     return (
       <div className="min-h-screen bg-gradient-to-b from-white via-gray-50 to-white">
         <div className="max-w-7xl mx-auto px-4 pt-24 pb-4">
-          <BackButton bookNowUrl={`/book-now?type=tour&name=${encodeURIComponent(tour?.title || "")}&id=${encodeURIComponent(tour?._id || slug)}&priceMMK=${tour?.priceMMK ?? 0}&priceUSD=${tour?.priceUSD ?? 0}&destination=${encodeURIComponent(tour?.destination || "")}`} />
+          <BackButton label="Back to Tours" />
         </div>
         <div className="h-[60vh] bg-white/5 animate-pulse" />
         <div className="max-w-7xl mx-auto px-4 py-12">
@@ -946,12 +947,10 @@ export default function TourDetailPage() {
               {/* Booking form preview */}
               <div className="space-y-3">
                 <div>
-                  <label className="text-gray-600 text-xs mb-1 block">Travel Date</label>
-                  <input
-                    type="date"
+                                    <Calendar
                     value={bookingForm.travelDate}
-                    onChange={(e) => setBookingForm((prev) => ({ ...prev, travelDate: e.target.value }))}
-                    className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-gray-900 text-sm focus:outline-none focus:border-gold/50 [color-scheme:dark]"
+                    onChange={(date) => setBookingForm((prev) => ({ ...prev, travelDate: date }))}
+                    label="Travel Date"
                   />
                 </div>
                 <div>
@@ -1047,12 +1046,10 @@ export default function TourDetailPage() {
                   </div>
 
                   <div>
-                    <label className="text-gray-600 text-sm mb-1 block">Travel Date</label>
-                    <input
-                      type="date"
+                                        <Calendar
                       value={bookingForm.travelDate}
-                      onChange={(e) => setBookingForm((prev) => ({ ...prev, travelDate: e.target.value }))}
-                      className="w-full px-3 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-gray-900 text-sm focus:outline-none focus:border-gold/50 [color-scheme:dark]"
+                      onChange={(date) => setBookingForm((prev) => ({ ...prev, travelDate: date }))}
+                      label="Travel Date"
                     />
                   </div>
 

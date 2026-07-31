@@ -57,7 +57,7 @@ function transformTour(t: Record<string, unknown>) {
     reviewCount: Number(t.reviewCount) || Math.floor(Math.random() * 50) + 10,
     images: getImages(t, tid),
     amenities: typeof t.amenities === 'string' ? (t.amenities as string).split(',').map(s => s.trim()).filter(Boolean) : (Array.isArray(t.amenities) ? t.amenities as string[] : []),
-    itinerary: [],
+    itinerary: Array.isArray(t.itinerary) ? (t.itinerary as never[]) : [],
     included: typeof t.included === 'string' ? (t.included as string).split(',').map(s => s.trim()).filter(Boolean) : (Array.isArray(t.included) ? t.included as string[] : []),
     excluded: typeof t.excluded === 'string' ? (t.excluded as string).split(',').map(s => s.trim()).filter(Boolean) : (Array.isArray(t.excluded) ? t.excluded as string[] : []),
     featured: t.status === 'featured',

@@ -19,7 +19,7 @@ export default function CarCard({ car, currency = 'MMK', cardWidth, cardHeight }
 
   const carType = car.carType || (car as any).title || '';
   const carId = (car._id || (car as any).id) as string;
-  const displayImage = getImageFallback(carId, car.images, (car as any).image);
+  const displayImage = getImageFallback(carId, car.images);
   const cheapestOption = (car.pricingWithDriver && car.pricingWithDriver.length > 0)
     ? car.pricingWithDriver.reduce((prev, curr) =>
         (currency === 'MMK' ? curr.priceMMK < prev.priceMMK : curr.priceUSD < prev.priceUSD) ? curr : prev)
@@ -110,7 +110,7 @@ export default function CarCard({ car, currency = 'MMK', cardWidth, cardHeight }
         {/* Button */}
         <div className="px-4 pb-4 pt-1.5 space-y-2">
           <div
-            onClick={(e) => { e.stopPropagation(); router.push('/book-now?type=car&name=' + encodeURIComponent(car.name||car.carType||carType||'') + '&id=' + encodeURIComponent(car._id||car.id||'') + '&priceMMK=' + (car.priceMMK||car.price||0) + '&priceUSD=' + (car.priceUSD||0)); }}
+            onClick={(e) => { e.stopPropagation(); router.push('/book-now?type=car&name=' + encodeURIComponent(car.carType||car.carType||carType||'') + '&id=' + encodeURIComponent(car._id||car._id||'') + '&priceMMK=' + ((car.pricingWithDriver?.[0]?.priceMMK || 0)||(car.pricingWithDriver?.[0]?.priceMMK || 0)||0) + '&priceUSD=' + ((car.pricingWithDriver?.[0]?.priceUSD || 0)||0)); }}
             className={`w-full py-2.5 rounded-xl text-center font-bold text-sm transition-all duration-400 cursor-pointer ${
             isHovered ? 'bg-gradient-to-r from-[#D4AF37] to-[#F5A623] text-[#0A1628] shadow-lg shadow-[#D4AF37]/40 scale-[1.02]' : 'bg-gradient-to-r from-[#D4AF37] to-[#C5A028] text-[#0A1628] shadow-md shadow-[#D4AF37]/20'
           }`}>
@@ -119,7 +119,7 @@ export default function CarCard({ car, currency = 'MMK', cardWidth, cardHeight }
 
           {/* View Details */}
           <div
-            onClick={(e) => { e.stopPropagation(); router.push("/cars/" + (car.slug || car._id || car.id)); }}
+            onClick={(e) => { e.stopPropagation(); router.push("/cars/" + (car.slug || car._id || car._id)); }}
             className="w-full py-2.5 rounded-xl text-center font-semibold text-sm transition-all duration-300 bg-white text-[#0A1628] border border-gray-200 hover:bg-[#0A1628] hover:text-[#D4AF37] hover:border-[#D4AF37] hover:shadow-lg cursor-pointer"
           >
             View Details →

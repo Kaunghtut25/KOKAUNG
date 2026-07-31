@@ -6,9 +6,30 @@ async function fetchSiteConfig() {
   catch { return null; }
 }
 
+async function getBlogPosts(): Promise<any[]> {
+  try {
+    const raw = await getAll("blog" as any) as any[];
+    if (!raw || raw.length === 0) return [];
+    return raw.map((p: any) => ({
+      _id: p.id || p._id || "",
+      slug: (p.title || "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, ""),
+      title: p.title || "",
+      content: p.content || p.description || "",
+      image: typeof p.images === "string" ? JSON.parse(p.images)[0] : (Array.isArray(p.images) ? p.images[0] : (p.image || p.img || "")),
+      author: p.author || "A9 Global",
+      tags: typeof p.tags === "string" ? p.tags.split(",").map((s: string) => s.trim()).filter(Boolean) : (Array.isArray(p.tags) ? p.tags : []),
+      createdAt: p.createdAt || new Date().toISOString(),
+    }));
+  } catch {
+    return [];
+  }
+}
+
+export const dynamic = 'force-dynamic';
+
 export default async function BlogPage() {
-  const siteConfig = await fetchSiteConfig();
+  const [posts, siteConfig] = await Promise.all([getBlogPosts(), fetchSiteConfig()]);
   const moduleOn = siteConfig?.moduleToggles?.["blog"] !== false;
   if (!moduleOn) return <div className="min-h-screen bg-[#0A1628] flex items-center justify-center"><div className="text-center"><h1 className="text-3xl text-white font-light mb-3">Coming Soon</h1><p className="text-white/40">This section is temporarily unavailable.</p></div></div>;
-  return <BlogClient siteConfig={siteConfig || {}} />;
+  return <BlogClient posts={posts} siteConfig={siteConfig || {}} />;
 }

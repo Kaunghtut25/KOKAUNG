@@ -4,16 +4,47 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
+interface MingalarItem {
+  id?: string; _id?: string;
+  title: string; desc: string; icon: string; img: string;
+  slug?: string;
+}
+
 export default function MingalarDetailPage({ params }: { params: { slug: string } }) {
   const { slug } = params;
   const [travelers, setTravelers] = useState(1);
   const [travelDate, setTravelDate] = useState('');
+  const [item, setItem] = useState<MingalarItem | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  // Resolve slug to item — mingalar is a section in kalayData
-  const item = kalayData.mingalar?.items?.find(
-    (d: { slug: string; title: string }) =>
-      d.slug === slug || d.title.toLowerCase().replace(/\s+/g, '-') === slug
-  );
+  useEffect(() => {
+    fetch('/api/admin/mingalar')
+      .then(r => r.json())
+      .then((data: MingalarItem[]) => {
+        const found = data.find(
+          (d: MingalarItem) =>
+            d.slug === slug ||
+            (d.title || '').toLowerCase().replace(/\s+/g, '-') === slug
+        );
+        setItem(found || null);
+        setLoading(false);
+      })
+      .catch(() => setLoading(false));
+  }, [slug]);
+
+  useEffect(() => {
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    setTravelDate(tomorrow.toISOString().split('T')[0]);
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-black flex items-center justify-center">
+        <div className="text-white/60 text-lg">Loading...</div>
+      </div>
+    );
+  }
 
   if (!item) {
     notFound();
@@ -28,13 +59,6 @@ export default function MingalarDetailPage({ params }: { params: { slug: string 
     window.location.href = bookUrl.toString();
   };
 
-  // Set default date to tomorrow
-  useEffect(() => {
-    const tomorrow = new Date();
-    tomorrow.setDate(tomorrow.getDate() + 1);
-    setTravelDate(tomorrow.toISOString().split('T')[0]);
-  }, []);
-
   return (
     <div className="min-h-screen bg-black">
       {/* Hero Image */}
@@ -44,112 +68,68 @@ export default function MingalarDetailPage({ params }: { params: { slug: string 
           alt={item.title}
           className="h-full w-full object-cover"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent" />
-        <div className="absolute bottom-0 left-0 right-0 p-8">
-          <Link
-            href="/mingalar"
-            className="mb-4 inline-flex items-center gap-2 text-sm text-orange-400 transition-colors hover:text-orange-300"
-          >
-            ← Back to Sky Lounge
+        <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent" />
+        <div className="absolute bottom-8 left-8">
+          <Link href="/mingalar" className="text-white/60 hover:text-[#D4AF37] text-sm mb-3 inline-block transition">
+            ← Back to Mingalar
           </Link>
-          <h1 className="text-4xl font-bold text-white md:text-5xl">{item.title}</h1>
+          <h1 className="text-5xl font-light text-white mb-2">{item.title}</h1>
+          <p className="text-white/60 text-lg">{item.desc}</p>
         </div>
       </div>
 
-      {/* Content + Sidebar */}
-      <div className="mx-auto max-w-7xl px-4 py-12">
-        <div className="grid gap-10 lg:grid-cols-3">
-          {/* Main Content */}
-          <div className="lg:col-span-2">
-            <div className="prose prose-invert max-w-none">
-              <p className="text-lg leading-relaxed text-gray-300">{item.desc}</p>
+      {/* Content */}
+      <div className="max-w-4xl mx-auto px-6 py-12">
+        <div className="flex flex-col md:flex-row gap-8">
+          {/* Details */}
+          <div className="flex-1">
+            <div className="flex items-center gap-3 mb-6">
+              <span className="text-4xl">{item.icon}</span>
+              <h2 className="text-2xl text-white font-light">{item.title}</h2>
             </div>
+            <p className="text-white/70 text-lg leading-relaxed">{item.desc}</p>
           </div>
 
-          {/* Booking Sidebar */}
-          <div className="lg:col-span-1">
-            <div className="sticky top-24 rounded-2xl border border-gray-800 bg-gray-900/60 p-6 backdrop-blur-sm">
-              {/* Service Title with Icon */}
-              <div className="mb-4 flex items-center gap-3">
-                {item.icon && (
-                  <span className="text-3xl">{item.icon}</span>
-                )}
-                <h2 className="text-xl font-bold text-white">{item.title}</h2>
-              </div>
+          {/* Booking Card */}
+          <div className="w-full md:w-80 bg-[#0A1628] border border-white/10 rounded-2xl p-6 h-fit sticky top-24">
+            <h3 className="text-white font-semibold text-lg mb-4">Book Now</h3>
 
-              {/* Description Snippet */}
-              <p className="mb-6 text-sm leading-relaxed text-gray-400">
-                {item.desc.substring(0, 100)}{item.desc.length > 100 ? '...' : ''}
-              </p>
-
-              {/* Travel Date */}
-              <div className="mb-4">
-                <label className="mb-2 block text-sm font-medium text-gray-300">
-                  Preferred Date
-                </label>
+            <div className="space-y-4">
+              <div>
+                <label className="text-white/50 text-xs mb-1 block">Date</label>
                 <input
                   type="date"
                   value={travelDate}
-                  onChange={(e) => setTravelDate(e.target.value)}
-                  className="w-full rounded-lg border border-gray-700 bg-gray-800 px-4 py-3 text-white
-                    focus:border-orange-500 focus:outline-none focus:ring-1 focus:ring-orange-500"
+                  onChange={e => setTravelDate(e.target.value)}
+                  className="w-full bg-black border border-white/10 rounded-lg px-3 py-2.5 text-white text-sm focus:border-[#D4AF37] outline-none"
                 />
               </div>
 
-              {/* Guests Counter */}
-              <div className="mb-6">
-                <label className="mb-2 block text-sm font-medium text-gray-300">
-                  Guests
-                </label>
+              <div>
+                <label className="text-white/50 text-xs mb-1 block">Travelers</label>
                 <div className="flex items-center gap-3">
                   <button
                     onClick={() => setTravelers(Math.max(1, travelers - 1))}
-                    className="flex h-10 w-10 items-center justify-center rounded-lg border border-gray-700
-                      text-lg text-white transition-colors hover:border-orange-500 hover:text-orange-400"
+                    className="w-10 h-10 rounded-lg border border-white/10 text-white hover:border-[#D4AF37] transition"
                   >
                     −
                   </button>
-                  <span className="min-w-[3rem] text-center text-lg font-semibold text-white">
-                    {travelers}
-                  </span>
+                  <span className="text-white text-lg w-8 text-center">{travelers}</span>
                   <button
                     onClick={() => setTravelers(travelers + 1)}
-                    className="flex h-10 w-10 items-center justify-center rounded-lg border border-gray-700
-                      text-lg text-white transition-colors hover:border-orange-500 hover:text-orange-400"
+                    className="w-10 h-10 rounded-lg border border-white/10 text-white hover:border-[#D4AF37] transition"
                   >
                     +
                   </button>
                 </div>
               </div>
 
-              {/* Price: On Request */}
-              <div className="mb-6 rounded-lg border border-gray-800 bg-gray-800/50 p-4 text-center">
-                <p className="text-lg font-bold text-orange-400">Price on Request</p>
-                <p className="text-xs text-gray-500">Contact us for pricing details</p>
-              </div>
-
-              {/* Book Now Button */}
               <button
                 onClick={handleBookNow}
-                className="mb-3 w-full rounded-lg bg-orange-500 px-6 py-3.5 font-semibold text-white
-                  transition-all hover:bg-orange-600 active:scale-[0.98]"
+                className="w-full bg-[#D4AF37] text-[#0A1628] py-3 rounded-xl font-semibold hover:bg-[#C4A030] transition mt-2"
               >
-                Contact Us
+                Book Now
               </button>
-
-              <p className="text-center text-xs text-gray-500">
-                No payment required to book
-              </p>
-            </div>
-
-            {/* Back Link (mobile-friendly duplicate) */}
-            <div className="mt-4 text-center lg:hidden">
-              <Link
-                href="/mingalar"
-                className="text-sm text-orange-400 transition-colors hover:text-orange-300"
-              >
-                ← Back to Sky Lounge
-              </Link>
             </div>
           </div>
         </div>

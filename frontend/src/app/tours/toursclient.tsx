@@ -9,7 +9,7 @@ import TestimonialSlider from '@/components/TestimonialSlider';
 import RoutesMap from '@/components/RoutesMap';
 import ScrollingRow from '@/components/ScrollingRow';
 
-export default function ToursClient(props) {
+export default function ToursClient(props: any) {
   const heroImage = props.siteConfig?.heroImages?.tours || "/images_v2/hero-tours-v2.jpg";
   const toursText = props.siteConfig?.heroText?.tours || {};
   const toursTitle = toursText.title || "";
@@ -20,7 +20,7 @@ export default function ToursClient(props) {
   const { initialTours, preloadMap } = props;
   // Use server-rendered data directly — no client re-fetch to avoid flash of old content
   const apiTours = initialTours;
-  const [currency, setCurrency] = useState('MMK');
+  const [currency, setCurrency] = useState<"MMK" | "USD">("MMK");
   const layout = props.siteConfig?.sectionLayouts?.tours || { desktop: 3, tablet: 2, mobile: 1 };
   const rowTitles = props.siteConfig?.sectionRows?.tours || ["Featured Tours", "More Tours", "Additional Tours"];
 
@@ -37,7 +37,7 @@ export default function ToursClient(props) {
   
 
 
-  const filteredTours = apiTours.filter((t) => {
+  const filteredTours = apiTours.filter((t: any) => {
     const q = destination.toLowerCase();
     if (q && !String(t.destination).toLowerCase().includes(q) && !String(t.title).toLowerCase().includes(q)) return false;
     if (minPrice && t.priceMMK < Number(minPrice)) return false;

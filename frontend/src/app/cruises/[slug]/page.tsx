@@ -8,6 +8,7 @@ import { getAll } from '@/lib/persistentStore';
 import CurrencyToggle from '@/components/CurrencyToggle';
 import SocialShare from '@/components/SocialShare';
 import BackButton from '@/components/BackButton';
+import Calendar from '@/components/Calendar';
 import RelatedItems from '@/components/RelatedItems';
 import ErrorBoundary from '@/components/ErrorBoundary';
 export const dynamic = 'force-dynamic';
@@ -78,7 +79,7 @@ function CruiseDetailClient({ cruise, slug }: CruiseDetailPageProps) {
 
   return (
     <main className="min-h-screen bg-white">
-      <BackButton bookNowUrl={`/book-now?type=cruise&name=${encodeURIComponent(name)}&id=${encodeURIComponent(cruise.id || cruise._id || slug)}&priceMMK=${priceMMK}&priceUSD=${priceUSD}&destination=${encodeURIComponent(dest)}`} />
+      <BackButton label="Back to Cruises" />
 
       {/* Hero Section */}
       <section className="relative w-full h-[50vh] md:h-[60vh] overflow-hidden">
@@ -267,13 +268,11 @@ function CruiseDetailClient({ cruise, slug }: CruiseDetailPageProps) {
                 {/* Booking Form */}
                 <div className="space-y-3">
                   <div>
-                    <label className="text-gray-600 text-xs mb-1 block">Travel Date</label>
-                    <input
-                      type="date"
-                      value={travelDate}
-                      onChange={(e) => setTravelDate(e.target.value)}
-                      className="w-full px-3 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-gray-900 text-sm focus:outline-none focus:border-[#D4AF37]/50 [color-scheme:dark]"
-                    />
+                    <Calendar
+  value={travelDate}
+  onChange={setTravelDate}
+  label="Travel Date"
+/>
                   </div>
                   <div>
                     <label className="text-gray-600 text-xs mb-1 block">Travelers</label>

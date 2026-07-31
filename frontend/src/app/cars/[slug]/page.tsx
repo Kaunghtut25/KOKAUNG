@@ -8,6 +8,7 @@ import { getAll } from "@/lib/persistentStore";
 import CurrencyToggle from '@/components/CurrencyToggle';
 import SocialShare from '@/components/SocialShare';
 import BackButton from '@/components/BackButton';
+import Calendar from '@/components/Calendar';
 import RelatedItems from '@/components/RelatedItems';
 
 interface CarData {
@@ -394,11 +395,10 @@ export default function CarDetailPage() {
               <div className="space-y-3">
                 {/* Travel Date */}
                 <div>
-                  <label className="text-gray-600 text-xs mb-1 block">Pickup Date</label>
-                  <input
-                    type="date"
+                  <Calendar
                     value={travelDate}
-                    onChange={(e) => setTravelDate(e.target.value)}
+                    label="Travel Date"
+                  />
                     className="w-full px-3 py-2 bg-white border border-gray-200 rounded-lg text-gray-900 text-sm focus:outline-none focus:border-[#D4AF37]/50"
                   />
                 </div>

@@ -9,6 +9,7 @@ import { notFound, useParams } from 'next/navigation';
 import SocialShare from '@/components/SocialShare';
 import CurrencyToggle from '@/components/CurrencyToggle';
 import BackButton from '@/components/BackButton';
+import Calendar from '@/components/Calendar';
 import RelatedItems from '@/components/RelatedItems';
 export const dynamic = 'force-dynamic';
 
@@ -209,7 +210,7 @@ export default function HotelDetailPage() {
   return (
     <main className="min-h-screen bg-white">
       {/* Back Button */}
-      <BackButton bookNowUrl={bookNowUrl} />
+      <BackButton label="Back to Hotels" />
 
       <section className="relative w-full h-[50vh] md:h-[60vh] overflow-hidden">
         <Image src={heroImage} alt={hotel.name} width={1200} height={630} className="w-full h-full object-cover" />
@@ -336,13 +337,11 @@ export default function HotelDetailPage() {
               {/* Booking inputs */}
               <div className="space-y-3">
                 <div>
-                  <label className="text-gray-600 text-xs mb-1 block">Check-in Date</label>
-                  <input
-                    type="date"
-                    value={travelDate}
-                    onChange={(e) => setTravelDate(e.target.value)}
-                    className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-gray-900 text-sm focus:outline-none focus:border-[#D4AF37]/50"
-                  />
+                  <Calendar
+  value={travelDate}
+  onChange={setTravelDate}
+  label="Check-in Date"
+/>
                 </div>
                 <div>
                   <label className="text-gray-600 text-xs mb-1 block">Rooms</label>

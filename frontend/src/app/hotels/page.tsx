@@ -22,7 +22,7 @@ interface Hotel {
   totalRooms: number;
   amenities: string[];
   images: string[];
-  row: number;
+  row?: number;
   status: string;
   featured: boolean;
 }

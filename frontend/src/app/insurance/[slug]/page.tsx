@@ -159,7 +159,7 @@ export default function InsuranceDetailPage() {
 
   const name = plan.planName || '';
   const coverage = plan.coverage || '';
-  const benefits: string[] = Array.isArray(plan.benefits) ? plan.benefits : (typeof plan.benefits === 'string' ? plan.benefits.split(',').map((s: string) => s.trim()).filter(Boolean) : []);
+  const benefits: string[] = Array.isArray((plan as any).benefits) ? (plan as any).benefits : (typeof (plan as any).benefits === 'string' ? (plan as any).benefits.split(',').map((s: string) => s.trim()).filter(Boolean) : []);
   const duration = plan.duration || 'Per trip';
 
   return (

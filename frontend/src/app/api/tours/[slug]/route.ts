@@ -55,7 +55,7 @@ function transformTour(t: Record<string, unknown>) {
     reviewCount: Number(t.reviewCount) || 42,
     images: getImages(t, tid),
     amenities: typeof t.amenities === 'string' ? (t.amenities as string).split(',').map(s => s.trim()).filter(Boolean) : (Array.isArray(t.amenities) ? t.amenities as string[] : []),
-    itinerary: [],
+    itinerary: (Array.isArray(t.itinerary) ? t.itinerary : []) as {day:number;title:string;description:string;meals:string[];accommodation?:string}[],
     included: typeof t.included === 'string' ? (t.included as string).split(',').map(s => s.trim()).filter(Boolean) : (Array.isArray(t.included) ? t.included as string[] : []),
     excluded: typeof t.excluded === 'string' ? (t.excluded as string).split(',').map(s => s.trim()).filter(Boolean) : (Array.isArray(t.excluded) ? t.excluded as string[] : []),
     featured: t.status === 'featured',
@@ -107,11 +107,11 @@ export async function GET(
     }
 
     // Add sample itinerary if empty
-    if (!tour.itinerary || tour.itinerary.length === 0) {
+    if (!tour.itinerary || (Array.isArray(tour.itinerary) && tour.itinerary.length === 0)) {
       const durStr = String(tour.duration || '5');
       const daysMatch = durStr.match(/(\d+)/); const days = daysMatch ? Math.min(parseInt(daysMatch[1]), 10) : 5;
       const dest = tour.destination || 'Myanmar';
-      tour.itinerary = Array.from({ length: days }, (_, i) => {
+      tour.itinerary = Array.from({ length: days }, (_, i): any => {
         const act = ACTIVITIES[i % ACTIVITIES.length];
         return {
           day: i + 1,

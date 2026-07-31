@@ -4,6 +4,7 @@ import DestinationsClient from "./DestinationsClient";
 export const dynamic = "force-dynamic";
 
 interface Destination {
+  _id?: string;
   city: string;
   country: string;
   image: string;
@@ -98,42 +99,34 @@ const FALLBACK_DESTINATIONS: Destination[] = [
     bestTime: "May to July and December to February",
     description: "Kuala Lumpur is a melting pot of cultures with the iconic Petronas Twin Towers, colorful Batu Caves, and incredible street food from Malay, Chinese, and Indian traditions.",
   },
-];
+];;
 
-async function fetchSiteConfig() {
-  try { const items = await getAll("site-config" as any); return items?.[0] || {}; }
-  catch { return {}; }
-}
-
-async function getInitialDestinations(): Promise<Destination[]> {
+async function fetchDestinations(): Promise<Destination[]> {
   try {
-    const raw = await getAll("destinations") as any[];
-    if (!raw || raw.length === 0) return FALLBACK_DESTINATIONS;
-    return raw.map((d: any) => ({
-      city: d.city || d.name || "",
-      country: d.country || "",
-      image: (Array.isArray(d.images) ? d.images[0] : d.image || d.img) || FALLBACK_DESTINATIONS[0].image,
-      minPrice: d.minPrice || ("From Ks " + (d.priceMMK ? Number(d.priceMMK).toLocaleString() : "150,000")),
-      bestTime: d.bestTime || "",
-      description: d.description || "",
-      highlights: Array.isArray(d.highlights) ? d.highlights : [],
+    const items = await getAll("destinations" as any) as any[];
+    if (!items || items.length === 0) return [];
+    return items.map((item: any) => ({
+      _id: item.id || item._id,
+      city: item.city || "",
+      country: item.country || "",
+      image: typeof item.images === "string" ? JSON.parse(item.images)[0] : (Array.isArray(item.images) ? item.images[0] : (item.image || item.img || "")),
+      minPrice: item.minPrice || "",
+      bestTime: item.bestTime || "",
+      description: item.description || "",
+      highlights: typeof item.highlights === "string" ? item.highlights.split(",").map((s: string) => s.trim()).filter(Boolean) : (Array.isArray(item.highlights) ? item.highlights : []),
     }));
   } catch {
-    return FALLBACK_DESTINATIONS;
+    return [];
   }
+}
+
+async function fetchSiteConfig() {
+  try { const items = await getAll("site-config" as any); return items?.[0] || null; }
+  catch { return null; }
 }
 
 export default async function DestinationsPage() {
-  const [initialDestinations, siteConfig] = await Promise.all([getInitialDestinations(), fetchSiteConfig()]);
-  if (siteConfig?.moduleToggles?.destinations === false) {
-    return (
-      <div className="min-h-screen bg-[#0A1628] flex items-center justify-center">
-        <div className="text-center">
-          <h1 className="text-3xl text-white font-light mb-3">Coming Soon</h1>
-          <p className="text-white/40">This section is temporarily unavailable.</p>
-        </div>
-      </div>
-    );
-  }
-  return <DestinationsClient initialDestinations={initialDestinations} siteConfig={siteConfig} />;
+  const [destinations, siteConfig] = await Promise.all([fetchDestinations(), fetchSiteConfig()]);
+  const displayDestinations = destinations.length > 0 ? destinations : FALLBACK_DESTINATIONS;
+  return <DestinationsClient initialDestinations={displayDestinations} siteConfig={siteConfig || {}} />;
 }

@@ -33,7 +33,7 @@ const FALLBACK_BUS_ROUTES: BusRoute[] = [
 
 async function getInitialBusRoutes(): Promise<BusRoute[]> {
   try {
-    const rawRoutes = await getAll("bus-routes") as any[];
+    const rawRoutes = await getAll("bus-routes" as any) as any[];
     if (!rawRoutes || rawRoutes.length === 0) return FALLBACK_BUS_ROUTES;
     return rawRoutes.map((v: any) => ({
       _id: v._id || v.id || "",

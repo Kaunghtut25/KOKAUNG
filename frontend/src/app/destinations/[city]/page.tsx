@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter, useParams } from 'next/navigation';
 import RelatedItems from '@/components/RelatedItems';
 import BackButton from '@/components/BackButton';
+import Calendar from '@/components/Calendar';
 import CurrencyToggle from '@/components/CurrencyToggle';
 import DestImage from "./DestImage";
 
@@ -417,12 +418,10 @@ export default function DestinationPage() {
                 {/* Booking form */}
                 <div className="space-y-4">
                   <div>
-                    <label className="text-gray-500 text-xs mb-1.5 block">Travel Date</label>
-                    <input
-                      type="date"
+                                        <Calendar
                       value={travelDate}
-                      onChange={(e) => setTravelDate(e.target.value)}
-                      className="w-full px-3 py-2.5 border border-gray-200 rounded-lg text-gray-900 text-sm focus:outline-none focus:border-[#D4AF37] focus:ring-1 focus:ring-[#D4AF37]/30 transition-all"
+                      onChange={setTravelDate}
+                      label="Travel Date"
                     />
                   </div>
                   <div>
