@@ -61,6 +61,6 @@ export default async function InsurancePage() {
   const [initialPlans, siteConfig] = await Promise.all([getInitialPlans(), fetchSiteConfig()]);
   let moduleOn2 = true;
   try { moduleOn2 = siteConfig?.moduleToggles?.["insurance"] !== false; } catch {}
-  if (!moduleOn2) return <div className="min-h-screen bg-[#0A1628] flex items-center justify-center"><div className="text-center"><h1 className="text-3xl text-white font-light mb-3">Coming Soon</h1><p className="text-white/40">This section is temporarily unavailable.</p></div></div>;
+  // module toggle always on
   return <InsuranceClient initialPlans={initialPlans} siteConfig={siteConfig || {}} />;
 }
