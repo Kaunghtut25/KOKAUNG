@@ -3,7 +3,12 @@
 > **Purpose**: This document explains the current Live Chat format and exactly how to plug in
 > real AI API keys (OpenAI / Anthropic / Gemini / DeepSeek / any OpenAI-compatible endpoint)
 > so the chat answers like a real travel assistant instead of the current keyword bot.
-> Last updated: 2026-08-02 (v80 baseline).
+> Last updated: 2026-08-02 (v81 baseline).
+>
+> **v81 UPDATE — the brain route is ALREADY DEPLOYED**: `frontend/src/app/api/chat/route.ts` is live
+> at `/api/chat` with session memory (Upstash Redis), keyword-bot fallback, live travel-catalog
+> grounding, and optional web-research hooks. Add an API key to Vercel env and the chat upgrades
+> to a real AI assistant with zero code changes. See section 3 for keys and section 10 for what v81 ships.
 
 ---
 
@@ -270,3 +275,30 @@ This gives you a **grounded travel assistant** — it can name your real tours, 
 | (optional) `frontend/src/app/api/chat/` rate-limit | add later if needed |
 
 That's the whole integration. Message format stays `{id, text, sender, time}` — the UI, styling, and bubbles never change.
+
+---
+
+## 10. What v81 already ships (deployed 2026-08-02)
+
+The code is live — you only need to add a key to flip the switch.
+
+| Feature | Status | How |
+|---|---|---|
+| Session memory | LIVE | a9:chat:<sessionId> in Upstash Redis, 30-day TTL, last 30 messages kept. Session id persists in visitor localStorage (a9_chat_session). No key needed. |
+| AI brain | Ready | Route calls OpenAI-compatible (or Anthropic) when key present; otherwise keyword-bot fallback keeps chat working. |
+| Researcher | Ready | TAVILY_API_KEY or SERPER_API_KEY -> route searches the web for visa/entry/weather/current-info questions and feeds results into the prompt. |
+| Travel info skills | LIVE | Live catalog (tours/hotels/cars/cruises/visas/insurance) from the store is injected into the system prompt every request. |
+| Human handoff | LIVE | "speak to an agent" -> phone/email from site-config. |
+
+### Env keys to add (Vercel -> Settings -> Environment Variables -> Production)
+| Key | Provider | Notes |
+|---|---|---|
+| OPENAI_API_KEY | OpenAI | default gpt-4o-mini; override model with OPENAI_MODEL |
+| OPENAI_BASE_URL | DeepSeek/Groq/OpenRouter | e.g. https://api.deepseek.com/v1 |
+| ANTHROPIC_API_KEY | Claude | used only if no OPENAI key |
+| TAVILY_API_KEY / SERPER_API_KEY | search | optional, for current-info answers |
+
+### Known v81 implementation notes
+- @upstash/redis v1.38 **auto-deserializes JSON on get** — do NOT JSON.parse the result of redis.get again (double-parse fails with "[object Object]"). Pass the array directly to set (client stringifies).
+- Memory verification: POST twice with same sessionId -> response memory field increments (1 -> 2 -> 3).
+- The keyword fallback uses only the last user message; the LLM path uses the last 10 turns + Redis history.
