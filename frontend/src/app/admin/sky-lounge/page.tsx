@@ -69,7 +69,7 @@ export default function AdminMingalarPage() {
     try {
       const fd = new FormData();
       fd.append('file', file);
-      const res = await fetch('/api/upload', { method: 'POST', body: fd });
+      const res = await fetch('/api/upload', { method: 'POST', headers: { Authorization: 'Bearer ' + token }, body: fd });
       const data = await res.json();
       const blob = data.uploads?.[0];
       const url = blob.url;

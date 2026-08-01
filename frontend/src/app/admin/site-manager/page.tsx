@@ -142,8 +142,8 @@ export default function SiteManagerPage() {
   const [saving, setSaving] = useState(false);
   const [tab, setTab] = useState<Tab>("hero");
   const [toast, setToast] = useState<{ msg: string; type: "success" | "error" } | null>(null);
-  const [uploading, setUploading] = useState(false);
-  const [uploadError, setUploadError] = useState("");
+  const [uploadingKey, setUploadingKey] = useState("");
+  const [uploadErrors, setUploadErrors] = useState<Record<string, string>>({});
   const [imageUrlInput, setImageUrlInput] = useState("");
   const fileInputRefs = useRef<Record<string, HTMLInputElement | null>>({});
 
@@ -157,13 +157,16 @@ export default function SiteManagerPage() {
   }, []);
 
   const uploadFile = async (file: File, field: string, index?: number, valueField: string = "image") => {
-    if (!file.type.startsWith("image/")) { setUploadError("Only image files are accepted."); return; }
-    setUploading(true); setUploadError("");
+    const zoneKey = field + "_" + (index ?? "");
+    if (!file.type.startsWith("image/")) { setUploadErrors(prev => ({ ...prev, [zoneKey]: "Only image files are accepted." })); return; }
+    setUploadingKey(zoneKey);
+    setUploadErrors(prev => { const n = { ...prev }; delete n[zoneKey]; return n; });
     try {
       const fd = new FormData();
       fd.append('file', file);
-      const res = await fetch('/api/upload', { method: 'POST', body: fd });
+      const res = await fetch('/api/upload', { method: 'POST', headers: { Authorization: "Bearer " + token }, body: fd });
       const data = await res.json();
+      if (!res.ok) { setUploadErrors(prev => ({ ...prev, [zoneKey]: data.error || "Upload failed. Try URL paste instead." })); return; }
       const blob = data.uploads?.[0];
       const url = blob.url;
       if (index !== undefined) {
@@ -175,19 +178,22 @@ export default function SiteManagerPage() {
       }
       showToast("Image uploaded!");
     } catch (err: any) {
-      setUploadError("Upload failed. Try URL paste instead.");
-    } finally { setUploading(false); }
+      setUploadErrors(prev => ({ ...prev, [zoneKey]: "Upload failed. Try URL paste instead." }));
+    } finally { setUploadingKey(""); }
   };
 
   const uploadSocialPhoto = async (file: File, index: number) => {
-    if (!file.type.startsWith("image/")) { setUploadError("Only image files are accepted."); return; }
-    setUploading(true); setUploadError("");
+    const zoneKey = "socialFeed_" + index;
+    if (!file.type.startsWith("image/")) { setUploadErrors(prev => ({ ...prev, [zoneKey]: "Only image files are accepted." })); return; }
+    setUploadingKey(zoneKey);
+    setUploadErrors(prev => { const n = { ...prev }; delete n[zoneKey]; return n; });
     try {
       const fd = new FormData();
       fd.append('file', file);
-      const res = await fetch('/api/upload', { method: 'POST', body: fd });
+      const res = await fetch('/api/upload', { method: 'POST', headers: { Authorization: "Bearer " + token }, body: fd });
       const data = await res.json();
       const url = data.uploads?.[0]?.url;
+      if (!res.ok) { setUploadErrors(prev => ({ ...prev, [zoneKey]: data.error || "Upload failed. Try URL paste instead." })); return; }
       if (url) {
         const photos = [...(cfg.socialFeed?.photos || [])];
         photos[index] = url;
@@ -195,8 +201,8 @@ export default function SiteManagerPage() {
         showToast("Image uploaded!");
       }
     } catch (err: any) {
-      setUploadError("Upload failed. Try URL paste instead.");
-    } finally { setUploading(false); }
+      setUploadErrors(prev => ({ ...prev, [zoneKey]: "Upload failed. Try URL paste instead." }));
+    } finally { setUploadingKey(""); }
   };
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>, field: string, index?: number, valueField: string = "image") => {
@@ -245,8 +251,8 @@ export default function SiteManagerPage() {
           ) : (
             <p className="text-sm text-white/40">Drag &amp; drop or click to upload</p>
           )}
-          {uploading && <p className="text-xs text-[#D4AF37] mt-1">Uploading...</p>}
-          {uploadError && <p className="text-xs text-red-400 mt-1">{uploadError}</p>}
+          {uploadingKey === field + "_" + (index ?? "") && <p className="text-xs text-[#D4AF37] mt-1">Uploading...</p>}
+          {uploadErrors[field + "_" + (index ?? "")] && <p className="text-xs text-red-400 mt-1">{uploadErrors[field + "_" + (index ?? "")]}</p>}
           <p className="text-xs text-white/30 mt-1">Recommended: 1200x630px (JPEG, max 2MB)</p>
         </div>
         <input
@@ -467,17 +473,20 @@ const tabs: { key: Tab; label: string }[] = [
                           e.preventDefault();
                           const file = e.dataTransfer.files?.[0];
                           if (!file) return;
-                          setUploading(true); setUploadError("");
+                          const zoneKey = "heroImages_" + key;
+                          setUploadingKey(zoneKey);
+                          setUploadErrors(prev => { const n = { ...prev }; delete n[zoneKey]; return n; });
                           try {
                             const fd = new FormData();
                             fd.append('file', file);
-                            const res = await fetch('/api/upload', { method: 'POST', body: fd });
+                            const res = await fetch('/api/upload', { method: 'POST', headers: { Authorization: "Bearer " + token }, body: fd });
                             const data = await res.json();
+                            if (!res.ok) { setUploadErrors(prev => ({ ...prev, [zoneKey]: data.error || "Upload failed." })); return; }
                             const blob = data.uploads?.[0];
                             setCfg(p => ({ ...p, heroImages: { ...(p.heroImages || {}), [key]: blob.url } }));
                             showToast("Image uploaded!");
-                          } catch { setUploadError("Upload failed."); }
-                          setUploading(false);
+                          } catch { setUploadErrors(prev => ({ ...prev, [zoneKey]: "Upload failed." })); }
+                          setUploadingKey("");
                         }}
                         onDragOver={(e) => e.preventDefault()}
                         onClick={() => {
@@ -493,17 +502,20 @@ const tabs: { key: Tab; label: string }[] = [
                           onChange={async (e) => {
                             const file = e.target.files?.[0];
                             if (!file) return;
-                            setUploading(true); setUploadError("");
+                            const zoneKey = "heroImages_" + key;
+                            setUploadingKey(zoneKey);
+                            setUploadErrors(prev => { const n = { ...prev }; delete n[zoneKey]; return n; });
                             try {
                               const fd = new FormData();
                               fd.append('file', file);
-                              const res = await fetch('/api/upload', { method: 'POST', body: fd });
+                              const res = await fetch('/api/upload', { method: 'POST', headers: { Authorization: "Bearer " + token }, body: fd });
                               const data = await res.json();
+                              if (!res.ok) { setUploadErrors(prev => ({ ...prev, [zoneKey]: data.error || "Upload failed." })); return; }
                               const blob = data.uploads?.[0];
                               setCfg(p => ({ ...p, heroImages: { ...(p.heroImages || {}), [key]: blob.url } }));
                               showToast("Image uploaded!");
-                            } catch { setUploadError("Upload failed."); }
-                            setUploading(false);
+                            } catch { setUploadErrors(prev => ({ ...prev, [zoneKey]: "Upload failed." })); }
+                            setUploadingKey("");
                           }}
                         />
                         {(cfg.heroImages && cfg.heroImages[key]) ? (
@@ -511,7 +523,8 @@ const tabs: { key: Tab; label: string }[] = [
                         ) : (
                           <p className="text-sm text-white/40">Click to upload</p>
                         )}
-                        {uploading && <p className="text-xs text-[#D4AF37] mt-1">Uploading...</p>}
+                        {uploadingKey === "heroImages_" + key && <p className="text-xs text-[#D4AF37] mt-1">Uploading...</p>}
+                        {uploadErrors["heroImages_" + key] && <p className="text-xs text-red-400 mt-1">{uploadErrors["heroImages_" + key]}</p>}
                         <p className="text-xs text-white/30 mt-1">1200x630px JPEG max 2MB</p>
                       </div>
                     </div>
@@ -694,7 +707,7 @@ const tabs: { key: Tab; label: string }[] = [
               <h2 className="text-lg font-bold text-white">Contact Information</h2>
               <p className="text-sm text-white/40">This controls phone/email/address shown on Contact page, Footer, and LiveChat widget.</p>
               <div className="grid grid-cols-2 gap-3">
-                <div><label className={`labelCls labelCls`}>Phone</label><input className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} value={cfg.contact.phone} onChange={e => set("contact", { ...cfg.contact, phone: e.target.value })} />
+                <div><label className={`labelCls labelCls`}>Phone</label><input className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} value={cfg.contact.phone} onChange={e => set("contact", { ...cfg.contact, phone: e.target.value })} /></div>
                 <div><label className={labelCls}>Email</label><input className={inputCls} type="email" style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} value={cfg.contact.email || ""} onChange={e => set("contact", { ...cfg.contact, email: e.target.value })} /></div>
               </div>
               <div><label className={labelCls}>Address</label><input className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} value={cfg.contact.address} onChange={e => set("contact", { ...cfg.contact, address: e.target.value })} /></div>
@@ -821,8 +834,8 @@ const tabs: { key: Tab; label: string }[] = [
                               <span className="text-white/20">drag / click / URL</span>
                             </div>
                           )}
-                          {uploading && <p className="text-[10px] text-[#D4AF37] mt-1">Uploading...</p>}
-                          {uploadError && <p className="text-[10px] text-red-400 mt-1">{uploadError}</p>}
+                          {uploadingKey === "socialFeed_" + i && <p className="text-[10px] text-[#D4AF37] mt-1">Uploading...</p>}
+                          {uploadErrors["socialFeed_" + i] && <p className="text-[10px] text-red-400 mt-1">{uploadErrors["socialFeed_" + i]}</p>}
                         </div>
                         <input
                           type="text"
@@ -1514,7 +1527,7 @@ const tabs: { key: Tab; label: string }[] = [
           )}
         </div>
 
-        {uploading && <div className="fixed bottom-4 right-4 bg-[#0A1628] text-white px-4 py-2 rounded-lg shadow-lg text-sm">Uploading image...</div>}
+        {uploadingKey && <div className="fixed bottom-4 right-4 bg-[#0A1628] text-white px-4 py-2 rounded-lg shadow-lg text-sm">Uploading image...</div>}
       </div>
     </main>
   );
