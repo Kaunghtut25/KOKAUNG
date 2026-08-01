@@ -33,6 +33,7 @@ interface SiteConfig {
   testimonials: Testimonial[]; partners: string[];
   ctaTitle: string; ctaDescription: string; ctaButtonLabel: string; ctaButtonHref: string;
   contact: ContactInfo; socialLinks: SocialLink[]; footerSections: FooterSection[];
+  socialFeed?: { enabled: boolean; instagram: string; photos: string[] };
   sectionLayouts?: Record<string, SectionLayout>;
   relatedItems?: { maxItems: number; crossSections: Record<string, { enabled: boolean; maxItems: number }> };
   sectionRows?: Record<string, string[]>;
@@ -95,6 +96,7 @@ const defaultCfg: SiteConfig = {
   ctaTitle: "", ctaDescription: "", ctaButtonLabel: "Book Now", ctaButtonHref: "/book-now",
   contact: { email: "", phone: "", address: "", whatsapp: "", messenger: "", viber: "", telegram: "" },
   socialLinks: [], footerSections: [],
+  socialFeed: { enabled: true, instagram: "https://instagram.com/a9global", photos: [] },
   sectionLayouts: {
     hotels: { desktop: 4, tablet: 2, mobile: 1 },
     tours: { desktop: 3, tablet: 2, mobile: 1 },
@@ -128,7 +130,7 @@ const defaultCfg: SiteConfig = {
   },
 };
 
-type Tab = "layout" | "rows" | "faq" | "terms" | "privacy" | "hero" | "heroImages" | "services" | "nav" | "stats" | "why" | "destinations" | "cta" | "contact" | "social" | "footer" | "meta" | "testimonials" | "partners" | "heroText" | "cardDims" | "moduleToggles" | "relatedItems";
+type Tab = "layout" | "rows" | "faq" | "terms" | "privacy" | "hero" | "heroImages" | "services" | "nav" | "stats" | "why" | "destinations" | "cta" | "contact" | "social" | "socialFeed" | "footer" | "meta" | "testimonials" | "partners" | "heroText" | "cardDims" | "moduleToggles" | "relatedItems";
 
 export default function SiteManagerPage() {
   const [cfg, setCfg] = useState(defaultCfg);
@@ -165,6 +167,26 @@ export default function SiteManagerPage() {
         setCfg(p => ({ ...p, [field]: url }));
       }
       showToast("Image uploaded!");
+    } catch (err: any) {
+      setUploadError("Upload failed. Try URL paste instead.");
+    } finally { setUploading(false); }
+  };
+
+  const uploadSocialPhoto = async (file: File, index: number) => {
+    if (!file.type.startsWith("image/")) { setUploadError("Only image files are accepted."); return; }
+    setUploading(true); setUploadError("");
+    try {
+      const fd = new FormData();
+      fd.append('file', file);
+      const res = await fetch('/api/upload', { method: 'POST', body: fd });
+      const data = await res.json();
+      const url = data.uploads?.[0]?.url;
+      if (url) {
+        const photos = [...(cfg.socialFeed?.photos || [])];
+        photos[index] = url;
+        setCfg(p => ({ ...p, socialFeed: { enabled: true, instagram: p.socialFeed?.instagram || "https://instagram.com/a9global", photos } }));
+        showToast("Image uploaded!");
+      }
     } catch (err: any) {
       setUploadError("Upload failed. Try URL paste instead.");
     } finally { setUploading(false); }
@@ -273,7 +295,7 @@ const tabs: { key: Tab; label: string }[] = [
     { key: "nav", label: "Nav Links" }, { key: "stats", label: "Stats Cards" },
     { key: "why", label: "Why Choose Us" }, { key: "destinations", label: "Destinations" },
     { key: "cta", label: "CTA Section" }, { key: "contact", label: "Contact Info" },
-    { key: "social", label: "Social Links" }, { key: "footer", label: "Footer" },
+    { key: "social", label: "Social Links" }, { key: "socialFeed", label: "Social Feed" }, { key: "footer", label: "Footer" },
     { key: "meta", label: "Meta & SEO" },
     { key: "testimonials", label: "Testimonials" },
     { key: "partners", label: "Partners" },
@@ -713,6 +735,97 @@ const tabs: { key: Tab; label: string }[] = [
                 </div>
               ))}
               <button onClick={() => set("socialLinks", [...cfg.socialLinks, { platform: "", url: "" }])} className="px-4 py-2 bg-white/10 rounded-lg text-sm">+ Add</button>
+            </div>
+          )}
+
+          {tab === "socialFeed" && (
+            <div className="space-y-5">
+              <h2 className="text-lg font-bold text-white">Social Feed (Follow Our Journey)</h2>
+              <p className="text-white/40 text-sm">Control the "Follow Our Journey" Instagram section on the homepage. Upload up to 6 photos and set the Instagram link. Toggle off to hide the whole section.</p>
+
+              {/* Enable toggle */}
+              <div className="flex items-center gap-3 bg-white/5 border border-white/10 rounded-lg p-3">
+                <span className="text-sm text-white/70">Show section on homepage</span>
+                <button
+                  type="button"
+                  onClick={() => setCfg(p => ({ ...p, socialFeed: { enabled: !(p.socialFeed?.enabled ?? true), instagram: p.socialFeed?.instagram || "https://instagram.com/a9global", photos: p.socialFeed?.photos || [] } }))}
+                  className={"relative w-12 h-6 rounded-full transition-colors " + ((cfg.socialFeed?.enabled ?? true) ? "bg-[#D4AF37]" : "bg-white/20")}
+                  aria-label="Toggle social feed"
+                >
+                  <span className={"absolute top-0.5 w-5 h-5 bg-white rounded-full transition-all " + ((cfg.socialFeed?.enabled ?? true) ? "left-6" : "left-0.5")} />
+                </button>
+              </div>
+
+              {/* Instagram URL */}
+              <div>
+                <label className={labelCls}>Instagram URL</label>
+                <input
+                  className={inputCls}
+                  style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }}
+                  placeholder="https://instagram.com/a9global"
+                  value={cfg.socialFeed?.instagram || ""}
+                  onChange={e => setCfg(p => ({ ...p, socialFeed: { enabled: p.socialFeed?.enabled ?? true, instagram: e.target.value, photos: p.socialFeed?.photos || [] } }))}
+                />
+                <p className="text-xs text-white/30 mt-1">The last part of the URL becomes the @handle shown under the title.</p>
+              </div>
+
+              {/* 6 photo slots */}
+              <div>
+                <label className={labelCls}>Photos (up to 6 — square works best)</label>
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                  {[0, 1, 2, 3, 4, 5].map(i => {
+                    const photo = (cfg.socialFeed?.photos || [])[i] || "";
+                    return (
+                      <div key={i} className="border border-white/10 rounded-lg p-2 bg-white/5">
+                        <div
+                          onDrop={e => { e.preventDefault(); const f = e.dataTransfer.files?.[0]; if (f) uploadSocialPhoto(f, i); }}
+                          onDragOver={e => e.preventDefault()}
+                          onClick={() => fileInputRefs.current['socialFeed_' + i]?.click()}
+                          className="border-2 border-dashed border-white/20 rounded-md p-2 text-center cursor-pointer hover:border-[#D4AF37] transition-colors"
+                        >
+                          <input
+                            type="file"
+                            accept="image/*"
+                            className="hidden"
+                            ref={el => { fileInputRefs.current['socialFeed_' + i] = el; }}
+                            onChange={e => { const f = e.target.files?.[0]; if (f) uploadSocialPhoto(f, i); }}
+                          />
+                          {photo ? (
+                            <img src={photo} alt={'Photo ' + (i + 1)} className="w-full h-20 object-cover rounded" />
+                          ) : (
+                            <div className="flex flex-col items-center justify-center h-20 text-white/30 text-xs">
+                              <span className="text-xl mb-1">📷</span>
+                              <span>Photo {i + 1}</span>
+                              <span className="text-white/20">drag / click / URL</span>
+                            </div>
+                          )}
+                          {uploading && <p className="text-[10px] text-[#D4AF37] mt-1">Uploading...</p>}
+                          {uploadError && <p className="text-[10px] text-red-400 mt-1">{uploadError}</p>}
+                        </div>
+                        <input
+                          type="text"
+                          placeholder="Or paste image URL"
+                          className="w-full px-2 py-1.5 rounded border border-white/10 text-white text-xs mt-1.5"
+                          style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }}
+                          value={photo}
+                          onChange={e => {
+                            const photos = [...(cfg.socialFeed?.photos || [])];
+                            photos[i] = e.target.value;
+                            setCfg(p => ({ ...p, socialFeed: { enabled: p.socialFeed?.enabled ?? true, instagram: p.socialFeed?.instagram || "", photos } }));
+                          }}
+                        />
+                        {photo && (
+                          <button onClick={() => {
+                            const photos = [...(cfg.socialFeed?.photos || [])];
+                            photos[i] = "";
+                            setCfg(p => ({ ...p, socialFeed: { enabled: p.socialFeed?.enabled ?? true, instagram: p.socialFeed?.instagram || "", photos } }));
+                          }} className="text-[10px] text-red-400 mt-1 hover:text-red-300">Remove</button>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
             </div>
           )}
 

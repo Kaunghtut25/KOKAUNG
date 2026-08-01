@@ -200,6 +200,13 @@ const defaultConfig = {
     { platform: "telegram", url: "https://t.me/a9globaltravel" },
   ],
 
+  // Social Feed (Follow Our Journey on homepage)
+  socialFeed: {
+    enabled: true,
+    instagram: "https://instagram.com/a9global",
+    photos: [],
+  },
+
   // Testimonials
   testimonials: [
     { name: "John Smith", country: "Australia", tour: "Bagan Explorer", text: "Amazing experience! The hot air balloon ride was breathtaking. Professional team from start to finish.", rating: 5 },

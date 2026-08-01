@@ -3,6 +3,12 @@ import { useState, useEffect } from 'react';
 
 interface SocialLink { platform: string; url: string; }
 
+interface SocialFeedConfig {
+  enabled?: boolean;
+  instagram?: string;
+  photos?: string[];
+}
+
 const FALLBACK_PHOTOS = [
   'https://images.unsplash.com/photo-1508009603885-50cf7c579365?w=300',
   'https://images.unsplash.com/photo-1543465077-db45d34b88a5?w=300',
@@ -14,22 +20,30 @@ const FALLBACK_PHOTOS = [
 
 export default function SocialFeed() {
   const [socialLinks, setSocialLinks] = useState<SocialLink[]>([]);
+  const [feed, setFeed] = useState<SocialFeedConfig | null>(null);
 
   useEffect(() => {
     fetch("/api/admin/site-config")
       .then(r => r.json())
       .then(config => {
-        if (config?.socialLinks?.length > 0) {
-          setSocialLinks(config.socialLinks);
-        }
+        if (config?.socialLinks?.length > 0) setSocialLinks(config.socialLinks);
+        if (config?.socialFeed) setFeed(config.socialFeed);
       })
       .catch(() => {});
   }, []);
 
-  const instagramLink = socialLinks.find(s => s.platform.toLowerCase() === 'instagram');
+  // Section hidden when admin disables it
+  if (feed && feed.enabled === false) return null;
+
+  const feedInstagram = feed?.instagram || '';
+  const instagramLink = feedInstagram
+    ? { url: feedInstagram }
+    : socialLinks.find(s => s.platform.toLowerCase() === 'instagram');
   const handle = instagramLink
     ? '@' + instagramLink.url.split('/').filter(Boolean).pop() || 'a9globaltravel'
     : '@a9globaltravel';
+
+  const photos = feed?.photos?.length ? feed.photos : FALLBACK_PHOTOS;
 
   return (
     <div style={{ maxWidth: 1000, margin: '0 auto', padding: '40px 20px' }}>
@@ -47,7 +61,7 @@ export default function SocialFeed() {
         </div>
       )}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 8 }}>
-        {FALLBACK_PHOTOS.map((url, i) => (
+        {photos.map((url, i) => (
           <a key={i} href={instagramLink?.url || 'https://instagram.com'} target="_blank" rel="noopener noreferrer" style={{ position: 'relative', display: 'block', borderRadius: 8, overflow: 'hidden', aspectRatio: '1' }}>
             <img src={url} alt="Travel photo" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
             <div style={{ position: 'absolute', inset: 0, background: 'rgba(10,22,40,0)', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'background 0.3s' }}
