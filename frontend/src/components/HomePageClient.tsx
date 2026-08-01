@@ -67,22 +67,6 @@ function StatsCard({ icon, title, description, imgSrc }: { icon: string; title: 
   );
 }
 
-function WhyChooseCard({ icon, title, description, image }: { icon: string; title: string; description: string; image?: string }) {
-  return (
-    <div className="bg-white rounded-xl p-8 text-center shadow-md hover:shadow-lg hover:-translate-y-1 transition-all duration-300 border border-gray-100">
-      {image ? (
-        <div className="w-24 h-24 mx-auto mb-4 rounded-full overflow-hidden bg-[#FFFDF5] border border-gray-100 flex items-center justify-center">
-          <img src={image} alt={title} className="w-full h-full object-cover" loading="lazy" />
-        </div>
-      ) : (
-        <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-[#FFFDF5] flex items-center justify-center text-[#D4AF37] text-3xl">{icon}</div>
-      )}
-      <h3 className="text-xl font-bold text-[#0A1628] mb-3">{title}</h3>
-      <p className="text-gray-500 leading-relaxed">{description}</p>
-    </div>
-  );
-}
-
 function AirportInput({ label, value, onChange, placeholder, icon }: { label: string; value: string; onChange: (val: string) => void; placeholder: string; icon: React.ReactNode }) {
   const [isOpen, setIsOpen] = useState(false);
   const [query, setQuery] = useState("");
@@ -395,8 +379,7 @@ export default function HomePageClient({ siteConfig: ssrConfig }: { siteConfig?:
   const heroHeight = siteConfig?.heroHeightDesktop || 460;
   const heroHeightMobile = siteConfig?.heroHeightMobile || 340;
   const statsCards = siteConfig?.statsCards?.length ? siteConfig.statsCards : [];
-  const whyCards = siteConfig?.whyChooseCards?.length ? siteConfig.whyChooseCards : [];
-
+  
   return (
     <main className="min-h-screen bg-white">
       <section className="relative w-full overflow-hidden" style={{ height: `${siteConfig?.heroHeightDesktop || 460}px`, maxHeight: "100vh" }}>
@@ -535,20 +518,6 @@ export default function HomePageClient({ siteConfig: ssrConfig }: { siteConfig?:
         </section>
 )}
 
-      {whyCards.length > 0 && (
-      <section className="py-20 bg-white">
-          <div className="max-w-6xl mx-auto px-4">
-            <div className="text-center mb-14">
-              <p className="text-[#D4AF37] uppercase tracking-[0.3em] text-sm font-medium mb-3">Why Choose Us</p>
-              <h2 className="text-3xl md:text-4xl font-bold text-[#0A1628]" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>Your Journey, Our Priority</h2>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-              {whyCards.map((s:any,i:number) => <WhyChooseCard key={i} {...s} />)}
-            </div>
-          </div>
-        </section>
-)}
-
       <section className="py-24 bg-[#0A1628] relative overflow-hidden">
         <div className="absolute inset-0 opacity-10 bg-cover bg-center" style={{ backgroundImage: `url(${ctaBgImage})` }} />
         <div className="relative z-10 max-w-3xl mx-auto text-center px-4">
@@ -557,11 +526,6 @@ export default function HomePageClient({ siteConfig: ssrConfig }: { siteConfig?:
           <Link href={siteConfig?.ctaButtonHref || "/book-now"} className="bg-gradient-to-r from-[#D4AF37] to-[#F5A623] text-[#0A1628] font-bold px-10 py-4 rounded-full text-lg hover:shadow-xl hover:shadow-[#D4AF37]/40 transition-all duration-300 transform hover:scale-105 cursor-pointer inline-block">{siteConfig?.ctaButtonLabel || "Book Now"}</Link>
         </div>
       </section>
-      <footer className="bg-gray-50 border-t border-gray-200 py-10">
-        <div className="max-w-6xl mx-auto px-4 text-center text-gray-500 text-sm">
-          <p>{siteConfig?.footerCopyright || `© ${new Date().getFullYear()} 𝐀𝟗 𝐆𝐥𝐨𝐛𝐚𝐥 𝐓𝐫𝐚𝐯𝐞𝐥𝐬 & 𝐓𝐨𝐮𝐫𝐬. All rights reserved.`}</p>
-        </div>
-      </footer>
           <TrustBadges />
       <DealsBanner />
       <WhyChooseUs />
