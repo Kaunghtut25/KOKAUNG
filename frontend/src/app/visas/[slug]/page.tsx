@@ -118,7 +118,26 @@ export default function VisaDetailPage() {
   }
 
   const country = visa.country || visa.title || '';
-  const displayImage = (visa.images && Array.isArray(visa.images) && visa.images[0]) || '/images_v2/visa1-v2.jpg';
+  const COUNTRY_IMAGES: Record<string, string> = {
+    Thailand: '/images_v2/visa1-v3.jpg',  Singapore: '/images_v2/visa2-v3.jpg',
+    Malaysia: '/images_v2/visa3-v3.jpg',  China: '/images_v2/visa4-v3.jpg',
+    India: '/images_v2/visa5-v3.jpg',     'United Arab Emirates': '/images_v2/visa6-v3.jpg',
+    Vietnam: '/images_v2/visa4-v3.jpg',   Cambodia: '/images_v2/visa3-v3.jpg',
+    Japan: '/images_v2/visa1-v3.jpg',     'South Korea': '/images_v2/visa2-v3.jpg',
+    Indonesia: '/images_v2/visa3-v3.jpg', Taiwan: '/images_v2/visa2-v3.jpg',
+    Philippines: '/images_v2/visa6-v3.jpg', Australia: '/images_v2/visa1-v3.jpg',
+    'United Kingdom': '/images_v2/visa2-v3.jpg', 'Hong Kong': '/images_v2/visa1-v3.jpg',
+    Macau: '/images_v2/visa1-v3.jpg',     'Sri Lanka': '/images_v2/visa3-v3.jpg',
+    Nepal: '/images_v2/visa4-v3.jpg',     Maldives: '/images_v2/visa6-v3.jpg',
+    Laos: '/images_v2/visa3-v3.jpg',      Brunei: '/images_v2/visa1-v3.jpg',
+    Myanmar: '/images_v2/visa2-v3.jpg',
+  };
+  // Resolve hero image: per-visa image first, then uploaded images[], then country map, then generic fallback
+  const displayImage =
+    visa.image ||
+    (visa.images && Array.isArray(visa.images) && visa.images[0]) ||
+    COUNTRY_IMAGES[country] ||
+    '/images_v2/visa1-v2.jpg';
   const processing = visa.processingTime || '3-5 Business Days';
   const requirements: string[] = Array.isArray(visa.requirements)
     ? visa.requirements
