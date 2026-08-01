@@ -24,7 +24,12 @@ async function getNameIndex(): Promise<Record<string, BlobEntry>> {
   try {
     const { blobs } = await list({ prefix: INDEX_PATHNAME });
     if (blobs.length > 0) {
-      const res = await fetch(blobs[0].url);
+      // Pick the NEWEST index blob (multiple copies accumulate if a deploy
+      // ever wrote with addRandomSuffix). Oldest-first fallback otherwise.
+      const newest = [...blobs].sort((a: any, b: any) =>
+        new Date(b.uploadedAt || 0).getTime() - new Date(a.uploadedAt || 0).getTime()
+      )[0];
+      const res = await fetch(newest.url);
       if (res.ok) return await res.json();
     }
   } catch { /* fall through */ }
@@ -36,6 +41,7 @@ async function saveNameIndex(index: Record<string, BlobEntry>) {
     access: 'public',
     contentType: 'application/json',
     allowOverwrite: true,
+    addRandomSuffix: false,
   });
 }
 
