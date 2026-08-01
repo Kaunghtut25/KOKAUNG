@@ -912,7 +912,7 @@ export default function TourDetailPage() {
 
           {/* Sidebar Booking Card */}
           <div className="lg:col-span-1">
-            <div className="sticky top-24 rounded-2xl border border-gold/20 bg-white/5 backdrop-blur-sm p-6 space-y-6">
+            <div className="sticky top-24 rounded-2xl border border-[#D4AF37]/20 bg-white shadow-lg p-6 space-y-6">
               {/* Price */}
               <div className="flex items-center justify-between">
                 <div>

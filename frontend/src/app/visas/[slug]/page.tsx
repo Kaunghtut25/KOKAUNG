@@ -281,7 +281,7 @@ export default function VisaDetailPage() {
           {/* Sidebar — Interactive Booking Card */}
           <div className="lg:col-span-1">
             <div className="sticky top-28 space-y-6">
-              <div className="rounded-2xl border border-[#D4AF37]/20 bg-gray-50 p-6 space-y-5">
+              <div className="rounded-2xl border border-[#D4AF37]/20 bg-white shadow-lg p-6 space-y-5">
                 {/* Price Header */}
                 <div className="bg-gradient-to-r from-[#0A1628] to-[#162D50] -mx-6 -mt-6 p-6 rounded-t-2xl text-white">
                   <p className="text-white/60 text-xs uppercase tracking-wider mb-1">Visa Fee</p>

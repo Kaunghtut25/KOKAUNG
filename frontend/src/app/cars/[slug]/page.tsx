@@ -345,7 +345,7 @@ export default function CarDetailPage() {
 
           {/* Sidebar - Interactive Booking Card */}
           <div className="lg:col-span-1">
-            <div className="sticky top-24 rounded-2xl border border-[#D4AF37]/20 bg-gray-50 backdrop-blur-sm p-6 space-y-5 relative">
+            <div className="sticky top-24 rounded-2xl border border-[#D4AF37]/20 bg-white shadow-lg p-6 space-y-5 relative">
               {/* Price Header */}
               <div className="flex items-center justify-between">
                 <div>
