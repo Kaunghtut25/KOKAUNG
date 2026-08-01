@@ -150,16 +150,17 @@ const SEEDS: Record<string, any[]> = {
 // ── Public API ────────────────────────────────────────────
 
 export async function getAll(collection: Collection): Promise<any[]> {
+  const activeOnly = (items: any[]) => (items || []).filter((i: any) => i.status !== "inactive");
   try {
     const { data, error } = await supabase.from(collection).select('*').order('createdAt', { ascending: false });
-    if (!error && data) return data;
+    if (!error && data) return activeOnly(data);
   } catch (err) {
     console.warn(`[Store] Supabase getAll(${collection}) failed, trying Redis:`, (err as Error).message?.substring(0, 80));
   }
   const redisData = await redisGetAll(collection);
-  if (redisData !== null && redisData.length > 0) return redisData;
+  if (redisData !== null && redisData.length > 0) return activeOnly(redisData);
   console.warn(`[Store] Using seed data for ${collection}`);
-  return SEEDS[collection] || [];
+  return activeOnly(SEEDS[collection] || []);
 }
 
 export async function getById(collection: Collection, id: string): Promise<any | null> {

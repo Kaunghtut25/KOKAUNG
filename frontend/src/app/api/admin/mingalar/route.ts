@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getAll, create, update } from "@/lib/persistentStore";
+import { getAll, create, update, delete_ } from "@/lib/persistentStore";
 
 export const dynamic = 'force-dynamic';
 
@@ -40,9 +40,9 @@ export async function DELETE(req: NextRequest) {
     const { searchParams } = new URL(req.url);
     const id = searchParams.get("id");
     if (!id) return NextResponse.json({ message: "Missing id" }, { status: 400 });
-    // Mark as inactive since persistentStore has no remove export yet
-    const item = await update("mingalar", id, { status: "inactive" });
-    return NextResponse.json({ success: true, item });
+    const deleted = await delete_("mingalar", id);
+    if (!deleted) return NextResponse.json({ message: "Not found" }, { status: 404 });
+    return NextResponse.json({ success: true });
   } catch (err: any) {
     return NextResponse.json({ message: err.message || "Server error" }, { status: 500 });
   }
