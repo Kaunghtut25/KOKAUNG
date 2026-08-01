@@ -591,7 +591,9 @@ const tabs: { key: Tab; label: string }[] = [
                 <div key={i} className="border border-white/10 bg-white/5 text-white rounded-lg p-4 space-y-3">
                   <div className="flex justify-between"><h3 className="font-medium">Card {i + 1}</h3><button onClick={() => set("statsCards", cfg.statsCards.filter((_, idx) => idx !== i))} className="text-red-400 text-sm">Delete</button></div>
                   <div className="grid grid-cols-3 gap-3">
-                    <input className={`inputCls inputCls`} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} placeholder="Icon" value={s.icon} onChange={e => { const a = [...cfg.statsCards]; a[i] = { ...s, icon: e.target.value }; set("statsCards", a); }} />
+                    <div><label className={labelCls}>Icon</label><input className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} placeholder="⭐" value={s.icon || ""} onChange={e => { const a = [...cfg.statsCards]; a[i] = { ...s, icon: e.target.value }; set("statsCards", a); }} /></div>
+                    <div><label className={labelCls}>Title (e.g. 5,000+ Happy Travelers)</label><input className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} placeholder="5,000+ Happy Travelers" value={s.title || ""} onChange={e => { const a = [...cfg.statsCards]; a[i] = { ...s, title: e.target.value }; set("statsCards", a); }} /></div>
+                    <div><label className={labelCls}>Description</label><input className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} placeholder="Trusted by thousands of customers" value={s.description || ""} onChange={e => { const a = [...cfg.statsCards]; a[i] = { ...s, description: e.target.value }; set("statsCards", a); }} /></div>
                   </div>
                   <ImageZone field="statsCards" index={i} label="Card Image" valueField="imgSrc" />
                 </div>

@@ -1,7 +1,7 @@
 'use client';
 import { useState, useEffect, useRef } from 'react';
 
-function Counter({ target, label, suffix = '+' }: { target: number; label: string; suffix?: string }) {
+function Counter({ target, label, suffix = '' }: { target: number; label: string; suffix?: string }) {
   const [val, setVal] = useState(0);
   const ref = useRef<HTMLDivElement>(null);
   const started = useRef(false);
@@ -28,40 +28,40 @@ function Counter({ target, label, suffix = '+' }: { target: number; label: strin
   );
 }
 
-function parseNumber(title: string): number {
-  const match = title.match(/([\d,]+)/);
-  if (match) {
-    return parseInt(match[1].replace(/,/g, ''), 10) || 0;
+// Parse a stats title like "5,000+ Happy Travelers", "50+ Destinations", "24/7 Support" or "IATA Accredited".
+// Returns { num, suffix, label } when a clean integer prefix exists, otherwise { num: null, label: title }.
+function parseStat(title: string): { num: number | null; suffix: string; label: string } {
+  const m = title.match(/^([\d,.]+(?:\/\d+)?)\s*(\+)?\s*(.*)$/);
+  if (!m) return { num: null, suffix: '', label: title };
+  const head = m[1];
+  const suffix = m[2] || '';
+  const rest = m[3] || '';
+  if (head.includes('/')) {
+    // e.g. "24/7 Support" — render the whole head statically, never "24+ /7 Support"
+    return { num: null, suffix: '', label: (head + (suffix ? ' ' + suffix : '') + (rest ? ' ' + rest : '')).trim() };
   }
-  return 0;
-}
-
-function extractLabel(title: string): string {
-  // Remove leading number patterns like "5,000+ " or "50+ "
-  return title.replace(/^[\d,+]+\s*/, '');
+  const num = parseInt(head.replace(/,/g, ''), 10);
+  if (isNaN(num)) return { num: null, suffix: '', label: title };
+  return { num, suffix, label: rest };
 }
 
 const FALLBACK_STATS = [
-  { target: 5000, label: 'Happy Travelers' },
-  { target: 150, label: 'Tour Packages' },
-  { target: 30, label: 'Hotel Partners' },
-  { target: 15, label: 'Years Experience' },
-  { target: 50, label: 'Destinations' },
+  { num: 5000, suffix: '+', label: 'Happy Travelers' },
+  { num: 150, suffix: '+', label: 'Tour Packages' },
+  { num: 30, suffix: '+', label: 'Hotel Partners' },
+  { num: 15, suffix: '+', label: 'Years Experience' },
+  { num: 50, suffix: '+', label: 'Destinations' },
 ];
 
 export default function StatsCounter() {
-  const [stats, setStats] = useState<{ target: number; label: string }[]>(FALLBACK_STATS);
+  const [stats, setStats] = useState<{ num: number | null; suffix: string; label: string }[]>(FALLBACK_STATS);
 
   useEffect(() => {
     fetch("/api/admin/site-config")
       .then(r => r.json())
       .then(config => {
         if (config?.statsCards?.length > 0) {
-          const parsed = config.statsCards.map((c: any) => ({
-            target: parseNumber(c.title || ''),
-            label: extractLabel(c.title || '') || c.description || '',
-          }));
-          setStats(parsed);
+          setStats(config.statsCards.map((c: any) => parseStat(c.title || '')));
         }
       })
       .catch(() => {});
@@ -70,9 +70,15 @@ export default function StatsCounter() {
   return (
     <div style={{ background: 'linear-gradient(135deg,#0A1628,#0F2035)', padding: '40px 20px' }}>
       <div style={{ maxWidth: 1000, margin: '0 auto', display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(150px,1fr))', gap: 24 }}>
-        {stats.map((s, i) => (
-          <Counter key={i} target={s.target} label={s.label} />
-        ))}
+        {stats.map((s, i) =>
+          s.num != null ? (
+            <Counter key={i} target={s.num} label={s.label} suffix={s.suffix} />
+          ) : (
+            <div key={i} style={{ textAlign: 'center' }}>
+              <div style={{ fontSize: 20, fontWeight: 700, color: '#D4AF37', fontFamily: "'Playfair Display',serif", lineHeight: 1.4 }}>{s.label}</div>
+            </div>
+          )
+        )}
       </div>
     </div>
   );
