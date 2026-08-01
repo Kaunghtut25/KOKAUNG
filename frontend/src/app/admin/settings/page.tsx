@@ -113,12 +113,14 @@ export default function AdminSettingsPage() {
       if (res.ok) {
         const data = await res.json();
         // Merge with defaults to ensure all keys exist
+        const certsFromConfig = await fetch(`${API_BASE}/admin/site-config`).then(r => r.json()).catch(() => null);
+        const configCerts = certsFromConfig && Array.isArray(certsFromConfig.certifications) && certsFromConfig.certifications.length ? certsFromConfig.certifications : null;
         setSettings({
           ...defaultSettings,
           ...data,
           socialLinks: { ...defaultSettings.socialLinks, ...(data.socialLinks || {}) },
           heroImages: { ...defaultSettings.heroImages, ...(data.heroImages || {}) },
-          certifications: data.certifications != null ? data.certifications : defaultSettings.certifications,
+          certifications: configCerts || (data.certifications != null ? data.certifications : defaultSettings.certifications),
         });
       }
     } catch (err) {
@@ -239,6 +241,17 @@ export default function AdminSettingsPage() {
       if (res.ok) {
         // Also save to localStorage for client-side access
         localStorage.setItem("site_settings", JSON.stringify(settings));
+        // Persist certifications into site-config (the store the About page reads)
+        try {
+          const current = await fetch(`${API_BASE}/admin/site-config`).then(r => r.json()).catch(() => null);
+          if (current) {
+            await fetch(`${API_BASE}/admin/site-config`, {
+              method: "PUT",
+              headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+              body: JSON.stringify({ ...current, certifications: settings.certifications }),
+            });
+          }
+        } catch (err) { console.error("Certifications sync failed:", err); }
         showToast("Settings saved successfully!", "success");
       } else {
         showToast("Failed to save settings", "error");
@@ -578,8 +591,25 @@ export default function AdminSettingsPage() {
         Update your certifications shown on the About Us page.
       </p>
       <div className="space-y-4">
+        {settings.certifications.length === 0 && (
+          <p className="text-white/40 text-sm">No certifications yet. Click "+ Add Certification" below to create one.</p>
+        )}
         {settings.certifications.map((cert, idx) => (
           <div key={idx} className="bg-white/[0.03] border border-white/10 rounded-lg p-4 space-y-3">
+            <div className="flex justify-between items-center">
+              <span className="text-white/40 text-xs font-medium">Certification {idx + 1}</span>
+              <button
+                type="button"
+                onClick={() => {
+                  const updated = [...settings.certifications];
+                  updated.splice(idx, 1);
+                  setSettings((prev) => ({ ...prev, certifications: updated }));
+                }}
+                className="text-red-400 hover:text-red-300 text-xs font-medium px-2 py-1 rounded hover:bg-red-400/10 transition-colors"
+              >
+                🗑 Delete
+              </button>
+            </div>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
               <div>
                 <label className="block text-white/60 text-xs mb-1">Title</label>
@@ -655,6 +685,13 @@ export default function AdminSettingsPage() {
             </div>
           </div>
         ))}
+        <button
+          type="button"
+          onClick={() => setSettings((prev) => ({ ...prev, certifications: [...prev.certifications, { title: "", code: "", image: "" }] }))}
+          className="w-full py-2.5 rounded-lg border border-dashed border-gold/30 text-gold text-sm font-medium hover:bg-gold/10 transition-colors"
+        >
+          ➕ Add Certification
+        </button>
       </div>
     </div>
   );

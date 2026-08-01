@@ -33,6 +33,7 @@ interface AboutConfig {
   commitmentSubtext: string;
   commitmentButtonLabel: string;
   commitmentButtonHref: string;
+  certifications: { title: string; code: string; image: string }[];
 }
 
 const defaultAbout: AboutConfig = {
@@ -74,6 +75,11 @@ const defaultAbout: AboutConfig = {
   commitmentSubtext: "Whether you are planning a business trip, family holiday, corporate event, or marine crew movement, we are here to support your journey every step of the way.",
   commitmentButtonLabel: "Book Now",
   commitmentButtonHref: "/book-now",
+  certifications: [
+    { title: "IATA Accredited", code: "05301026", image: "/images_v2/iata-logo.png" },
+    { title: "Licensed Tour Operator", code: "T/O(YGN)-0946", image: "/images_v2/license-tour-operator.png" },
+    { title: "Company Registration", code: "126395248", image: "/images_v2/company-registration.png" },
+  ],
 };
 
 export default function AboutClient({ siteConfig }: { siteConfig: any }) {
@@ -87,6 +93,7 @@ export default function AboutClient({ siteConfig }: { siteConfig: any }) {
     fetch("/api/admin/site-config").then(r => r.json()).then(d => {
       const baseConfig = d?.about ? { ...defaultAbout, ...d.about } : defaultAbout;
       if (d?.heroImages?.about) baseConfig.heroImage = d.heroImages.about;
+      if (Array.isArray(d?.certifications) && d.certifications.length) baseConfig.certifications = d.certifications;
       setConfig(baseConfig);
     }).catch(() => setConfig(defaultAbout));
   }, []);
@@ -185,8 +192,8 @@ export default function AboutClient({ siteConfig }: { siteConfig: any }) {
           <p className="text-gray-500">Officially recognized and fully licensed</p>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-          {[{title:"IATA Accredited",code:"05301026",img:"/images_v2/iata-logo.png"},{title:"Licensed Tour Operator",code:"T/O(YGN)-0946",img:"/images_v2/license-tour-operator.png"},{title:"Company Registration",code:"126395248",img:"/images_v2/company-registration.png"}].map((item,i)=>
-            <div key={i} className="bg-white rounded-2xl border border-gray-200 p-6 text-center hover:border-[#D4AF37]/40 hover:shadow-md transition-all"><div className="w-20 h-20 mx-auto mb-4 flex items-center justify-center"><img src={item.img} alt={item.title} className="w-full h-full object-contain"/></div><h4 className="text-[#0A1628] font-semibold mb-1">{item.title}</h4><p className="text-[#D4AF37] text-sm font-mono font-medium">{item.code}</p></div>
+          {(config.certifications && config.certifications.length ? config.certifications : []).map((item,i)=>
+            <div key={i} className="bg-white rounded-2xl border border-gray-200 p-6 text-center hover:border-[#D4AF37]/40 hover:shadow-md transition-all"><div className="w-20 h-20 mx-auto mb-4 flex items-center justify-center"><img src={item.image} alt={item.title} className="w-full h-full object-contain"/></div><h4 className="text-[#0A1628] font-semibold mb-1">{item.title}</h4><p className="text-[#D4AF37] text-sm font-mono font-medium">{item.code}</p></div>
           )}
         </div>
       </section>
