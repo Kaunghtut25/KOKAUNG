@@ -1,6 +1,6 @@
 'use client';
 
-﻿import React, { useState } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import Link from "next/link";
 import { useRouter, useParams } from 'next/navigation';
 import RelatedItems from '@/components/RelatedItems';
@@ -165,9 +165,40 @@ export default function DestinationPage() {
   const [travelDate, setTravelDate] = useState('');
 
   const key = cityParam.toLowerCase();
-  const dest = FALLBACK_DESTINATIONS.find(
+  const [storeDest, setStoreDest] = useState<PopularDestination | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const r = await fetch('/api/destinations');
+        const d = await r.json();
+        const arr = Array.isArray(d) ? d : (d.data || d.items || []);
+        const found = arr.find((x: any) => toSlug(x.city || x.name || '') === key || (x.slug || '') === key);
+        if (found && !cancelled) {
+          setStoreDest({
+            city: found.city || found.name || '',
+            country: found.country || '',
+            image: found.image || '',
+            minPrice: found.minPrice || '',
+            rating: found.rating,
+            reviews: found.reviews,
+            duration: found.duration,
+            tags: found.tags,
+            bestTime: found.bestTime,
+            description: found.description,
+            highlights: found.highlights,
+          });
+        }
+      } catch {}
+    })();
+    return () => { cancelled = true; };
+  }, [key]);
+
+  const fallbackDest = FALLBACK_DESTINATIONS.find(
     (d) => toSlug(d.city) === key
   );
+  const dest = storeDest || fallbackDest;
 
   if (!dest) {
     return (
