@@ -199,8 +199,8 @@ export default function Footer() {
                   {workingHours}
                 </p>
               </div>
-              {/* Department Phone Numbers */}
-              {config?.departmentPhones && typeof config.departmentPhones === "object" &&
+              {/* Department Phone Numbers — shown only when main phone is set at Admin */}
+              {phone && config?.departmentPhones && typeof config.departmentPhones === "object" &&
                 Object.entries(config.departmentPhones)
                   .filter(([k, v]: [string, any]) => k !== "__proto__" && v)
                   .map(([dept, phoneNum]: [string, any]) => (
