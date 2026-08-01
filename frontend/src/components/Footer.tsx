@@ -30,6 +30,14 @@ const supportLinks = [
   { label: "Terms of Service", href: "/terms" },
 ];
 
+const DEPT_LABELS: Record<string, string> = {
+  ticket: "Ticket Department",
+  visa: "Visa Department",
+  hotel: "Hotel Department",
+  outbound: "Outbound Department",
+  inbound: "Inbound Department",
+};
+
 export default function Footer() {
   const currentYear = new Date().getFullYear();
   const [config, setConfig] = useState<any>(null);
@@ -196,7 +204,7 @@ export default function Footer() {
                     <div key={dept} className="flex items-start space-x-3">
                       <FaPhoneAlt className="text-[#D4AF37] mt-1 flex-shrink-0 text-xs" />
                       <div className="leading-tight">
-                        <span className="text-[10px] text-white/30 uppercase tracking-wider block">{dept}</span>
+                        <span className="text-[10px] text-white/30 uppercase tracking-wider block">{DEPT_LABELS[dept] || dept}</span>
                         <a href={`tel:${String(phoneNum).replace(/\s/g, "")}`} className="text-sm text-white/60 hover:text-[#D4AF37] transition-colors">{phoneNum}</a>
                       </div>
                     </div>
