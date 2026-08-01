@@ -329,7 +329,7 @@ const tabs: { key: Tab; label: string }[] = [
           </div>
           <button
             onClick={handleSave}
-            disabled={saving || uploading}
+            disabled={saving || !!uploadingKey}
             className="px-6 py-2.5 bg-[#D4AF37] text-white rounded-lg font-medium hover:bg-[#B8941F] disabled:opacity-50 transition-colors"
           >
             {saving ? "Saving..." : "Save All Changes"}
