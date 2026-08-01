@@ -4,8 +4,9 @@ import { Redis } from '@upstash/redis';
 // ─────────────────────────────────────────────────────────────────────────────
 // A9 Travel — Live Chat Brain Route
 // 1. MEMORY  : conversation history per session, stored in Upstash Redis (a9:chat:<sessionId>)
-// 2. BRAIN   : LLM reply via OpenAI-compatible endpoint (OPENAI_API_KEY / OPENAI_BASE_URL)
-//              or Anthropic (ANTHROPIC_API_KEY). Falls back to keyword bot when no key set.
+// 2. BRAIN   : LLM reply via OpenAI-compatible endpoint (OPENAI_API_KEY / OPENAI_BASE_URL),
+//              Anthropic (ANTHROPIC_API_KEY), or local Ollama (OLLAMA_BASE_URL, e.g. http://localhost:11434/v1).
+//              Falls back to keyword bot when none configured.
 // 3. RESEARCH: optional web search (TAVILY_API_KEY or SERPER_API_KEY) for current info
 // 4. TRAVEL  : live catalog snapshot (tours/hotels/cars/cruises/visas/insurance) injected
 //              into the system prompt so the bot answers from real data.
@@ -93,11 +94,13 @@ async function research(query: string): Promise<string> {
 }
 
 function buildSystemPrompt(phone: string, email: string, catalog: string, researchText: string): string {
-  return `You are "A9 Travel Support", the live chat assistant for A9 Global Travels & Tours, an IATA-accredited travel agency in Myanmar (YGN) operating since 2015.
+  return `You are "Master A9", the AI live chat assistant for A9 Global Travels & Tours, an IATA-accredited travel agency in Myanmar (YGN) operating since 2015.
 
-Your job: help website visitors with travel planning, exactly like a warm, knowledgeable human travel consultant would.
+YOUR IDENTITY:
+- Your name is Master A9. When asked "what is your name" or "who are you", say you are Master A9, the AI travel assistant for A9 Global Travels & Tours.
+- You are a warm, knowledgeable human travel consultant — not a generic chatbot.
 
-How to answer like a human consultant:
+HOW TO ANSWER LIKE A HUMAN CONSULTANT:
 - Read the visitor's message carefully, infer intent (booking, price check, visa question, itinerary help, complaint, general info).
 - Ask ONE clarifying question when details are missing (dates, destination, group size, budget) — do not dump everything at once.
 - Be warm, concise, conversational. Match the visitor's language (Burmese visitors may write in Burmese — reply in Burmese; English in, English out).
@@ -106,6 +109,15 @@ How to answer like a human consultant:
 - If the visitor wants to book or talk to a human, give the phone and email below and offer to connect them.
 - Never invent policies, flights, or visa rules. Use the catalog and research below when relevant; otherwise hand off to a human.
 - Keep answers under ~120 words unless the visitor asks for detail.
+
+TRAVEL KNOWLEDGE GUIDELINES (use this expertise when relevant):
+- A9 operates tours, hotels, cars, cruises, visas, insurance & sky lounge across Myanmar.
+- Top Myanmar destinations: Yangon (Shwedagon Pagoda), Bagan (temple plain), Mandalay, Inle Lake, Ngapali Beach, Golden Rock (Kyaiktiyo), Nay Pyi Taw.
+- Domestic travel: flights (Yangon-Bagan, Yangon-Mandalay, Yangon-Inle/Heho), overnight buses, private cars with drivers, E-bikes in Bagan, boat transfers on Inle.
+- Best time to visit Myanmar: Nov-Feb (cool dry season). Rainy season Jun-Sep. Hot Mar-May.
+- Visa: Myanmar e-visa is available online for tourism (typical stay ~28 days for many nationalities); some nationalities are visa-free or visa-on-arrival — always advise checking with the nearest Myanmar embassy for the visitor's nationality, and offer A9 visa assistance.
+- Flights and entry rules change often — if unsure or the question is about current rules, use the research results below or hand off to a human.
+- Never state a visa fee or rule as guaranteed unless it comes from the research below or the live catalog.
 
 OUR LIVE CATALOG (answer from this when relevant):
 ${catalog || '(catalog unavailable)'}
@@ -117,6 +129,9 @@ Contact: Phone ${phone || '(see contact page)'} | Email ${email || 'info@a9trave
 
 function keywordReply(text: string, phone: string): string {
   const lower = text.toLowerCase();
+  if (lower.includes('your name') || lower.includes('who are you') || lower.includes('what are you') || lower.includes('what is your name')) {
+    return "I'm Master A9, the AI travel assistant for A9 Global Travels & Tours. I can help you plan tours, hotels, visas, cars & more across Myanmar. How can I help?";
+  }
   if (lower.includes('tour') || lower.includes('book')) return KEYWORD_FALLBACK.tour;
   if (lower.includes('hotel')) return KEYWORD_FALLBACK.hotel;
   if (lower.includes('visa')) return KEYWORD_FALLBACK.visa;
@@ -154,9 +169,11 @@ export async function POST(req: NextRequest) {
   // ── 2. BRAIN: try LLM, fall back to keyword bot ──
   const apiKey = process.env.OPENAI_API_KEY;
   const anthropicKey = process.env.ANTHROPIC_API_KEY;
+  const ollamaBase = process.env.OLLAMA_BASE_URL; // e.g. http://localhost:11434/v1 (local Ollama)
+  const ollamaModel = process.env.OLLAMA_MODEL || 'qwen2.5-coder:3b';
   let reply = '';
 
-  if (apiKey || anthropicKey) {
+  if (apiKey || anthropicKey || ollamaBase) {
     try {
       const [catalog, researchText] = await Promise.all([
         fetchCatalog(),
@@ -177,6 +194,32 @@ export async function POST(req: NextRequest) {
         });
         const data = await res.json();
         reply = data?.content?.[0]?.text ?? '';
+      } else if (ollamaBase) {
+        // Local Ollama (OpenAI-compatible /v1) — no real API key needed
+        try {
+          const res = await fetch(ollamaBase.replace(/\/$/, '') + '/chat/completions', {
+            method: 'POST',
+            headers: { 'content-type': 'application/json', authorization: 'Bearer ollama' },
+            body: JSON.stringify({
+              model: ollamaModel,
+              messages: [
+                { role: 'system', content: system },
+                ...merged.slice(-10).map((m: any) => ({ role: m.sender === 'user' ? 'user' : 'assistant', content: m.text })),
+              ],
+              temperature: 0.6,
+              max_tokens: 500,
+            }),
+          });
+          if (!res.ok) {
+            const errText = await res.text();
+            console.error('[chat] ollama error', res.status, errText.slice(0, 200));
+          } else {
+            const data = await res.json();
+            reply = data?.choices?.[0]?.message?.content ?? '';
+          }
+        } catch (e) {
+          console.error('[chat] ollama call error', (e as Error).message);
+        }
       } else {
         const res = await fetch(process.env.OPENAI_BASE_URL || 'https://api.openai.com/v1/chat/completions', {
           method: 'POST',

@@ -24,7 +24,7 @@ function getSessionId(): string {
 const initialMessages: Message[] = [
   {
     id: 1,
-    text: "Welcome to A9 Global Travel & Tours! How may we assist you today?",
+    text: "Welcome! I'm Master A9, your AI travel assistant from A9 Global Travel & Tours. How may I help you plan your trip today?",
     sender: 'agent',
     time: '',
   },
@@ -155,10 +155,10 @@ export default function LiveChatWidget() {
               </svg>
               <div>
                 <div style={{ fontWeight: 700, fontSize: 14, display: 'flex', alignItems: 'center', gap: 6 }}>
-                  A9 Travel Support
+                  Master A9
                   <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#22c55e', display: 'inline-block' }} />
                 </div>
-                <div style={{ fontSize: 11, opacity: 0.7, color: '#D4AF37' }}>24/7 Live Chat • Online now</div>
+                <div style={{ fontSize: 11, opacity: 0.7, color: '#D4AF37' }}>AI Travel Assistant • Online now</div>
               </div>
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
