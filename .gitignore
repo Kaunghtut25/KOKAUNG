@@ -9,3 +9,6 @@
 .netlify
 .vercel
 .env*
+
+# local Ollama gate secret (never commit)
+scripts/ollama-gate-secret.txt
