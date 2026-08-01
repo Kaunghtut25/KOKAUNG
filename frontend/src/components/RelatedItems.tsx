@@ -20,9 +20,13 @@ const CROSS_SECTIONS: RelatedSection[] = [
   { key: 'cars', label: 'Cars', apiPath: '/api/cars', linkPrefix: '/cars', nameField: 'name', imageField: 'image', priceField: 'priceMMK', matchField: 'location' },
   { key: 'visas', label: 'Visas', apiPath: '/api/visas', linkPrefix: '/visas', nameField: 'country', imageField: 'image', priceField: 'visaFeeMMK', matchField: 'country' },
   { key: 'cruises', label: 'Cruises', apiPath: '/api/cruises', linkPrefix: '/cruises', nameField: 'name', imageField: 'image', priceField: 'priceMMK', matchField: 'destination' },
-  { key: 'insurance', label: 'Insurance', apiPath: '/api/insurance', linkPrefix: '/insurance', nameField: 'name', imageField: 'image', priceField: 'priceMMK', matchField: 'destination' },
+  { key: 'insurance', label: 'Insurance', apiPath: '/api/insurance', linkPrefix: '/insurance', nameField: 'planName', imageField: 'image', priceField: 'priceMMK', matchField: 'destination' },
   { key: 'mingalar', label: 'Sky Lounge', apiPath: '/api/mingalar', linkPrefix: '/mingalar', nameField: 'title', imageField: 'image', priceField: 'priceMMK', matchField: 'location' },
 ];
+
+function slugify(v: any): string {
+  return String(v || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+}
 
 function matchesDestination(item: any, matchField: string, destination: string, country: string): boolean {
   if (!destination && !country) return false;
@@ -104,11 +108,11 @@ export default function RelatedItems({ section, excludeSlug, destination, countr
           <h2 style={{ fontFamily: "'Playfair Display',serif", fontSize: 22, color: '#0A1628', marginBottom: 16 }}>You May Also Like</h2>
           <ScrollingRow containerWidth={RELATED_CONTAINER_WIDTH}>
             {(items ?? []).map((item, i) => (
-              <a key={i} href={`/${section}/${item.slug}`} className="flex-shrink-0 snap-start" style={{ width: RELATED_CARD_WIDTH, textDecoration: 'none' }}>
+              <a key={i} href={`/${section}/${item.slug || slugify(item.name || item.title || item.planName) || item._id || item.id}`} className="flex-shrink-0 snap-start" style={{ width: RELATED_CARD_WIDTH, textDecoration: 'none' }}>
                 <div style={{ borderRadius: 12, overflow: 'hidden', border: '1px solid #eee' }}>
-                  <img src={item.image || item.displayImage || `/images_v2/hero-${section}-v2.jpg`} alt={item.name || item.title} style={{ width: '100%', height: 120, objectFit: 'cover' }} />
+                  <img src={item.image || item.displayImage || (Array.isArray(item.images) ? item.images[0] : (typeof item.images === "string" ? item.images : "")) || `/images_v2/hero-${section}-v2.jpg`} alt={item.name || item.title} style={{ width: '100%', height: 120, objectFit: 'cover' }} />
                   <div style={{ padding: 10 }}>
-                    <div style={{ fontSize: 13, fontWeight: 600, color: '#0A1628', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{item.name || item.title || item.country}</div>
+                    <div style={{ fontSize: 13, fontWeight: 600, color: '#0A1628', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{item.name || item.title || item.planName || item.country}</div>
                     <div style={{ fontSize: 12, color: '#D4AF37', fontWeight: 600, marginTop: 4 }}>{item.priceMMK ? 'Ks ' + item.priceMMK.toLocaleString() : item.priceUSD ? '$' + item.priceUSD : item.visaFeeMMK ? 'Ks ' + item.visaFeeMMK.toLocaleString() : ''}</div>
                   </div>
                 </div>
@@ -126,7 +130,7 @@ export default function RelatedItems({ section, excludeSlug, destination, countr
           </h3>
           <ScrollingRow containerWidth={RELATED_CONTAINER_WIDTH}>
             {sItems.map((item, i) => (
-              <a key={i} href={`${s.linkPrefix}/${item.slug || item._id || item.id}`} className="flex-shrink-0 snap-start" style={{ width: 180, textDecoration: 'none' }}>
+              <a key={i} href={`${s.linkPrefix}/${item.slug || slugify(item[s.nameField] || item.name || item.title || item.planName) || item._id || item.id}`} className="flex-shrink-0 snap-start" style={{ width: 180, textDecoration: 'none' }}>
                 <div style={{ borderRadius: 12, overflow: 'hidden', border: '1px solid #eee', background: 'white' }}>
                   <img src={item[s.imageField] || item.image || item.displayImage || `/images_v2/hero-${s.key}-v2.jpg`} alt={item[s.nameField] || ''} style={{ width: '100%', height: 110, objectFit: 'cover' }} />
                   <div style={{ padding: 8 }}>
