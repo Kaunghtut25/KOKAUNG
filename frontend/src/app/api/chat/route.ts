@@ -141,13 +141,14 @@ export async function POST(req: NextRequest) {
   if (redis) {
     try {
       const raw = await redis.get('a9:chat:' + sid);
-      console.error('[chat] memory read key=' + sid + ' rawType=' + typeof raw + ' rawLen=' + (raw ? String(raw).length : 0));
-      if (raw) { try { const parsed = JSON.parse(raw); if (Array.isArray(parsed)) history = parsed; } catch (e) { console.error('[chat] memory parse fail', (e as Error).message); } }
+      // NOTE: @upstash/redis v1.38 auto-deserializes JSON on get — raw is already an object/array.
+      const parsed = typeof raw === 'string' ? JSON.parse(raw) : raw;
+      if (Array.isArray(parsed)) history = parsed;
     } catch {}
   }
   const merged = [...history, ...messages].slice(-MAX_HISTORY);
   if (redis) {
-    try { await redis.set('a9:chat:' + sid, JSON.stringify(merged), { ex: MEMORY_TTL_SECONDS }); console.error('[chat] memory wrote len=' + merged.length); } catch (e) { console.error('[chat] memory write FAIL', (e as Error).message); }
+    try { await redis.set('a9:chat:' + sid, merged, { ex: MEMORY_TTL_SECONDS }); } catch (e) { console.error('[chat] memory write FAIL', (e as Error).message); }
   }
 
   // ── 2. BRAIN: try LLM, fall back to keyword bot ──
