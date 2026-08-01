@@ -29,6 +29,7 @@ interface SiteConfig {
   heroSlides: HeroSlide[]; heroHeightMobile: number; heroHeightDesktop: number;
   serviceIcons: ServiceIcon[]; navLinks: NavLink[];
   statsCards: StatsCard[]; whyChooseCards: WhyCard[];
+  whyChooseTitle?: string; whyChooseTagline?: string; whyChooseCardWidth?: number;
   popularDestinations: PopularDestination[];
   testimonials: Testimonial[]; partners: string[];
   ctaTitle: string; ctaDescription: string; ctaButtonLabel: string; ctaButtonHref: string; ctaImage?: string; ctaImage?: string;
@@ -84,6 +85,7 @@ const defaultCfg: SiteConfig = {
   privacy: defaultPrivacy,
   heroSlides: [{ image: "", label: "", title: "", subtitle: "", titleFont: "'Playfair Display', Georgia, serif", titleSize: "4rem", subtitleSize: "1.2rem", labelFont: "inherit", labelSize: "0.75rem" }], heroHeightMobile: 500, heroHeightDesktop: 680,
   serviceIcons: [], navLinks: [], statsCards: [], whyChooseCards: [], popularDestinations: [],
+  whyChooseTitle: "Why Choose A9 Global Travel?", whyChooseTagline: "Your trusted travel partner in Myanmar since 2015", whyChooseCardWidth: 280,
   testimonials: [
     { name: "John Smith", country: "Australia", tour: "Bagan Explorer", text: "Amazing experience! The hot air balloon ride was breathtaking. Professional team from start to finish.", rating: 5 },
     { name: "Sarah Chen", country: "Singapore", tour: "Inle Lake Discovery", text: "Beautiful lake, friendly people. A9 made everything seamless. Highly recommend!", rating: 5 },
@@ -607,7 +609,15 @@ const tabs: { key: Tab; label: string }[] = [
           {tab === "why" && (
             <div className="space-y-4">
               <h2 className="text-lg font-bold text-white">Why Choose Us Cards</h2>
-              <p className="text-sm text-white/40">Edit every card — icon, title, description, and image. Deleting the phone at Admin now removes it from the website footer and contact page too.</p>
+              <p className="text-sm text-white/40">Edit the section title, tagline, card size, and every card (icon/title/description/image). Changes appear on the homepage instantly after Save.</p>
+              <div className="border border-white/10 bg-white/5 text-white rounded-lg p-4 space-y-3">
+                <h3 className="text-sm font-semibold text-[#D4AF37] mb-3">Section Header</h3>
+                <div className="grid grid-cols-3 gap-3">
+                  <div><label className={labelCls}>Section Title</label><input className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} placeholder="Why Choose A9 Global Travel?" value={cfg.whyChooseTitle || ""} onChange={e => set("whyChooseTitle", e.target.value)} /></div>
+                  <div className="col-span-2"><label className={labelCls}>Tagline</label><input className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} placeholder="Your trusted travel partner in Myanmar since 2015" value={cfg.whyChooseTagline || ""} onChange={e => set("whyChooseTagline", e.target.value)} /></div>
+                </div>
+                <div><label className={labelCls}>Card Width (px — bigger = fewer cards per row)</label><input type="number" min={200} max={600} className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} placeholder="280" value={cfg.whyChooseCardWidth || 280} onChange={e => set("whyChooseCardWidth", parseInt(e.target.value) || 280)} /></div>
+              </div>
               {cfg.whyChooseCards.map((w, i) => (
                 <div key={i} className="border border-white/10 bg-white/5 text-white rounded-lg p-4 space-y-3">
                   <div className="flex justify-between"><h3 className="font-medium">Card {i + 1}</h3><button onClick={() => set("whyChooseCards", cfg.whyChooseCards.filter((_, idx) => idx !== i))} className="text-red-400 text-sm">Delete</button></div>
