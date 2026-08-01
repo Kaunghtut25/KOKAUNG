@@ -168,8 +168,8 @@ export default function CruisesClient({ initialCruises, siteConfig }: { initialC
         <div className={`grid grid-cols-${layout.mobile} md:grid-cols-${layout.tablet} lg:grid-cols-${layout.desktop} gap-6`}>
           {cruises.map((cruise) => {
             const displayPrice = currency === 'USD'
-              ? '$' + cruise.priceUSD.toLocaleString()
-              : 'Ks ' + cruise.priceMMK.toLocaleString();
+              ? '$' + Number(cruise.priceUSD || 0).toLocaleString()
+              : 'Ks ' + Number(cruise.priceMMK || 0).toLocaleString();
             return (
               <div key={cruise.id} onClick={() => router.push("/cruises/" + (cruise.id || cruise._id || cruise.slug))} className="bg-white rounded-2xl border border-gray-200 overflow-hidden hover:shadow-xl hover:border-[#D4AF37]/40 transition-all group cursor-pointer">
                 <div className="relative overflow-hidden" style={{ height: (siteConfig?.cardDimensions?.cruises?.height) || 192 }}>
@@ -188,7 +188,7 @@ export default function CruisesClient({ initialCruises, siteConfig }: { initialC
                   <p className="text-gray-500 text-sm mb-2">{cruise.destination}</p>
                   <p className="text-gray-600 text-sm line-clamp-2 mb-4">{cruise.description}</p>
                   <div className="flex flex-wrap gap-1 mb-4">
-                    {cruise.amenities?.split(',').slice(0, 3).map((a, i) => (
+                    {(typeof cruise.amenities === 'string' && cruise.amenities.trim() ? cruise.amenities.split(',') : []).slice(0, 3).map((a, i) => (
                       <span key={i} className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full">{a.trim()}</span>
                     ))}
                   </div>
