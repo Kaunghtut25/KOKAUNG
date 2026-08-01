@@ -321,6 +321,8 @@ export default function HomePageClient({ siteConfig: ssrConfig }: { siteConfig?:
   const [clientType, setClientType] = useState<'local' | 'foreigner'>('local');
   const ctaBg = ssrConfig?.ctaImage || ssrConfig?.heroImages?.bookNow || ssrConfig?.heroImages?.flights || '/images_v2/cta-bg-v2.jpg';
   const [ctaBgImage, setCtaBgImage] = useState(ctaBg);
+  // v78: remember whether a real CTA image exists — legacy settings store must NOT overwrite it
+  const ctaImageRef = useRef(ssrConfig?.ctaImage || "");
   const { mode: searchMode, setMode: setSearchMode } = useSearchMode();
   const [busFrom, setBusFrom] = useState("");
   const [busTo, setBusTo] = useState("");
@@ -333,9 +335,11 @@ export default function HomePageClient({ siteConfig: ssrConfig }: { siteConfig?:
   useEffect(() => {
     fetch('/api/admin/site-config').then(r=>r.json()).then(d=>{
       if (d && d.heroSlides) setSiteConfig(d);
+      if (d?.ctaImage) { ctaImageRef.current = d.ctaImage; setCtaBgImage(d.ctaImage); }
     }).catch(()=>{});
     fetch('/api/admin/settings').then(r=>r.json()).then(d=>{
-      if (d?.heroImages?.flights) setCtaBgImage(d.heroImages.flights);
+      // v78 fix: only use legacy flights hero as CTA bg when NO ctaImage is configured
+      if (d?.heroImages?.flights && !ctaImageRef.current) setCtaBgImage(d.heroImages.flights);
     }).catch(()=>{});
   }, []);
 
