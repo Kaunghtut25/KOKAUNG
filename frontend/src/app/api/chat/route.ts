@@ -199,7 +199,7 @@ export async function POST(req: NextRequest) {
         try {
           const res = await fetch(ollamaBase.replace(/\/$/, '') + '/chat/completions', {
             method: 'POST',
-            headers: { 'content-type': 'application/json', authorization: 'Bearer ollama' },
+            headers: { 'content-type': 'application/json', authorization: 'Bearer ' + (process.env.OLLAMA_API_KEY || 'ollama') },
             body: JSON.stringify({
               model: ollamaModel,
               messages: [
