@@ -59,9 +59,12 @@ export default function Footer() {
   const email = config?.contact?.email || "";
   const address = config?.contact?.address || "No-18, Ground Floor, Zayya Waddy Street, Baho Road, Sanchaung Tsp, Yangon, Myanmar";
   const workingHours = config?.contact?.workingHours || "Mon-Sat: 9:00 AM - 6:00 PM";
-  const fbLink = config?.socialLinks?.facebook || "https://facebook.com";
-  const igLink = config?.socialLinks?.instagram || "https://instagram.com";
-  const tgLink = config?.socialLinks?.telegram || "https://t.me";
+  const socialArr = Array.isArray(config?.socialLinks) ? config.socialLinks : Object.values((config?.socialLinks as any) || {});
+  const socialMap: Record<string, string> = {};
+  socialArr.forEach((s: any) => { if (s && s.platform) socialMap[String(s.platform).toLowerCase()] = s.url; });
+  const fbLink = socialMap.facebook || (config?.socialLinks as any)?.facebook || "https://facebook.com";
+  const igLink = socialMap.instagram || (config?.socialLinks as any)?.instagram || "https://instagram.com";
+  const tgLink = socialMap.telegram || (config?.socialLinks as any)?.telegram || "https://t.me";
 
   return (
     <footer className="bg-[#0a0e1a] border-t border-[#D4AF37]/20">

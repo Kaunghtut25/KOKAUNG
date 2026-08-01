@@ -181,6 +181,7 @@ const defaultConfig = {
   ctaDescription: "Let us help you plan the trip of a lifetime. Our team is ready to create a custom itinerary just for you.",
   ctaButtonLabel: "Book Now",
   ctaButtonHref: "/book-now",
+  ctaImage: "",
 
   // Contact Info
   contact: {

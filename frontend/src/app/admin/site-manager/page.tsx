@@ -6,7 +6,7 @@ interface HeroSlide { image: string; label: string; title: string; subtitle: str
 interface ServiceIcon { label: string; icon: string; href: string; enabled: boolean; }
 interface NavLink { label: string; href: string; }
 interface StatsCard { icon: string; title: string; description: string; imgSrc: string; }
-interface WhyCard { icon: string; title: string; description: string; }
+interface WhyCard { icon: string; title: string; description: string; image?: string; }
 interface Testimonial { name: string; country: string; tour: string; text: string; rating: number; image?: string; }
 interface PopularDestination { city: string; country: string; image: string; minPrice: string; }
 interface ContactInfo { email: string; phone: string; address: string; whatsapp: string; messenger: string; viber: string; telegram: string; }
@@ -31,7 +31,7 @@ interface SiteConfig {
   statsCards: StatsCard[]; whyChooseCards: WhyCard[];
   popularDestinations: PopularDestination[];
   testimonials: Testimonial[]; partners: string[];
-  ctaTitle: string; ctaDescription: string; ctaButtonLabel: string; ctaButtonHref: string;
+  ctaTitle: string; ctaDescription: string; ctaButtonLabel: string; ctaButtonHref: string; ctaImage?: string; ctaImage?: string;
   contact: ContactInfo; socialLinks: SocialLink[]; footerSections: FooterSection[];
   socialFeed?: { enabled: boolean; instagram: string; photos: string[] };
   sectionLayouts?: Record<string, SectionLayout>;
@@ -93,9 +93,13 @@ const defaultCfg: SiteConfig = {
     "Shangri-La", "Sedona Hotel", "Sule Palace", "Melia Hotel",
     "Myanmar Airways", "Thai Airways", "Singapore Airlines", "Emirates",
   ],
-  ctaTitle: "", ctaDescription: "", ctaButtonLabel: "Book Now", ctaButtonHref: "/book-now",
+  ctaTitle: "", ctaDescription: "", ctaButtonLabel: "Book Now", ctaButtonHref: "/book-now", ctaImage: "", ctaImage: "",
   contact: { email: "", phone: "", address: "", whatsapp: "", messenger: "", viber: "", telegram: "" },
-  socialLinks: [], footerSections: [],
+  socialLinks: [
+    { platform: "facebook", url: "https://facebook.com/a9global" },
+    { platform: "instagram", url: "https://instagram.com/a9global" },
+    { platform: "telegram", url: "https://t.me/a9globaltravel" },
+  ], footerSections: [],
   socialFeed: { enabled: true, instagram: "https://instagram.com/a9global", photos: [] },
   sectionLayouts: {
     hotels: { desktop: 4, tablet: 2, mobile: 1 },
@@ -146,10 +150,13 @@ export default function SiteManagerPage() {
   const showToast = (msg: string, type: "success" | "error" = "success") => { setToast({ msg, type }); setTimeout(() => setToast(null), 3500); };
 
   useEffect(() => {
-    fetch(API).then(r => r.json()).then(d => { setCfg({ ...defaultCfg, ...d }); }).catch(() => { }).finally(() => setLoading(false));
+    fetch(API).then(r => r.json()).then(d => {
+      const social = Array.isArray(d.socialLinks) ? d.socialLinks : Object.values(d.socialLinks || {});
+      setCfg({ ...defaultCfg, ...d, socialLinks: social.length ? social : defaultCfg.socialLinks });
+    }).catch(() => { }).finally(() => setLoading(false));
   }, []);
 
-  const uploadFile = async (file: File, field: string, index?: number) => {
+  const uploadFile = async (file: File, field: string, index?: number, valueField: string = "image") => {
     if (!file.type.startsWith("image/")) { setUploadError("Only image files are accepted."); return; }
     setUploading(true); setUploadError("");
     try {
@@ -161,7 +168,7 @@ export default function SiteManagerPage() {
       const url = blob.url;
       if (index !== undefined) {
         const arr = [...(cfg as any)[field]];
-        arr[index] = { ...arr[index], image: url };
+        arr[index] = { ...arr[index], [valueField]: url };
         setCfg(p => ({ ...p, [field]: arr }));
       } else {
         setCfg(p => ({ ...p, [field]: url }));
@@ -192,15 +199,15 @@ export default function SiteManagerPage() {
     } finally { setUploading(false); }
   };
 
-  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>, field: string, index?: number) => {
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>, field: string, index?: number, valueField: string = "image") => {
     const file = e.target.files?.[0]; if (!file) return;
-    await uploadFile(file, field, index);
+    await uploadFile(file, field, index, valueField);
   };
 
-  const handleDrop = (e: React.DragEvent, field: string, index?: number) => {
+  const handleDrop = (e: React.DragEvent, field: string, index?: number, valueField: string = "image") => {
     e.preventDefault();
     const file = e.dataTransfer.files?.[0]; if (!file) return;
-    handleFileChange({ target: { files: [file] } } as any, field, index);
+    handleFileChange({ target: { files: [file] } } as any, field, index, valueField);
   };
 
   const handleSave = async () => {
@@ -215,23 +222,23 @@ export default function SiteManagerPage() {
   const set = <K extends keyof SiteConfig>(k: K, v: SiteConfig[K]) => setCfg(p => ({ ...p, [k]: v }));
 
   // Image upload zone component
-  const ImageZone = ({ field, index, label }: { field: string; index?: number; label: string }) => {
-    const currentVal = index !== undefined ? (cfg as any)[field]?.[index]?.image : (cfg as any)[field];
+  const ImageZone = ({ field, index, label, valueField = "image" }: { field: string; index?: number; label: string; valueField?: string }) => {
+    const currentVal = index !== undefined ? (cfg as any)[field]?.[index]?.[valueField] : (cfg as any)[field];
     return (
       <div className="mb-3">
         <label className="block text-sm font-medium text-white/70 mb-1">{label}</label>
         <div
-          onDrop={(e) => handleDrop(e, field, index)}
+          onDrop={(e) => handleDrop(e, field, index, valueField)}
           onDragOver={(e) => e.preventDefault()}
           className="border-2 border-dashed border-white/20 rounded-lg p-4 text-center cursor-pointer hover:border-[#D4AF37] transition-colors"
-          onClick={() => fileInputRefs.current[`${field}_${index ?? ''}`]?.click()}
+          onClick={() => fileInputRefs.current[field + "_" + (index ?? "")]?.click()}
         >
           <input
             type="file"
             accept="image/*"
             className="hidden"
-            ref={(el) => { fileInputRefs.current[`${field}_${index ?? ''}`] = el; }}
-            onChange={(e) => handleFileChange(e, field, index)}
+            ref={(el) => { fileInputRefs.current[field + "_" + (index ?? "")] = el; }}
+            onChange={(e) => handleFileChange(e, field, index, valueField)}
           />
           {currentVal ? (
             <img src={currentVal} alt="Preview" className="mx-auto mt-2 w-full h-28 object-cover rounded" />
@@ -251,7 +258,7 @@ export default function SiteManagerPage() {
             setImageUrlInput(e.target.value);
             if (index !== undefined) {
               const arr = [...(cfg as any)[field]];
-              arr[index] = { ...arr[index], image: e.target.value };
+              arr[index] = { ...arr[index], [valueField]: e.target.value };
               setCfg(p => ({ ...p, [field]: arr }));
             } else {
               setCfg(p => ({ ...p, [field]: e.target.value }));
@@ -261,6 +268,7 @@ export default function SiteManagerPage() {
       </div>
     );
   };
+
 
   if (loading) return <div className="flex items-center justify-center h-96"><div className="animate-spin w-10 h-10 border-2 border-[#D4AF37] border-t-transparent rounded-full" /></div>;
 
@@ -572,7 +580,7 @@ const tabs: { key: Tab; label: string }[] = [
                   <div className="grid grid-cols-3 gap-3">
                     <input className={`inputCls inputCls`} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} placeholder="Icon" value={s.icon} onChange={e => { const a = [...cfg.statsCards]; a[i] = { ...s, icon: e.target.value }; set("statsCards", a); }} />
                   </div>
-                  <ImageZone field="statsCards" index={i} label="Card Image" />
+                  <ImageZone field="statsCards" index={i} label="Card Image" valueField="imgSrc" />
                 </div>
               ))}
               <button onClick={() => set("statsCards", [...cfg.statsCards, { icon: "", title: "", description: "", imgSrc: "" }])} className="px-4 py-2 bg-white/10 rounded-lg text-sm">+ Add</button>
@@ -582,13 +590,19 @@ const tabs: { key: Tab; label: string }[] = [
           {tab === "why" && (
             <div className="space-y-4">
               <h2 className="text-lg font-bold text-white">Why Choose Us Cards</h2>
+              <p className="text-sm text-white/40">Edit every card — icon, title, description, and image. Deleting the phone at Admin now removes it from the website footer and contact page too.</p>
               {cfg.whyChooseCards.map((w, i) => (
-                <div key={i} className="border border-white/10 bg-white/5 text-white rounded-lg p-3 grid grid-cols-3 gap-3">
-                  <input className={`inputCls inputCls`} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} placeholder="Icon" value={w.icon} onChange={e => { const a = [...cfg.whyChooseCards]; a[i] = { ...w, icon: e.target.value }; set("whyChooseCards", a); }} />
-                  <button onClick={() => set("whyChooseCards", cfg.whyChooseCards.filter((_, idx) => idx !== i))} className="text-red-400 text-sm col-span-3 text-right">Delete</button>
+                <div key={i} className="border border-white/10 bg-white/5 text-white rounded-lg p-4 space-y-3">
+                  <div className="flex justify-between"><h3 className="font-medium">Card {i + 1}</h3><button onClick={() => set("whyChooseCards", cfg.whyChooseCards.filter((_, idx) => idx !== i))} className="text-red-400 text-sm">Delete</button></div>
+                  <div className="grid grid-cols-3 gap-3">
+                    <div><label className={labelCls}>Icon (emoji)</label><input className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} placeholder="🤝" value={w.icon || ""} onChange={e => { const a = [...cfg.whyChooseCards]; a[i] = { ...w, icon: e.target.value }; set("whyChooseCards", a); }} /></div>
+                    <div className="col-span-2"><label className={labelCls}>Title</label><input className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} placeholder="Card title" value={w.title || ""} onChange={e => { const a = [...cfg.whyChooseCards]; a[i] = { ...w, title: e.target.value }; set("whyChooseCards", a); }} /></div>
+                  </div>
+                  <div><label className={labelCls}>Description</label><textarea className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} rows={2} placeholder="Card description" value={w.description || ""} onChange={e => { const a = [...cfg.whyChooseCards]; a[i] = { ...w, description: e.target.value }; set("whyChooseCards", a); }} /></div>
+                  <ImageZone field="whyChooseCards" index={i} label="Card Image (optional — shown above the icon)" />
                 </div>
               ))}
-              <button onClick={() => set("whyChooseCards", [...cfg.whyChooseCards, { icon: "", title: "", description: "" }])} className="px-4 py-2 bg-white/10 rounded-lg text-sm">+ Add</button>
+              <button onClick={() => set("whyChooseCards", [...cfg.whyChooseCards, { icon: "", title: "", description: "", image: "" }])} className="px-4 py-2 bg-white/10 rounded-lg text-sm">+ Add</button>
             </div>
           )}
 
@@ -664,10 +678,14 @@ const tabs: { key: Tab; label: string }[] = [
           {tab === "cta" && (
             <div className="space-y-4">
               <h2 className="text-lg font-bold text-white">Call-to-Action Section</h2>
-              <div><label className={`labelCls labelCls`}>Title</label><input className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} value={cfg.ctaTitle} onChange={e => set("ctaTitle", e.target.value)} /></div>
+              <p className="text-sm text-white/40">Edit the dark "Ready to Start Your Journey?" band on the homepage — title, description, button, and background image.</p>
+              <div><label className={labelCls}>Title</label><input className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} value={cfg.ctaTitle} onChange={e => set("ctaTitle", e.target.value)} /></div>
+              <div><label className={labelCls}>Description</label><textarea className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} rows={2} value={cfg.ctaDescription} onChange={e => set("ctaDescription", e.target.value)} /></div>
               <div className="grid grid-cols-2 gap-3">
-                <div><label className={`labelCls labelCls`}>Button Label</label><input className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} value={cfg.ctaButtonLabel} onChange={e => set("ctaButtonLabel", e.target.value)} /></div>
+                <div><label className={labelCls}>Button Label</label><input className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} value={cfg.ctaButtonLabel} onChange={e => set("ctaButtonLabel", e.target.value)} /></div>
+                <div><label className={labelCls}>Button Link</label><input className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} value={cfg.ctaButtonHref} onChange={e => set("ctaButtonHref", e.target.value)} /></div>
               </div>
+              <ImageZone field="ctaImage" label="Background Image (shown faintly behind the CTA text)" />
             </div>
           )}
 
@@ -728,10 +746,14 @@ const tabs: { key: Tab; label: string }[] = [
           {tab === "social" && (
             <div className="space-y-4">
               <h2 className="text-lg font-bold text-white">Social Media Links</h2>
+              <p className="text-sm text-white/40">These drive the social icons in the website footer. Use lowercase platform names (facebook, instagram, telegram...).</p>
               {cfg.socialLinks.map((s, i) => (
-                <div key={i} className="flex gap-3 items-center">
-                  <input className={`inputCls inputCls`} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} placeholder="Platform (Facebook, Instagram...)" value={s.platform} onChange={e => { const a = [...cfg.socialLinks]; a[i] = { ...s, platform: e.target.value }; set("socialLinks", a); }} />
-                  <button onClick={() => set("socialLinks", cfg.socialLinks.filter((_, idx) => idx !== i))} className="text-red-400 text-sm">Delete</button>
+                <div key={i} className="border border-white/10 bg-white/5 text-white rounded-lg p-3 space-y-2">
+                  <div className="flex items-center gap-2">
+                    <input className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white", width: "30%" }} placeholder="Platform (facebook...)" value={s.platform || ""} onChange={e => { const a = [...cfg.socialLinks]; a[i] = { ...s, platform: e.target.value }; set("socialLinks", a); }} />
+                    <button onClick={() => set("socialLinks", cfg.socialLinks.filter((_, idx) => idx !== i))} className="text-red-400 text-sm ml-auto">Delete</button>
+                  </div>
+                  <input className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} placeholder="URL (https://facebook.com/yourpage)" value={s.url || ""} onChange={e => { const a = [...cfg.socialLinks]; a[i] = { ...s, url: e.target.value }; set("socialLinks", a); }} />
                 </div>
               ))}
               <button onClick={() => set("socialLinks", [...cfg.socialLinks, { platform: "", url: "" }])} className="px-4 py-2 bg-white/10 rounded-lg text-sm">+ Add</button>

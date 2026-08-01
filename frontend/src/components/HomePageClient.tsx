@@ -29,8 +29,8 @@ interface SiteConfig {
   heroHeightMobile: number; heroHeightDesktop: number;
   serviceIcons: { label:string;icon:string;href:string;enabled:boolean }[];
   statsCards: { icon:string;title:string;description:string;imgSrc:string }[];
-  whyChooseCards: { icon:string;title:string;description:string }[];
-  ctaTitle: string; ctaDescription: string; ctaButtonLabel: string; ctaButtonHref: string;
+  whyChooseCards: { icon:string;title:string;description:string;image?:string }[];
+  ctaTitle: string; ctaDescription: string; ctaButtonLabel: string; ctaButtonHref: string; ctaImage?: string;
   footerCopyright: string;
 }
 
@@ -67,10 +67,16 @@ function StatsCard({ icon, title, description, imgSrc }: { icon: string; title: 
   );
 }
 
-function WhyChooseCard({ icon, title, description }: { icon: string; title: string; description: string }) {
+function WhyChooseCard({ icon, title, description, image }: { icon: string; title: string; description: string; image?: string }) {
   return (
     <div className="bg-white rounded-xl p-8 text-center shadow-md hover:shadow-lg hover:-translate-y-1 transition-all duration-300 border border-gray-100">
-      <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-[#FFFDF5] flex items-center justify-center text-[#D4AF37] text-3xl">{icon}</div>
+      {image ? (
+        <div className="w-24 h-24 mx-auto mb-4 rounded-full overflow-hidden bg-[#FFFDF5] border border-gray-100 flex items-center justify-center">
+          <img src={image} alt={title} className="w-full h-full object-cover" loading="lazy" />
+        </div>
+      ) : (
+        <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-[#FFFDF5] flex items-center justify-center text-[#D4AF37] text-3xl">{icon}</div>
+      )}
       <h3 className="text-xl font-bold text-[#0A1628] mb-3">{title}</h3>
       <p className="text-gray-500 leading-relaxed">{description}</p>
     </div>
@@ -313,7 +319,7 @@ export default function HomePageClient({ siteConfig: ssrConfig }: { siteConfig?:
   const [passengers, setPassengers] = useState<PassengerCounts>({ adults: 1, children: 0, infants: 0 });
   const [travelClass, setTravelClass] = useState("Economy");
   const [clientType, setClientType] = useState<'local' | 'foreigner'>('local');
-  const ctaBg = ssrConfig?.heroImages?.bookNow || ssrConfig?.heroImages?.flights || '/images_v2/cta-bg-v2.jpg';
+  const ctaBg = ssrConfig?.ctaImage || ssrConfig?.heroImages?.bookNow || ssrConfig?.heroImages?.flights || '/images_v2/cta-bg-v2.jpg';
   const [ctaBgImage, setCtaBgImage] = useState(ctaBg);
   const { mode: searchMode, setMode: setSearchMode } = useSearchMode();
   const [busFrom, setBusFrom] = useState("");
