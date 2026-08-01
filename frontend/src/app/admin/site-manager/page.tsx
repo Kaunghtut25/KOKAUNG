@@ -751,7 +751,6 @@ const tabs: { key: Tab; label: string }[] = [
   }
 }} className="text-xs text-[#D4AF37] hover:text-[#C19B2F] border border-[#D4AF37]/30 rounded px-3 py-1.5 hover:bg-[#D4AF37]/10 transition-colors">+ Add Department Phone</button>
             </div>
-              </div>
             <ImageZone field="logoUrl" label="Site Logo" />
             </div>
           )}
