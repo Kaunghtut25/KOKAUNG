@@ -10,7 +10,9 @@ const credsConfigured = Boolean(ADMIN_EMAIL && ADMIN_PASSWORD);
 
 // ── Rate limiting (Upstash Redis when available; in-memory fallback) ──
 const WINDOW_MS = 15 * 60 * 1000; // 15 minutes
-const MAX_ATTEMPTS = 10;
+const MAX_ATTEMPTS = 50; // counts FAILED attempts only; generous enough that a
+// legit admin behind a shared NAT/WARP egress is never locked out, while still
+// blocking brute force (3.3 tries/min max). Successful login resets the bucket.
 
 let redisClient: any = null;
 function getRedis(): any {
@@ -36,16 +38,39 @@ function clientIp(request: NextRequest): string {
   return request.headers.get("x-real-ip") || "unknown";
 }
 
+function bucketKey(ip: string): string {
+  return "a9:rl:login:" + ip;
+}
+
+// Peek at current failure count WITHOUT incrementing, so a successful login
+// never extends a stale window. Returns true when the IP is over the limit.
 async function isRateLimited(ip: string): Promise<boolean> {
-  const key = "a9:rl:login:" + ip;
+  const key = bucketKey(ip);
   const redis = getRedis();
   if (redis) {
     try {
-      const [count] = await redis.pipeline()
+      const count = await redis.get<number>(key);
+      return (count || 0) > MAX_ATTEMPTS;
+    } catch {
+      // fall through to memory
+    }
+  }
+  const bucket = memoryBuckets.get(key);
+  if (!bucket || bucket.resetAt < Date.now()) return false;
+  return bucket.count > MAX_ATTEMPTS;
+}
+
+// Called ONLY after a failed credential check (401 path).
+async function recordFailure(ip: string): Promise<void> {
+  const key = bucketKey(ip);
+  const redis = getRedis();
+  if (redis) {
+    try {
+      await redis.pipeline()
         .incr(key)
         .expire(key, Math.ceil(WINDOW_MS / 1000))
         .exec();
-      return count > MAX_ATTEMPTS;
+      return;
     } catch {
       // fall through to memory
     }
@@ -54,10 +79,24 @@ async function isRateLimited(ip: string): Promise<boolean> {
   const bucket = memoryBuckets.get(key);
   if (!bucket || bucket.resetAt < now) {
     memoryBuckets.set(key, { count: 1, resetAt: now + WINDOW_MS });
-    return false;
+  } else {
+    bucket.count += 1;
   }
-  bucket.count += 1;
-  return bucket.count > MAX_ATTEMPTS;
+}
+
+// Successful login clears the bucket so a legitimate admin never gets stuck.
+async function resetRateLimit(ip: string): Promise<void> {
+  try {
+    const key = bucketKey(ip);
+    const redis = getRedis();
+    if (redis) {
+      await redis.del(key);
+    } else {
+      memoryBuckets.delete(key);
+    }
+  } catch {
+    // best-effort: never block a successful login
+  }
 }
 
 export async function POST(request: NextRequest) {
@@ -93,8 +132,14 @@ export async function POST(request: NextRequest) {
     }
 
     if (email !== ADMIN_EMAIL || password !== ADMIN_PASSWORD) {
+      // Count this failure toward the window; then reject.
+      await recordFailure(ip);
       return NextResponse.json({ message: "Invalid email or password" }, { status: 401 });
     }
+
+    // Successful login: reset the rate-limit bucket so a legitimate admin
+    // never gets stuck behind an old 429 window.
+    await resetRateLimit(ip);
 
     const user = {
       id: "admin-001",
