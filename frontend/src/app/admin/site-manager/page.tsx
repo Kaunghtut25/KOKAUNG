@@ -32,6 +32,7 @@ interface SiteConfig {
   popularDestinations: PopularDestination[];
   testimonials: Testimonial[]; partners: string[];
   ctaTitle: string; ctaDescription: string; ctaButtonLabel: string; ctaButtonHref: string; ctaImage?: string; ctaImage?: string;
+  dealsBanner?: { enabled: boolean; badge: string; title: string; buttonLabel: string; buttonHref: string; countdownDays: number };
   contact: ContactInfo; socialLinks: SocialLink[]; footerSections: FooterSection[];
   socialFeed?: { enabled: boolean; instagram: string; photos: string[] };
   sectionLayouts?: Record<string, SectionLayout>;
@@ -94,6 +95,7 @@ const defaultCfg: SiteConfig = {
     "Myanmar Airways", "Thai Airways", "Singapore Airlines", "Emirates",
   ],
   ctaTitle: "", ctaDescription: "", ctaButtonLabel: "Book Now", ctaButtonHref: "/book-now", ctaImage: "", ctaImage: "",
+  dealsBanner: { enabled: true, badge: "⏰ LIMITED TIME OFFER", title: "30% OFF Bagan Explorer Tour", buttonLabel: "Book Now", buttonHref: "/book-now", countdownDays: 30 },
   contact: { email: "", phone: "", address: "", whatsapp: "", messenger: "", viber: "", telegram: "" },
   socialLinks: [
     { platform: "facebook", url: "https://facebook.com/a9global" },
@@ -134,7 +136,7 @@ const defaultCfg: SiteConfig = {
   },
 };
 
-type Tab = "layout" | "rows" | "faq" | "terms" | "privacy" | "hero" | "heroImages" | "services" | "nav" | "stats" | "why" | "destinations" | "cta" | "contact" | "social" | "socialFeed" | "footer" | "meta" | "testimonials" | "partners" | "heroText" | "cardDims" | "moduleToggles" | "relatedItems";
+type Tab = "layout" | "rows" | "faq" | "terms" | "privacy" | "hero" | "heroImages" | "services" | "nav" | "stats" | "why" | "destinations" | "cta" | "contact" | "social" | "socialFeed" | "footer" | "meta" | "testimonials" | "partners" | "heroText" | "cardDims" | "moduleToggles" | "relatedItems" | "deals";
 
 export default function SiteManagerPage() {
   const [cfg, setCfg] = useState(defaultCfg);
@@ -308,7 +310,7 @@ const tabs: { key: Tab; label: string }[] = [
     { key: "relatedItems", label: "You May Also Like" }, { key: "services", label: "Service Icons" },
     { key: "nav", label: "Nav Links" }, { key: "stats", label: "Stats Cards" },
     { key: "why", label: "Why Choose Us" }, { key: "destinations", label: "Destinations" },
-    { key: "cta", label: "CTA Section" }, { key: "contact", label: "Contact Info" },
+    { key: "cta", label: "CTA Section" }, { key: "deals", label: "Deals Banner" }, { key: "contact", label: "Contact Info" },
     { key: "social", label: "Social Links" }, { key: "socialFeed", label: "Social Feed" }, { key: "footer", label: "Footer" },
     { key: "meta", label: "Meta & SEO" },
     { key: "testimonials", label: "Testimonials" },
@@ -687,6 +689,21 @@ const tabs: { key: Tab; label: string }[] = [
                 </div>
               ))}
               <button onClick={() => set("popularDestinations", [...cfg.popularDestinations, { city: "", country: "", image: "", minPrice: "" }])} className="px-4 py-2 bg-white/10 rounded-lg text-sm">+ Add</button>
+            </div>
+          )}
+
+          {tab === "deals" && (
+            <div className="space-y-4">
+              <h2 className="text-lg font-bold text-white">Deals Banner (Countdown)</h2>
+              <p className="text-sm text-white/40">Controls the dark "LIMITED TIME OFFER" countdown bar on the homepage and all service pages. Turn it off to hide it completely.</p>
+              <div><label className={labelCls}>Show Banner</label><label className="flex items-center gap-2 text-sm text-white/70"><input type="checkbox" checked={!!(cfg.dealsBanner && cfg.dealsBanner.enabled)} onChange={e => set("dealsBanner", { ...(cfg.dealsBanner || { enabled: true, badge: "", title: "", buttonLabel: "Book Now", buttonHref: "/book-now", countdownDays: 30 }), enabled: e.target.checked })} /> Enabled</label></div>
+              <div><label className={labelCls}>Badge Text</label><input className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} value={(cfg.dealsBanner && cfg.dealsBanner.badge) || ""} onChange={e => set("dealsBanner", { ...(cfg.dealsBanner || {}), badge: e.target.value })} /></div>
+              <div><label className={labelCls}>Title</label><input className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} placeholder="30% OFF Bagan Explorer Tour" value={(cfg.dealsBanner && cfg.dealsBanner.title) || ""} onChange={e => set("dealsBanner", { ...(cfg.dealsBanner || {}), title: e.target.value })} /></div>
+              <div className="grid grid-cols-2 gap-3">
+                <div><label className={labelCls}>Button Label</label><input className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} value={(cfg.dealsBanner && cfg.dealsBanner.buttonLabel) || ""} onChange={e => set("dealsBanner", { ...(cfg.dealsBanner || {}), buttonLabel: e.target.value })} /></div>
+                <div><label className={labelCls}>Button Link</label><input className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} value={(cfg.dealsBanner && cfg.dealsBanner.buttonHref) || ""} onChange={e => set("dealsBanner", { ...(cfg.dealsBanner || {}), buttonHref: e.target.value })} /></div>
+              </div>
+              <div><label className={labelCls}>Countdown Days</label><input className={inputCls} type="number" min={1} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} value={(cfg.dealsBanner && cfg.dealsBanner.countdownDays) || 30} onChange={e => set("dealsBanner", { ...(cfg.dealsBanner || {}), countdownDays: parseInt(e.target.value) || 30 })} /></div>
             </div>
           )}
 
