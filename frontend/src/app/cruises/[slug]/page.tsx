@@ -36,7 +36,30 @@ function CruiseDetailClient({ cruise, slug }: CruiseDetailPageProps) {
   const [travelDate, setTravelDate] = useState('');
 
   const name = cruise.title || cruise.name || '';
-  const displayImage = (cruise.images && Array.isArray(cruise.images) && cruise.images[0]) || '/images_v2/hero-cruises-v2.jpg';
+  // Per-cruise hero image resolution:
+  // 1. cruise.image (single image field)
+  // 2. cruise.images[0] (gallery array)
+  // 3. CRUISE_HERO_IMAGES[title] (real uploaded cruise photos)
+  // 4. generic fallback
+  const CRUISE_HERO_IMAGES: Record<string, string> = {
+    'Dubai Marina Dhow Cruise': 'https://vydupdjfr38dxlzx.public.blob.vercel-storage.com/uploads/img_1784609375257_o1rs8j-dubai-marina-cruise-BgrMHFrRlMaplw4wKa6mhDfiJCZocL.jpg',
+    'Maldives Overwater Cruise': 'https://vydupdjfr38dxlzx.public.blob.vercel-storage.com/uploads/img_1784609373849_qqocr6-maldives-atoll-cruise-4G5XO1nb7DSkWAqaEf6UzHzUKoVh83.jpg',
+    'Phuket Island Hopper': 'https://vydupdjfr38dxlzx.public.blob.vercel-storage.com/uploads/img_1784609371185_a6d9cm-andaman-sea-cruise-DGrdWrFm1Bd4Gn84CJ4GX6gu1raCvL.jpg',
+    'Yangon River Sunset Cruise': 'https://vydupdjfr38dxlzx.public.blob.vercel-storage.com/uploads/img_1784609382352_ryle8t-myanmar-irrawaddy-cruise-Am9kKNeh5003TOiSveDXzysyPqIdgm.jpg',
+    'Caribbean Explorer': 'https://vydupdjfr38dxlzx.public.blob.vercel-storage.com/uploads/img_1784609379660_ztdt36-greek-isles-cruise-2yVStBJzJwAPF3wplYiL95N9MKL5L7.jpg',
+    'Halong Bay Cruise': 'https://vydupdjfr38dxlzx.public.blob.vercel-storage.com/uploads/img_1784609368332_ogdvxh-halong-bay-cruise-DN02hErUVjbA7g5tYyF78PqpvBiLtu.jpg',
+    'Mekong River Cruise': 'https://vydupdjfr38dxlzx.public.blob.vercel-storage.com/uploads/img_1784609369635_4qqbgm-mekong-river-cruise-TFX7rfdQd2KizGqwlEVQPbJGlF28Yq.jpg',
+    'Singapore Strait Cruise': 'https://vydupdjfr38dxlzx.public.blob.vercel-storage.com/uploads/img_1784609372628_tayqki-singapore-strait-cruise-miIWaEO9qvinGxDZs9H2Yc7blMPxEt.jpg',
+    'Alaska Glacier Cruise': 'https://vydupdjfr38dxlzx.public.blob.vercel-storage.com/uploads/img_1784609376675_4c233e-alaska-glacier-cruise-OtRwzKuRPnoga7apeB9VGEwvllAvYQ.jpg',
+    'Norwegian Fjords Cruise': 'https://vydupdjfr38dxlzx.public.blob.vercel-storage.com/uploads/img_1784609378262_5q6ygv-norwegian-fjords-cruise-j7xFcN4bQ5WnVlHq59E00Y6yaKQV3I.jpg',
+    'Greek Isles Cruise': 'https://vydupdjfr38dxlzx.public.blob.vercel-storage.com/uploads/img_1784609379660_ztdt36-greek-isles-cruise-2yVStBJzJwAPF3wplYiL95N9MKL5L7.jpg',
+    'Antarctic Expedition': 'https://vydupdjfr38dxlzx.public.blob.vercel-storage.com/uploads/img_1784609380925_9n0iah-antarctic-expedition-3AUnTFu9jcZMpIpkvoQbENDoxuKeqh.jpg',
+  };
+  const displayImage =
+    cruise.image ||
+    (cruise.images && Array.isArray(cruise.images) && cruise.images[0]) ||
+    CRUISE_HERO_IMAGES[name] ||
+    '/images_v2/hero-cruises-v2.jpg';
   const priceMMK = cruise.priceMMK || 0;
   const priceUSD = cruise.priceUSD || 0;
   const dest = cruise.destination || '';
