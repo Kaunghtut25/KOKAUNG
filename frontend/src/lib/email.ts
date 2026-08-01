@@ -2,6 +2,9 @@ import { Resend } from "resend";
 
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL || "dadkaunghtut@gmail.com";
 const FROM_EMAIL = process.env.FROM_EMAIL || "bookings@a9travel.com";
+// Public contact info shown to customers in confirmation emails (admin-editable via env / site-config)
+const CONTACT_PHONE = process.env.CONTACT_PHONE || "959 781 617 111";
+const CONTACT_EMAIL = process.env.CONTACT_EMAIL || "a9ticketing@a9globaltravel.com.mm";
 const RESEND_API_KEY = process.env.RESEND_API_KEY || "";
 
 function getResend(): Resend | null {
@@ -142,8 +145,8 @@ export async function sendCustomerConfirmationEmail(data: {
 
         <p style="color: #333; margin-top: 20px;">If you have any questions or need to modify your booking, please don't hesitate to contact us:</p>
         <div style="background: #fff; padding: 16px; border-radius: 8px; margin: 16px 0; border: 1px solid #eee;">
-          <p style="margin: 0 0 6px; font-size: 14px;">📞 <strong>Phone:</strong> <a href="tel:+959694320111" style="color: #0A1628;">959 694 320 111</a></p>
-          <p style="margin: 0 0 6px; font-size: 14px;">✉️ <strong>Email:</strong> <a href="mailto:dadkaunghtut@gmail.com" style="color: #0A1628;">dadkaunghtut@gmail.com</a></p>
+          <p style="margin: 0 0 6px; font-size: 14px;">📞 <strong>Phone:</strong> <a href="tel:${CONTACT_PHONE.replace(/\s/g, "")}" style="color: #0A1628;">${CONTACT_PHONE}</a></p>
+          <p style="margin: 0 0 6px; font-size: 14px;">✉️ <strong>Email:</strong> <a href="mailto:${CONTACT_EMAIL}" style="color: #0A1628;">${CONTACT_EMAIL}</a></p>
           <p style="margin: 0; font-size: 14px;">🌐 <strong>Website:</strong> <a href="https://a9travel.com" style="color: #D4AF37;">a9travel.com</a></p>
         </div>
         

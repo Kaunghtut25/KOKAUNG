@@ -47,9 +47,10 @@ export default function Footer() {
   }, []);
 
   // ── Dynamic values with hardcoded fallbacks ──
-  const phone = config?.contact?.phone || "+959 123 456 789";
-  const email = config?.contact?.email || "info@a9travel.com";
-  const address = config?.contact?.address || "No. 123, Bogyoke Aung San Road\nPabedan Township, Yangon\nMyanmar";
+  const deptTicket = config?.departmentPhones?.ticket;
+  const phone = config?.contact?.phone || deptTicket || "+959 781 617 111";
+  const email = config?.contact?.email || "a9ticketing@a9globaltravel.com.mm";
+  const address = config?.contact?.address || "No-18, Ground Floor, Zayya Waddy Street, Baho Road, Sanchaung Tsp, Yangon, Myanmar";
   const workingHours = config?.contact?.workingHours || "Mon-Sat: 9:00 AM - 6:00 PM";
   const fbLink = config?.socialLinks?.facebook || "https://facebook.com";
   const igLink = config?.socialLinks?.instagram || "https://instagram.com";

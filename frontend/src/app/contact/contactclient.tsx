@@ -38,9 +38,10 @@ export default function ContactClient({ siteConfig }: { siteConfig: any }) {
       .catch(() => {});
   }, []);
 
-  const phone = siteConfig?.contact?.phone || "959 694 320 111";
+  const deptPhones = siteConfig?.departmentPhones || contactData?.departmentPhones || {};
+  const phone = siteConfig?.contact?.phone || deptPhones.ticket || "959 781 617 111";
   const email = siteConfig?.contact?.email || "a9ticketing@a9globaltravel.com.mm";
-  const address = siteConfig?.contact?.address || "Yangon, Myanmar";
+  const address = siteConfig?.contact?.address || "No-18, Ground Floor, Zayya Waddy Street, Baho Road, Sanchaung Tsp, Yangon, Myanmar";
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
@@ -314,9 +315,9 @@ export default function ContactClient({ siteConfig }: { siteConfig: any }) {
               <div>
                 <p className="text-[#0A1628] font-semibold text-sm mb-1">📍 Address</p>
                 <p className="text-gray-600 text-sm leading-relaxed">
-                  No-18, Ground Floor, Zayya Waddy Street, Baho Road,
-                  <br />
-                  Sanchaung Township, Yangon, Myanmar 11111
+                  {address.split("\n").map((line: string, i: number) => (
+                    <span key={i}>{line}{i < address.split("\n").length - 1 ? <br /> : null}</span>
+                  ))}
                 </p>
               </div>
             </div>
@@ -330,12 +331,12 @@ export default function ContactClient({ siteConfig }: { siteConfig: any }) {
                 <p className="text-[#0A1628] font-semibold text-sm mb-2">📞 Contact Numbers</p>
                 <div className="space-y-1.5 text-sm">
                   {[
-                    {label:"Ticket Department",phone:"959 694 320 111"},
-                    {label:"Visa Department",phone:"959 694 320 111"},
-                    {label:"Hotel Department",phone:"959 694 320 111"},
-                    {label:"Outbound Department",phone:"959 694 320 111"},
-                    {label:"Inbound Department",phone:"959 694 320 111"},
-                  ].map(d=><div key={d.label} className="flex justify-between items-center"><span className="text-gray-500 text-xs">{d.label}</span><a href={`tel:+959694320111`} className="text-gray-700 font-medium hover:text-[#D4AF37] transition-colors">{d.phone}</a></div>)}
+                    {label:"Ticket Department",key:"ticket",phone:deptPhones.ticket || "959 781 617 111"},
+                    {label:"Visa Department",key:"visa",phone:deptPhones.visa || "959 781 617 333"},
+                    {label:"Hotel Department",key:"hotel",phone:deptPhones.hotel || "959 694 202 111"},
+                    {label:"Outbound Department",key:"outbound",phone:deptPhones.outbound || "959 756 348 222"},
+                    {label:"Inbound Department",key:"inbound",phone:deptPhones.inbound || "959 694 320 111"},
+                  ].map(d=><div key={d.key} className="flex justify-between items-center"><span className="text-gray-500 text-xs">{d.label}</span><a href={`tel:${String(d.phone).replace(/\s/g,"")}`} className="text-gray-700 font-medium hover:text-[#D4AF37] transition-colors">{d.phone}</a></div>)}
                 </div>
               </div>
             </div>
@@ -412,7 +413,7 @@ export default function ContactClient({ siteConfig }: { siteConfig: any }) {
               </div>
               <div className="text-center mt-3">
                 <p className="text-[#0A1628] font-semibold">📍 A9 Global Office</p>
-                <p className="text-gray-500 text-sm">Sanchaung, Yangon</p>
+                <p className="text-gray-500 text-sm">{address.split("\n")[0]}</p>
               </div>
             </div>
           </div>

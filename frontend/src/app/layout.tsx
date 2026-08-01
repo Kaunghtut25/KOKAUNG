@@ -72,7 +72,7 @@ const jsonLd = {
   },
   "contactPoint": {
     "@type": "ContactPoint",
-    "telephone": "+959123456789",
+    "telephone": "+959781617111",
     "contactType": "customer service"
   },
   "sameAs": ["https://facebook.com/a9globaltravel", "https://instagram.com/a9globaltravel"]
