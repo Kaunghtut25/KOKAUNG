@@ -56,8 +56,8 @@ export default function Footer() {
 
   // ── Dynamic values with hardcoded fallbacks ──
   const deptTicket = config?.departmentPhones?.ticket;
-  const phone = config?.contact?.phone || deptTicket || "+959 781 617 111";
-  const email = config?.contact?.email || "a9ticketing@a9globaltravel.com.mm";
+  const phone = config?.contact?.phone || deptTicket || "";
+  const email = config?.contact?.email || "";
   const address = config?.contact?.address || "No-18, Ground Floor, Zayya Waddy Street, Baho Road, Sanchaung Tsp, Yangon, Myanmar";
   const workingHours = config?.contact?.workingHours || "Mon-Sat: 9:00 AM - 6:00 PM";
   const fbLink = config?.socialLinks?.facebook || "https://facebook.com";
@@ -172,24 +172,28 @@ export default function Footer() {
                   {address}
                 </p>
               </div>
-              <div className="flex items-start space-x-3">
-                <FaPhoneAlt className="text-[#D4AF37] mt-1 flex-shrink-0 text-sm" />
-                <a
-                  href={`tel:${phone.replace(/\s/g, "")}`}
-                  className="text-sm text-white/60 hover:text-[#D4AF37] transition-colors"
-                >
-                  {phone}
-                </a>
-              </div>
-              <div className="flex items-start space-x-3">
-                <FaEnvelope className="text-[#D4AF37] mt-1 flex-shrink-0 text-sm" />
-                <a
-                  href={`mailto:${email}`}
-                  className="text-sm text-white/60 hover:text-[#D4AF37] transition-colors break-all"
-                >
-                  {email}
-                </a>
-              </div>
+              {phone && (
+                <div className="flex items-start space-x-3">
+                  <FaPhoneAlt className="text-[#D4AF37] mt-1 flex-shrink-0 text-sm" />
+                  <a
+                    href={`tel:${phone.replace(/\s/g, "")}`}
+                    className="text-sm text-white/60 hover:text-[#D4AF37] transition-colors"
+                  >
+                    {phone}
+                  </a>
+                </div>
+              )}
+              {email && (
+                <div className="flex items-start space-x-3">
+                  <FaEnvelope className="text-[#D4AF37] mt-1 flex-shrink-0 text-sm" />
+                  <a
+                    href={`mailto:${email}`}
+                    className="text-sm text-white/60 hover:text-[#D4AF37] transition-colors break-all"
+                  >
+                    {email}
+                  </a>
+                </div>
+              )}
               <div className="flex items-start space-x-3">
                 <FaClock className="text-[#D4AF37] mt-1 flex-shrink-0 text-sm" />
                 <p className="text-sm text-white/60">

@@ -31,7 +31,8 @@ export default function LiveChatWidget() {
   const [input, setInput] = useState('');
   const [typing, setTyping] = useState(false);
   const [unread, setUnread] = useState(0);
-  const [phone, setPhone] = useState('+95 9 781 617 111');
+  const [phone, setPhone] = useState('');
+  const [email, setEmail] = useState('');
   const scrollRef = useRef<HTMLDivElement>(null);
   const msgId = useRef(2);
 
@@ -42,6 +43,7 @@ export default function LiveChatWidget() {
       .then((res) => res.json())
       .then((data) => {
         if (data?.contact?.phone) setPhone(data.contact.phone);
+        if (data?.contact?.email) setEmail(data.contact.email);
       })
       .catch(() => {});
   }, []);
@@ -78,11 +80,11 @@ export default function LiveChatWidget() {
         hotel: "We partner with 30+ luxury hotels in Myanmar. Which city are you looking to stay in, and what's your budget range?",
         visa: "We handle visa applications for 30+ countries. Which country's visa do you need, and what's your passport nationality?",
         car: "We offer a fleet of 30+ vehicles — from sedans to luxury vans. What type of vehicle do you need and for how many days?",
-        agent: `I'm connecting you to one of our travel consultants. Please hold for a moment... You can also reach us directly at ${phone}.`,
+        agent: `I'm connecting you to one of our travel consultants. Please hold for a moment...${phone ? ` You can also reach us directly at ${phone}.` : ""}`,
       };
 
       const lower = text.toLowerCase();
-      let response = `Thank you for your message! Our team will get back to you shortly. For urgent inquiries, please call ${phone}.`;
+      let response = `Thank you for your message! Our team will get back to you shortly.${phone ? ` For urgent inquiries, please call ${phone}.` : ""}`;
 
       if (lower.includes('tour') || lower.includes('book')) response = responses.tour;
       else if (lower.includes('hotel')) response = responses.hotel;
@@ -148,20 +150,45 @@ export default function LiveChatWidget() {
                 <div style={{ fontSize: 11, opacity: 0.7, color: '#D4AF37' }}>24/7 Live Chat • Online now</div>
               </div>
             </div>
-            <button
-              onClick={() => setOpen(false)}
-              style={{
-                background: 'transparent',
-                border: 'none',
-                color: '#999',
-                cursor: 'pointer',
-                fontSize: 22,
-                lineHeight: 1,
-                padding: 0,
-              }}
-            >
-              ×
-            </button>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              {email && (
+                <a
+                  href={`mailto:${email}`}
+                  title="Email us"
+                  aria-label="Email us"
+                  style={{
+                    background: 'rgba(212,175,55,0.15)',
+                    border: '1px solid rgba(212,175,55,0.4)',
+                    color: '#D4AF37',
+                    borderRadius: 18,
+                    padding: '4px 12px',
+                    fontSize: 12,
+                    fontWeight: 600,
+                    textDecoration: 'none',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: 5,
+                    cursor: 'pointer',
+                  }}
+                >
+                  ✉️ Email
+                </a>
+              )}
+              <button
+                onClick={() => setOpen(false)}
+                style={{
+                  background: 'transparent',
+                  border: 'none',
+                  color: '#999',
+                  cursor: 'pointer',
+                  fontSize: 22,
+                  lineHeight: 1,
+                  padding: 0,
+                }}
+              >
+                ×
+              </button>
+            </div>
           </div>
 
           {/* Messages */}

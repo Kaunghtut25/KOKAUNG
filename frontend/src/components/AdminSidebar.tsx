@@ -21,6 +21,7 @@ const navItems: NavItem[] = [
   { label: "Manage Insurance", icon: "🛡️", path: "/admin/insurance" },
   { label: "Manage Cruises", icon: "🚢", path: "/admin/cruises" },
   { label: "Manage Blog", icon: "📝", path: "/admin/blog" },
+  { label: "Manage Users", icon: "👥", path: "/admin/users" },
   { label: "Sky Lounge", icon: "✨", path: "/admin/sky-lounge" },
   { label: "Site Settings", icon: "⚙️", path: "/admin/settings" },
 ];

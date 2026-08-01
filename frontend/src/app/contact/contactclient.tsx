@@ -39,8 +39,8 @@ export default function ContactClient({ siteConfig }: { siteConfig: any }) {
   }, []);
 
   const deptPhones = siteConfig?.departmentPhones || contactData?.departmentPhones || {};
-  const phone = siteConfig?.contact?.phone || deptPhones.ticket || "959 781 617 111";
-  const email = siteConfig?.contact?.email || "a9ticketing@a9globaltravel.com.mm";
+  const phone = siteConfig?.contact?.phone || deptPhones.ticket || "";
+  const email = siteConfig?.contact?.email || "";
   const address = siteConfig?.contact?.address || "No-18, Ground Floor, Zayya Waddy Street, Baho Road, Sanchaung Tsp, Yangon, Myanmar";
 
   const handleChange = (
@@ -331,17 +331,18 @@ export default function ContactClient({ siteConfig }: { siteConfig: any }) {
                 <p className="text-[#0A1628] font-semibold text-sm mb-2">📞 Contact Numbers</p>
                 <div className="space-y-1.5 text-sm">
                   {[
-                    {label:"Ticket Department",key:"ticket",phone:deptPhones.ticket || "959 781 617 111"},
-                    {label:"Visa Department",key:"visa",phone:deptPhones.visa || "959 781 617 333"},
-                    {label:"Hotel Department",key:"hotel",phone:deptPhones.hotel || "959 694 202 111"},
-                    {label:"Outbound Department",key:"outbound",phone:deptPhones.outbound || "959 756 348 222"},
-                    {label:"Inbound Department",key:"inbound",phone:deptPhones.inbound || "959 694 320 111"},
-                  ].map(d=><div key={d.key} className="flex justify-between items-center"><span className="text-gray-500 text-xs">{d.label}</span><a href={`tel:${String(d.phone).replace(/\s/g,"")}`} className="text-gray-700 font-medium hover:text-[#D4AF37] transition-colors">{d.phone}</a></div>)}
+                    {label:"Ticket Department",key:"ticket",phone:deptPhones.ticket},
+                    {label:"Visa Department",key:"visa",phone:deptPhones.visa},
+                    {label:"Hotel Department",key:"hotel",phone:deptPhones.hotel},
+                    {label:"Outbound Department",key:"outbound",phone:deptPhones.outbound},
+                    {label:"Inbound Department",key:"inbound",phone:deptPhones.inbound},
+                  ].filter(d=>d.phone).map(d=><div key={d.key} className="flex justify-between items-center"><span className="text-gray-500 text-xs">{d.label}</span><a href={`tel:${String(d.phone).replace(/\s/g,"")}`} className="text-gray-700 font-medium hover:text-[#D4AF37] transition-colors">{d.phone}</a></div>)}
                 </div>
               </div>
             </div>
 
             {/* Email */}
+            {email && (
             <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-5 flex gap-4 items-start hover:border-[#D4AF37]/30 transition-all duration-200">
               <div className="w-11 h-11 rounded-xl bg-[#D4AF37]/10 flex items-center justify-center shrink-0">
                 <svg
@@ -368,6 +369,7 @@ export default function ContactClient({ siteConfig }: { siteConfig: any }) {
                 </a>
               </div>
             </div>
+            )}
 
             {/* Working Hours */}
             <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-5 flex gap-4 items-start hover:border-[#D4AF37]/30 transition-all duration-200">
@@ -455,8 +457,8 @@ export default function ContactClient({ siteConfig }: { siteConfig: any }) {
             <p style={{ color: "#555", padding: "4px 0" }}>Saturday: 9:00 AM - 12:00 PM</p>
             <p style={{ color: "#555", padding: "4px 0" }}>Sunday: Closed</p>
             <div style={{ marginTop: 16, paddingTop: 16, borderTop: "1px solid #eee" }}>
-              <p style={{ color: "#555" }}>&#9742; {phone}</p>
-              <p style={{ color: "#555" }}>&#9993; {email}</p>
+              {phone && <p style={{ color: "#555" }}>&#9742; {phone}</p>}
+              {email && <p style={{ color: "#555" }}>&#9993; {email}</p>}
               <p style={{ color: "#555" }}>&#9873; {address}</p>
             </div>
           </div>

@@ -57,9 +57,9 @@ export async function PUT(request: NextRequest) {
       certifications: body.certifications != null ? body.certifications : cfg.certifications,
       contact: {
         ...(cfg.contact || {}),
-        email: body.contactEmail || cfg.contact?.email,
-        phone: body.contactPhone || cfg.contact?.phone,
-        address: body.contactAddress || cfg.contact?.address,
+        email: typeof body.contactEmail === "string" ? body.contactEmail : cfg.contact?.email,
+        phone: typeof body.contactPhone === "string" ? body.contactPhone : cfg.contact?.phone,
+        address: typeof body.contactAddress === "string" ? body.contactAddress : cfg.contact?.address,
       },
       updatedAt: new Date().toISOString(),
     };

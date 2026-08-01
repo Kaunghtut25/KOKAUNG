@@ -1,7 +1,20 @@
 import { NextRequest, NextResponse } from "next/server";
+import { randomBytes, scryptSync, timingSafeEqual } from "crypto";
 import { signToken } from "@/lib/auth";
 
 export const runtime = "nodejs";
+
+// scrypt verify for users created in the Admin → Manage Users panel
+function verifyUserPassword(password: string, stored: string): boolean {
+  try {
+    const [salt, hash] = String(stored || "").split(":");
+    if (!salt || !hash) return false;
+    const test = scryptSync(password, salt, 64);
+    return timingSafeEqual(test, Buffer.from(hash, "hex"));
+  } catch {
+    return false;
+  }
+}
 
 // Fail closed: no hardcoded fallback credentials. Must be configured via env.
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL;
@@ -131,7 +144,33 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ message: "Email and password are required" }, { status: 400 });
     }
 
-    if (email !== ADMIN_EMAIL || password !== ADMIN_PASSWORD) {
+    let user: any = null;
+
+    // 1) Env-configured primary admin
+    if (email === ADMIN_EMAIL && password === ADMIN_PASSWORD) {
+      user = { id: "admin-001", email: ADMIN_EMAIL, name: "A9 Admin", role: "admin" };
+    }
+
+    // 2) Users created via Admin → Manage Users (persistentStore users collection)
+    if (!user) {
+      try {
+        const store = await import("@/lib/persistentStore");
+        const users = (await store.getAll("users" as any)) || [];
+        const found = users.find((u: any) => String(u.email || "").toLowerCase() === String(email || "").toLowerCase());
+        if (found && found.passwordHash && verifyUserPassword(password, found.passwordHash)) {
+          user = {
+            id: found.id || found._id || "user-" + email,
+            email: found.email,
+            name: found.name || found.email,
+            role: found.role === "admin" ? "admin" : "admin",
+          };
+        }
+      } catch (err) {
+        console.error("[login] users collection check failed:", err);
+      }
+    }
+
+    if (!user) {
       // Count this failure toward the window; then reject.
       await recordFailure(ip);
       return NextResponse.json({ message: "Invalid email or password" }, { status: 401 });
@@ -140,13 +179,6 @@ export async function POST(request: NextRequest) {
     // Successful login: reset the rate-limit bucket so a legitimate admin
     // never gets stuck behind an old 429 window.
     await resetRateLimit(ip);
-
-    const user = {
-      id: "admin-001",
-      email: ADMIN_EMAIL,
-      name: "A9 Admin",
-      role: "admin",
-    };
 
     const token = await signToken({
       ...user,
