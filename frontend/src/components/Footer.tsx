@@ -59,6 +59,14 @@ export default function Footer() {
   const email = config?.contact?.email || "";
   const address = config?.contact?.address || "No-18, Ground Floor, Zayya Waddy Street, Baho Road, Sanchaung Tsp, Yangon, Myanmar";
   const workingHours = config?.contact?.workingHours || "Mon-Sat: 9:00 AM - 6:00 PM";
+  const moduleToggles = (config as any)?.moduleToggles || {};
+  const MODULE_BY_HREF: Record<string, string> = {
+    "/tours": "tours", "/hotels": "hotels", "/cars": "cars", "/buses": "buses",
+    "/visas": "visas", "/insurance": "insurance", "/cruises": "cruises",
+    "/mingalar": "skyLounge", "/blog": "blog",
+  };
+  const quickLinksFiltered = quickLinks.filter(l => { const k = MODULE_BY_HREF[l.href]; return !k || moduleToggles[k] !== false; });
+  const supportLinksFiltered = supportLinks.filter(l => { const k = MODULE_BY_HREF[l.href]; return !k || moduleToggles[k] !== false; });
   const socialArr = Array.isArray(config?.socialLinks) ? config.socialLinks : Object.values((config?.socialLinks as any) || {});
   const socialMap: Record<string, string> = {};
   socialArr.forEach((s: any) => { if (s && s.platform) socialMap[String(s.platform).toLowerCase()] = s.url; });
@@ -128,7 +136,7 @@ export default function Footer() {
               Quick Links
             </h4>
             <ul className="space-y-3">
-              {quickLinks.map((link) => (
+              {quickLinksFiltered.map((link) => (
                 <li key={link.href}>
                   <Link
                     href={link.href}
@@ -148,7 +156,7 @@ export default function Footer() {
               Support
             </h4>
             <ul className="space-y-3">
-              {supportLinks.map((link) => (
+              {supportLinksFiltered.map((link) => (
                 <li key={link.href}>
                   <Link
                     href={link.href}

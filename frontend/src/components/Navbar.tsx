@@ -15,6 +15,7 @@ interface SiteConfig {
   logoUrl?: string;
   siteName?: string;
   navLinks?: NavLink[];
+  moduleToggles?: Record<string, boolean>;
 }
 
 const DEFAULT_LOGO = "/logo.jpeg";
@@ -54,11 +55,19 @@ export default function Navbar() {
         if (cfg.logoUrl) setLogoUrl(cfg.logoUrl);
         if (cfg.siteName) setSiteName(cfg.siteName);
         if (cfg.navLinks && cfg.navLinks.length > 0) setNavLinks(cfg.navLinks);
+        setModuleToggles(cfg.moduleToggles || {});
       })
       .catch(() => { /* fall back to defaults */ });
     return () => { cancelled = true; };
   }, []);
 
+  const [moduleToggles, setModuleToggles] = useState<Record<string, boolean>>({});
+  const MODULE_BY_HREF: Record<string, string> = {
+    "/blog": "blog", "/tours": "tours", "/hotels": "hotels", "/cars": "cars",
+    "/buses": "buses", "/visas": "visas", "/insurance": "insurance",
+    "/cruises": "cruises", "/mingalar": "skyLounge",
+  };
+  const visibleNavLinks = navLinks.filter(l => { const k = MODULE_BY_HREF[l.href]; return !k || moduleToggles[k] !== false; });
   const isActive = (href: string) => pathname === href;
 
   return (
@@ -84,7 +93,7 @@ export default function Navbar() {
             </Link>
 
             <div className="hidden lg:flex items-center space-x-3">
-              {navLinks.map((link) => (
+              {visibleNavLinks.map((link) => (
                 <Link key={link.href} href={link.href}
                   className={`px-4 py-2 text-sm font-semibold transition-all duration-200 rounded-lg [text-shadow:0_1px_3px_rgba(0,0,0,0.5)] ${
                     isActive(link.href) ? 'bg-[#D4AF37] text-[#0A1628] [text-shadow:none] shadow-sm' : 'text-white hover:text-[#D4AF37] hover:bg-white/10'
@@ -149,7 +158,7 @@ export default function Navbar() {
           </div>
 
           <div className="flex-1 px-6 py-6 space-y-1 overflow-y-auto">
-            {navLinks.map((link) => (
+            {visibleNavLinks.map((link) => (
               <Link key={link.href} href={link.href} onClick={() => setMobileOpen(false)}
                 className={`block py-3 px-4 text-base font-medium rounded-lg transition-all duration-200 ${
                   isActive(link.href) ? "bg-[#D4AF37] text-[#0A1628]" : "text-white hover:text-[#D4AF37] hover:bg-white/10"
