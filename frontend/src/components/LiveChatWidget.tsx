@@ -8,6 +8,19 @@ interface Message {
   time: string;
 }
 
+const STORAGE_KEY = 'a9_chat_session';
+
+function getSessionId(): string {
+  try {
+    let sid = localStorage.getItem(STORAGE_KEY);
+    if (!sid) {
+      sid = 's_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2, 10) + '_' + Math.random().toString(36).slice(2, 6);
+      localStorage.setItem(STORAGE_KEY, sid);
+    }
+    return sid;
+  } catch { return 'anon_' + Date.now().toString(36); }
+}
+
 const initialMessages: Message[] = [
   {
     id: 1,
@@ -35,8 +48,14 @@ export default function LiveChatWidget() {
   const [email, setEmail] = useState('');
   const scrollRef = useRef<HTMLDivElement>(null);
   const msgId = useRef(2);
+  const sessionId = useRef<string>('');
 
   const currentTime = () => new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
+
+  // init session id once (client-only)
+  useEffect(() => {
+    sessionId.current = getSessionId();
+  }, []);
 
   useEffect(() => {
     fetch("/api/admin/site-config")
@@ -60,7 +79,7 @@ export default function LiveChatWidget() {
     }
   }, [messages.length]);
 
-  const sendMessage = (text: string) => {
+  const sendMessage = async (text: string) => {
     if (!text.trim()) return;
 
     const userMsg: Message = {
@@ -69,37 +88,29 @@ export default function LiveChatWidget() {
       sender: 'user',
       time: currentTime(),
     };
-    setMessages(prev => [...prev, userMsg]);
+    const history = [...messages, userMsg];
+    setMessages(history);
     setInput('');
     setTyping(true);
 
-    setTimeout(() => {
+    try {
+      const res = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          sessionId: sessionId.current || getSessionId(),
+          messages: history.map(m => ({ text: m.text, sender: m.sender })),
+          siteInfo: { phone, email },
+        }),
+      });
+      const data = await res.json().catch(() => ({ reply: '' }));
+      const replyText = data?.reply || 'Sorry, I could not generate a reply. Please try again.';
+      setMessages(prev => [...prev, { id: msgId.current++, text: replyText, sender: 'agent', time: currentTime() }]);
+    } catch {
+      setMessages(prev => [...prev, { id: msgId.current++, text: 'Network error. Please try again.', sender: 'agent', time: currentTime() }]);
+    } finally {
       setTyping(false);
-      const responses: Record<string, string> = {
-        tour: "Great choice! We offer premium tour packages across Myanmar — Bagan, Inle Lake, Yangon & more. Could you share your preferred destination and travel dates?",
-        hotel: "We partner with 30+ luxury hotels in Myanmar. Which city are you looking to stay in, and what's your budget range?",
-        visa: "We handle visa applications for 30+ countries. Which country's visa do you need, and what's your passport nationality?",
-        car: "We offer a fleet of 30+ vehicles — from sedans to luxury vans. What type of vehicle do you need and for how many days?",
-        agent: `I'm connecting you to one of our travel consultants. Please hold for a moment...${phone ? ` You can also reach us directly at ${phone}.` : ""}`,
-      };
-
-      const lower = text.toLowerCase();
-      let response = `Thank you for your message! Our team will get back to you shortly.${phone ? ` For urgent inquiries, please call ${phone}.` : ""}`;
-
-      if (lower.includes('tour') || lower.includes('book')) response = responses.tour;
-      else if (lower.includes('hotel')) response = responses.hotel;
-      else if (lower.includes('visa')) response = responses.visa;
-      else if (lower.includes('car')) response = responses.car;
-      else if (lower.includes('agent') || lower.includes('human') || lower.includes('speak')) response = responses.agent;
-
-      const agentMsg: Message = {
-        id: msgId.current++,
-        text: response,
-        sender: 'agent',
-        time: currentTime(),
-      };
-      setMessages(prev => [...prev, agentMsg]);
-    }, 1500);
+    }
   };
 
   return (
