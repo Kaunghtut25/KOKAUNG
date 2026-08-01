@@ -19,8 +19,9 @@ function getRedis(): any {
   if (_redis) return _redis;
   const url = process.env.UPSTASH_REDIS_REST_URL;
   const token = process.env.UPSTASH_REDIS_REST_TOKEN;
-  if (!url || !token) return null;
+  if (!url || !token) { console.error('[chat] redis env MISSING url=' + !!url + ' token=' + !!token); return null; }
   _redis = new Redis({ url, token });
+  console.error('[chat] redis connected');
   return _redis;
 }
 
@@ -140,12 +141,13 @@ export async function POST(req: NextRequest) {
   if (redis) {
     try {
       const raw = await redis.get('a9:chat:' + sid);
-      if (raw) { try { const parsed = JSON.parse(raw); if (Array.isArray(parsed)) history = parsed; } catch {} }
+      console.error('[chat] memory read key=' + sid + ' rawType=' + typeof raw + ' rawLen=' + (raw ? String(raw).length : 0));
+      if (raw) { try { const parsed = JSON.parse(raw); if (Array.isArray(parsed)) history = parsed; } catch (e) { console.error('[chat] memory parse fail', (e as Error).message); } }
     } catch {}
   }
   const merged = [...history, ...messages].slice(-MAX_HISTORY);
   if (redis) {
-    try { await redis.set('a9:chat:' + sid, JSON.stringify(merged), { ex: MEMORY_TTL_SECONDS }); } catch {}
+    try { await redis.set('a9:chat:' + sid, JSON.stringify(merged), { ex: MEMORY_TTL_SECONDS }); console.error('[chat] memory wrote len=' + merged.length); } catch (e) { console.error('[chat] memory write FAIL', (e as Error).message); }
   }
 
   // ── 2. BRAIN: try LLM, fall back to keyword bot ──
