@@ -3,7 +3,6 @@
 ﻿import React, { useState, useEffect } from 'react';
 import Link from "next/link";
 import { useRouter, useParams } from 'next/navigation';
-import RelatedItems from '@/components/RelatedItems';
 import BackButton from '@/components/BackButton';
 import Calendar from '@/components/Calendar';
 import CurrencyToggle from '@/components/CurrencyToggle';
@@ -369,6 +368,14 @@ export default function DestinationPage() {
                 <p className="text-gray-700 leading-relaxed text-lg">
                   {dest.description}
                 </p>
+                {highlights.length > 0 && (
+                  <p className="text-gray-600 leading-relaxed mt-3 text-lg">
+                    Must-see experiences include {highlights.slice(0, 5).join(", ")} — perfect for
+                    first-time visitors and returning travelers alike. Whether you prefer
+                    guided sightseeing, cultural tours, or free time to explore at your own
+                    pace, we can tailor the perfect itinerary for you.
+                  </p>
+                )}
               </section>
             )}
 
@@ -399,6 +406,12 @@ export default function DestinationPage() {
                   Best Time to Visit
                 </h2>
                 <p className="text-gray-700 text-lg">{dest.bestTime}</p>
+                <p className="text-gray-600 leading-relaxed mt-3 text-lg">
+                  During this window the weather is at its most pleasant for sightseeing, with
+                  comfortable temperatures and clearer skies. Popular periods can get busy, so
+                  we recommend booking your flights and hotel early to lock in the best rates
+                  and availability for your trip to {dest.city}.
+                </p>
               </section>
             )}
           </div>
@@ -521,13 +534,7 @@ export default function DestinationPage() {
           </div>
         </div>
 
-        {/* Related Items */}
-        <div className="pt-8 border-t border-[#D4AF37]/10">
-          <h2 className="text-2xl font-bold text-[#0A1628] mb-6" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
-            Discover {dest.city}
-          </h2>
-          <RelatedItems section="destinations" excludeSlug={cityParam} destination={(dest.city || "") + ", " + (dest.country || "")} />
-        </div>
+        {/* Related destinations removed per user request — "Discover {city}" showed other cities */}
 
         {/* Bottom CTA */}
         <section className="text-center py-12">
