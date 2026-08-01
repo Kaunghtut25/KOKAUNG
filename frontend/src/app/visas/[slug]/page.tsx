@@ -283,17 +283,15 @@ export default function VisaDetailPage() {
             <div className="sticky top-28 space-y-6">
               <div className="rounded-2xl border border-[#D4AF37]/20 bg-white shadow-lg p-6 space-y-5">
                 {/* Price Header */}
-                <div className="bg-gradient-to-r from-[#0A1628] to-[#162D50] -mx-6 -mt-6 p-6 rounded-t-2xl text-white">
-                  <p className="text-white/60 text-xs uppercase tracking-wider mb-1">Visa Fee</p>
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-baseline gap-1">
-                      <span className="text-3xl font-bold" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
-                        {currencySymbol} {price.toLocaleString()}
-                      </span>
-                      <span className="text-white/50 text-sm ml-1">/ person</span>
-                    </div>
-                    <CurrencyToggle activeCurrency={currency} onToggle={setCurrency} />
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-gray-400 text-xs uppercase tracking-wider mb-1">Visa Fee</p>
+                    <p className="text-3xl font-bold text-[#D4AF37]" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
+                      {currencySymbol} {price.toLocaleString()}
+                    </p>
+                    <p className="text-gray-500 text-xs mt-0.5">/ person</p>
                   </div>
+                  <CurrencyToggle activeCurrency={currency} onToggle={setCurrency} />
                 </div>
 
                 {/* Info Rows */}
