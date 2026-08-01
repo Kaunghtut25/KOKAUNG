@@ -55,8 +55,7 @@ export default function Footer() {
   }, []);
 
   // ── Dynamic values with hardcoded fallbacks ──
-  const deptTicket = config?.departmentPhones?.ticket;
-  const phone = config?.contact?.phone || deptTicket || "";
+  const phone = config?.contact?.phone || "";
   const email = config?.contact?.email || "";
   const address = config?.contact?.address || "No-18, Ground Floor, Zayya Waddy Street, Baho Road, Sanchaung Tsp, Yangon, Myanmar";
   const workingHours = config?.contact?.workingHours || "Mon-Sat: 9:00 AM - 6:00 PM";

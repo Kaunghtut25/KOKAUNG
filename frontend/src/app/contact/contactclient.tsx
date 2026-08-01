@@ -39,7 +39,7 @@ export default function ContactClient({ siteConfig }: { siteConfig: any }) {
   }, []);
 
   const deptPhones = siteConfig?.departmentPhones || contactData?.departmentPhones || {};
-  const phone = siteConfig?.contact?.phone || deptPhones.ticket || "";
+  const phone = siteConfig?.contact?.phone || "";
   const email = siteConfig?.contact?.email || "";
   const address = siteConfig?.contact?.address || "No-18, Ground Floor, Zayya Waddy Street, Baho Road, Sanchaung Tsp, Yangon, Myanmar";
 
