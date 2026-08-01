@@ -77,6 +77,17 @@ export async function verifyToken(token: string): Promise<AuthPayload | null> {
   }
 }
 
+/** Client-safe: decode token payload WITHOUT verifying signature (signed format base64url(payload).base64url(sig)). */
+export function decodeTokenPayload(token: string): AuthPayload | null {
+  try {
+    const body = token.split('.')[0];
+    if (!body) return null;
+    return JSON.parse(b64urlDecode(body)) as AuthPayload;
+  } catch {
+    return null;
+  }
+}
+
 /** Verify an Authorization header / cookie token and confirm admin role. */
 export async function isAdminToken(token: string | undefined | null): Promise<boolean> {
   if (!token) return false;

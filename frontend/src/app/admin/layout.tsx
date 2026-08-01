@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { decodeTokenPayload } from "@/lib/auth";
 import AdminSidebar from "@/components/AdminSidebar";
 
 function AdminErrorFallback() {
@@ -66,35 +67,18 @@ export default function AdminLayout({
         router.replace("/auth/login");
         return;
       }
-      try {
-        // Decode base64 token
-        let decoded: any;
-        try {
-          const binary = atob(token);
-          const bytes = new Uint8Array(binary.length);
-          for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
-          const jsonStr = new TextDecoder("utf-8").decode(bytes);
-          decoded = JSON.parse(jsonStr);
-        } catch {
-          decoded = JSON.parse(token);
-        }
-
-        if (decoded.role !== "admin" || (decoded.exp && decoded.exp < Date.now())) {
-          localStorage.removeItem("admin_token");
-          localStorage.removeItem("admin_user");
-          router.replace("/auth/login");
-          return;
-        }
-        // Set cookie for middleware
-        try {
-          document.cookie = `a9_admin_token=${token}; path=/; max-age=86400; samesite=lax`;
-        } catch {}
-        setAuthorized(true);
-      } catch {
+      const payload = decodeTokenPayload(token);
+      if (!payload || payload.role !== "admin" || (payload.exp && payload.exp < Date.now())) {
         localStorage.removeItem("admin_token");
         localStorage.removeItem("admin_user");
         router.replace("/auth/login");
+        return;
       }
+      // Set cookie for middleware
+      try {
+        document.cookie = `a9_admin_token=${token}; path=/; max-age=86400; samesite=lax`;
+      } catch {}
+      setAuthorized(true);
     } catch (e: any) {
       console.error("[AdminLayout] Auth check error:", e);
       setError(e?.message || "Authentication error");

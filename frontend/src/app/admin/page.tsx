@@ -3,6 +3,7 @@
 
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { decodeTokenPayload } from "@/lib/auth";
 
 export default function AdminRootPage() {
   const router = useRouter();
@@ -10,13 +11,11 @@ export default function AdminRootPage() {
   useEffect(() => {
     const token = localStorage.getItem("admin_token");
     if (token) {
-      try {
-        const payload = JSON.parse(atob(token));
-        if (payload.role === "admin") {
-          router.replace("/admin/dashboard");
-          return;
-        }
-      } catch {}
+      const payload = decodeTokenPayload(token);
+      if (payload?.role === "admin" && (!payload.exp || payload.exp > Date.now())) {
+        router.replace("/admin/dashboard");
+        return;
+      }
     }
     router.replace("/auth/login");
   }, [router]);
