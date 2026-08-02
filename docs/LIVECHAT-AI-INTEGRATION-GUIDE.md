@@ -362,7 +362,7 @@ The system prompt (route.ts buildSystemPrompt) now:
 
 ## 12. v82c (2026-08-02) — post-reboot recovery + model swap (LIVE)
 
-- **Brain**: gemma3:4b (was qwen2.5-coder:3b). Best Burmese of the 4 local models — verified by shootout (qwen2.5-coder:3b/7b + hermes3 all garbled Burmese).
+- **Brain**: qwen2.5-coder:7b (user chose this; gemma3:4b removed 2026-08-02). Clean Burmese with the few-shot prompt; warm ~23-29s per reply (cold first call ~68s — warm the model if chat slows).
 - **Burmese quality fix**: few-shot BURMESE REPLY STYLE example in the system prompt (show a correct example — a "pure Burmese" prohibition backfired into Karen-script gibberish).
 - **Widget label**: "Travel Assistant • Online now" (was "AI Travel Assistant • Online now"). Verified in deployed chunk layout-cc28334a22f6e5a4.js.
 - **Vercel env (production)**: OLLAMA_BASE_URL=https://guestbook-buck-earthquake-spam.trycloudflare.com/v1 (guestbook tunnel up; coalition-seats-harbour-configured = spare), OLLAMA_MODEL=gemma3:4b, OLLAMA_API_KEY=<raw secret>, maxDuration=60.
