@@ -3,7 +3,12 @@
 > **Purpose**: This document explains the current Live Chat format and exactly how to plug in
 > real AI API keys (OpenAI / Anthropic / Gemini / DeepSeek / any OpenAI-compatible endpoint)
 > so the chat answers like a real travel assistant instead of the current keyword bot.
-> Last updated: 2026-08-02 (v80 baseline).
+> Last updated: 2026-08-02 (v82 baseline — Master A9 connected to local Ollama qwen2.5-coder:3b).
+>
+> **v81 UPDATE — the brain route is ALREADY DEPLOYED**: `frontend/src/app/api/chat/route.ts` is live
+> at `/api/chat` with session memory (Upstash Redis), keyword-bot fallback, live travel-catalog
+> grounding, and optional web-research hooks. Add an API key to Vercel env and the chat upgrades
+> to a real AI assistant with zero code changes. See section 3 for keys and section 10 for what v81 ships.
 
 ---
 
@@ -273,12 +278,82 @@ That's the whole integration. Message format stays `{id, text, sender, time}` �
 
 ---
 
-## 10. v82c status (2026-08-02) — live & running
+## 10. What v81/v82 already ship (deployed 2026-08-02)
 
-- **Brain**: gemma3:4b (best Burmese of the 4 local models — verified by 4-model shootout; qwen2.5-coder:3b/7b + hermes3 all produce garbled Burmese).
-- **Burmese quality fix**: few-shot BURMESE REPLY STYLE example in the system prompt (show a correct example — a "pure Burmese" prohibition backfired into Karen-script gibberish).
-- **Widget label**: "Travel Assistant • Online now" (changed from "AI Travel Assistant • Online now").
-- **Live env (Vercel production)**: OLLAMA_BASE_URL=https://guestbook-buck-earthquake-spam.trycloudflare.com/v1 (guestbook tunnel up; coalition-seats-harbour-configured = spare), OLLAMA_MODEL=gemma3:4b, OLLAMA_API_KEY=<raw secret>, maxDuration=60 (v82b).
-- **Gate gotcha (critical)**: start the gate with the RAW secret from `scripts/ollama-gate-secret.txt` — the `.openclaw/tmp/ollama-secret.txt` copy contains an `OLLAMA_GATE_SECRET=` prefix that will make Vercel auth fail (401 → "trouble connecting").
-- **Tunnel gotcha**: killing the cloudflared session/wrapper does NOT kill the child process — check `Get-CimInstance Win32_Process -Filter "Name='cloudflared.exe'"` before assuming a tunnel is dead.
-- **www.a9travel.com can intermittently ETIMEDOUT** from this network while the deployment URL works — transient edge flake, recovers in minutes.
+The code is live — you only need to add a key to flip the switch.
+
+| Feature | Status | How |
+|---|---|---|
+| Session memory | LIVE | a9:chat:<sessionId> in Upstash Redis, 30-day TTL, last 30 messages kept. Session id persists in visitor localStorage (a9_chat_session). No key needed. |
+| AI brain | Ready | Route calls OpenAI-compatible (or Anthropic) when key present; otherwise keyword-bot fallback keeps chat working. |
+| Researcher | Ready | TAVILY_API_KEY or SERPER_API_KEY -> route searches the web for visa/entry/weather/current-info questions and feeds results into the prompt. |
+| Travel info skills | LIVE | Live catalog (tours/hotels/cars/cruises/visas/insurance) from the store is injected into the system prompt every request. |
+| Human handoff | LIVE | "speak to an agent" -> phone/email from site-config. |
+
+### Env keys to add (Vercel -> Settings -> Environment Variables -> Production)
+| Key | Provider | Notes |
+|---|---|---|
+| OPENAI_API_KEY | OpenAI | default gpt-4o-mini; override model with OPENAI_MODEL |
+| OPENAI_BASE_URL | DeepSeek/Groq/OpenRouter | e.g. https://api.deepseek.com/v1 |
+| ANTHROPIC_API_KEY | Claude | used only if no OPENAI key |
+| TAVILY_API_KEY / SERPER_API_KEY | search | optional, for current-info answers |
+
+### Known v81 implementation notes
+- @upstash/redis v1.38 **auto-deserializes JSON on get** — do NOT JSON.parse the result of redis.get again (double-parse fails with "[object Object]"). Pass the array directly to set (client stringifies).
+- Memory verification: POST twice with same sessionId -> response memory field increments (1 -> 2 -> 3).
+- The keyword fallback uses only the last user message; the LLM path uses the last 10 turns + Redis history.
+
+---
+
+## 11. v82 — Master A9 connected to local Ollama (qwen2.5-coder:3b) — LIVE
+
+**Status: FULLY WORKING on www.a9travel.com.** The live chat is named **Master A9** and answers
+visitors using your local qwen2.5-coder:3b model, through a token-gated public tunnel.
+
+### Architecture (how the pieces connect)
+```
+Visitor browser
+  -> POST /api/chat (www.a9travel.com, Vercel serverless)
+  -> reads OLLAMA_BASE_URL / OLLAMA_MODEL / OLLAMA_API_KEY env
+  -> HTTPS POST https://<tunnel>.trycloudflare.com/v1/chat/completions   (Bearer OLLAMA_API_KEY)
+  -> ollama-gate.js on your PC (port 11555) checks the token
+  -> http://localhost:11434/v1/chat/completions (Ollama, qwen2.5-coder:3b)
+  -> reply flows back the same way
+```
+
+### Vercel env vars (all set, production)
+| Key | Value | Purpose |
+|---|---|---|
+| OLLAMA_BASE_URL | https://<tunnel>.trycloudflare.com/v1 | OpenAI-compatible endpoint of local Ollama via tunnel |
+| OLLAMA_MODEL | qwen2.5-coder:3b | the model |
+| OLLAMA_API_KEY | (generated secret) | bearer token required by ollama-gate |
+| UPSTASH_REDIS_REST_URL / TOKEN | (existing) | chat memory (a9:chat:<sessionId>) |
+
+### Local processes that must keep running (on your PC)
+1. **Ollama** on port 11434 (already running — OLLAMA_HOST=0.0.0.0).
+2. **ollama-gate.js** — token-gated proxy, port 11555.
+   - File: repo `scripts/ollama-gate.js`.
+   - Start: `node scripts/ollama-gate.js 11555 <secret>` (or set OLLAMA_GATE_SECRET env).
+3. **cloudflared quick tunnel** from 11555 to a public URL.
+   - `cloudflared tunnel --url http://localhost:11555 --protocol http2 --edge-ip-version 4`
+   - NOTE: quick-tunnel URL CHANGES every restart. If the PC restarts, run it again and update
+     OLLAMA_BASE_URL on Vercel (or the chat falls back to the keyword bot — it never breaks).
+
+### Master A9 persona + travel knowledge guidelines
+The system prompt (route.ts buildSystemPrompt) now:
+- Tells the model its name is **Master A9** and to say so when asked.
+- Adds **TRAVEL KNOWLEDGE GUIDELINES**: Myanmar destinations (Yangon/Shwedagon, Bagan, Mandalay,
+  Inle Lake, Ngapali, Golden Rock), domestic travel options, best seasons (Nov-Feb cool/dry),
+  Myanmar e-visa basics (advise checking embassy per nationality), and the rule to never invent
+  visa fees/flight rules — use catalog/research or hand off.
+- Still matches language (Burmese in -> Burmese out), asks ONE clarifying question, hands off
+  with phone/email for bookings, keeps answers ~120 words.
+- Keyword fallback is name-aware too: "your name" -> "I'm Master A9...".
+
+### If you change Ollama host/proxy later
+- Local dev without tunnel: set OLLAMA_BASE_URL=http://localhost:11434/v1 (no tunnel needed).
+- Other model: change OLLAMA_MODEL on Vercel (models available: qwen2.5-coder:7b, deepseek-r1:8b, hermes3).
+- Token rotation: generate a new secret, update ollama-gate start command AND OLLAMA_API_KEY on Vercel.
+- Security: ollama-gate only forwards POST /v1/chat/completions with the correct Bearer token;
+  everything else returns 404/401. The tunnel URL itself is unguessable but NOT secret — do not
+  paste it publicly.
