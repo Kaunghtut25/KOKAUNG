@@ -200,7 +200,7 @@ export async function POST(req: NextRequest) {
         });
         const data = await res.json();
         reply = data?.content?.[0]?.text ?? '';
-      } else if (ollamaBase) {
+      } else if (ollamaBase && !apiKey) {
         // Local Ollama (OpenAI-compatible /v1) — no real API key needed
         try {
           const res = await fetch(ollamaBase.replace(/\/$/, '') + '/chat/completions', {
