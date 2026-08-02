@@ -357,3 +357,16 @@ The system prompt (route.ts buildSystemPrompt) now:
 - Security: ollama-gate only forwards POST /v1/chat/completions with the correct Bearer token;
   everything else returns 404/401. The tunnel URL itself is unguessable but NOT secret — do not
   paste it publicly.
+
+---
+
+## 12. v82c (2026-08-02) — post-reboot recovery + model swap (LIVE)
+
+- **Brain**: gemma3:4b (was qwen2.5-coder:3b). Best Burmese of the 4 local models — verified by shootout (qwen2.5-coder:3b/7b + hermes3 all garbled Burmese).
+- **Burmese quality fix**: few-shot BURMESE REPLY STYLE example in the system prompt (show a correct example — a "pure Burmese" prohibition backfired into Karen-script gibberish).
+- **Widget label**: "Travel Assistant • Online now" (was "AI Travel Assistant • Online now"). Verified in deployed chunk layout-cc28334a22f6e5a4.js.
+- **Vercel env (production)**: OLLAMA_BASE_URL=https://guestbook-buck-earthquake-spam.trycloudflare.com/v1 (guestbook tunnel up; coalition-seats-harbour-configured = spare), OLLAMA_MODEL=gemma3:4b, OLLAMA_API_KEY=<raw secret>, maxDuration=60.
+- **Gate gotcha (critical)**: start the gate with the RAW secret from `scripts/ollama-gate-secret.txt` — the `.openclaw/tmp/ollama-secret.txt` copy contains an `OLLAMA_GATE_SECRET=` prefix that makes Vercel auth fail (401 → "trouble connecting" error reply).
+- **Tunnel gotcha**: killing the cloudflared session/wrapper does NOT kill the child process — check `Get-CimInstance Win32_Process -Filter "Name=cloudflared.exe"` before assuming a tunnel is dead.
+- **www.a9travel.com can intermittently ETIMEDOUT** from this network while the deployment URL works — transient edge flake, recovers in minutes.
+- **Deploys this cycle**: frontend-pycum1yra (maxDuration) → frontend-bxtdmhr3e (gemma3) → frontend-5hnm27e2b (label + few-shot). Commits fb6cfb6 → c9ae240 → ae6f0ec → ebd231e.
