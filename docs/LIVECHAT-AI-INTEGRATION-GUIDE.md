@@ -370,3 +370,13 @@ The system prompt (route.ts buildSystemPrompt) now:
 - **Tunnel gotcha**: killing the cloudflared session/wrapper does NOT kill the child process — check `Get-CimInstance Win32_Process -Filter "Name=cloudflared.exe"` before assuming a tunnel is dead.
 - **www.a9travel.com can intermittently ETIMEDOUT** from this network while the deployment URL works — transient edge flake, recovers in minutes.
 - **Deploys this cycle**: frontend-pycum1yra (maxDuration) → frontend-bxtdmhr3e (gemma3) → frontend-5hnm27e2b (label + few-shot). Commits fb6cfb6 → c9ae240 → ae6f0ec → ebd231e.
+
+---
+
+## 13. v82e (2026-08-02) — DeepSeek API connected (fast cloud brain)
+
+- **Brain**: deepseek-chat via https://api.deepseek.com/v1/chat/completions (OpenAI-compatible). Replies in 2–5s (was 23–29s local). Better Burmese too.
+- **Vercel env**: OPENAI_API_KEY=<deepseek key>, OPENAI_BASE_URL=https://api.deepseek.com/v1/chat/completions (FULL endpoint — route uses it as-is), OPENAI_MODEL=deepseek-chat. OLLAMA_* still set as automatic fallback.
+- **Route change**: Ollama branch requires `!apiKey` — so when OPENAI_API_KEY is set, the OpenAI-compatible branch (DeepSeek) wins; remove the key to fall back to local Ollama with zero code changes.
+- **Local stack now optional**: Ollama + gate + tunnel are idle fallback while the DeepSeek key is set — chat works without them.
+- **Key handling**: stored only in Vercel env (Sensitive) + `.openclaw/tmp/env-ds-key.txt`; never commit it.
