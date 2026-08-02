@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { Redis } from '@upstash/redis';
 
+// v82b: allow up to 60s for local Ollama generation (Vercel default is 10s)
+export const maxDuration = 60;
+
 // ─────────────────────────────────────────────────────────────────────────────
 // A9 Travel — Live Chat Brain Route
 // 1. MEMORY  : conversation history per session, stored in Upstash Redis (a9:chat:<sessionId>)
