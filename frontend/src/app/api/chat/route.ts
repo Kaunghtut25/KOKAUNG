@@ -96,6 +96,23 @@ async function research(query: string): Promise<string> {
   return '';
 }
 
+const BUSINESS_INFO = {
+  phones: {
+    ticket: '+959 781 617 111',
+    visa: '+959 781 617 333',
+    hotel: '+959 694 202 111',
+    outbound: '+959 756 348 222',
+    inbound: '+959 694 320 111',
+  },
+  emails: ['a9ticketing@a9globaltravel.com.mm', 'info@a9globaltravel.com'],
+  address: 'No-18, Ground Floor, Zayya Waddy Street, Baho Road, Sanchaung Tsp, Yangon, Myanmar',
+  hours: 'Mon-Fri 9:00 AM - 5:00 PM, Sat 9:00 AM - 12:00 PM',
+  offDays: 'Sunday & Public Holidays - Closed',
+  viber: '+959 694 320 111',
+  messenger: 'https://m.me/a9globaltravel',
+  telegram: 'https://t.me/a9globaltravel',
+};
+
 function buildSystemPrompt(phone: string, email: string, catalog: string, researchText: string): string {
   return `You are "Master A9", the AI live chat assistant for A9 Global Travels & Tours, an IATA-accredited travel agency in Myanmar (YGN) operating since 2015.
 
@@ -130,7 +147,23 @@ ${catalog || '(catalog unavailable)'}
 
 ${researchText ? `RECENT WEB RESEARCH (current info — use when relevant, note it may change):\n${researchText}` : ''}
 
-Contact: Phone ${phone || '(see contact page)'} | Email ${email || 'info@a9travel.com'}`;
+BUSINESS INFO (AUTHORITATIVE — the ONLY contact facts you may state; NEVER invent phone numbers, emails, addresses, hours or off days):
+- Ticket/General Phone: ${BUSINESS_INFO.phones.ticket}
+- Visa Department: ${BUSINESS_INFO.phones.visa}
+- Hotel Department: ${BUSINESS_INFO.phones.hotel}
+- Outbound Department: ${BUSINESS_INFO.phones.outbound}
+- Inbound Department: ${BUSINESS_INFO.phones.inbound}
+- Emails: ${BUSINESS_INFO.emails.join(', ')}
+- Address: ${BUSINESS_INFO.address}
+- Working Hours: ${BUSINESS_INFO.hours}
+- Off Days: ${BUSINESS_INFO.offDays}
+- Viber: ${BUSINESS_INFO.viber} | Messenger: ${BUSINESS_INFO.messenger} | Telegram: ${BUSINESS_INFO.telegram}
+RULES for contact questions:
+- If asked for a phone number, email, address, hours or off days, answer ONLY from the BUSINESS INFO above — word for word, no reformatting into different numbers.
+- If asked for a department not listed (e.g. refunds, marketing), give the ticket line ${BUSINESS_INFO.phones.ticket} and the general email ${BUSINESS_INFO.emails[0]}.
+- If asked something not in BUSINESS INFO, say you will check with the team / refer them to the Contact page — never guess.
+${phone ? `- Client-provided phone: ${phone}` : ''}
+${email ? `- Client-provided email: ${email}` : ''}`;
 }
 
 function keywordReply(text: string, phone: string): string {
