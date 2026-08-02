@@ -158,7 +158,7 @@ export default function LiveChatWidget() {
                   Master A9
                   <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#22c55e', display: 'inline-block' }} />
                 </div>
-                <div style={{ fontSize: 11, opacity: 0.7, color: '#D4AF37' }}>AI Travel Assistant • Online now</div>
+                <div style={{ fontSize: 11, opacity: 0.7, color: '#D4AF37' }}>Travel Assistant • Online now</div>
               </div>
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
