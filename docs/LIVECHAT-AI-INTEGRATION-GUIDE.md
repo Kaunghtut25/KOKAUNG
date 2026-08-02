@@ -380,3 +380,13 @@ The system prompt (route.ts buildSystemPrompt) now:
 - **Route change**: Ollama branch requires `!apiKey` — so when OPENAI_API_KEY is set, the OpenAI-compatible branch (DeepSeek) wins; remove the key to fall back to local Ollama with zero code changes.
 - **Local stack now optional**: Ollama + gate + tunnel are idle fallback while the DeepSeek key is set — chat works without them.
 - **Key handling**: stored only in Vercel env (Sensitive) + `.openclaw/tmp/env-ds-key.txt`; never commit it.
+
+---
+
+## 14. v82f (2026-08-02) — Master A9 knows real business info (no more invented contact details)
+
+- **Problem**: bot gave a fake phone (+95 1 123 4567) because stored `contact.phone` was empty → prompt said "(see contact page)" → model hallucinated.
+- **Fix**: `BUSINESS_INFO` const in `frontend/src/app/api/chat/route.ts` — department phones (ticket +959 781 617 111, visa +959 781 617 333, hotel +959 694 202 111, outbound +959 756 348 222, inbound +959 694 320 111), emails (a9ticketing@a9globaltravel.com.mm, info@a9globaltravel.com), address (No-18 Zayya Waddy St, Baho Rd, Sanchaung, Yangon), hours (Mon-Fri 9-5, Sat 9-12), off days (Sunday & public holidays), viber/messenger/telegram. Prompt ends with "BUSINESS INFO (AUTHORITATIVE...)" + rules: answer ONLY from it word-for-word, NEVER invent; unknown → refer to Contact page.
+- **Verified live**: phone/hours/Sunday/email+address questions all return exact real data (2.4-3.6s, DeepSeek).
+- **Where hours/off-days live**: /contact page HTML only (no site-config fields) — keep BUSINESS_INFO in sync if the user changes business hours.
+- **Patch pitfall**: when generating code that must contain `${...}` literals, never use a JS template literal in the patch script for that content — build via string concat with a DOLLAR variable.
