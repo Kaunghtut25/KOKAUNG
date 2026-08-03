@@ -76,7 +76,7 @@ export async function sendBookingEmail(data: {
     const result = await resend.emails.send({
       from: `A9 Global Travel <${FROM_EMAIL}>`,
       to: [ADMIN_EMAIL],
-      reply_to: data.email,
+      replyTo: data.email,
       subject,
       html,
     });
@@ -169,6 +169,44 @@ export async function sendCustomerConfirmationEmail(data: {
     return true;
   } catch (err) {
     console.error("[Email] Customer confirmation failed:", (err as any)?.message || err);
+    return false;
+  }
+}
+
+/**
+ * Send a 6-digit password-reset OTP to an admin account.
+ * FIX: 2026-08-04 forgot-password
+ */
+export async function sendPasswordResetOtp(toEmail: string, otp: string): Promise<boolean> {
+  const resend = getResend();
+  if (!resend) return false;
+  const subject = "A9 Admin — Password Reset Code";
+  const html = `
+    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #D4AF37; border-radius: 8px;">
+      <h2 style="color: #0A1628; border-bottom: 2px solid #D4AF37; padding-bottom: 10px;">
+        🔐 A9 Admin Password Reset
+      </h2>
+      <p style="color: #333; line-height: 1.6;">We received a request to reset the password for the A9 Global Travel admin panel. Use the code below — it expires in <strong>10 minutes</strong>.</p>
+      <div style="text-align: center; margin: 24px 0;">
+        <span style="font-size: 32px; font-weight: bold; letter-spacing: 8px; color: #0A1628; background: #F5F0E0; padding: 12px 24px; border-radius: 8px; border: 2px dashed #D4AF37;">${otp}</span>
+      </div>
+      <p style="color: #555; font-size: 13px;">If you didn't request this, you can safely ignore this email — your password won't change.</p>
+      <div style="margin-top: 20px; padding: 15px; background: #0A1628; color: #D4AF37; border-radius: 6px; text-align: center; font-size: 14px;">
+        📧 <strong>A9 Global Travel & Tours</strong> — Admin security notification
+      </div>
+    </div>
+  `;
+  try {
+    const result = await resend.emails.send({
+      from: `A9 Global Travel <${FROM_EMAIL}>`,
+      to: [toEmail],
+      subject,
+      html,
+    });
+    console.log(`[Email] Password reset OTP sent to ${toEmail} — Resend ID: ${result.data?.id}`);
+    return true;
+  } catch (err) {
+    console.error("[Email] Password reset OTP failed:", (err as any)?.message || err);
     return false;
   }
 }
