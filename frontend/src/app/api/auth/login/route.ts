@@ -62,7 +62,7 @@ async function isRateLimited(ip: string): Promise<boolean> {
   const redis = getRedis();
   if (redis) {
     try {
-      const count = await redis.get<number>(key);
+      const count: number = (await redis.get(key)) || 0;
       return (count || 0) > MAX_ATTEMPTS;
     } catch {
       // fall through to memory
@@ -146,28 +146,32 @@ export async function POST(request: NextRequest) {
 
     let user: any = null;
 
-    // 1) Env-configured primary admin
-    if (email === ADMIN_EMAIL && password === ADMIN_PASSWORD) {
-      user = { id: "admin-001", email: ADMIN_EMAIL, name: "A9 Admin", role: "admin" };
+    // 1) Users created via Admin → Manage Users (persistentStore users collection).
+    //    A stored "admin-001" record overrides the env-configured primary admin,
+    //    so the admin email/password can be changed from the panel.
+    try {
+      const store = await import("@/lib/persistentStore");
+      const users = (await store.getAll("users" as any)) || [];
+      const found = users.find((u: any) => String(u.email || "").toLowerCase() === String(email || "").toLowerCase());
+      if (found && found.passwordHash && verifyUserPassword(password, found.passwordHash)) {
+        const isPrimary = found.id === "admin-001" || found._id === "admin-001";
+        user = {
+          id: isPrimary ? "admin-001" : (found.id || found._id || "user-" + email),
+          email: found.email,
+          name: found.name || found.email,
+          role: found.role === "admin" || found.role === "staff" || found.role === "editor" || found.role === "viewer"
+            ? found.role
+            : "admin",
+          authorities: Array.isArray(found.authorities) ? found.authorities : [],
+        };
+      }
+    } catch (err) {
+      console.error("[login] users collection check failed:", err);
     }
 
-    // 2) Users created via Admin → Manage Users (persistentStore users collection)
-    if (!user) {
-      try {
-        const store = await import("@/lib/persistentStore");
-        const users = (await store.getAll("users" as any)) || [];
-        const found = users.find((u: any) => String(u.email || "").toLowerCase() === String(email || "").toLowerCase());
-        if (found && found.passwordHash && verifyUserPassword(password, found.passwordHash)) {
-          user = {
-            id: found.id || found._id || "user-" + email,
-            email: found.email,
-            name: found.name || found.email,
-            role: found.role === "admin" ? "admin" : "admin",
-          };
-        }
-      } catch (err) {
-        console.error("[login] users collection check failed:", err);
-      }
+    // 2) Env-configured primary admin (only when no stored admin-001 override exists)
+    if (!user && email === ADMIN_EMAIL && password === ADMIN_PASSWORD) {
+      user = { id: "admin-001", email: ADMIN_EMAIL, name: "A9 Admin", role: "admin", authorities: [] };
     }
 
     if (!user) {

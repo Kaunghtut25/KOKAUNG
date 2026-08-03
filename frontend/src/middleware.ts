@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { isAdminToken } from "@/lib/auth";
+import { isAdminToken, verifyToken } from "@/lib/auth";
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
@@ -38,6 +38,14 @@ export async function middleware(request: NextRequest) {
 
       if (!(await isAdminToken(token))) {
         return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+      }
+
+      // Role-gated: "viewer" role is read-only — block all non-GET writes
+      if (request.method !== "GET") {
+        const payload = await verifyToken(token);
+        if (payload?.role === "viewer") {
+          return NextResponse.json({ message: "Read-only role: writes not allowed" }, { status: 403 });
+        }
       }
     }
   }

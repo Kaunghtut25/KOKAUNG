@@ -49,9 +49,13 @@ export interface AuthPayload {
   email?: string;
   role?: string;
   name?: string;
+  authorities?: string[];
   iat?: number;
   exp?: number;
 }
+
+/** Roles allowed into the admin panel. Used by middleware + API routes. */
+export const ADMIN_ROLES = ["admin", "staff", "editor", "viewer"] as const;
 
 /** Sign a payload into a signed token. Throws if no secret configured. */
 export async function signToken(payload: AuthPayload): Promise<string> {
@@ -92,9 +96,9 @@ export function decodeTokenPayload(token: string): AuthPayload | null {
   }
 }
 
-/** Verify an Authorization header / cookie token and confirm admin role. */
+/** Verify an Authorization header / cookie token and confirm panel role access. */
 export async function isAdminToken(token: string | undefined | null): Promise<boolean> {
   if (!token) return false;
   const payload = await verifyToken(token);
-  return payload?.role === 'admin';
+  return !!payload?.role && (ADMIN_ROLES as readonly string[]).includes(payload.role);
 }
