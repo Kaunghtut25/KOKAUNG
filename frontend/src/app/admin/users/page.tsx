@@ -34,6 +34,12 @@ const AUTHORITIES = [
   { key: "sky-lounge", label: "Sky Lounge" },
 ];
 
+// FIX: 2026-08-04 admin-users-v2b — admin API routes require the bearer token
+function authHeaders(extra: Record<string, string> = {}): Record<string, string> {
+  const token = typeof window !== "undefined" ? localStorage.getItem("admin_token") || "" : "";
+  return { ...extra, Authorization: `Bearer ${token}` };
+}
+
 const roleColor: Record<string, string> = {
   admin: "bg-[#D4AF37]/15 text-[#D4AF37] border-[#D4AF37]/30",
   staff: "bg-sky-500/15 text-sky-300 border-sky-500/30",
@@ -54,7 +60,7 @@ export default function AdminUsersPage() {
   const load = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await fetch("/api/admin/users");
+      const res = await fetch("/api/admin/users", { headers: authHeaders() });
       const data = await res.json();
       setUsers(Array.isArray(data) ? data : []);
     } catch (e) { console.error(e); }
@@ -102,7 +108,7 @@ export default function AdminUsersPage() {
       const method = editId ? "PUT" : "POST";
       const res = await fetch(url, {
         method,
-        headers: { "Content-Type": "application/json" },
+        headers: authHeaders({ "Content-Type": "application/json" }),
         body: JSON.stringify({ ...form, authorities: auths }),
       });
       const data = await res.json();
@@ -120,7 +126,7 @@ export default function AdminUsersPage() {
   const del = async (id: string) => {
     if (!confirm("Delete this user? They will no longer be able to log in.")) return;
     try {
-      await fetch(`/api/admin/users?id=${id}`, { method: "DELETE" });
+      await fetch(`/api/admin/users?id=${id}`, { method: "DELETE", headers: authHeaders() });
       await load();
     } catch (e) { console.error(e); }
   };
