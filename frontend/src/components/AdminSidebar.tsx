@@ -34,14 +34,28 @@ export default function AdminSidebar() {
   const [adminUser, setAdminUser] = useState<string>("");
 
   useEffect(() => {
-    const user = localStorage.getItem("admin_user");
-    if (user) {
-      try {
-        const parsed = JSON.parse(user);
-        setAdminUser(parsed.username || parsed.email || "Admin");
-      } catch {
-        setAdminUser(user);
-      }
+    // FIX: 2026-08-04 admin-users-v3 — show LIVE user data from the API,
+    // not the stale localStorage snapshot captured at login time.
+    const snapshot = localStorage.getItem("admin_user");
+    const setFrom = (u: any) => setAdminUser(u?.name || u?.email || "Admin");
+    if (snapshot) {
+      try { setFrom(JSON.parse(snapshot)); } catch { setAdminUser(snapshot); }
+    }
+    const token = localStorage.getItem("admin_token");
+    if (token) {
+      fetch("/api/admin/users", { headers: { Authorization: `Bearer ${token}` } })
+        .then((r) => r.json())
+        .then((users) => {
+          if (!Array.isArray(users) || users.length === 0) return;
+          let snap: any = {};
+          try { snap = JSON.parse(snapshot || "{}"); } catch { /* ignore */ }
+          const row =
+            users.find((u: any) => u.email === snap.email) ||
+            users.find((u: any) => u.isPrimary) ||
+            users[0];
+          if (row) setFrom(row);
+        })
+        .catch(() => { /* keep snapshot fallback */ });
     }
   }, []);
 

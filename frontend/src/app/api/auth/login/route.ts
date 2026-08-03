@@ -145,6 +145,7 @@ export async function POST(request: NextRequest) {
     }
 
     let user: any = null;
+    let primaryOverride: any = null; // stored admin-001 record, if any
 
     // 1) Users created via Admin → Manage Users (persistentStore users collection).
     //    A stored "admin-001" record overrides the env-configured primary admin,
@@ -152,6 +153,7 @@ export async function POST(request: NextRequest) {
     try {
       const store = await import("@/lib/persistentStore");
       const users = (await store.getAll("users" as any)) || [];
+      primaryOverride = users.find((u: any) => u.id === "admin-001" || u._id === "admin-001") || null;
       const found = users.find((u: any) => String(u.email || "").toLowerCase() === String(email || "").toLowerCase());
       if (found && found.passwordHash && verifyUserPassword(password, found.passwordHash)) {
         const isPrimary = found.id === "admin-001" || found._id === "admin-001";
@@ -170,7 +172,7 @@ export async function POST(request: NextRequest) {
     }
 
     // 2) Env-configured primary admin (only when no stored admin-001 override exists)
-    if (!user && email === ADMIN_EMAIL && password === ADMIN_PASSWORD) {
+    if (!user && !primaryOverride && email === ADMIN_EMAIL && password === ADMIN_PASSWORD) {
       user = { id: "admin-001", email: ADMIN_EMAIL, name: "A9 Admin", role: "admin", authorities: [] };
     }
 
