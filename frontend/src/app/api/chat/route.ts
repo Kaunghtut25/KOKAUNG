@@ -29,6 +29,51 @@ function getRedis(): any {
   return _redis;
 }
 
+// ── Rate limiting: 60 msgs / 15 min per IP (Upstash Redis when available, in-memory fallback) ──
+// FIX: 2026-08-04 add rate limiting to /api/chat (prevents LLM bill abuse)
+const RL_WINDOW_MS = 15 * 60 * 1000;
+const RL_MAX = 60;
+
+const rlMemory = new Map<string, { count: number; resetAt: number }>();
+
+function clientIp(req: NextRequest): string {
+  const fwd = req.headers.get('x-forwarded-for');
+  if (fwd) return fwd.split(',')[0].trim();
+  return req.headers.get('x-real-ip') || 'unknown';
+}
+
+async function isChatRateLimited(ip: string): Promise<boolean> {
+  const key = 'a9:rl:chat:' + ip;
+  const redis = getRedis();
+  if (redis) {
+    try {
+      const count: number = (await redis.get(key)) || 0;
+      return (count || 0) >= RL_MAX;
+    } catch { /* fall through to memory */ }
+  }
+  const bucket = rlMemory.get(key);
+  if (!bucket || bucket.resetAt < Date.now()) return false;
+  return bucket.count >= RL_MAX;
+}
+
+async function recordChatHit(ip: string): Promise<void> {
+  const key = 'a9:rl:chat:' + ip;
+  const redis = getRedis();
+  if (redis) {
+    try {
+      await redis.pipeline().incr(key).expire(key, Math.ceil(RL_WINDOW_MS / 1000)).exec();
+      return;
+    } catch { /* fall through to memory */ }
+  }
+  const now = Date.now();
+  const bucket = rlMemory.get(key);
+  if (!bucket || bucket.resetAt < now) {
+    rlMemory.set(key, { count: 1, resetAt: now + RL_WINDOW_MS });
+  } else {
+    bucket.count += 1;
+  }
+}
+
 const KEYWORD_FALLBACK: Record<string, string> = {
   tour: "Great choice! We offer premium tour packages across Myanmar — Bagan, Inle Lake, Yangon & more. Could you share your preferred destination and travel dates?",
   hotel: "We partner with 30+ luxury hotels in Myanmar. Which city are you looking to stay in, and what's your budget range?",
@@ -184,6 +229,13 @@ export async function POST(req: NextRequest) {
   if (!Array.isArray(messages) || messages.length === 0) {
     return NextResponse.json({ error: 'messages required' }, { status: 400 });
   }
+
+  // ── 0. RATE LIMIT: check before any LLM/Redis work ──
+  const ip = clientIp(req);
+  if (await isChatRateLimited(ip)) {
+    return NextResponse.json({ error: 'Too many messages. Please try again later.' }, { status: 429 });
+  }
+  await recordChatHit(ip);
   const sid = (typeof sessionId === 'string' && sessionId.length >= 8 && sessionId.length <= 64) ? sessionId : 'anon_' + Date.now().toString(36) + Math.random().toString(36).slice(2, 10);
   const phone = siteInfo?.phone || '';
   const email = siteInfo?.email || '';

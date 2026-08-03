@@ -26,10 +26,10 @@ export async function middleware(request: NextRequest) {
   // Protect /api/admin/* routes — EXCEPT public GET on site-config and settings
   if (pathname.startsWith("/api/admin/")) {
     // Allow public GET on site-config and settings (needed for Footer, Navbar, Contact, etc.)
+    // FIX: 2026-08-04 removed /api/admin/seed from public GET whitelist (was leaking catalog data)
     const isPublicRead = request.method === "GET" && (
       pathname === "/api/admin/site-config" ||
-      pathname === "/api/admin/settings" ||
-      pathname === "/api/admin/seed"
+      pathname === "/api/admin/settings"
     );
 
     if (!isPublicRead) {

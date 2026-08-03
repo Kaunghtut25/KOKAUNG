@@ -70,7 +70,11 @@ export async function verifyToken(token: string): Promise<AuthPayload | null> {
     const expected = await hmacSign(body);
     if (expected !== sig) return null;
     const payload = JSON.parse(b64urlDecode(body)) as AuthPayload;
-    if (payload.exp && payload.exp < Date.now()) return null;
+    // FIX: 2026-08-04 accept exp in epoch-seconds OR epoch-ms (some signers use seconds)
+    if (payload.exp) {
+      const expMs = payload.exp < 1e12 ? payload.exp * 1000 : payload.exp;
+      if (expMs < Date.now()) return null;
+    }
     return payload;
   } catch {
     return null;
