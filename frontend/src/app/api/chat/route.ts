@@ -233,7 +233,7 @@ function keywordReply(text: string, phone: string): string {
   if (lower.includes('ဗီဇာ')) return KEYWORD_FALLBACK['ဗီဇာ'];
   if (lower.includes('ကား')) return KEYWORD_FALLBACK['ကား'];
   if (lower.includes('အေးဂျင့်') || lower.includes('လူ') && lower.includes('ပြော')) return KEYWORD_FALLBACK['အေးဂျင့်'];
-  return `Thank you for your message! Our team will get back to you shortly.${phone ? ` For urgent inquiries, please call ${phone}.` : '}`;
+  return `Thank you for your message! Our team will get back to you shortly.${phone ? ` For urgent inquiries, please call ${phone}.` : ''}`;
 }
 
 export async function POST(req: NextRequest) {
