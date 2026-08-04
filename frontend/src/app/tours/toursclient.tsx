@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import React, { useState } from 'react';
 import TourCard from '@/components/TourCard';
@@ -9,6 +9,24 @@ import TestimonialSlider from '@/components/TestimonialSlider';
 import RoutesMap from '@/components/RoutesMap';
 import ScrollingRow from '@/components/ScrollingRow';
 
+/** Myanmar destinations — auto-classified as Inbound */
+const MYANMAR_CITIES = [
+  'bagan', 'yangon', 'mandalay', 'inle', 'ngapali', 'mingun', 'sagaing',
+  'pyin oo lwin', 'hsipaw', 'mrauk u', 'loikaw', 'kyaiktiyo', 'dawei',
+  'myeik', 'kawthaung', 'putao', 'naypyidaw', 'taunggyi', 'kalaw',
+  'pindaya', 'bago', 'popa', 'mount popa', 'thanlyin',
+].flatMap(c => [c, `, ${c}`, `,${c}`]); // match partial too
+
+export function detectTourType(tour: { destination?: string; tourType?: string }): 'inbound' | 'outbound' {
+  // 1) explicit field
+  if (tour.tourType === 'inbound' || tour.tourType === 'outbound') return tour.tourType as 'inbound' | 'outbound';
+  // 2) inference from destination
+  const dest = (tour.destination || '').toLowerCase();
+  if (dest === 'myanmar' || dest.includes('myanmar')) return 'inbound';
+  if (MYANMAR_CITIES.some(c => dest.includes(c))) return 'inbound';
+  return 'outbound';
+}
+
 export default function ToursClient(props: any) {
   const heroImage = props.siteConfig?.heroImages?.tours || "/images_v2/hero-tours-v2.jpg";
   const toursText = props.siteConfig?.heroText?.tours || {};
@@ -18,7 +36,6 @@ export default function ToursClient(props: any) {
   const toursTitleSize = toursText.titleSize || "3rem";
   const toursSubtitleSize = toursText.subtitleSize || "1.2rem";
   const { initialTours, preloadMap } = props;
-  // Use server-rendered data directly — no client re-fetch to avoid flash of old content
   const apiTours = initialTours;
   const [currency, setCurrency] = useState<"MMK" | "USD">("MMK");
   const layout = props.siteConfig?.sectionLayouts?.tours || { desktop: 3, tablet: 2, mobile: 1 };
@@ -28,16 +45,20 @@ export default function ToursClient(props: any) {
   const cardHeight = props.siteConfig?.cardDimensions?.tours?.height || 420;
   const cardInfo = { width: cardWidth, height: cardHeight, containerWidth: 6 * (cardWidth + 16) };
 
+  // ── Tab ──
+  type TourTab = 'all' | 'inbound' | 'outbound';
+  const [activeTab, setActiveTab] = useState<TourTab>('all');
 
+  // ── Filters ──
   const [destination, setDestination] = useState('');
   const [minPrice, setMinPrice] = useState('');
   const [maxPrice, setMaxPrice] = useState('');
   const [durationFilter, setDurationFilter] = useState('');
   const [sort, setSort] = useState('');
-  
-
 
   const filteredTours = apiTours.filter((t: any) => {
+    // tab filter
+    if (activeTab !== 'all' && detectTourType(t) !== activeTab) return false;
     const q = destination.toLowerCase();
     if (q && !String(t.destination).toLowerCase().includes(q) && !String(t.title).toLowerCase().includes(q)) return false;
     if (minPrice && t.priceMMK < Number(minPrice)) return false;
@@ -67,21 +88,30 @@ export default function ToursClient(props: any) {
     return 0;
   });
   const pool = [...sortedTours];
-  // Group by row field
   const rowMap = new Map<number, typeof pool>();
   pool.forEach(t => {
     const r = (t as any).row || 1;
     if (!rowMap.has(r)) rowMap.set(r, []);
     rowMap.get(r)!.push(t);
   });
-  // Sort by row number, limit each row to 6
   const tourRows = [...rowMap.entries()]
     .sort(([a],[b]) => a - b)
     .map(([,items]) => items.slice(0, 6));
 
+  // counts for tab badges
+  const countInbound = apiTours.filter((t: any) => detectTourType(t) === 'inbound').length;
+  const countOutbound = apiTours.filter((t: any) => detectTourType(t) === 'outbound').length;
+
+  const tabCls = (tab: TourTab) =>
+    `px-5 py-2.5 rounded-full text-sm font-medium transition-all duration-200 ${
+      activeTab === tab
+        ? 'bg-[#D4AF37] text-[#0A1628] shadow-lg shadow-[#D4AF37]/30'
+        : 'bg-white/10 text-white/70 hover:bg-white/20 hover:text-white border border-white/20'
+    }`;
+
   return (
     <main className="min-h-screen bg-white">
-      {/* Hero */}
+      {/* ── Hero (same for all tabs) ── */}
       <section className="relative pt-24 pb-12 px-4 overflow-hidden" style={{ height: (props.siteConfig?.heroDimensions?.["tours"]?.desktop || 480) + "px" }}>
         <div className="absolute inset-0">
           <img src={heroImage} alt="A9 Global Tours" className="w-full h-full object-cover" onError={(e) => { (e.target as HTMLImageElement).src = "/images_v2/hero-tours-v2.jpg"; }} />
@@ -95,8 +125,34 @@ export default function ToursClient(props: any) {
         </div>
       </section>
 
-      {/* Filters */}
+      {/* ── Inbound / Outbound tabs + Filters ── */}
       <section className="max-w-6xl mx-auto px-4 py-6">
+        {/* Tab row */}
+        <div className="flex flex-wrap justify-center gap-3 mb-6">
+          <button onClick={() => setActiveTab('all')} className={tabCls('all')}>
+            🇲🇲 All Tours ({apiTours.length})
+          </button>
+          <button onClick={() => setActiveTab('inbound')} className={tabCls('inbound')}>
+            🏔️ Inbound ({countInbound})
+          </button>
+          <button onClick={() => setActiveTab('outbound')} className={tabCls('outbound')}>
+            🌏 Outbound ({countOutbound})
+          </button>
+        </div>
+
+        {/* Inbound / Outbound description bar */}
+        {activeTab === 'inbound' && (
+          <p className="text-center text-gray-500 text-sm mb-4">
+            Discover Myanmar — guided tours across Bagan, Inle Lake, Yangon, Mandalay & more.
+          </p>
+        )}
+        {activeTab === 'outbound' && (
+          <p className="text-center text-gray-500 text-sm mb-4">
+            International tours to Thailand, Vietnam, Bali, Singapore, Japan & beyond.
+          </p>
+        )}
+
+        {/* Filters */}
         <div className="flex flex-wrap gap-3 items-center justify-center">
           <input value={destination} onChange={(e) => setDestination(e.target.value)} placeholder="Destination" className="px-4 py-2 rounded-xl border border-gray-200 text-sm" />
           <input value={minPrice} onChange={(e) => setMinPrice(e.target.value)} placeholder="Min Price" type="number" className="px-4 py-2 rounded-xl border border-gray-200 text-sm w-28" />
@@ -144,10 +200,10 @@ export default function ToursClient(props: any) {
           </div>
         )}
       </section>
-          <DealsBanner />
+      <DealsBanner />
       <FAQAccordion section="tours" />
       <TestimonialSlider />
       <RoutesMap />
-</main>
+    </main>
   );
 }
