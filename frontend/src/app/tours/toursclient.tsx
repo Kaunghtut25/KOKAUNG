@@ -123,7 +123,7 @@ export default function ToursClient(props: any) {
       <section className="max-w-6xl mx-auto px-4 py-8">
         {/* Tab bar — premium pill-style with underline accent */}
         <div className="flex flex-col items-center mb-8">
-          <div className="inline-flex bg-gray-100 rounded-2xl p-1.5 gap-1 shadow-inner">
+          <div className="inline-flex bg-gray-100 rounded-2xl p-1.5 gap-1 shadow-inner border border-[#D4AF37]/30">
             <button
               onClick={() => setActiveTab('all')}
               className={`relative px-6 py-2.5 rounded-xl text-sm font-medium transition-all duration-300 ${
