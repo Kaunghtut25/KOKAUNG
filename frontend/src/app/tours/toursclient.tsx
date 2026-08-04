@@ -102,12 +102,6 @@ export default function ToursClient(props: any) {
   const countInbound = apiTours.filter((t: any) => detectTourType(t) === 'inbound').length;
   const countOutbound = apiTours.filter((t: any) => detectTourType(t) === 'outbound').length;
 
-  const tabCls = (tab: TourTab) =>
-    `px-5 py-2.5 rounded-full text-sm font-medium transition-all duration-200 ${
-      activeTab === tab
-        ? 'bg-[#D4AF37] text-[#0A1628] shadow-lg shadow-[#D4AF37]/30'
-        : 'bg-white/10 text-white/70 hover:bg-white/20 hover:text-white border border-white/20'
-    }`;
 
   return (
     <main className="min-h-screen bg-white">
@@ -126,31 +120,64 @@ export default function ToursClient(props: any) {
       </section>
 
       {/* ── Inbound / Outbound tabs + Filters ── */}
-      <section className="max-w-6xl mx-auto px-4 py-6">
-        {/* Tab row */}
-        <div className="flex flex-wrap justify-center gap-3 mb-6">
-          <button onClick={() => setActiveTab('all')} className={tabCls('all')}>
-            🇲🇲 All Tours ({apiTours.length})
-          </button>
-          <button onClick={() => setActiveTab('inbound')} className={tabCls('inbound')}>
-            🏔️ Inbound ({countInbound})
-          </button>
-          <button onClick={() => setActiveTab('outbound')} className={tabCls('outbound')}>
-            🌏 Outbound ({countOutbound})
-          </button>
-        </div>
+      <section className="max-w-6xl mx-auto px-4 py-8">
+        {/* Tab bar — premium pill-style with underline accent */}
+        <div className="flex flex-col items-center mb-8">
+          <div className="inline-flex bg-gray-100 rounded-2xl p-1.5 gap-1 shadow-inner">
+            <button
+              onClick={() => setActiveTab('all')}
+              className={`relative px-6 py-2.5 rounded-xl text-sm font-medium transition-all duration-300 ${
+                activeTab === 'all'
+                  ? 'bg-white text-[#0A1628] shadow-lg shadow-black/10'
+                  : 'text-gray-500 hover:text-gray-700'
+              }`}
+            >
+              All Tours
+              <span className={`ml-2 text-xs px-2 py-0.5 rounded-full ${activeTab === 'all' ? 'bg-[#D4AF37]/15 text-[#B8930E]' : 'bg-gray-200 text-gray-400'}`}>
+                {apiTours.length}
+              </span>
+            </button>
+            <button
+              onClick={() => setActiveTab('inbound')}
+              className={`relative px-6 py-2.5 rounded-xl text-sm font-medium transition-all duration-300 ${
+                activeTab === 'inbound'
+                  ? 'bg-white text-[#0A1628] shadow-lg shadow-black/10'
+                  : 'text-gray-500 hover:text-gray-700'
+              }`}
+            >
+              🇲🇲 Inbound
+              <span className={`ml-2 text-xs px-2 py-0.5 rounded-full ${activeTab === 'inbound' ? 'bg-emerald-100 text-emerald-700' : 'bg-gray-200 text-gray-400'}`}>
+                {countInbound}
+              </span>
+            </button>
+            <button
+              onClick={() => setActiveTab('outbound')}
+              className={`relative px-6 py-2.5 rounded-xl text-sm font-medium transition-all duration-300 ${
+                activeTab === 'outbound'
+                  ? 'bg-white text-[#0A1628] shadow-lg shadow-black/10'
+                  : 'text-gray-500 hover:text-gray-700'
+              }`}
+            >
+              🌏 Outbound
+              <span className={`ml-2 text-xs px-2 py-0.5 rounded-full ${activeTab === 'outbound' ? 'bg-sky-100 text-sky-700' : 'bg-gray-200 text-gray-400'}`}>
+                {countOutbound}
+              </span>
+            </button>
+          </div>
 
-        {/* Inbound / Outbound description bar */}
-        {activeTab === 'inbound' && (
-          <p className="text-center text-gray-500 text-sm mb-4">
-            Discover Myanmar — guided tours across Bagan, Inle Lake, Yangon, Mandalay & more.
+          {/* Description */}
+          <p className="text-center text-gray-400 text-sm mt-4 max-w-xl leading-relaxed">
+            {activeTab === 'all' && (
+              <>Explore our complete collection of premium tours — from Myanmar's ancient temples to Southeast Asia's vibrant cities.</>
+            )}
+            {activeTab === 'inbound' && (
+              <>Discover the Golden Land — guided journeys through Bagan's temples, Inle's floating gardens, Yangon's colonial charm, and Mandalay's royal heritage.</>
+            )}
+            {activeTab === 'outbound' && (
+              <>Venture beyond Myanmar — curated international tours to Thailand, Vietnam, Bali, Singapore, Japan, and more. Visas handled by our team.</>
+            )}
           </p>
-        )}
-        {activeTab === 'outbound' && (
-          <p className="text-center text-gray-500 text-sm mb-4">
-            International tours to Thailand, Vietnam, Bali, Singapore, Japan & beyond.
-          </p>
-        )}
+        </div>
 
         {/* Filters */}
         <div className="flex flex-wrap gap-3 items-center justify-center">
