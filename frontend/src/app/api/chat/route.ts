@@ -80,6 +80,12 @@ const KEYWORD_FALLBACK: Record<string, string> = {
   visa: "We handle visa applications for 30+ countries. Which country's visa do you need, and what's your passport nationality?",
   car: "We offer a fleet of 30+ vehicles — from sedans to luxury vans. What type of vehicle do you need and for how many days?",
   agent: "I'm connecting you to one of our travel consultants. Please hold for a moment...",
+  // FIX: 2026-08-04 Burmese keyword fallback — so Burmese visitors get replies in their language
+  "ခရီး": "ကျေးဇူးပြု၍ သွားရောက်လိုသည့် နေရာနှင့် ခရီးသွားမည့်ရက်ကို ပြောပြပေးပါ။ A9 Global မှ မြန်မာနိုင်ငံတစ်ဝှမ်း (ပုဂံ၊ အင်းလေး၊ ရန်ကုန် စသည်) tour များ စီစဉ်ပေးပါသည်။",
+  "ဟိုတယ်": "မည်သည့်မြို့တွင် တည်းခိုလိုပါသလဲ။ ဘတ်ဂျက် ဘယ်လောက်ရှိပါသလဲ။ A9 Global မှ မြန်မာနိုင်ငံအနှံ့ ဟိုတယ် ၃၀ ကျော်နှင့် ချိတ်ဆက်ထားပါသည်။",
+  "ဗီဇာ": "မည်သည့်နိုင်ငံအတွက် ဗီဇာလျှောက်ထားလိုပါသလဲ။ နိုင်ငံကူးလက်မှတ် နိုင်ငံသားက ဘာပါလဲ။ A9 Global မှ နိုင်ငံ ၃၀ ကျော်အတွက် ဗီဇာလျှောက်ထားပေးပါသည်။",
+  "ကား": "မည်သည့်ကားအမျိုးအစား လိုအပ်ပါသလဲ။ ဘယ်နှစ်ရက်စီစဉ်ပေးရမလဲ။ A9 Global မှ ကား ၃၀ ကျော် ငှားရမ်းပေးပါသည်။",
+  "အေးဂျင့်": "ခဏစောင့်ပါ။ ကျွန်ုပ်တို့၏ travel consultant တစ်ဦးနှင့် ချိတ်ဆက်ပေးပါမည်။",
 };
 
 // ── travel catalog snapshot (live data for grounding) ───────────────────────
@@ -221,7 +227,13 @@ function keywordReply(text: string, phone: string): string {
   if (lower.includes('visa')) return KEYWORD_FALLBACK.visa;
   if (lower.includes('car')) return KEYWORD_FALLBACK.car;
   if (lower.includes('agent') || lower.includes('human') || lower.includes('speak')) return KEYWORD_FALLBACK.agent + (phone ? ` You can also reach us directly at ${phone}.` : '');
-  return `Thank you for your message! Our team will get back to you shortly.${phone ? ` For urgent inquiries, please call ${phone}.` : ''}`;
+  // FIX: 2026-08-04 Burmese keyword branches
+  if (lower.includes('ခရီး') || lower.includes('ဘွတ်ကင်') || lower.includes('booking')) return KEYWORD_FALLBACK['ခရီး'];
+  if (lower.includes('ဟိုတယ်')) return KEYWORD_FALLBACK['ဟိုတယ်'];
+  if (lower.includes('ဗီဇာ')) return KEYWORD_FALLBACK['ဗီဇာ'];
+  if (lower.includes('ကား')) return KEYWORD_FALLBACK['ကား'];
+  if (lower.includes('အေးဂျင့်') || lower.includes('လူ') && lower.includes('ပြော')) return KEYWORD_FALLBACK['အေးဂျင့်'];
+  return `Thank you for your message! Our team will get back to you shortly.${phone ? ` For urgent inquiries, please call ${phone}.` : '}`;
 }
 
 export async function POST(req: NextRequest) {
