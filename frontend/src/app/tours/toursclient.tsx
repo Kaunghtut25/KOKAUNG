@@ -129,7 +129,7 @@ export default function ToursClient(props: any) {
               className={`relative px-6 py-2.5 rounded-xl text-sm font-medium transition-all duration-300 ${
                 activeTab === 'all'
                   ? 'bg-white text-[#0A1628] shadow-lg shadow-black/10'
-                  : 'text-gray-500 hover:text-gray-700'
+                  : 'text-gray-500 hover:text-[#D4AF37] hover:bg-[#D4AF37]/10'
               }`}
             >
               All Tours
@@ -142,10 +142,10 @@ export default function ToursClient(props: any) {
               className={`relative px-6 py-2.5 rounded-xl text-sm font-medium transition-all duration-300 ${
                 activeTab === 'inbound'
                   ? 'bg-white text-[#0A1628] shadow-lg shadow-black/10'
-                  : 'text-gray-500 hover:text-gray-700'
+                  : 'text-gray-500 hover:text-[#D4AF37] hover:bg-[#D4AF37]/10'
               }`}
             >
-              🇲🇲 Inbound
+              🏔️ Inbound
               <span className={`ml-2 text-xs px-2 py-0.5 rounded-full ${activeTab === 'inbound' ? 'bg-emerald-100 text-emerald-700' : 'bg-gray-200 text-gray-400'}`}>
                 {countInbound}
               </span>
@@ -155,7 +155,7 @@ export default function ToursClient(props: any) {
               className={`relative px-6 py-2.5 rounded-xl text-sm font-medium transition-all duration-300 ${
                 activeTab === 'outbound'
                   ? 'bg-white text-[#0A1628] shadow-lg shadow-black/10'
-                  : 'text-gray-500 hover:text-gray-700'
+                  : 'text-gray-500 hover:text-[#D4AF37] hover:bg-[#D4AF37]/10'
               }`}
             >
               🌏 Outbound
