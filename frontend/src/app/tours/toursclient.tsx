@@ -102,24 +102,6 @@ export default function ToursClient(props: any) {
   const countInbound = apiTours.filter((t: any) => detectTourType(t) === 'inbound').length;
   const countOutbound = apiTours.filter((t: any) => detectTourType(t) === 'outbound').length;
 
-  // ── Featured destination cards ──
-  const FEATURED_DESTINATIONS: Record<string, { name: string; image: string; blurb: string }[]> = {
-    inbound: [
-      { name: "Bagan", image: "/images_v2/bagan-v2.jpg", blurb: "Ancient temples & sunrise balloons" },
-      { name: "Inle Lake", image: "/images_v2/inle-v2.jpg", blurb: "Floating gardens & leg rowers" },
-      { name: "Mandalay", image: "/images_v2/mandalay-v2.jpg", blurb: "Royal heritage & craft villages" },
-      { name: "Ngapali Beach", image: "/images_v2/ngapali-v2.jpg", blurb: "Pristine white-sand escape" },
-      { name: "Yangon", image: "/images_v2/yangon-v2.jpg", blurb: "Colonial charm & Shwedagon" },
-    ],
-    outbound: [
-      { name: "Thailand", image: "/images_v2/hero-thailand-v2.jpg", blurb: "Bangkok, Chiang Mai & islands" },
-      { name: "Vietnam", image: "/images_v2/hero-vietnam-v2.jpg", blurb: "Ha Long Bay & old towns" },
-      { name: "Singapore", image: "/images_v2/hero-singapore-v2.jpg", blurb: "City in a garden" },
-      { name: "Japan", image: "/images_v2/dest-japan-v2.jpg", blurb: "Tokyo, Kyoto & Mt Fuji" },
-      { name: "Dubai", image: "/images_v2/dest-dubai-v2.jpg", blurb: "Desert & futuristic skyline" },
-    ],
-  };
-
 
   return (
     <main className="min-h-screen bg-white">
@@ -235,45 +217,6 @@ export default function ToursClient(props: any) {
         </div>
       </section>
 
-      {/* ── Featured destination cards ── */}
-      {activeTab !== 'all' && (
-        <section className="max-w-7xl mx-auto px-4 pb-2">
-          <div className="flex items-end justify-between mb-5">
-            <div>
-              <h3
-                className="text-lg md:text-xl font-bold text-[#0A1628]"
-                style={{ fontFamily: "'Playfair Display', Georgia, serif" }}
-              >
-                {activeTab === 'inbound' ? '🏔️ Featured Myanmar Destinations' : '🌏 Featured Outbound Destinations'}
-              </h3>
-              <p className="text-gray-400 text-xs mt-0.5">Tap a destination to filter tours</p>
-            </div>
-          </div>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
-            {FEATURED_DESTINATIONS[activeTab].map((d) => (
-              <button
-                key={d.name}
-                onClick={() => { setDestination(d.name); }}
-                className="group relative rounded-2xl overflow-hidden h-40 text-left focus:outline-none border border-white/10 hover:border-[#D4AF37]/60 transition-all duration-300 shadow-md hover:shadow-xl hover:shadow-[#D4AF37]/20 hover:-translate-y-1"
-              >
-                <img
-                  src={d.image}
-                  alt={d.name}
-                  className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                  onError={(e) => { (e.target as HTMLImageElement).src = "/images_v2/hero-tours-v2.jpg"; }}
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#0A1628]/90 via-[#0A1628]/25 to-transparent" />
-                <div className="absolute bottom-0 left-0 right-0 p-3">
-                  <p className="text-white font-bold text-sm" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>{d.name}</p>
-                  <p className="text-[#D4AF37] text-[10px] font-medium mt-0.5 opacity-0 group-hover:opacity-100 transition-opacity">{d.blurb}</p>
-                </div>
-                <div className="absolute top-2 right-2 w-6 h-6 rounded-full bg-[#D4AF37]/90 text-[#0A1628] flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity text-xs font-bold">→</div>
-              </button>
-            ))}
-          </div>
-        </section>
-      )}
-
       {/* Tour Rows */}
       <section className="max-w-7xl mx-auto px-4 pb-16">
         {sortedTours.length === 0 ? (
@@ -290,7 +233,7 @@ export default function ToursClient(props: any) {
                 <ScrollingRow containerWidth={cardInfo.containerWidth}>
                   {row.map((item, i) => (
                     <div key={item._id || i} className="flex-shrink-0 snap-start" style={{ width: cardInfo.width }}>
-                      <TourCard tour={item} currency={currency} preloadedImage={preloadMap?.[item._id]} cardWidth={cardInfo.width} cardHeight={cardInfo.height} tourType={detectTourType(item)} />
+                      <TourCard tour={item} currency={currency} preloadedImage={preloadMap?.[item._id]} cardWidth={cardInfo.width} cardHeight={cardInfo.height} />
                     </div>
                   ))}
                 </ScrollingRow>
