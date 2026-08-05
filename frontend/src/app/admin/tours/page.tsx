@@ -25,6 +25,7 @@ interface Tour {
   row: number;
   status: string;
   featured: boolean;
+  tourType?: string;
   createdAt?: string;
 }
 
@@ -51,6 +52,7 @@ const emptyTour: Tour = {
   row: 1,
   status: "active",
   featured: false,
+  tourType: "",
 };
 
 export default function AdminToursPage() {
@@ -624,6 +626,20 @@ export default function AdminToursPage() {
             <option value="featured">Featured</option>
           </select>
         </div>
+        <div>
+          <label className="block text-white/70 text-sm mb-1">Tour Type</label>
+          <select
+            value={editingTour.tourType || ""}
+            onChange={(e) => handleFieldChange("tourType", e.target.value)}
+            className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-gold/50 transition-colors"
+          >
+            <option value="">Auto-detect (by destination)</option>
+            <option value="inbound">🏔 Inbound (Myanmar)</option>
+            <option value="outbound">🌏 Outbound (International)</option>
+          </select>
+        </div>
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="flex items-end pb-0.5">
           <label className="flex items-center gap-3 cursor-pointer">
             <input
@@ -721,6 +737,9 @@ export default function AdminToursPage() {
                   Status
                 </th>
                 <th className="text-left p-4 text-white/40 font-semibold uppercase tracking-wider text-[11px]">
+                  Type
+                </th>
+                <th className="text-left p-4 text-white/40 font-semibold uppercase tracking-wider text-[11px]">
                   Actions
                 </th>
               </tr>
@@ -729,7 +748,7 @@ export default function AdminToursPage() {
               {tours.length === 0 ? (
                 <tr>
                   <td
-                    colSpan={8}
+                    colSpan={9}
                     className="p-10 text-center text-white/30"
                   >
                     <span className="text-3xl block mb-2">✈️</span>
