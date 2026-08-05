@@ -11,9 +11,10 @@ interface TourCardProps {
   preloadedImage?: string;
   cardWidth?: number;
   cardHeight?: number;
+  tourType?: 'inbound' | 'outbound';
 }
 
-export default function TourCard({ tour, currency = 'MMK', preloadedImage, cardWidth, cardHeight }: TourCardProps) {
+export default function TourCard({ tour, currency = 'MMK', preloadedImage, cardWidth, cardHeight, tourType }: TourCardProps) {
   const router = useRouter();
   const [imgError, setImgError] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
@@ -97,6 +98,17 @@ export default function TourCard({ tour, currency = 'MMK', preloadedImage, cardW
               {tour?.duration || ''}
             </span>
           </div>
+          {tourType && (
+            <div className="absolute bottom-3 left-3 z-20">
+              <span className={`inline-block px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider border backdrop-blur-sm shadow-lg shadow-black/30 ${
+                tourType === 'inbound'
+                  ? 'bg-emerald-500/85 text-white border-emerald-300/40'
+                  : 'bg-sky-500/85 text-white border-sky-300/40'
+              }`}>
+                {tourType === 'inbound' ? '🏔 Inbound' : '🌏 Outbound'}
+              </span>
+            </div>
+          )}
           {tour?.featured && (
             <div className="absolute top-7 left-1/2 -translate-x-1/2 z-20">
               <span className="inline-block px-2.5 py-0.5 rounded-full bg-[#D4AF37]/90 text-[#0A1628] text-[10px] font-bold uppercase tracking-wider shadow-lg">

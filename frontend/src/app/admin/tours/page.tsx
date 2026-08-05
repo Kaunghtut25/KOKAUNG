@@ -77,6 +77,20 @@ export default function AdminToursPage() {
   // Ensure token is available before first render
   const [tokenReady, setTokenReady] = React.useState(false);
   React.useEffect(() => { setTokenReady(true); }, []);
+  const [typeFilter, setTypeFilter] = useState<"all" | "inbound" | "outbound">("all");
+
+  // Inbound/Outbound detection (mirrors public tours page logic)
+  const isInboundTour = (t: any): boolean => {
+    const tt = String(t.tourType || "").toLowerCase();
+    if (tt === "inbound") return true;
+    if (tt === "outbound") return false;
+    const d = String(t.destination || "").toLowerCase();
+    if (d === "myanmar" || d.includes("myanmar")) return true;
+    const mmCities = ["bagan","yangon","mandalay","inle","ngapali","mingun","sagaing","pyin oo lwin","hsipaw","mrauk u","loikaw","kyaiktiyo","dawei","myeik","kawthaung","putao","naypyidaw","taunggyi","kalaw","pindaya","bago","popa","mount popa","thanlyin"];
+    return mmCities.some((c) => d.includes(c));
+  };
+  const countInbound = tours.filter(isInboundTour).length;
+  const countOutbound = tours.length - countInbound;
 
   const fetchTours = useCallback(async () => {
     try {
@@ -709,6 +723,45 @@ export default function AdminToursPage() {
         </button>
       </div>
 
+      {/* ─── Stats ─── */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-5">
+          <p className="text-white/40 text-xs uppercase tracking-wider">Total Tours</p>
+          <p className="text-3xl font-bold text-[#D4AF37] mt-1" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
+            {tours.length}
+          </p>
+        </div>
+        <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-5">
+          <p className="text-white/40 text-xs uppercase tracking-wider">🏔 Inbound</p>
+          <p className="text-3xl font-bold text-emerald-400 mt-1">{countInbound}</p>
+        </div>
+        <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-5">
+          <p className="text-white/40 text-xs uppercase tracking-wider">🌏 Outbound</p>
+          <p className="text-3xl font-bold text-sky-400 mt-1">{countOutbound}</p>
+        </div>
+      </div>
+
+      {/* ─── Type Filter ─── */}
+      <div className="flex items-center gap-2 flex-wrap">
+        {(["all", "inbound", "outbound"] as const).map((t) => (
+          <button
+            key={t}
+            onClick={() => setTypeFilter(t)}
+            className={`px-4 py-1.5 rounded-full text-xs font-semibold transition-all border ${
+              typeFilter === t
+                ? t === "inbound"
+                  ? "bg-emerald-500/15 text-emerald-400 border-emerald-500/40"
+                  : t === "outbound"
+                    ? "bg-sky-500/15 text-sky-400 border-sky-500/40"
+                    : "bg-gold/15 text-gold border-gold/40"
+                : "bg-white/5 text-white/50 border-white/10 hover:border-white/25"
+            }`}
+          >
+            {t === "all" ? "All Tours" : t === "inbound" ? "🏔 Inbound" : "🌏 Outbound"}
+          </button>
+        ))}
+      </div>
+
       {/* ─── Tours Table ─── */}
       <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl overflow-hidden">
         <div className="overflow-x-auto">
@@ -757,7 +810,12 @@ export default function AdminToursPage() {
                   </td>
                 </tr>
               ) : (
-                (tours || []).filter(Boolean).map((tour: any) => {
+                (tours || [])
+                  .filter(Boolean)
+                  .filter((tour: any) =>
+                    typeFilter === "all" || (typeFilter === "inbound" ? isInboundTour(tour) : !isInboundTour(tour))
+                  )
+                  .map((tour: any) => {
                   const thumb = getFirstImage(tour.images);
                   return (
                     <tr
