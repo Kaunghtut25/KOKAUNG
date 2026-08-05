@@ -72,6 +72,7 @@ function detectTourType(tour: any): 'inbound' | 'outbound' {
 
 export default function AdminToursPage() {
   const [tours, setTours] = useState<Tour[]>([]);
+  const [typeFilter, setTypeFilter] = useState<"all" | "inbound" | "outbound">("all");
   const countInbound = (tours || []).filter((t: any) => detectTourType(t) === 'inbound').length;
   const countOutbound = (tours || []).filter((t: any) => detectTourType(t) === 'outbound').length;
   const visibleTours = (tours || []).filter(
@@ -83,7 +84,6 @@ export default function AdminToursPage() {
   const [isNew, setIsNew] = useState(true);
   const [saving, setSaving] = useState(false);
   const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
-  const [typeFilter, setTypeFilter] = useState<"all" | "inbound" | "outbound">("all");
   const [imageUrlInput, setImageUrlInput] = useState("");
   const [imagePreviewUrl, setImagePreviewUrl] = useState("");
   const [imageList, setImageList] = useState<string[]>([]);
