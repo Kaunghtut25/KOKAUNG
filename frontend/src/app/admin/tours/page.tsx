@@ -55,14 +55,35 @@ const emptyTour: Tour = {
   tourType: "",
 };
 
+const ADMIN_MYANMAR_CITIES = [
+  'bagan', 'yangon', 'mandalay', 'inle', 'ngapali', 'mingun', 'sagaing',
+  'pyin oo lwin', 'hsipaw', 'mrauk u', 'loikaw', 'kyaiktiyo', 'dawei',
+  'myeik', 'kawthaung', 'putao', 'naypyidaw', 'taunggyi', 'kalaw',
+  'pindaya', 'bago', 'popa', 'mount popa', 'thanlyin',
+].flatMap((c) => [c, `, ${c}`, `,${c}`]);
+
+function detectTourType(tour: any): 'inbound' | 'outbound' {
+  if (tour.tourType === 'inbound' || tour.tourType === 'outbound') return tour.tourType;
+  const dest = String(tour.destination || '').toLowerCase();
+  if (dest === 'myanmar' || dest.includes('myanmar')) return 'inbound';
+  if (ADMIN_MYANMAR_CITIES.some((c) => dest.includes(c))) return 'inbound';
+  return 'outbound';
+}
+
 export default function AdminToursPage() {
   const [tours, setTours] = useState<Tour[]>([]);
+  const countInbound = (tours || []).filter((t: any) => detectTourType(t) === 'inbound').length;
+  const countOutbound = (tours || []).filter((t: any) => detectTourType(t) === 'outbound').length;
+  const visibleTours = (tours || []).filter(
+    (t: any) => typeFilter === 'all' || detectTourType(t) === typeFilter
+  );
   const [loading, setLoading] = useState(true);
   const [modalOpen, setModalOpen] = useState(false);
   const [editingTour, setEditingTour] = useState<Tour>(emptyTour);
   const [isNew, setIsNew] = useState(true);
   const [saving, setSaving] = useState(false);
   const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
+  const [typeFilter, setTypeFilter] = useState<"all" | "inbound" | "outbound">("all");
   const [imageUrlInput, setImageUrlInput] = useState("");
   const [imagePreviewUrl, setImagePreviewUrl] = useState("");
   const [imageList, setImageList] = useState<string[]>([]);
@@ -708,6 +729,34 @@ export default function AdminToursPage() {
         </button>
       </div>
 
+      {/* ─── Inbound / Outbound / All Tabs ─── */}
+      <div className="flex flex-wrap items-center gap-2 mt-6">
+        {[
+          { key: 'all', label: 'All Tours', count: (tours || []).length },
+          { key: 'inbound', label: '🏔️ Inbound', count: countInbound },
+          { key: 'outbound', label: '🌏 Outbound', count: countOutbound },
+        ].map((tab) => (
+          <button
+            key={tab.key}
+            onClick={() => setTypeFilter(tab.key as any)}
+            className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+              typeFilter === tab.key
+                ? 'bg-gold text-deepblue-dark shadow-lg shadow-gold/25'
+                : 'bg-white/5 text-white/60 hover:bg-white/10 border border-white/10'
+            }`}
+          >
+            {tab.label}
+            <span className={`ml-1.5 text-xs px-2 py-0.5 rounded-full ${
+              typeFilter === tab.key
+                ? 'bg-deepblue-dark/15 text-deepblue-dark'
+                : 'bg-white/10 text-white/40'
+            }`}>
+              {tab.count}
+            </span>
+          </button>
+        ))}
+      </div>
+
       {/* ─── Tours Table ─── */}
       <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl overflow-hidden">
         <div className="overflow-x-auto">
@@ -744,7 +793,7 @@ export default function AdminToursPage() {
               </tr>
             </thead>
             <tbody>
-              {tours.length === 0 ? (
+              {visibleTours.length === 0 ? (
                 <tr>
                   <td
                     colSpan={9}
@@ -756,7 +805,7 @@ export default function AdminToursPage() {
                   </td>
                 </tr>
               ) : (
-                (tours || [])
+                visibleTours
                   .filter(Boolean)
                   .map((tour: any) => {
                   const thumb = getFirstImage(tour.images);
@@ -812,13 +861,9 @@ export default function AdminToursPage() {
                         </div>
                       </td>
                       <td className="p-4">
-                        {tour.tourType ? (
-                          <span className={`text-[10px] px-2 py-1 rounded-full font-medium ${tour.tourType === 'inbound' ? 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/30' : 'bg-sky-500/15 text-sky-400 border border-sky-500/30'}`}>
-                            {tour.tourType === 'inbound' ? '🏔 Inbound' : '🌏 Outbound'}
-                          </span>
-                        ) : (
-                          <span className="text-white/20 text-[10px]">Auto</span>
-                        )}
+                        <span className={`text-[10px] px-2 py-1 rounded-full font-medium ${detectTourType(tour) === 'inbound' ? 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/30' : 'bg-sky-500/15 text-sky-400 border border-sky-500/30'}`}>
+                          {detectTourType(tour) === 'inbound' ? '🏔 Inbound' : '🌏 Outbound'}
+                        </span>
                       </td>
                       <td className="p-4">
                         <div className="flex items-center gap-2">
