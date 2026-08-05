@@ -792,6 +792,15 @@ export default function AdminToursPage() {
                         </div>
                       </td>
                       <td className="p-4">
+                        {tour.tourType ? (
+                          <span className={`text-[10px] px-2 py-1 rounded-full font-medium ${tour.tourType === 'inbound' ? 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/30' : 'bg-sky-500/15 text-sky-400 border border-sky-500/30'}`}>
+                            {tour.tourType === 'inbound' ? '🏔 Inbound' : '🌏 Outbound'}
+                          </span>
+                        ) : (
+                          <span className="text-white/20 text-[10px]">Auto</span>
+                        )}
+                      </td>
+                      <td className="p-4">
                         <div className="flex items-center gap-2">
                           <Link href={`/tours/${tour.id}`} target="_blank" rel="noopener noreferrer" className="px-3 py-1.5 rounded-lg bg-blue-500/10 text-blue-400 text-xs font-medium hover:bg-blue-500/20 transition-colors">
                             View
