@@ -15,7 +15,7 @@ const CLEANUP_PLAN = [
     const country = (it.country || "").toLowerCase();
     const addInfo = (it.additionalInfo || "").toLowerCase();
     const fee = it.visaFeeMMK;
-    return country === "thailand" && (addInfo.includes("singapore") || (typeof fee === "number" && fee >= 70000));
+    return country === "thailand" && (addInfo.includes("singapore") || (typeof fee === "number" && fee > 0 && fee <= 75));
   }},
   { collection: "insurances", label: "Premium Travel Protect dupe", match: (it: any) => (it.planName || "").toLowerCase().includes("premium travel protect") },
 ];
@@ -115,9 +115,11 @@ export default function CleanupPage() {
     };
     for (const car of cars) {
       const t = (car.carType || "").toLowerCase();
-      const pricing = car.pricing || [];
+      const pricingArr = Array.isArray(car.pricingWithDriver) ? car.pricingWithDriver : (Array.isArray(car.pricing) ? car.pricing : []);
+      const pricingObj = car.pricing && !Array.isArray(car.pricing) ? car.pricing : null;
       const id = car.id || car._id;
-      const hasPrice = pricing.length > 0 && pricing.some((p: any) => p.priceMMK || p.priceUSD);
+      const hasPrice = (pricingArr.length > 0 && pricingArr.some((p: any) => p.priceMMK || p.priceUSD)) ||
+        (pricingObj && (pricingObj.halfDay || pricingObj.fullDay || pricingObj.airportTransfer || pricingObj.priceMMK || pricingObj.priceUSD));
       if (!hasPrice) {
         let bestPrice = 120000;
         for (const [kw, p] of Object.entries(carPriceMap)) {
@@ -127,7 +129,7 @@ export default function CleanupPage() {
           await fetch("/api/admin/cars/" + id, {
             method: "PUT",
             headers: { "Content-Type": "application/json", Authorization: "Bearer " + t },
-            body: JSON.stringify({ ...car, pricing: [{ duration: "Full Day", priceMMK: bestPrice, priceUSD: Math.round(bestPrice / 2100) }] }),
+            body: JSON.stringify({ ...car, pricingWithDriver: [{ duration: "Full Day", priceMMK: bestPrice, priceUSD: Math.round(bestPrice / 2100) }] }),
           });
           logLine(`  ✅ ${car.carType}: price set to ${bestPrice} MMK`);
         } catch (e) {
