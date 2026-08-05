@@ -13,6 +13,7 @@ interface NavItem {
 const navItems: NavItem[] = [
   { label: "Dashboard", icon: "📊", path: "/admin/dashboard" },
   { label: "Site Manager", icon: "⚙️", path: "/admin/site-manager" },
+  { label: "Manage About", icon: "📄", path: "/admin/about" },
   { label: "Manage Flights", icon: "✈️", path: "/admin/bookings" },
   { label: "Manage Tours", icon: "🏔️", path: "/admin/tours" },
   { label: "Manage Hotels", icon: "🏨", path: "/admin/hotels" },
