@@ -34,7 +34,19 @@ interface AboutConfig {
   commitmentButtonLabel: string;
   commitmentButtonHref: string;
   certifications: { title: string; code: string; image: string }[];
+  journeyTitle: string;
+  journey: { year: string; title: string; desc: string }[];
 }
+
+const DEFAULT_JOURNEY = [
+  { year: '2015', title: 'Founded', desc: 'A9 Global Travel & Tours established in Yangon' },
+  { year: '2017', title: 'IATA Accreditation', desc: 'Official IATA certification received' },
+  { year: '2019', title: 'Expansion', desc: 'Grew to 30+ tour packages across Myanmar' },
+  { year: '2020', title: 'Digital Transformation', desc: 'Launched online booking platform' },
+  { year: '2022', title: 'Sky Lounge', desc: 'Premium airport lounge service launched' },
+  { year: '2024', title: '5000+ Travelers', desc: 'Milestone of 5000 happy customers reached' },
+  { year: '2026', title: 'Premium Relaunch', desc: 'Next-generation travel platform' },
+];
 
 const defaultAbout: AboutConfig = {
   heroImage: "/images_v2/about-hero-v2.jpg",
@@ -80,6 +92,8 @@ const defaultAbout: AboutConfig = {
     { title: "Licensed Tour Operator", code: "T/O(YGN)-0946", image: "/images_v2/license-tour-operator.png" },
     { title: "Company Registration", code: "126395248", image: "/images_v2/company-registration.png" },
   ],
+  journeyTitle: "Our Journey",
+  journey: DEFAULT_JOURNEY,
 };
 
 export default function AboutClient({ siteConfig }: { siteConfig: any }) {
@@ -94,11 +108,13 @@ export default function AboutClient({ siteConfig }: { siteConfig: any }) {
       const baseConfig = d?.about ? { ...defaultAbout, ...d.about } : defaultAbout;
       if (d?.heroImages?.about) baseConfig.heroImage = d.heroImages.about;
       if (Array.isArray(d?.certifications) && d.certifications.length) baseConfig.certifications = d.certifications;
+      if (Array.isArray(d?.about?.journey) && d.about.journey.length) baseConfig.journey = d.about.journey;
+      if (d?.about?.journeyTitle) baseConfig.journeyTitle = d.about.journeyTitle;
       setConfig(baseConfig);
     }).catch(() => setConfig(defaultAbout));
   }, []);
 
-  const { heroImage, heroTitle, heroSubtitle, whoWeAreText, missionTitle, missionText, visionTitle, visionText, valuesTitle, values, servicesTitle, services, whyChooseUsTitle, whyChooseUs, teamTitle, teamSubtitle, teamMembers, commitmentTitle, commitmentText, commitmentSubtext, commitmentButtonLabel, commitmentButtonHref } = config;
+  const { heroImage, heroTitle, heroSubtitle, whoWeAreText, missionTitle, missionText, visionTitle, visionText, valuesTitle, values, servicesTitle, services, whyChooseUsTitle, whyChooseUs, teamTitle, teamSubtitle, teamMembers, commitmentTitle, commitmentText, commitmentSubtext, commitmentButtonLabel, commitmentButtonHref, journeyTitle, journey } = config;
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -221,7 +237,7 @@ export default function AboutClient({ siteConfig }: { siteConfig: any }) {
       </section>      {/* ========== Newsletter Signup ========== */}
       <TrustBadges />
       <WhyChooseUs />
-      <CompanyTimeline />
+      <CompanyTimeline milestones={journey} title={journeyTitle} />
       <PartnerLogos />
       <Newsletter />
 </div>

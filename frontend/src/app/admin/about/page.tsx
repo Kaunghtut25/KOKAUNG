@@ -8,8 +8,8 @@ import React, { useEffect, useState, useCallback } from "react";
    ───────────────────────────────────────────────────────────── */
 
 interface ValueItem { title: string; desc: string; icon: string; }
-interface TeamMember { name: string; role: string; image: string; }
 interface CertItem { title: string; code: string; image: string; }
+interface JourneyItem { year: string; title: string; desc: string; }
 
 interface AboutConfig {
   heroImage: string;
@@ -26,15 +26,14 @@ interface AboutConfig {
   services: string[];
   whyChooseUsTitle: string;
   whyChooseUs: string[];
-  teamTitle: string;
-  teamSubtitle: string;
-  teamMembers: TeamMember[];
   commitmentTitle: string;
   commitmentText: string;
   commitmentSubtext: string;
   commitmentButtonLabel: string;
   commitmentButtonHref: string;
   certifications: CertItem[];
+  journeyTitle: string;
+  journey: JourneyItem[];
 }
 
 const defaultAbout: AboutConfig = {
@@ -60,14 +59,6 @@ const defaultAbout: AboutConfig = {
   services: ["International Air Ticketing", "Domestic Air Ticketing", "Corporate Travel Management", "Marine and Offshore Travel", "Visa Assistance"],
   whyChooseUsTitle: "Why Choose A9 Global?",
   whyChooseUs: ["Experienced travel professionals", "Competitive pricing and corporate travel solutions", "Dedicated account management", "Fast response and personalized service"],
-  teamTitle: "Our Expert Team",
-  teamSubtitle: "Passionate professionals dedicated to crafting your perfect journey",
-  teamMembers: [
-    { name: "U Aung Kyaw", role: "Founder & CEO", image: "/images_v2/team-ceo-v2.jpg" },
-    { name: "Daw Su Myat", role: "Operations Director", image: "/images_v2/team-ops-v2.jpg" },
-    { name: "U Zaw Htun", role: "Head of Tours", image: "/images_v2/team-tours-v2.jpg" },
-    { name: "Daw Hnin Si", role: "Customer Relations", image: "/images_v2/team-cr-v2.jpg" },
-  ],
   commitmentTitle: "Our Commitment",
   commitmentText: "At A9 Global Travel & Tours, our commitment is simple: to deliver seamless travel experiences with professionalism, reliability, and care.",
   commitmentSubtext: "Whether you are planning a business trip, family holiday, corporate event, or marine crew movement, we are here to support your journey.",
@@ -77,6 +68,16 @@ const defaultAbout: AboutConfig = {
     { title: "IATA Accredited", code: "05301026", image: "/images_v2/iata-logo.png" },
     { title: "Licensed Tour Operator", code: "T/O(YGN)-0946", image: "/images_v2/license-tour-operator.png" },
     { title: "Company Registration", code: "126395248", image: "/images_v2/company-registration.png" },
+  ],
+  journeyTitle: "Our Journey",
+  journey: [
+    { year: "2015", title: "Founded", desc: "A9 Global Travel & Tours established in Yangon" },
+    { year: "2017", title: "IATA Accreditation", desc: "Official IATA certification received" },
+    { year: "2019", title: "Expansion", desc: "Grew to 30+ tour packages across Myanmar" },
+    { year: "2020", title: "Digital Transformation", desc: "Launched online booking platform" },
+    { year: "2022", title: "Sky Lounge", desc: "Premium airport lounge service launched" },
+    { year: "2024", title: "5000+ Travelers", desc: "Milestone of 5000 happy customers reached" },
+    { year: "2026", title: "Premium Relaunch", desc: "Next-generation travel platform" },
   ],
 };
 
@@ -120,8 +121,9 @@ export default function AdminAboutPage() {
             services: Array.isArray(d.about.services) && d.about.services.length ? d.about.services : prev.services,
             whoWeAreText: Array.isArray(d.about.whoWeAreText) && d.about.whoWeAreText.length ? d.about.whoWeAreText : prev.whoWeAreText,
             whyChooseUs: Array.isArray(d.about.whyChooseUs) && d.about.whyChooseUs.length ? d.about.whyChooseUs : prev.whyChooseUs,
-            teamMembers: Array.isArray(d.about.teamMembers) && d.about.teamMembers.length ? d.about.teamMembers : prev.teamMembers,
             certifications: Array.isArray(d.about.certifications) && d.about.certifications.length ? d.about.certifications : prev.certifications,
+            journey: Array.isArray(d.about.journey) && d.about.journey.length ? d.about.journey : prev.journey,
+            journeyTitle: d.about.journeyTitle || prev.journeyTitle,
           }));
         }
         if (d?.heroImages?.about) set("heroImage", d.heroImages.about);
@@ -151,13 +153,6 @@ export default function AdminAboutPage() {
         const newUrl = `/api/upload?id=${data.uploads[0].id}`;
         if (target === "heroImage") {
           set("heroImage", newUrl);
-        } else if (target.startsWith("team:")) {
-          const idx = Number(target.split(":")[1]);
-          setAbout((prev) => {
-            const team = [...prev.teamMembers];
-            team[idx] = { ...team[idx], image: newUrl };
-            return { ...prev, teamMembers: team };
-          });
         } else if (target.startsWith("cert:")) {
           const idx = Number(target.split(":")[1]);
           setAbout((prev) => {
@@ -207,13 +202,13 @@ export default function AdminAboutPage() {
   };
   const removeValue = (idx: number) => set("values", about.values.filter((_, i) => i !== idx));
 
-  const addTeam = () => set("teamMembers", [...about.teamMembers, { name: "", role: "", image: "" }]);
-  const updateTeam = (idx: number, patch: Partial<TeamMember>) => {
-    const arr = [...about.teamMembers];
+  const addJourney = () => set("journey", [...about.journey, { year: "", title: "", desc: "" }]);
+  const updateJourney = (idx: number, patch: Partial<JourneyItem>) => {
+    const arr = [...about.journey];
     arr[idx] = { ...arr[idx], ...patch };
-    set("teamMembers", arr);
+    set("journey", arr);
   };
-  const removeTeam = (idx: number) => set("teamMembers", about.teamMembers.filter((_, i) => i !== idx));
+  const removeJourney = (idx: number) => set("journey", about.journey.filter((_, i) => i !== idx));
 
   const addCert = () => set("certifications", [...about.certifications, { title: "", code: "", image: "" }]);
   const updateCert = (idx: number, patch: Partial<CertItem>) => {
@@ -328,7 +323,7 @@ export default function AdminAboutPage() {
         <h2 className="text-lg font-bold text-white mb-4">📖 Who We Are (Paragraphs)</h2>
         <div className="space-y-3">
           {about.whoWeAreText.map((p, i) => (
-            <div key={i} className="flex items-start gap-2">
+            <div key={i} className="flex flex-col md:flex-row items-stretch md:items-start gap-2">
               <textarea className={inputCls} rows={2} value={p} onChange={(e) => updateStringItem("whoWeAreText", i, e.target.value)} />
               <button onClick={() => removeStringItem("whoWeAreText", i)} className="px-3 py-2 rounded-lg bg-red-500/10 text-red-400 text-sm hover:bg-red-500/20 transition-colors flex-shrink-0">
                 🗑️
@@ -366,8 +361,8 @@ export default function AdminAboutPage() {
         <div className="mb-3"><label className={labelCls}>Values Section Title</label><input className={inputCls} value={about.valuesTitle} onChange={(e) => set("valuesTitle", e.target.value)} /></div>
         <div className="space-y-3">
           {about.values.map((v, i) => (
-            <div key={i} className="flex items-start gap-2">
-              <input className={`${inputCls} w-16 flex-shrink-0 text-center`} value={v.icon} onChange={(e) => updateValue(i, { icon: e.target.value })} title="Icon (emoji)" />
+            <div key={i} className="flex flex-col md:flex-row items-stretch md:items-start gap-2">
+              <input className={`${inputCls} md:w-16 flex-shrink-0 text-center`} value={v.icon} onChange={(e) => updateValue(i, { icon: e.target.value })} title="Icon (emoji)" />
               <input className={inputCls} placeholder="Title" value={v.title} onChange={(e) => updateValue(i, { title: e.target.value })} />
               <input className={inputCls} placeholder="Description" value={v.desc} onChange={(e) => updateValue(i, { desc: e.target.value })} />
               <button onClick={() => removeValue(i)} className="px-3 py-2 rounded-lg bg-red-500/10 text-red-400 text-sm hover:bg-red-500/20 transition-colors flex-shrink-0">🗑️</button>
@@ -385,7 +380,7 @@ export default function AdminAboutPage() {
         <div className="mb-3"><label className={labelCls}>Services Section Title</label><input className={inputCls} value={about.servicesTitle} onChange={(e) => set("servicesTitle", e.target.value)} /></div>
         <div className="space-y-2">
           {about.services.map((s, i) => (
-            <div key={i} className="flex items-center gap-2">
+            <div key={i} className="flex flex-col md:flex-row items-stretch md:items-center gap-2">
               <input className={inputCls} value={s} onChange={(e) => updateStringItem("services", i, e.target.value)} />
               <button onClick={() => removeStringItem("services", i)} className="px-3 py-2 rounded-lg bg-red-500/10 text-red-400 text-sm hover:bg-red-500/20 transition-colors flex-shrink-0">🗑️</button>
             </div>
@@ -402,7 +397,7 @@ export default function AdminAboutPage() {
         <div className="mb-3"><label className={labelCls}>Section Title</label><input className={inputCls} value={about.whyChooseUsTitle} onChange={(e) => set("whyChooseUsTitle", e.target.value)} /></div>
         <div className="space-y-2">
           {about.whyChooseUs.map((w, i) => (
-            <div key={i} className="flex items-center gap-2">
+            <div key={i} className="flex flex-col md:flex-row items-stretch md:items-center gap-2">
               <input className={inputCls} value={w} onChange={(e) => updateStringItem("whyChooseUs", i, e.target.value)} />
               <button onClick={() => removeStringItem("whyChooseUs", i)} className="px-3 py-2 rounded-lg bg-red-500/10 text-red-400 text-sm hover:bg-red-500/20 transition-colors flex-shrink-0">🗑️</button>
             </div>
@@ -410,36 +405,23 @@ export default function AdminAboutPage() {
         </div>
       </div>
 
-      {/* ─── Team ─── */}
+      {/* ─── Our Journey ─── */}
       <div className={cardCls}>
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-bold text-white">👥 Team Members</h2>
-          <button onClick={addTeam} className={btnGhost}>＋ Add Member</button>
+          <h2 className="text-lg font-bold text-white">🗺️ Our Journey (Timeline)</h2>
+          <button onClick={addJourney} className={btnGhost}>＋ Add Milestone</button>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
-          <div><label className={labelCls}>Team Title</label><input className={inputCls} value={about.teamTitle} onChange={(e) => set("teamTitle", e.target.value)} /></div>
-          <div><label className={labelCls}>Team Subtitle</label><input className={inputCls} value={about.teamSubtitle} onChange={(e) => set("teamSubtitle", e.target.value)} /></div>
+        <div className="mb-3">
+          <label className={labelCls}>Journey Section Title</label>
+          <input className={inputCls} value={about.journeyTitle} onChange={(e) => set("journeyTitle", e.target.value)} />
         </div>
         <div className="space-y-3">
-          {about.teamMembers.map((m, i) => (
-            <div key={i} className="flex items-start gap-3 bg-white/[0.03] border border-white/10 rounded-xl p-3">
-              <div className="w-14 h-14 rounded-lg overflow-hidden border border-white/10 bg-white/5 flex-shrink-0">
-                {m.image ? (
-                  <img src={m.image} alt={m.name} className="w-full h-full object-cover" onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }} />
-                ) : (
-                  <div className="flex items-center justify-center h-full text-white/20 text-lg">👤</div>
-                )}
-              </div>
-              <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-2">
-                <input className={inputCls} placeholder="Name" value={m.name} onChange={(e) => updateTeam(i, { name: e.target.value })} />
-                <input className={inputCls} placeholder="Role" value={m.role} onChange={(e) => updateTeam(i, { role: e.target.value })} />
-              </div>
-              <div className="flex flex-col gap-2 flex-shrink-0">
-                <button onClick={() => openUploader(`team:${i}`)} disabled={uploadingKey === `team:${i}`} className={`${btnGhost} text-xs px-3 py-1.5`}>
-                  {uploadingKey === `team:${i}` ? "..." : "📤"}
-                </button>
-                <button onClick={() => removeTeam(i)} className="px-3 py-1.5 rounded-lg bg-red-500/10 text-red-400 text-xs hover:bg-red-500/20 transition-colors">🗑️</button>
-              </div>
+          {about.journey.map((m, i) => (
+            <div key={i} className="flex flex-col md:flex-row items-stretch md:items-start gap-2 bg-white/[0.03] border border-white/10 rounded-xl p-3">
+              <input className={`${inputCls} md:w-24 flex-shrink-0`} placeholder="Year (e.g. 2015)" value={m.year} onChange={(e) => updateJourney(i, { year: e.target.value })} />
+              <input className={inputCls} placeholder="Title (e.g. Founded)" value={m.title} onChange={(e) => updateJourney(i, { title: e.target.value })} />
+              <input className={inputCls} placeholder="Description" value={m.desc} onChange={(e) => updateJourney(i, { desc: e.target.value })} />
+              <button onClick={() => removeJourney(i)} className="px-3 py-2 rounded-lg bg-red-500/10 text-red-400 text-sm hover:bg-red-500/20 transition-colors flex-shrink-0">🗑️</button>
             </div>
           ))}
         </div>
@@ -465,7 +447,7 @@ export default function AdminAboutPage() {
         </div>
         <div className="space-y-3">
           {about.certifications.map((c, i) => (
-            <div key={i} className="flex items-start gap-3 bg-white/[0.03] border border-white/10 rounded-xl p-3">
+            <div key={i} className="flex flex-col sm:flex-row items-stretch sm:items-start gap-3 bg-white/[0.03] border border-white/10 rounded-xl p-3">
               <div className="w-14 h-14 rounded-lg overflow-hidden border border-white/10 bg-white/5 flex-shrink-0 flex items-center justify-center">
                 {c.image ? (
                   <img src={c.image} alt={c.title} className="w-full h-full object-contain" onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }} />
@@ -477,7 +459,7 @@ export default function AdminAboutPage() {
                 <input className={inputCls} placeholder="Title (e.g. IATA Accredited)" value={c.title} onChange={(e) => updateCert(i, { title: e.target.value })} />
                 <input className={inputCls} placeholder="Code (e.g. 05301026)" value={c.code} onChange={(e) => updateCert(i, { code: e.target.value })} />
               </div>
-              <div className="flex flex-col gap-2 flex-shrink-0">
+              <div className="flex flex-row sm:flex-col gap-2 flex-shrink-0">
                 <button onClick={() => openUploader(`cert:${i}`)} disabled={uploadingKey === `cert:${i}`} className={`${btnGhost} text-xs px-3 py-1.5`}>
                   {uploadingKey === `cert:${i}` ? "..." : "📤"}
                 </button>
