@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import ScrollingRow from "./ScrollingRow";
+import { useI18n } from "@/lib/i18n";
 
 const FALLBACK_IMG = "/images_v2/cta-bg-v2.jpg";
 
@@ -160,6 +161,7 @@ function DestinationCard({ dest, destText = {} }: { dest: { city: string; countr
 }
 
 export default function PopularDestinations({ siteConfig }: { siteConfig?: any } = {}) {
+  const { t } = useI18n();
   const [dests, setDests] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [destText, setDestText] = useState<any>({});
@@ -185,8 +187,8 @@ export default function PopularDestinations({ siteConfig }: { siteConfig?: any }
   return (
     <section className="max-w-7xl mx-auto px-4 py-12">
       <div className="text-center mb-10">
-        <h2 className="font-bold mb-2" style={{ fontFamily: destText?.titleFont || "'Playfair Display', Georgia, serif", fontSize: destText?.titleSize || "2.5rem", color: destText?.titleColor || "#0A1628" }}>{destText?.title || "Explore The World"}</h2>
-        <p style={{ fontSize: destText?.subtitleSize || "1rem" }} className="text-gray-500">{destText?.subtitle || "Popular Destinations"}</p>
+        <h2 className="font-bold mb-2" style={{ fontFamily: destText?.titleFont || "'Playfair Display', Georgia, serif", fontSize: destText?.titleSize || "2.5rem", color: destText?.titleColor || "#0A1628" }}>{destText?.title || t("home.exploreWorld")}</h2>
+        <p style={{ fontSize: destText?.subtitleSize || "1rem" }} className="text-gray-500">{destText?.subtitle || t("home.popularDestinations")}</p>
       </div>
       {loading && dests.length === 0 ? (
         <div className="flex gap-4 overflow-hidden">

@@ -1,5 +1,6 @@
 'use client';
 import { useState, useEffect } from 'react';
+import { useI18n } from "@/lib/i18n";
 
 interface SocialLink { platform: string; url: string; }
 
@@ -19,6 +20,7 @@ const FALLBACK_PHOTOS = [
 ];
 
 export default function SocialFeed() {
+  const { t } = useI18n();
   const [socialLinks, setSocialLinks] = useState<SocialLink[]>([]);
   const [feed, setFeed] = useState<SocialFeedConfig | null>(null);
 
@@ -47,7 +49,7 @@ export default function SocialFeed() {
 
   return (
     <div style={{ maxWidth: 1000, margin: '0 auto', padding: '40px 20px' }}>
-      <h2 style={{ textAlign: 'center', fontFamily: "'Playfair Display',serif", fontSize: 24, color: '#0A1628', marginBottom: 8 }}>Follow Our Journey</h2>
+      <h2 style={{ textAlign: 'center', fontFamily: "'Playfair Display',serif", fontSize: 24, color: '#0A1628', marginBottom: 8 }}>{t("home.followJourney")}</h2>
       <p style={{ textAlign: 'center', color: '#666', fontSize: 14, marginBottom: 24 }}>{handle}</p>
       {/* Social link buttons */}
       {socialLinks.length > 0 && (

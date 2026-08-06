@@ -1,5 +1,6 @@
 'use client';
 import { useState, useEffect } from 'react';
+import { useI18n } from "@/lib/i18n";
 
 interface Review {
   name: string;
@@ -20,6 +21,7 @@ const FALLBACK_REVIEWS: Review[] = [
 ];
 
 export default function TestimonialSlider() {
+  const { t } = useI18n();
   const [reviews, setReviews] = useState<Review[]>(FALLBACK_REVIEWS);
   const [idx, setIdx] = useState(0);
 
@@ -45,7 +47,7 @@ export default function TestimonialSlider() {
   return (
     <div style={{ background: 'linear-gradient(135deg,#0A1628,#0F2035)', padding: '40px 20px' }}>
       <div style={{ maxWidth: 700, margin: '0 auto', textAlign: 'center' }}>
-        <h2 style={{ color: '#D4AF37', fontFamily: "'Playfair Display',serif", fontSize: 24, marginBottom: 24 }}>What Our Travelers Say</h2>
+        <h2 style={{ color: '#D4AF37', fontFamily: "'Playfair Display',serif", fontSize: 24, marginBottom: 24 }}>{t("home.travelersSay")}</h2>
         <div style={{ background: 'rgba(255,255,255,0.05)', borderRadius: 16, padding: 24 }}>
           <div style={{ color: '#D4AF37', fontSize: 18, marginBottom: 8 }}>{'★'.repeat(r.rating || 5)}</div>
           <p style={{ color: 'white', fontSize: 16, lineHeight: 1.6, fontStyle: 'italic', marginBottom: 16 }}>"{r.text}"</p>

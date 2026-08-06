@@ -82,6 +82,49 @@ const en: Record<string, string> = {
   "common.add": "Add",
   "common.search": "Search",
   "common.back": "Back",
+
+  // Home page — booking widget
+  "home.oneWay": "One Way",
+  "home.roundTrip": "Round Trip",
+  "home.multiCity": "Multi-City",
+  "home.from": "From",
+  "home.to": "To",
+  "home.fromCity": "From city",
+  "home.toCity": "To city",
+  "home.departureCity": "Departure city",
+  "home.arrivalCity": "Arrival city",
+  "home.depart": "Depart",
+  "home.return": "Return",
+  "home.date": "Date",
+  "home.class": "Class",
+  "home.client": "Client",
+  "home.local": "Local",
+  "home.foreigner": "Foreigner",
+  "home.searchFlights": "Search Flights",
+  "home.searchBuses": "Search Buses",
+  "home.selectTravelDate": "Select travel date",
+  "home.searchCity": "Search city...",
+  "home.noCities": "No cities found",
+  "home.addAnotherFlight": "Add Another Flight",
+  "home.swapAirports": "Swap airports",
+  "home.passengers": "Passengers (max 9)",
+  "home.adults": "Adults",
+  "home.children": "Children",
+  "home.pax": "Pax",
+
+  // Home page — sections
+  "home.exploreWorld": "Explore The World",
+  "home.popularDestinations": "Popular Destinations",
+  "home.travelersSay": "What Our Travelers Say",
+  "home.followJourney": "Follow Our Journey",
+  "home.trustedPartners": "Our Trusted Partners",
+  "home.ctaTitle": "Ready to Start Your Journey?",
+  "home.ctaDesc": "Let us craft your perfect getaway.",
+
+  // Newsletter
+  "newsletter.placeholder": "Your email address",
+  "newsletter.subscribe": "Subscribe",
+  "newsletter.thanks": "Thank you for subscribing!",
 };
 
 const mm: Record<string, string> = {
@@ -161,6 +204,49 @@ const mm: Record<string, string> = {
   "common.add": "ထည့်မည်",
   "common.search": "ရှာဖွေရန်",
   "common.back": "နောက်သို့",
+
+  // Home page — booking widget
+  "home.oneWay": "တစ်လမ်း",
+  "home.roundTrip": "သွားပြန်",
+  "home.multiCity": "မြို့စုံ",
+  "home.from": "မှ",
+  "home.to": "သို့",
+  "home.fromCity": "ထွက်မည့်မြို့",
+  "home.toCity": "ရောက်မည့်မြို့",
+  "home.departureCity": "ထွက်ခွာမည့်မြို့",
+  "home.arrivalCity": "ဆိုက်ရောက်မည့်မြို့",
+  "home.depart": "ထွက်ခွာမည့်ရက်",
+  "home.return": "ပြန်လာမည့်ရက်",
+  "home.date": "ရက်",
+  "home.class": "အတန်း",
+  "home.client": "ဖောက်သည်",
+  "home.local": "ပြည်တွင်း",
+  "home.foreigner": "နိုင်ငံခြားသား",
+  "home.searchFlights": "လေယာဉ်ရှာရန်",
+  "home.searchBuses": "ဘတ်စ်ကားရှာရန်",
+  "home.selectTravelDate": "ခရီးသွားရက်ရွေးပါ",
+  "home.searchCity": "မြို့ရှာရန်...",
+  "home.noCities": "မြို့မတွေ့ပါ",
+  "home.addAnotherFlight": "နောက်ထပ်လေယာဉ်ထည့်ရန်",
+  "home.swapAirports": "လေဆိပ်ဖလှယ်ရန်",
+  "home.passengers": "ခရီးသည် (အများဆုံး ၉)",
+  "home.adults": "လူကြီး",
+  "home.children": "ကလေး",
+  "home.pax": "ဦး",
+
+  // Home page — sections
+  "home.exploreWorld": "ကမ္ဘာကို စူးစမ်းပါ",
+  "home.popularDestinations": "လူကြိုက်များသော ခရီးစဉ်များ",
+  "home.travelersSay": "ခရီးသွားများ၏ ပြောကြားချက်များ",
+  "home.followJourney": "ကျွန်ုပ်တို့၏ ခရီးစဉ်ကို လိုက်ပါ",
+  "home.trustedPartners": "ကျွန်ုပ်တို့၏ ယုံကြည်ရသော မိတ်ဖက်များ",
+  "home.ctaTitle": "သင့်ခရီးစဉ်ကို စတင်ရန် အသင့်ဖြစ်ပြီလား?",
+  "home.ctaDesc": "သင့်အတွက် ပြီးပြည့်စုံသော ခရီးစဉ်ကို ဖန်တီးပေးပါမည်။",
+
+  // Newsletter
+  "newsletter.placeholder": "သင့်အီးမေးလ်လိပ်စာ",
+  "newsletter.subscribe": "စာရင်းသွင်းမည်",
+  "newsletter.thanks": "စာရင်းသွင်းပေးသည့်အတွက် ကျေးဇူးတင်ပါသည်!",
 };
 
 const DICTS: Record<Lang, Record<string, string>> = { en, mm };
