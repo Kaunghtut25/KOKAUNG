@@ -11,6 +11,7 @@ import RelatedItems from '@/components/RelatedItems';
 import BackButton from '@/components/BackButton';
 import Calendar from '@/components/Calendar';
 import ErrorBoundary from '@/components/ErrorBoundary';
+import { useI18n } from '@/lib/i18n';
 type TabKey = 'overview' | 'itinerary' | 'included' | 'reviews';
 
 // ─── Fallback tours when API is unavailable ─────────────────
@@ -463,6 +464,7 @@ interface BookingFormData {
 }
 
 export default function TourDetailPage() {
+  const { t } = useI18n();
   const params = useParams();
   const router = useRouter();
   const slug = params?.slug as string;
@@ -603,7 +605,7 @@ export default function TourDetailPage() {
     return (
       <div className="min-h-screen bg-gradient-to-b from-white via-gray-50 to-white">
         <div className="max-w-7xl mx-auto px-4 pt-24 pb-4">
-          <BackButton label="Back to Tours" />
+          <BackButton label={t("common.backToTours")} />
         </div>
         <div className="h-[60vh] bg-white/5 animate-pulse" />
         <div className="max-w-7xl mx-auto px-4 py-12">
@@ -634,7 +636,7 @@ export default function TourDetailPage() {
             <svg className="w-16 h-16 mx-auto text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z" />
             </svg>
-            <h2 className="text-xl text-[#0A1628] font-semibold">Something went wrong</h2>
+            <h2 className="text-xl text-[#0A1628] font-semibold">{t("tour.errorTitle")}</h2>
             <p className="text-gray-500">{error || 'Tour not found'}</p>
             <button
               onClick={() => router.push('/search')}
@@ -717,7 +719,7 @@ export default function TourDetailPage() {
             {activeTab === 'overview' && (
               <div className="space-y-8">
                 <div>
-                  <h3 className="text-xl text-[#0A1628] font-semibold mb-4">About This Tour</h3>
+                  <h3 className="text-xl text-[#0A1628] font-semibold mb-4">{t("tour.about")}</h3>
                   <p className="text-gray-700 leading-relaxed">{tour.description}</p>
                 </div>
 
@@ -728,21 +730,21 @@ export default function TourDetailPage() {
                   </div>
                   <div className="p-4 rounded-xl bg-gray-50 border border-gray-200 text-center">
                     <p className="text-[#D4AF37] text-2xl font-bold">{tour.groupSize}</p>
-                    <p className="text-gray-600 text-sm">Max Group Size</p>
+                    <p className="text-gray-600 text-sm">{t("tour.maxGroupSize")}</p>
                   </div>
                   <div className="p-4 rounded-xl bg-gray-50 border border-gray-200 text-center">
                     <p className="text-[#D4AF37] text-2xl font-bold">★ {tour.rating}</p>
-                    <p className="text-gray-600 text-sm">Rating</p>
+                    <p className="text-gray-600 text-sm">{t("tour.rating")}</p>
                   </div>
                   <div className="p-4 rounded-xl bg-gray-50 border border-gray-200 text-center">
                     <p className="text-[#D4AF37] text-2xl font-bold">{tour.reviewCount}</p>
-                    <p className="text-gray-600 text-sm">Reviews</p>
+                    <p className="text-gray-600 text-sm">{t("tour.reviews")}</p>
                   </div>
                 </div>
 
                 {tour.amenities && tour.amenities.length > 0 && (
                   <div>
-                    <h3 className="text-xl text-[#0A1628] font-semibold mb-4">Amenities</h3>
+                    <h3 className="text-xl text-[#0A1628] font-semibold mb-4">{t("tour.amenities")}</h3>
                     <div className="flex flex-wrap gap-2">
                       {tour.amenities.map((amenity, idx) => (
                         <span
@@ -775,7 +777,7 @@ export default function TourDetailPage() {
                             {/* Gold day number badge */}
                             <div className="flex-shrink-0 w-14 h-14 rounded-xl bg-gradient-to-br from-[#D4AF37] to-[#C5A028] flex items-center justify-center shadow-lg shadow-[#D4AF37]/30">
                               <div className="text-center">
-                                <span className="block text-xs text-gray-900/70 font-medium leading-tight">Day</span>
+                                <span className="block text-xs text-gray-900/70 font-medium leading-tight">{t("tour.day")}</span>
                                 <span className="block text-gray-900 text-xl font-bold leading-tight">{day.day}</span>
                               </div>
                             </div>
@@ -868,7 +870,7 @@ export default function TourDetailPage() {
                       </li>
                     ))}
                     {(tour.included || []).length === 0 && (
-                      <li className="text-gray-500">No items listed</li>
+                      <li className="text-gray-500">{t("tour.noItems")}</li>
                     )}
                   </ul>
                 </div>
@@ -891,7 +893,7 @@ export default function TourDetailPage() {
                       </li>
                     ))}
                     {(tour.excluded || []).length === 0 && (
-                      <li className="text-gray-500">No items listed</li>
+                      <li className="text-gray-500">{t("tour.noItems")}</li>
                     )}
                   </ul>
                 </div>
@@ -904,8 +906,8 @@ export default function TourDetailPage() {
                 <svg className="w-16 h-16 mx-auto text-gold/30 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                 </svg>
-                <p className="text-gray-600 text-lg">Reviews coming soon</p>
-                <p className="text-gray-500 text-sm mt-1">We&apos;re working on collecting authentic reviews from our travelers.</p>
+                <p className="text-gray-600 text-lg">{t("tour.reviewsComingSoon")}</p>
+                <p className="text-gray-500 text-sm mt-1">{t("tour.reviewsSoonDesc")}</p>
               </div>
             )}
           </div>
@@ -929,15 +931,15 @@ export default function TourDetailPage() {
               {/* Quick info */}
               <div className="space-y-2 text-sm">
                 <div className="flex justify-between">
-                  <span className="text-gray-600">Duration</span>
+                  <span className="text-gray-600">{t("tour.duration")}</span>
                   <span className="text-[#0A1628]">{tour.duration} {tour.durationUnit}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-600">Group Size</span>
-                  <span className="text-[#0A1628]">Up to {tour.groupSize} people</span>
+                  <span className="text-gray-600">{t("tour.groupSize")}</span>
+                  <span className="text-[#0A1628]">{t("tour.upToPeople", { n: tour.groupSize })}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-600">Rating</span>
+                  <span className="text-gray-600">{t("tour.rating")}</span>
                   <span className="text-[#0A1628] flex items-center gap-1">★ {tour.rating}</span>
                 </div>
               </div>
@@ -950,11 +952,11 @@ export default function TourDetailPage() {
                                     <Calendar
                     value={bookingForm.travelDate}
                     onChange={(date) => setBookingForm((prev) => ({ ...prev, travelDate: date }))}
-                    label="Travel Date"
+                    label={t("tour.travelDate")}
                   />
                 </div>
                 <div>
-                  <label className="text-gray-600 text-xs mb-1 block">Travelers</label>
+                  <label className="text-gray-600 text-xs mb-1 block">{t("tour.travelers")}</label>
                   <div className="flex items-center gap-2">
                     <button
                       type="button"
@@ -987,7 +989,7 @@ export default function TourDetailPage() {
 
               {/* Total */}
               <div className="flex justify-between items-center py-3 border-t border-gold/10">
-                <span className="text-gray-700 font-medium">Total</span>
+                <span className="text-gray-700 font-medium">{t("tour.total")}</span>
                 <span className="text-2xl font-bold text-[#D4AF37]">
                   {currencySymbol} {totalPrice.toLocaleString()}
                 </span>
@@ -1002,7 +1004,7 @@ export default function TourDetailPage() {
                 Book Now
               </button>
 
-              <p className="text-center text-gray-500 text-xs">No payment required to book</p>
+              <p className="text-center text-gray-500 text-xs">{t("tour.noPayment")}</p>
             </div>
             <Link
               href="/tours"
@@ -1049,12 +1051,12 @@ export default function TourDetailPage() {
                                         <Calendar
                       value={bookingForm.travelDate}
                       onChange={(date) => setBookingForm((prev) => ({ ...prev, travelDate: date }))}
-                      label="Travel Date"
+                      label={t("tour.travelDate")}
                     />
                   </div>
 
                   <div>
-                    <label className="text-gray-600 text-sm mb-1 block">Number of Travelers</label>
+                    <label className="text-gray-600 text-sm mb-1 block">{t("tour.numTravelers")}</label>
                     <div className="flex items-center gap-2">
                       <button
                         type="button"
@@ -1075,11 +1077,11 @@ export default function TourDetailPage() {
                   </div>
 
                   <div>
-                    <label className="text-gray-600 text-sm mb-1 block">Special Requests</label>
+                    <label className="text-gray-600 text-sm mb-1 block">{t("tour.specialRequests")}</label>
                     <textarea
                       value={bookingForm.specialRequests}
                       onChange={(e) => setBookingForm((prev) => ({ ...prev, specialRequests: e.target.value }))}
-                      placeholder="Any special requirements or preferences..."
+                      placeholder={t("tour.specialRequestsPh")}
                       rows={3}
                       className="w-full px-3 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-gray-900 placeholder-gray-400 text-sm focus:outline-none focus:border-gold/50 resize-none"
                     />

@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 import { getAll } from '@/lib/persistentStore';
 import ScrollingRow from './ScrollingRow';
+import { useI18n } from "@/lib/i18n";
 
 interface RelatedSection {
   key: string;
@@ -40,6 +41,7 @@ const RELATED_CARD_WIDTH = 200;
 const RELATED_CONTAINER_WIDTH = 4 * (RELATED_CARD_WIDTH + 16) + 4;
 
 export default function RelatedItems({ section, excludeSlug, destination, country }: { section: string; excludeSlug?: string; destination?: string; country?: string }) {
+  const { t } = useI18n();
   const [items, setItems] = useState<any[]>([]);
   const [crossItems, setCrossItems] = useState<{section: RelatedSection; items: any[]}[]>([]);
 
@@ -105,7 +107,7 @@ export default function RelatedItems({ section, excludeSlug, destination, countr
       {/* Same-section "You May Also Like" */}
       {items.length > 0 && (
         <>
-          <h2 style={{ fontFamily: "'Playfair Display',serif", fontSize: 22, color: '#0A1628', marginBottom: 16 }}>You May Also Like</h2>
+          <h2 style={{ fontFamily: "'Playfair Display',serif", fontSize: 22, color: '#0A1628', marginBottom: 16 }}>{t("related.youMayAlsoLike")}</h2>
           <ScrollingRow containerWidth={RELATED_CONTAINER_WIDTH}>
             {(items ?? []).map((item, i) => (
               <a key={i} href={`/${section}/${item.slug || slugify(item.name || item.title || item.planName) || item._id || item.id}`} className="flex-shrink-0 snap-start" style={{ width: RELATED_CARD_WIDTH, textDecoration: 'none' }}>

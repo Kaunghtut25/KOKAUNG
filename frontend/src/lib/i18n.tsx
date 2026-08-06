@@ -125,6 +125,38 @@ const en: Record<string, string> = {
   "newsletter.placeholder": "Your email address",
   "newsletter.subscribe": "Subscribe",
   "newsletter.thanks": "Thank you for subscribing!",
+
+  // Shared components — cards & detail pages
+  "common.viewDetails": "View Details",
+  "common.back": "Back",
+  "common.backToTours": "Back to Tours",
+  "common.share": "Share:",
+  "common.copyLink": "Copy link",
+  "calendar.clear": "Clear",
+  "calendar.today": "Today",
+  "related.youMayAlsoLike": "You May Also Like",
+
+  // Tour detail page
+  "tour.errorTitle": "Something went wrong",
+  "tour.about": "About This Tour",
+  "tour.maxGroupSize": "Max Group Size",
+  "tour.rating": "Rating",
+  "tour.reviews": "Reviews",
+  "tour.amenities": "Amenities",
+  "tour.day": "Day",
+  "tour.noItems": "No items listed",
+  "tour.reviewsComingSoon": "Reviews coming soon",
+  "tour.reviewsSoonDesc": "We're working on collecting authentic reviews from our travelers.",
+  "tour.duration": "Duration",
+  "tour.groupSize": "Group Size",
+  "tour.upToPeople": "Up to {n} people",
+  "tour.travelDate": "Travel Date",
+  "tour.travelers": "Travelers",
+  "tour.total": "Total",
+  "tour.noPayment": "No payment required to book",
+  "tour.numTravelers": "Number of Travelers",
+  "tour.specialRequests": "Special Requests",
+  "tour.specialRequestsPh": "Any special requirements or preferences...",
 };
 
 const mm: Record<string, string> = {
@@ -247,6 +279,38 @@ const mm: Record<string, string> = {
   "newsletter.placeholder": "သင့်အီးမေးလ်လိပ်စာ",
   "newsletter.subscribe": "စာရင်းသွင်းမည်",
   "newsletter.thanks": "စာရင်းသွင်းပေးသည့်အတွက် ကျေးဇူးတင်ပါသည်!",
+
+  // Shared components — cards & detail pages
+  "common.viewDetails": "အသေးစိတ်ကြည့်ရှုရန်",
+  "common.back": "နောက်သို့",
+  "common.backToTours": "ခရီးစဉ်များသို့ ပြန်သွားရန်",
+  "common.share": "မျှဝေရန်:",
+  "common.copyLink": "လင့်ခ်ကူးယူရန်",
+  "calendar.clear": "ရှင်းလင်းမည်",
+  "calendar.today": "ယနေ့",
+  "related.youMayAlsoLike": "သင်နှစ်သက်နိုင်သော အခြားခရီးစဉ်များ",
+
+  // Tour detail page
+  "tour.errorTitle": "တစ်စုံတစ်ရာ မှားယွင်းသွားပါသည်",
+  "tour.about": "ဤခရီးစဉ်အကြောင်း",
+  "tour.maxGroupSize": "အများဆုံး အဖွဲ့ဝင်ဦးရေ",
+  "tour.rating": "အဆင့်သတ်မှတ်ချက်",
+  "tour.reviews": "သုံးသပ်ချက်များ",
+  "tour.amenities": "အထောက်အကူပြုပစ္စည်းများ",
+  "tour.day": "နေ့",
+  "tour.noItems": "ပစ္စည်းများ စာရင်းမသွင်းရသေးပါ",
+  "tour.reviewsComingSoon": "သုံးသပ်ချက်များ မကြာမီရောက်ရှိပါမည်",
+  "tour.reviewsSoonDesc": "ကျွန်ုပ်တို့၏ ခရီးသွားများထံမှ စစ်မှန်သော သုံးသပ်ချက်များ စုဆောင်းနေပါသည်။",
+  "tour.duration": "ကြာချိန်",
+  "tour.groupSize": "အဖွဲ့ဝင်ဦးရေ",
+  "tour.upToPeople": "လူ {n} ဦးအထိ",
+  "tour.travelDate": "ခရီးထွက်မည့်ရက်",
+  "tour.travelers": "ခရီးသွားဦးရေ",
+  "tour.total": "စုစုပေါင်း",
+  "tour.noPayment": "ကြိုတင်ငွေပေးချေရန် မလိုပါ",
+  "tour.numTravelers": "ခရီးသွားဦးရေ",
+  "tour.specialRequests": "အထူးတောင်းဆိုချက်များ",
+  "tour.specialRequestsPh": "အထူးလိုအပ်ချက်များ သို့မဟုတ် နှစ်သက်ချက်များရှိပါက...",
 };
 
 const DICTS: Record<Lang, Record<string, string>> = { en, mm };

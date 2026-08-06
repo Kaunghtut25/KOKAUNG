@@ -1,7 +1,9 @@
 'use client';
 import { useState } from 'react';
+import { useI18n } from "@/lib/i18n";
 
 export default function SocialShare({ url, title }: { url: string; title: string }) {
+  const { t } = useI18n();
   const [copied, setCopied] = useState(false);
 
   const shareUrl = encodeURIComponent(url);
@@ -48,7 +50,7 @@ export default function SocialShare({ url, title }: { url: string; title: string
 
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginTop: 16 }}>
-      <span style={{ fontSize: 14, color: '#555', fontWeight: 500 }}>Share:</span>
+      <span style={{ fontSize: 14, color: '#555', fontWeight: 500 }}>{t("common.share")}</span>
       {links.map((l) => (
         <a
           key={l.label}
@@ -90,7 +92,7 @@ export default function SocialShare({ url, title }: { url: string; title: string
         }}
         onMouseEnter={(e) => { e.currentTarget.style.background = '#0A1628'; e.currentTarget.style.color = '#D4AF37'; }}
         onMouseLeave={(e) => { e.currentTarget.style.background = '#f5f5f5'; e.currentTarget.style.color = '#555'; }}
-        title="Copy link"
+        title={t("common.copyLink")}
       >
         {copied ? '✓' : (
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">

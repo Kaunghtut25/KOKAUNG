@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useMemo, useCallback } from "react";
+import { useI18n } from "@/lib/i18n";
 
 interface CalendarProps {
   value: string;
@@ -58,6 +59,7 @@ export default function Calendar({
   placeholder = "Pick a date",
   className = "",
 }: CalendarProps) {
+  const { t } = useI18n();
   const today = new Date();
   const initialY = value ? new Date(value + "T00:00:00").getFullYear() : today.getFullYear();
   const initialM = value ? new Date(value + "T00:00:00").getMonth() : today.getMonth();
@@ -185,14 +187,14 @@ export default function Calendar({
 
             <div className="flex items-center justify-between px-4 py-2.5 bg-gray-50 border-t border-gray-100">
               <button type="button" onClick={() => { onChange(""); setIsOpen(false); }}
-                className="text-xs text-gray-500 hover:text-red-500 transition-colors">Clear</button>
+                className="text-xs text-gray-500 hover:text-red-500 transition-colors">{t("calendar.clear")}</button>
               <button type="button" onClick={() => { onChange(todayStr); setIsOpen(false); }}
                 disabled={isDateDisabled(todayStr, minDate, maxDate)}
                 className={"text-xs px-3 py-1 rounded-full transition-colors " +
                   (isDateDisabled(todayStr, minDate, maxDate)
                     ? "text-gray-300 cursor-not-allowed"
                     : "text-[#D4AF37] hover:bg-[#D4AF37]/10 font-semibold")}
-              >Today</button>
+              >{t("calendar.today")}</button>
             </div>
           </div>
         </>
