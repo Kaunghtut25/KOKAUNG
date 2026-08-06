@@ -1,9 +1,10 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useParams } from 'next/navigation';
 import BackButton from '@/components/BackButton';
 import Link from 'next/link';
 import { useI18n } from "@/lib/i18n";
+import { mmLookup, mmBlogs } from "@/lib/mm-content";
 
 interface BlogPost {
   _id: string; slug: string; title: string; content: string; image: string;
@@ -58,7 +59,7 @@ const FALLBACK_BLOG_POSTS: any[] = [
 ];
 
 export default function BlogDetailPage() {
-  const { t } = useI18n();
+  const { t, lang } = useI18n();
   const params = useParams();
   const slug = params?.slug as string;
   const [apiPosts, setApiPosts] = useState<Record<string, BlogPost>>({});
@@ -104,7 +105,10 @@ export default function BlogDetailPage() {
     });
   }
 
-  const post = found;
+  const post = useMemo(() => {
+    if (lang !== "mm" || !found) return found;
+    return { ...found, ...mmLookup(mmBlogs, found) };
+  }, [found, lang]);
 
   // Gate on API load to avoid flashing stale hardcoded ALL_POSTS content
   if (!postsLoaded) {
