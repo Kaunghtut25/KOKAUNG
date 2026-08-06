@@ -103,7 +103,6 @@ export default function Navbar() {
             </Link>
 
             <div className="hidden lg:flex items-center space-x-3">
-              <LanguageSwitcher />
               {visibleNavLinks.map((link) => (
                 <Link key={link.href} href={link.href}
                   className={`px-4 py-2 text-sm font-semibold transition-all duration-200 rounded-lg [text-shadow:0_1px_3px_rgba(0,0,0,0.5)] ${
@@ -111,6 +110,7 @@ export default function Navbar() {
                   }`}>{linkLabel(link)}</Link>
               ))}
 
+              <LanguageSwitcher />
               <div className="relative group">
                 <button className="flex items-center gap-1 text-sm font-medium text-white hover:text-[#D4AF37] transition-colors px-3 py-2 rounded-lg hover:bg-white/10">
                   <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>

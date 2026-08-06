@@ -20,9 +20,9 @@ export default function LanguageSwitcher({ dark = true }: { dark?: boolean }) {
       <button
         onClick={() => setLang("mm")}
         className={`px-3 py-1.5 transition-all ${lang === "mm" ? active : base}`}
-        aria-label="မြန်မာ"
+        aria-label="Myanmar (Burmese)"
       >
-        မြ
+        MM
       </button>
     </div>
   );
