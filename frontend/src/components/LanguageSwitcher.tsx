@@ -12,19 +12,19 @@ export default function LanguageSwitcher({ dark = true }: { dark?: boolean }) {
     <div className={`flex items-center rounded-full border ${dark ? "border-white/20" : "border-gray-300"} overflow-hidden text-xs`}>
       <button
         onClick={() => setLang("en")}
-        className={`flex items-center gap-1 px-3 py-1.5 transition-all ${lang === "en" ? active : base}`}
+        className={`flex items-center justify-center px-2.5 py-1.5 text-base leading-none transition-all ${lang === "en" ? active : base}`}
         aria-label="English (USA)"
         title="English"
       >
-        <span aria-hidden="true">🇺🇸</span>EN
+        <span aria-hidden="true">🇺🇸</span>
       </button>
       <button
         onClick={() => setLang("mm")}
-        className={`flex items-center gap-1 px-3 py-1.5 transition-all ${lang === "mm" ? active : base}`}
+        className={`flex items-center justify-center px-2.5 py-1.5 text-base leading-none transition-all ${lang === "mm" ? active : base}`}
         aria-label="Myanmar (Burmese)"
         title="မြန်မာ"
       >
-        <span aria-hidden="true">🇲🇲</span>MM
+        <span aria-hidden="true">🇲🇲</span>
       </button>
     </div>
   );
