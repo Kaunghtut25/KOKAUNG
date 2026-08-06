@@ -6,6 +6,7 @@ import Image from 'next/image';
 import BackButton from '@/components/BackButton';
 import Calendar from '@/components/Calendar';
 import SocialShare from '@/components/SocialShare';
+import { useI18n } from "@/lib/i18n";
 
 export const dynamic = 'force-dynamic';
 
@@ -27,6 +28,7 @@ const FALLBACK_MINGALAR: MingalarItem[] = [
 ];
 
 export default function MingalarDetailPage({ params }: { params: { slug: string } }) {
+  const { t } = useI18n();
   const slug = params.slug;
   const [item, setItem] = useState<MingalarItem | null>(null);
   const [loading, setLoading] = useState(true);
@@ -64,7 +66,7 @@ export default function MingalarDetailPage({ params }: { params: { slug: string 
   if (loading) {
     return (
       <main className="min-h-screen bg-white pt-24 text-center">
-        <div className="text-gray-500 py-16">Loading mingalar details...</div>
+        <div className="text-gray-500 py-16">{t("mingalar.loading")}</div>
       </main>
     );
   }
@@ -73,8 +75,8 @@ export default function MingalarDetailPage({ params }: { params: { slug: string 
     return (
       <main className="min-h-screen bg-white pt-24 text-center">
         <BackButton />
-        <h1 className="text-4xl font-bold text-[#0A1628] mb-4">Mingalar Experience Not Found</h1>
-        <p className="text-gray-600 mb-8">The sky lounge experience you are looking for does not exist.</p>
+        <h1 className="text-4xl font-bold text-[#0A1628] mb-4">{t("mingalar.notFound")}</h1>
+        <p className="text-gray-600 mb-8">{t("mingalar.notFoundDesc")}</p>
         <Link href="/mingalar" className="text-[#D4AF37] font-semibold hover:underline">← Back to Mingalar</Link>
       </main>
     );
@@ -95,7 +97,7 @@ export default function MingalarDetailPage({ params }: { params: { slug: string 
 
   return (
     <main className="min-h-screen bg-white">
-      <BackButton label="Back to Mingalar" />
+      <BackButton label={t("mingalar.backToMingalar")} />
 
       {/* Hero Section */}
       <section className="relative w-full h-[50vh] md:h-[60vh] overflow-hidden">
@@ -125,9 +127,9 @@ export default function MingalarDetailPage({ params }: { params: { slug: string 
 
       {/* Breadcrumbs */}
       <nav className="max-w-7xl mx-auto px-4 py-4 text-sm">
-        <Link href="/" className="text-gray-500 hover:text-[#D4AF37]">Home</Link>
+        <Link href="/" className="text-gray-500 hover:text-[#D4AF37]">{t("mingalar.home")}</Link>
         <span className="mx-2 text-gray-300">/</span>
-        <Link href="/mingalar" className="text-gray-500 hover:text-[#D4AF37]">Mingalar</Link>
+        <Link href="/mingalar" className="text-gray-500 hover:text-[#D4AF37]">{t("mingalar.mingalar")}</Link>
         <span className="mx-2 text-gray-300">/</span>
         <span className="text-[#0A1628] font-medium">{name}</span>
       </nav>
@@ -143,22 +145,22 @@ export default function MingalarDetailPage({ params }: { params: { slug: string 
             <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
               <div className="p-5 rounded-2xl bg-gray-50 border border-[#D4AF37]/10 text-center hover:border-[#D4AF37]/30 transition-colors">
                 <span className="text-3xl">{item.icon}</span>
-                <p className="text-gray-400 text-xs uppercase tracking-wider mt-1">Experience</p>
+                <p className="text-gray-400 text-xs uppercase tracking-wider mt-1">{t("mingalar.experience")}</p>
               </div>
               <div className="p-5 rounded-2xl bg-gray-50 border border-[#D4AF37]/10 text-center hover:border-[#D4AF37]/30 transition-colors">
                 <svg className="w-8 h-8 mx-auto text-[#D4AF37] mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                   <path strokeLinecap="round" strokeLinejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                 </svg>
-                <p className="text-[#D4AF37] text-2xl font-bold">Mingalar</p>
-                <p className="text-gray-400 text-xs uppercase tracking-wider mt-1">Location</p>
+                <p className="text-[#D4AF37] text-2xl font-bold">{t("mingalar.mingalar")}</p>
+                <p className="text-gray-400 text-xs uppercase tracking-wider mt-1">{t("mingalar.location")}</p>
               </div>
               <div className="p-5 rounded-2xl bg-gray-50 border border-[#D4AF37]/10 text-center hover:border-[#D4AF37]/30 transition-colors">
                 <svg className="w-8 h-8 mx-auto text-[#D4AF37] mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
                 </svg>
-                <p className="text-[#D4AF37] text-2xl font-bold">Sky Lounge</p>
-                <p className="text-gray-400 text-xs uppercase tracking-wider mt-1">Category</p>
+                <p className="text-[#D4AF37] text-2xl font-bold">{t("mingalar.skyLounge")}</p>
+                <p className="text-gray-400 text-xs uppercase tracking-wider mt-1">{t("mingalar.category")}</p>
               </div>
             </div>
 
@@ -185,8 +187,8 @@ export default function MingalarDetailPage({ params }: { params: { slug: string 
                     </svg>
                   </div>
                   <div>
-                    <p className="text-white/50 text-xs uppercase tracking-wider">Category</p>
-                    <p className="text-white font-medium">Sky Lounge</p>
+                    <p className="text-white/50 text-xs uppercase tracking-wider">{t("mingalar.category")}</p>
+                    <p className="text-white font-medium">{t("mingalar.skyLounge")}</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
@@ -197,8 +199,8 @@ export default function MingalarDetailPage({ params }: { params: { slug: string 
                     </svg>
                   </div>
                   <div>
-                    <p className="text-white/50 text-xs uppercase tracking-wider">Location</p>
-                    <p className="text-white font-medium">Mingalar</p>
+                    <p className="text-white/50 text-xs uppercase tracking-wider">{t("mingalar.location")}</p>
+                    <p className="text-white font-medium">{t("mingalar.mingalar")}</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
@@ -206,7 +208,7 @@ export default function MingalarDetailPage({ params }: { params: { slug: string 
                     {item.icon}
                   </div>
                   <div>
-                    <p className="text-white/50 text-xs uppercase tracking-wider">Signature</p>
+                    <p className="text-white/50 text-xs uppercase tracking-wider">{t("mingalar.signature")}</p>
                     <p className="text-white font-medium">{name}</p>
                   </div>
                 </div>
@@ -232,16 +234,16 @@ export default function MingalarDetailPage({ params }: { params: { slug: string 
                 {/* Info Rows */}
                 <div className="space-y-2 text-sm">
                   <div className="flex justify-between py-1">
-                    <span className="text-gray-500">Category</span>
+                    <span className="text-gray-500">{t("mingalar.category")}</span>
                     <span className="text-[#0A1628] font-medium">Sky Lounge</span>
                   </div>
                   <div className="flex justify-between py-1">
-                    <span className="text-gray-500">Location</span>
+                    <span className="text-gray-500">{t("mingalar.location")}</span>
                     <span className="text-[#0A1628] font-medium">Mingalar</span>
                   </div>
                   <div className="flex justify-between py-1">
-                    <span className="text-gray-500">Group Size</span>
-                    <span className="text-[#0A1628] font-medium">Up to 12 people</span>
+                    <span className="text-gray-500">{t("mingalar.groupSize")}</span>
+                    <span className="text-[#0A1628] font-medium">{t("mingalar.upToPeople", { n: 12 })}</span>
                   </div>
                 </div>
                 <hr className="border-[#D4AF37]/10" />
@@ -249,10 +251,10 @@ export default function MingalarDetailPage({ params }: { params: { slug: string 
                 {/* Booking Form */}
                 <div className="space-y-3">
                   <div>
-                    <Calendar value={travelDate} onChange={setTravelDate} label="Travel Date" />
+                    <Calendar value={travelDate} onChange={setTravelDate} label={t("mingalar.travelDate")} />
                   </div>
                   <div>
-                    <label className="text-gray-600 text-xs mb-1 block">Travelers</label>
+                    <label className="text-gray-600 text-xs mb-1 block">{t("mingalar.travelers")}</label>
                     <div className="flex items-center gap-2">
                       <button
                         type="button"
@@ -280,7 +282,7 @@ export default function MingalarDetailPage({ params }: { params: { slug: string 
                 >
                   Book Now
                 </button>
-                <p className="text-center text-gray-400 text-xs">No payment required to book</p>
+                <p className="text-center text-gray-400 text-xs">{t("mingalar.noPayment")}</p>
               </div>
 
               {/* Back Link */}

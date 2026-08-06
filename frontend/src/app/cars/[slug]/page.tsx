@@ -10,6 +10,7 @@ import SocialShare from '@/components/SocialShare';
 import BackButton from '@/components/BackButton';
 import Calendar from '@/components/Calendar';
 import RelatedItems from '@/components/RelatedItems';
+import { useI18n } from "@/lib/i18n";
 
 interface CarData {
   id: string;
@@ -109,6 +110,7 @@ async function getCarBySlug(slug: string): Promise<CarData | null> {
 }
 
 export default function CarDetailPage() {
+  const { t } = useI18n();
   const params = useParams();
   const router = useRouter();
   const slug = params?.slug as string;
@@ -172,7 +174,7 @@ export default function CarDetailPage() {
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z" />
             </svg>
           </div>
-          <h2 className="text-2xl text-[#0A1628] font-semibold" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>Car Not Found</h2>
+          <h2 className="text-2xl text-[#0A1628] font-semibold" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>{t("car.notFound")}</h2>
           <p className="text-gray-400">The vehicle you&apos;re looking for is no longer available.</p>
           <a href="/cars" className="inline-block mt-4 px-6 py-2.5 rounded-xl bg-[#D4AF37] text-[#0A1628] font-bold hover:bg-[#C5A028] transition-colors">
             ← Back to Cars
@@ -262,7 +264,7 @@ export default function CarDetailPage() {
                   <path strokeLinecap="round" strokeLinejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
                 </svg>
                 <p className="text-[#D4AF37] text-2xl font-bold">{car.capacity}</p>
-                <p className="text-gray-400 text-xs uppercase tracking-wider">Capacity</p>
+                <p className="text-gray-400 text-xs uppercase tracking-wider">{t("car.capacity")}</p>
               </div>
               <div className="p-5 rounded-2xl bg-gray-50 border border-[#D4AF37]/10 text-center hover:border-[#D4AF37]/30 transition-colors">
                 <svg className="w-8 h-8 mx-auto text-[#D4AF37] mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
@@ -270,21 +272,21 @@ export default function CarDetailPage() {
                   <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                 </svg>
                 <p className="text-[#D4AF37] text-2xl font-bold">{car.transmission}</p>
-                <p className="text-gray-400 text-xs uppercase tracking-wider">Transmission</p>
+                <p className="text-gray-400 text-xs uppercase tracking-wider">{t("car.transmission")}</p>
               </div>
               <div className="p-5 rounded-2xl bg-gray-50 border border-[#D4AF37]/10 text-center hover:border-[#D4AF37]/30 transition-colors">
                 <svg className="w-8 h-8 mx-auto text-[#D4AF37] mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
                 </svg>
                 <p className="text-[#D4AF37] text-2xl font-bold capitalize">{fuelType}</p>
-                <p className="text-gray-400 text-xs uppercase tracking-wider">Fuel</p>
+                <p className="text-gray-400 text-xs uppercase tracking-wider">{t("car.fuel")}</p>
               </div>
               <div className="p-5 rounded-2xl bg-gray-50 border border-[#D4AF37]/10 text-center hover:border-[#D4AF37]/30 transition-colors">
                 <svg className="w-8 h-8 mx-auto text-[#D4AF37] mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
                 </svg>
                 <p className="text-[#D4AF37] text-2xl font-bold">{car.seats}</p>
-                <p className="text-gray-400 text-xs uppercase tracking-wider">Seats</p>
+                <p className="text-gray-400 text-xs uppercase tracking-wider">{t("car.seats")}</p>
               </div>
             </div>
 
@@ -349,12 +351,12 @@ export default function CarDetailPage() {
               {/* Price Header */}
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-gray-400 text-xs uppercase tracking-wider mb-1">Starting from</p>
+                  <p className="text-gray-400 text-xs uppercase tracking-wider mb-1">{t("car.startingFrom")}</p>
                   <p className="text-3xl font-bold text-[#D4AF37]">
                     {currencySymbol}{price.toLocaleString()}
                   </p>
                   <p className="text-gray-500 text-xs mt-0.5">
-                    Per Day
+                    {t("car.perDay")}
                   </p>
                 </div>
                 <CurrencyToggle activeCurrency={currency} onToggle={setCurrency} />
@@ -379,28 +381,28 @@ export default function CarDetailPage() {
               {/* Info Rows */}
               <div className="space-y-2.5 text-sm">
                 <div className="flex justify-between py-1 border-b border-gray-100">
-                  <span className="text-gray-400">Vehicle Type</span>
+                  <span className="text-gray-400">{t("car.vehicleType")}</span>
                   <span className="text-[#0A1628] font-medium">{car.carType}</span>
                 </div>
                 <div className="flex justify-between py-1 border-b border-gray-100">
-                  <span className="text-gray-400">Capacity</span>
+                  <span className="text-gray-400">{t("car.capacity")}</span>
                   <span className="text-[#0A1628] font-medium">{car.capacity} passengers</span>
                 </div>
                 <div className="flex justify-between py-1 border-b border-gray-100">
-                  <span className="text-gray-400">Transmission</span>
+                  <span className="text-gray-400">{t("car.transmission")}</span>
                   <span className="text-[#0A1628] font-medium">{car.transmission}</span>
                 </div>
                 <div className="flex justify-between py-1 border-b border-gray-100">
-                  <span className="text-gray-400">Fuel Type</span>
+                  <span className="text-gray-400">{t("car.fuelType")}</span>
                   <span className="text-[#0A1628] font-medium capitalize">{fuelType}</span>
                 </div>
                 <div className="flex justify-between py-1 border-b border-gray-100">
-                  <span className="text-gray-400">Driver</span>
+                  <span className="text-gray-400">{t("car.driver")}</span>
                   <span className="text-green-400 font-medium">Included ✓</span>
                 </div>
                 {otherFeatures.length > 0 && (
                   <div className="flex justify-between py-1 border-b border-gray-100">
-                    <span className="text-gray-400">Features</span>
+                    <span className="text-gray-400">{t("car.features")}</span>
                     <span className="text-[#0A1628] font-medium">{otherFeatures.length}</span>
                   </div>
                 )}
@@ -415,13 +417,13 @@ export default function CarDetailPage() {
                   <Calendar
                     value={travelDate}
                     onChange={setTravelDate}
-                    label="Travel Date"
+                    label={t("car.travelDate")}
                   />
                 </div>
 
                 {/* Days counter */}
                 <div>
-                  <label className="text-gray-600 text-xs mb-1 block">Days</label>
+                  <label className="text-gray-600 text-xs mb-1 block">{t("car.days")}</label>
                   <div className="flex items-center gap-2">
                     <button
                       type="button"
@@ -444,7 +446,7 @@ export default function CarDetailPage() {
 
               {/* Total */}
               <div className="flex justify-between items-center py-3 border-t border-[#D4AF37]/10">
-                <span className="text-gray-700 font-medium">Total</span>
+                <span className="text-gray-700 font-medium">{t("car.total")}</span>
                 <span className="text-2xl font-bold text-[#D4AF37]">
                   {currencySymbol}{totalPrice.toLocaleString()}
                 </span>
@@ -459,7 +461,7 @@ export default function CarDetailPage() {
                 Book Now
               </button>
 
-              <p className="text-center text-gray-500 text-xs">No payment required to book</p>
+              <p className="text-center text-gray-500 text-xs">{t("car.noPayment")}</p>
 
               {/* Back to All Cars link */}
               <Link

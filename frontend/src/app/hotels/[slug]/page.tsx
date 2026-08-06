@@ -11,6 +11,7 @@ import CurrencyToggle from '@/components/CurrencyToggle';
 import BackButton from '@/components/BackButton';
 import Calendar from '@/components/Calendar';
 import RelatedItems from '@/components/RelatedItems';
+import { useI18n } from "@/lib/i18n";
 export const dynamic = 'force-dynamic';
 
 interface HotelDetail {
@@ -118,6 +119,7 @@ async function getHotelBySlug(slug: string): Promise<HotelDetail | null> {
 
 
 export default function HotelDetailPage() {
+  const { t } = useI18n();
   const params = useParams();
   const slug = params?.slug as string;
 
@@ -169,8 +171,8 @@ export default function HotelDetailPage() {
         </div>
         <div className="flex items-center justify-center flex-1 py-20">
           <div className="text-center space-y-4">
-            <h2 className="text-xl text-[#0A1628] font-semibold">Hotel Not Found</h2>
-            <p className="text-gray-500">The hotel you are looking for does not exist.</p>
+            <h2 className="text-xl text-[#0A1628] font-semibold">{t("hotel.notFound")}</h2>
+            <p className="text-gray-500">{t("hotel.notFoundDesc")}</p>
             <Link href="/hotels" className="px-6 py-2 rounded-xl bg-gradient-to-r from-[#D4AF37] to-[#C5A028] text-gray-900 font-semibold inline-block">
               Back to Hotels
             </Link>
@@ -228,7 +230,7 @@ export default function HotelDetailPage() {
   return (
     <main className="min-h-screen bg-white">
       {/* Back Button */}
-      <BackButton label="Back to Hotels" />
+      <BackButton label={t("hotel.backToHotels")} />
 
       <section className="relative w-full h-[50vh] md:h-[60vh] overflow-hidden">
         <Image src={heroImage} alt={hotel.name} width={1200} height={630} className="w-full h-full object-cover" />
@@ -260,9 +262,9 @@ export default function HotelDetailPage() {
 
       {/* Breadcrumbs */}
       <nav className="max-w-7xl mx-auto px-4 py-4 text-sm">
-        <Link href="/" className="text-gray-500 hover:text-[#D4AF37]">Home</Link>
+        <Link href="/" className="text-gray-500 hover:text-[#D4AF37]">{t("hotel.home")}</Link>
         <span className="mx-2 text-gray-300">/</span>
-        <Link href="/hotels" className="text-gray-500 hover:text-[#D4AF37]">Hotels</Link>
+        <Link href="/hotels" className="text-gray-500 hover:text-[#D4AF37]">{t("hotel.hotels")}</Link>
         <span className="mx-2 text-gray-300">/</span>
         <span className="text-[#0A1628] font-medium">{hotel.name}</span>
       </nav>
@@ -337,15 +339,15 @@ export default function HotelDetailPage() {
               {/* Quick info */}
               <div className="space-y-2 text-sm">
                 <div className="flex justify-between">
-                  <span className="text-gray-600">Per Night</span>
+                  <span className="text-gray-600">{t("hotel.perNight")}</span>
                   <span className="text-[#0A1628]">{currencySymbol} {price.toLocaleString()}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-600">Rating</span>
+                  <span className="text-gray-600">{t("hotel.rating")}</span>
                   <span className="text-[#0A1628] flex items-center gap-1">★ {hotel.rating.toFixed(1)} ({hotel.reviewCount} reviews)</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-600">Available Rooms</span>
+                  <span className="text-gray-600">{t("hotel.availableRooms")}</span>
                   <span className="text-[#0A1628]">{hotel.availableRooms}</span>
                 </div>
               </div>
@@ -358,11 +360,11 @@ export default function HotelDetailPage() {
                   <Calendar
   value={travelDate}
   onChange={setTravelDate}
-  label="Check-in Date"
+  label={t("hotel.checkInDate")}
 />
                 </div>
                 <div>
-                  <label className="text-gray-600 text-xs mb-1 block">Rooms</label>
+                  <label className="text-gray-600 text-xs mb-1 block">{t("hotel.rooms")}</label>
                   <div className="flex items-center gap-2">
                     <button
                       type="button"
@@ -400,7 +402,7 @@ export default function HotelDetailPage() {
                 Book Now
               </button>
 
-              <p className="text-center text-gray-500 text-xs">No payment required to book</p>
+              <p className="text-center text-gray-500 text-xs">{t("hotel.noPayment")}</p>
             </div>
 
             <Link

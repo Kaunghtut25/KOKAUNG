@@ -10,6 +10,7 @@ import SocialShare from '@/components/SocialShare';
 import BackButton from '@/components/BackButton';
 import RelatedItems from '@/components/RelatedItems';
 import ErrorBoundary from '@/components/ErrorBoundary';
+import { useI18n } from "@/lib/i18n";
 
 const FALLBACK_PLANS: any[] = [
   { _id: "basic-travel-shield", id: "i1", planName: "Basic Travel Shield", coverage: "Medical Emergency + Trip Delay", priceMMK: 15000, priceUSD: 7, duration: "Per trip", benefits: "Medical Emergency up to $50,000, Trip Cancellation, Lost Baggage, 24/7 Assistance", status: "active" },
@@ -33,6 +34,7 @@ interface InsurancePlan {
 }
 
 export default function InsuranceDetailPage() {
+  const { t } = useI18n();
   const params = useParams();
   const router = useRouter();
   const slug = params?.slug as string;
@@ -140,7 +142,7 @@ export default function InsuranceDetailPage() {
             <svg className="w-16 h-16 mx-auto text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z" />
             </svg>
-            <h2 className="text-xl text-[#0A1628] font-semibold">Something went wrong</h2>
+            <h2 className="text-xl text-[#0A1628] font-semibold">{t("ins.errorTitle")}</h2>
             <p className="text-gray-500">{error || 'Insurance plan not found'}</p>
             <button
               onClick={() => router.push('/insurance')}
@@ -200,9 +202,9 @@ export default function InsuranceDetailPage() {
 
       {/* Breadcrumbs */}
       <nav className="max-w-7xl mx-auto px-4 py-4 text-sm">
-        <Link href="/" className="text-gray-500 hover:text-[#D4AF37]">Home</Link>
+        <Link href="/" className="text-gray-500 hover:text-[#D4AF37]">{t("ins.home")}</Link>
         <span className="mx-2 text-gray-300">/</span>
-        <Link href="/insurance" className="text-gray-500 hover:text-[#D4AF37]">Insurance</Link>
+        <Link href="/insurance" className="text-gray-500 hover:text-[#D4AF37]">{t("ins.insurance")}</Link>
         <span className="mx-2 text-gray-300">/</span>
         <span className="text-[#0A1628] font-medium">{name}</span>
       </nav>
@@ -221,21 +223,21 @@ export default function InsuranceDetailPage() {
                   <path strokeLinecap="round" strokeLinejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
                 <p className="text-[#D4AF37] text-2xl font-bold">Ks {plan.priceMMK.toLocaleString()}</p>
-                <p className="text-gray-400 text-xs uppercase tracking-wider mt-1">Price (MMK)</p>
+                <p className="text-gray-400 text-xs uppercase tracking-wider mt-1">{t("ins.priceMMK")}</p>
               </div>
               <div className="p-5 rounded-2xl bg-gray-50 border border-[#D4AF37]/10 text-center hover:border-[#D4AF37]/30 transition-colors">
                 <svg className="w-8 h-8 mx-auto text-[#D4AF37] mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
                 <p className="text-[#D4AF37] text-2xl font-bold">{duration}</p>
-                <p className="text-gray-400 text-xs uppercase tracking-wider mt-1">Duration</p>
+                <p className="text-gray-400 text-xs uppercase tracking-wider mt-1">{t("ins.duration")}</p>
               </div>
               <div className="p-5 rounded-2xl bg-gray-50 border border-[#D4AF37]/10 text-center hover:border-[#D4AF37]/30 transition-colors">
                 <svg className="w-8 h-8 mx-auto text-[#D4AF37] mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
                 </svg>
                 <p className="text-[#D4AF37] text-2xl font-bold">{benefits.length}</p>
-                <p className="text-gray-400 text-xs uppercase tracking-wider mt-1">Benefits</p>
+                <p className="text-gray-400 text-xs uppercase tracking-wider mt-1">{t("ins.benefits")}</p>
               </div>
             </div>
 
@@ -281,7 +283,7 @@ export default function InsuranceDetailPage() {
                     </svg>
                   </div>
                   <div>
-                    <p className="text-white/50 text-xs uppercase tracking-wider">Price (MMK)</p>
+                    <p className="text-white/50 text-xs uppercase tracking-wider">{t("ins.priceMMK")}</p>
                     <p className="text-white font-medium">Ks {plan.priceMMK.toLocaleString()}</p>
                   </div>
                 </div>
@@ -292,7 +294,7 @@ export default function InsuranceDetailPage() {
                     </svg>
                   </div>
                   <div>
-                    <p className="text-white/50 text-xs uppercase tracking-wider">Price (USD)</p>
+                    <p className="text-white/50 text-xs uppercase tracking-wider">{t("ins.priceUSD")}</p>
                     <p className="text-white font-medium">${plan.priceUSD.toLocaleString()}</p>
                   </div>
                 </div>
@@ -303,7 +305,7 @@ export default function InsuranceDetailPage() {
                     </svg>
                   </div>
                   <div>
-                    <p className="text-white/50 text-xs uppercase tracking-wider">Duration</p>
+                    <p className="text-white/50 text-xs uppercase tracking-wider">{t("ins.duration")}</p>
                     <p className="text-white font-medium">{duration}</p>
                   </div>
                 </div>
@@ -330,16 +332,16 @@ export default function InsuranceDetailPage() {
               {/* Quick info */}
               <div className="space-y-2 text-sm">
                 <div className="flex justify-between">
-                  <span className="text-gray-600">Duration</span>
+                  <span className="text-gray-600">{t("ins.duration")}</span>
                   <span className="text-[#0A1628]">{duration}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-600">Coverage</span>
+                  <span className="text-gray-600">{t("ins.coverage")}</span>
                   <span className="text-[#0A1628]">{coverage}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-600">Benefits</span>
-                  <span className="text-[#0A1628]">{benefits.length} coverages</span>
+                  <span className="text-gray-600">{t("ins.benefits")}</span>
+                  <span className="text-[#0A1628]">{t("ins.coverages", { n: benefits.length })}</span>
                 </div>
               </div>
 
@@ -348,11 +350,11 @@ export default function InsuranceDetailPage() {
               {/* Booking form */}
               <div className="space-y-3">
                 <div>
-                  <label className="text-gray-600 text-xs mb-1 block">Travel Date</label>
-                  <Calendar value={travelDate} onChange={setTravelDate} label="Travel Date" />
+                  <label className="text-gray-600 text-xs mb-1 block">{t("ins.travelDate")}</label>
+                  <Calendar value={travelDate} onChange={setTravelDate} label={t("ins.travelDate")} />
                 </div>
                 <div>
-                  <label className="text-gray-600 text-xs mb-1 block">Travelers</label>
+                  <label className="text-gray-600 text-xs mb-1 block">{t("ins.travelers")}</label>
                   <div className="flex items-center gap-2">
                     <button
                       type="button"
@@ -375,7 +377,7 @@ export default function InsuranceDetailPage() {
 
               {/* Total */}
               <div className="flex justify-between items-center py-3 border-t border-gold/10">
-                <span className="text-gray-700 font-medium">Total</span>
+                <span className="text-gray-700 font-medium">{t("ins.total")}</span>
                 <span className="text-2xl font-bold text-[#D4AF37]">
                   {currencySymbol}{' '}{totalPrice.toLocaleString()}
                 </span>
@@ -390,7 +392,7 @@ export default function InsuranceDetailPage() {
                 Book Now
               </button>
 
-              <p className="text-center text-gray-500 text-xs">No payment required to book</p>
+              <p className="text-center text-gray-500 text-xs">{t("ins.noPayment")}</p>
             </div>
 
             <Link

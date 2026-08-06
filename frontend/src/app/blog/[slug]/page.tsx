@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import BackButton from '@/components/BackButton';
 import Link from 'next/link';
+import { useI18n } from "@/lib/i18n";
 
 interface BlogPost {
   _id: string; slug: string; title: string; content: string; image: string;
@@ -57,6 +58,7 @@ const FALLBACK_BLOG_POSTS: any[] = [
 ];
 
 export default function BlogDetailPage() {
+  const { t } = useI18n();
   const params = useParams();
   const slug = params?.slug as string;
   const [apiPosts, setApiPosts] = useState<Record<string, BlogPost>>({});
@@ -108,7 +110,7 @@ export default function BlogDetailPage() {
   if (!postsLoaded) {
     return (
       <main className="min-h-screen bg-white pt-24 text-center">
-        <div className="text-gray-500 py-16">Loading post...</div>
+        <div className="text-gray-500 py-16">{t("blog.loading")}</div>
       </main>
     );
   }
@@ -118,8 +120,8 @@ export default function BlogDetailPage() {
       <main className="min-h-screen bg-white pt-24 text-center">
       <BackButton />
 
-        <h1 className="text-4xl font-bold text-[#0A1628] mb-4">Post Not Found</h1>
-        <p className="text-gray-600 mb-8">The blog post you are looking for does not exist.</p>
+        <h1 className="text-4xl font-bold text-[#0A1628] mb-4">{t("blog.notFound")}</h1>
+        <p className="text-gray-600 mb-8">{t("blog.notFoundDesc")}</p>
         <Link href="/blog" className="text-[#D4AF37] font-semibold hover:underline">← Back to Blog</Link>
       </main>
     );
@@ -180,11 +182,11 @@ export default function BlogDetailPage() {
 
         {/* CTA */}
         <div className="mt-12 p-8 bg-gradient-to-r from-[#D4AF37]/10 to-[#D4AF37]/5 rounded-2xl border border-[#D4AF37]/20 text-center">
-          <h3 className="text-xl font-bold text-[#0A1628] mb-2">Inspired to Travel?</h3>
-          <p className="text-gray-600 mb-6">Let A9 Global Travel plan your perfect trip!</p>
+          <h3 className="text-xl font-bold text-[#0A1628] mb-2">{t("blog.inspired")}</h3>
+          <p className="text-gray-600 mb-6">{t("blog.ctaDesc")}</p>
           <div className="flex gap-4 justify-center flex-wrap">
-            <Link href={"/book-now?type=blog&title=" + encodeURIComponent(post.title) + "&destination=" + encodeURIComponent(post.tags?.join(", ") || "") + "&requests=" + encodeURIComponent("Blog: " + post.title)} className="px-6 py-3 bg-[#D4AF37] text-white font-semibold rounded-full hover:bg-[#C19B2F] transition-colors">Book Now</Link>
-            <Link href="/contact" className="px-6 py-3 border border-[#D4AF37] text-[#D4AF37] font-semibold rounded-full hover:bg-[#D4AF37]/10 transition-colors">Contact Us</Link>
+            <Link href={"/book-now?type=blog&title=" + encodeURIComponent(post.title) + "&destination=" + encodeURIComponent(post.tags?.join(", ") || "") + "&requests=" + encodeURIComponent("Blog: " + post.title)} className="px-6 py-3 bg-[#D4AF37] text-white font-semibold rounded-full hover:bg-[#C19B2F] transition-colors">{t("blog.bookNow")}</Link>
+            <Link href="/contact" className="px-6 py-3 border border-[#D4AF37] text-[#D4AF37] font-semibold rounded-full hover:bg-[#D4AF37]/10 transition-colors">{t("blog.contactUs")}</Link>
           </div>
         </div>
 

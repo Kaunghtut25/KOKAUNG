@@ -10,6 +10,7 @@ import BackButton from '@/components/BackButton';
 import Calendar from '@/components/Calendar';
 import RelatedItems from '@/components/RelatedItems';
 import ErrorBoundary from '@/components/ErrorBoundary';
+import { useI18n } from "@/lib/i18n";
 export const dynamic = 'force-dynamic';
 
 const FALLBACK_CRUISES = [
@@ -101,7 +102,7 @@ function CruiseDetailClient({ cruise, slug }: CruiseDetailPageProps) {
 
   return (
     <main className="min-h-screen bg-white">
-      <BackButton label="Back to Cruises" />
+      <BackButton label={t("cruise.backToCruises")} />
 
       {/* Hero Section */}
       <section className="relative w-full h-[50vh] md:h-[60vh] overflow-hidden">
@@ -133,9 +134,9 @@ function CruiseDetailClient({ cruise, slug }: CruiseDetailPageProps) {
 
       {/* Breadcrumbs */}
       <nav className="max-w-7xl mx-auto px-4 py-4 text-sm">
-        <Link href="/" className="text-gray-500 hover:text-[#D4AF37]">Home</Link>
+        <Link href="/" className="text-gray-500 hover:text-[#D4AF37]">{t("cruise.home")}</Link>
         <span className="mx-2 text-gray-300">/</span>
-        <Link href="/cruises" className="text-gray-500 hover:text-[#D4AF37]">Cruises</Link>
+        <Link href="/cruises" className="text-gray-500 hover:text-[#D4AF37]">{t("cruise.cruises")}</Link>
         <span className="mx-2 text-gray-300">/</span>
         <span className="text-[#0A1628] font-medium">{name}</span>
       </nav>
@@ -154,7 +155,7 @@ function CruiseDetailClient({ cruise, slug }: CruiseDetailPageProps) {
                   <path strokeLinecap="round" strokeLinejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
                 <p className="text-[#D4AF37] text-2xl font-bold">{currencySymbol} {price.toLocaleString()}</p>
-                <p className="text-gray-400 text-xs uppercase tracking-wider mt-1">Price</p>
+                <p className="text-gray-400 text-xs uppercase tracking-wider mt-1">{t("cruise.price")}</p>
               </div>
               {duration && (
                 <div className="p-5 rounded-2xl bg-gray-50 border border-[#D4AF37]/10 text-center hover:border-[#D4AF37]/30 transition-colors">
@@ -162,7 +163,7 @@ function CruiseDetailClient({ cruise, slug }: CruiseDetailPageProps) {
                     <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
                   <p className="text-[#D4AF37] text-2xl font-bold">{duration}</p>
-                  <p className="text-gray-400 text-xs uppercase tracking-wider mt-1">Duration</p>
+                  <p className="text-gray-400 text-xs uppercase tracking-wider mt-1">{t("cruise.duration")}</p>
                 </div>
               )}
               <div className="p-5 rounded-2xl bg-gray-50 border border-[#D4AF37]/10 text-center hover:border-[#D4AF37]/30 transition-colors">
@@ -171,7 +172,7 @@ function CruiseDetailClient({ cruise, slug }: CruiseDetailPageProps) {
                   <path strokeLinecap="round" strokeLinejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                 </svg>
                 <p className="text-[#D4AF37] text-2xl font-bold">{dest}</p>
-                <p className="text-gray-400 text-xs uppercase tracking-wider mt-1">Destination</p>
+                <p className="text-gray-400 text-xs uppercase tracking-wider mt-1">{t("cruise.destination")}</p>
               </div>
             </div>
 
@@ -202,7 +203,7 @@ function CruiseDetailClient({ cruise, slug }: CruiseDetailPageProps) {
                       </svg>
                     </div>
                     <div>
-                      <p className="text-white/50 text-xs uppercase tracking-wider">Destination</p>
+                      <p className="text-white/50 text-xs uppercase tracking-wider">{t("cruise.destination")}</p>
                       <p className="text-white font-medium">{dest}</p>
                     </div>
                   </div>
@@ -215,7 +216,7 @@ function CruiseDetailClient({ cruise, slug }: CruiseDetailPageProps) {
                       </svg>
                     </div>
                     <div>
-                      <p className="text-white/50 text-xs uppercase tracking-wider">Duration</p>
+                      <p className="text-white/50 text-xs uppercase tracking-wider">{t("cruise.duration")}</p>
                       <p className="text-white font-medium">{duration}</p>
                     </div>
                   </div>
@@ -227,7 +228,7 @@ function CruiseDetailClient({ cruise, slug }: CruiseDetailPageProps) {
                     </svg>
                   </div>
                   <div>
-                    <p className="text-white/50 text-xs uppercase tracking-wider">Price (MMK)</p>
+                    <p className="text-white/50 text-xs uppercase tracking-wider">{t("cruise.priceMMK")}</p>
                     <p className="text-white font-medium">Ks {priceMMK.toLocaleString()}</p>
                   </div>
                 </div>
@@ -238,7 +239,7 @@ function CruiseDetailClient({ cruise, slug }: CruiseDetailPageProps) {
                     </svg>
                   </div>
                   <div>
-                    <p className="text-white/50 text-xs uppercase tracking-wider">Price (USD)</p>
+                    <p className="text-white/50 text-xs uppercase tracking-wider">{t("cruise.priceUSD")}</p>
                     <p className="text-white font-medium">${priceUSD.toLocaleString()}</p>
                   </div>
                 </div>
@@ -266,19 +267,19 @@ function CruiseDetailClient({ cruise, slug }: CruiseDetailPageProps) {
                 {/* Info Rows */}
                 <div className="space-y-2 text-sm">
                   <div className="flex justify-between py-1">
-                    <span className="text-gray-500">Duration</span>
+                    <span className="text-gray-500">{t("cruise.duration")}</span>
                     <span className="text-[#0A1628] font-medium">{duration}</span>
                   </div>
                   <div className="flex justify-between py-1">
-                    <span className="text-gray-500">Destination</span>
+                    <span className="text-gray-500">{t("cruise.destination")}</span>
                     <span className="text-[#0A1628] font-medium">{dest}</span>
                   </div>
                   <div className="flex justify-between py-1">
-                    <span className="text-gray-500">Group Size</span>
+                    <span className="text-gray-500">{t("cruise.groupSize")}</span>
                     <span className="text-[#0A1628] font-medium">Up to {maxGroupSize} people</span>
                   </div>
                   <div className="flex justify-between py-1">
-                    <span className="text-gray-500">Rating</span>
+                    <span className="text-gray-500">{t("cruise.rating")}</span>
                     <span className="text-[#0A1628] font-medium flex items-center gap-1">
                       {renderStars(rating)}
                     </span>
@@ -293,11 +294,11 @@ function CruiseDetailClient({ cruise, slug }: CruiseDetailPageProps) {
                     <Calendar
   value={travelDate}
   onChange={setTravelDate}
-  label="Travel Date"
+  label={t("cruise.travelDate")}
 />
                   </div>
                   <div>
-                    <label className="text-gray-600 text-xs mb-1 block">Travelers</label>
+                    <label className="text-gray-600 text-xs mb-1 block">{t("cruise.travelers")}</label>
                     <div className="flex items-center gap-2">
                       <button
                         type="button"
@@ -333,7 +334,7 @@ function CruiseDetailClient({ cruise, slug }: CruiseDetailPageProps) {
                 >
                   Book Now
                 </button>
-                <p className="text-center text-gray-400 text-xs">No payment required to book</p>
+                <p className="text-center text-gray-400 text-xs">{t("cruise.noPayment")}</p>
               </div>
 
               {/* Back Link */}
@@ -356,6 +357,7 @@ function CruiseDetailClient({ cruise, slug }: CruiseDetailPageProps) {
 }
 
 export default function CruiseDetailPage({ params }: { params: { slug: string } }) {
+  const { t } = useI18n();
   const slug = params.slug;
   const [cruise, setCruise] = useState<any>(null);
   const [loading, setLoading] = useState(true);
@@ -382,7 +384,7 @@ export default function CruiseDetailPage({ params }: { params: { slug: string } 
   if (loading) {
     return (
       <main className="min-h-screen bg-white pt-24 text-center">
-        <div className="text-gray-500 py-16">Loading cruise details...</div>
+        <div className="text-gray-500 py-16">{t("cruise.loading")}</div>
       </main>
     );
   }
@@ -390,8 +392,8 @@ export default function CruiseDetailPage({ params }: { params: { slug: string } 
     return (
       <main className="min-h-screen bg-white pt-24 text-center">
         <BackButton />
-        <h1 className="text-4xl font-bold text-[#0A1628] mb-4">Cruise Not Found</h1>
-        <p className="text-gray-600 mb-8">The cruise you are looking for does not exist.</p>
+        <h1 className="text-4xl font-bold text-[#0A1628] mb-4">{t("cruise.notFound")}</h1>
+        <p className="text-gray-600 mb-8">{t("cruise.notFoundDesc")}</p>
         <Link href="/cruises" className="text-[#D4AF37] font-semibold hover:underline">← Back to Cruises</Link>
       </main>
     );

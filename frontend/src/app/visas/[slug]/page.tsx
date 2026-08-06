@@ -10,6 +10,7 @@ import SocialShare from '@/components/SocialShare';
 import BackButton from '@/components/BackButton';
 import RelatedItems from '@/components/RelatedItems';
 import { getAll } from '@/lib/persistentStore';
+import { useI18n } from "@/lib/i18n";
 
 const FALLBACK_VISAS: any[] = [
   { id: "myanmar-visa", _id: "v1", country: "Myanmar", description: "Comprehensive Myanmar visa services for tourists and business travelers. Fast processing and expert guidance through the entire application process.", process: "eVisa available online", priceMMK: 85000, priceUSD: 40, duration: "28 Days (Single Entry)", requirements: "Passport, Digital Photo, Completed Application, Hotel Booking", status: "active" },
@@ -20,6 +21,7 @@ const FALLBACK_VISAS: any[] = [
 ];
 
 export default function VisaDetailPage() {
+  const { t } = useI18n();
   const params = useParams();
   const slug = params?.slug as string;
 
@@ -103,7 +105,7 @@ export default function VisaDetailPage() {
             <svg className="w-16 h-16 mx-auto text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z" />
             </svg>
-            <h2 className="text-xl text-[#0A1628] font-semibold">Something went wrong</h2>
+            <h2 className="text-xl text-[#0A1628] font-semibold">{t("visa.errorTitle")}</h2>
             <p className="text-gray-500">{error || 'Visa not found'}</p>
             <Link
               href="/visas"
@@ -185,18 +187,18 @@ export default function VisaDetailPage() {
               </span>
             </div>
             <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold text-white mb-3 drop-shadow-lg" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
-              Visa to {country}
+              {t("visa.visaTo", { country })}
             </h1>
-            <p className="text-white/60 text-base md:text-lg">Professional Visa Processing Service</p>
+            <p className="text-white/60 text-base md:text-lg">{t("visa.proService")}</p>
           </div>
         </div>
       </section>
 
       {/* Breadcrumbs */}
       <nav className="max-w-7xl mx-auto px-4 py-4 text-sm">
-        <Link href="/" className="text-gray-500 hover:text-[#D4AF37]">Home</Link>
+        <Link href="/" className="text-gray-500 hover:text-[#D4AF37]">{t("visa.home")}</Link>
         <span className="mx-2 text-gray-300">/</span>
-        <Link href="/visas" className="text-gray-500 hover:text-[#D4AF37]">Visas</Link>
+        <Link href="/visas" className="text-gray-500 hover:text-[#D4AF37]">{t("visa.visas")}</Link>
         <span className="mx-2 text-gray-300">/</span>
         <span className="text-[#0A1628] font-medium">{country}</span>
       </nav>
@@ -215,21 +217,21 @@ export default function VisaDetailPage() {
                   <path strokeLinecap="round" strokeLinejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
                 <p className="text-[#D4AF37] text-2xl font-bold">{currencySymbol} {price.toLocaleString()}</p>
-                <p className="text-gray-400 text-xs uppercase tracking-wider mt-1">Visa Fee</p>
+                <p className="text-gray-400 text-xs uppercase tracking-wider mt-1">{t("visa.fee")}</p>
               </div>
               <div className="p-5 rounded-2xl bg-gray-50 border border-[#D4AF37]/10 text-center hover:border-[#D4AF37]/30 transition-colors">
                 <svg className="w-8 h-8 mx-auto text-[#D4AF37] mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
                 <p className="text-[#D4AF37] text-2xl font-bold">{processing}</p>
-                <p className="text-gray-400 text-xs uppercase tracking-wider mt-1">Processing</p>
+                <p className="text-gray-400 text-xs uppercase tracking-wider mt-1">{t("visa.processing")}</p>
               </div>
               <div className="p-5 rounded-2xl bg-gray-50 border border-[#D4AF37]/10 text-center hover:border-[#D4AF37]/30 transition-colors">
                 <svg className="w-8 h-8 mx-auto text-[#D4AF37] mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
                 <p className="text-[#D4AF37] text-2xl font-bold">{country}</p>
-                <p className="text-gray-400 text-xs uppercase tracking-wider mt-1">Country</p>
+                <p className="text-gray-400 text-xs uppercase tracking-wider mt-1">{t("visa.country")}</p>
               </div>
             </div>
 
@@ -262,7 +264,7 @@ export default function VisaDetailPage() {
             {requirements.length > 0 && (
               <div>
                 <h2 className="text-2xl font-bold text-[#0A1628] mb-4" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
-                  Required Documents
+                  {t("visa.requiredDocs")}
                 </h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                   {requirements.map((req: string, idx: number) => (
@@ -285,11 +287,11 @@ export default function VisaDetailPage() {
                 {/* Price Header */}
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-gray-400 text-xs uppercase tracking-wider mb-1">Visa Fee</p>
+                    <p className="text-gray-400 text-xs uppercase tracking-wider mb-1">{t("visa.fee")}</p>
                     <p className="text-3xl font-bold text-[#D4AF37]" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
                       {currencySymbol} {price.toLocaleString()}
                     </p>
-                    <p className="text-gray-500 text-xs mt-0.5">/ person</p>
+                    <p className="text-gray-500 text-xs mt-0.5">{t("visa.perPerson")}</p>
                   </div>
                   <CurrencyToggle activeCurrency={currency} onToggle={setCurrency} />
                 </div>
@@ -297,16 +299,16 @@ export default function VisaDetailPage() {
                 {/* Info Rows */}
                 <div className="space-y-2.5 text-sm">
                   <div className="flex justify-between py-1 border-b border-gray-100">
-                    <span className="text-gray-400">Country</span>
+                    <span className="text-gray-400">{t("visa.country")}</span>
                     <span className="text-[#0A1628] font-medium">{country}</span>
                   </div>
                   <div className="flex justify-between py-1 border-b border-gray-100">
-                    <span className="text-gray-400">Processing Time</span>
+                    <span className="text-gray-400">{t("visa.processingTime")}</span>
                     <span className="text-[#0A1628] font-medium">{processing}</span>
                   </div>
                   <div className="flex justify-between py-1 border-b border-gray-100">
-                    <span className="text-gray-400">Requirements</span>
-                    <span className="text-[#0A1628] font-medium">{requirements.length} documents</span>
+                    <span className="text-gray-400">{t("visa.requirements")}</span>
+                    <span className="text-[#0A1628] font-medium">{t("visa.documents", { n: requirements.length })}</span>
                   </div>
                 </div>
 
@@ -314,13 +316,13 @@ export default function VisaDetailPage() {
 
                 {/* Travel Date */}
                 <div>
-                  <label className="text-gray-600 text-xs mb-1 block">Travel Date</label>
-                  <Calendar value={travelDate} onChange={setTravelDate} label="Travel Date" />
+                  <label className="text-gray-600 text-xs mb-1 block">{t("visa.travelDate")}</label>
+                  <Calendar value={travelDate} onChange={setTravelDate} label={t("visa.travelDate")} />
                 </div>
 
                 {/* Travelers Counter */}
                 <div>
-                  <label className="text-gray-600 text-xs mb-1 block">Travelers</label>
+                  <label className="text-gray-600 text-xs mb-1 block">{t("visa.travelers")}</label>
                   <div className="flex items-center gap-2">
                     <button
                       type="button"
@@ -342,7 +344,7 @@ export default function VisaDetailPage() {
 
                 {/* Total */}
                 <div className="flex justify-between items-center py-3 border-t border-[#D4AF37]/10">
-                  <span className="text-gray-700 font-medium">Total</span>
+                  <span className="text-gray-700 font-medium">{t("visa.total")}</span>
                   <span className="text-2xl font-bold text-[#D4AF37]">
                     {currencySymbol} {totalPrice.toLocaleString()}
                   </span>
@@ -355,7 +357,7 @@ export default function VisaDetailPage() {
                 >
                   Book Now
                 </button>
-                <p className="text-center text-gray-400 text-xs">No payment required to book</p>
+                <p className="text-center text-gray-400 text-xs">{t("visa.noPayment")}</p>
               </div>
 
               <Link

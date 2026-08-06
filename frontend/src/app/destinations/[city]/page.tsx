@@ -7,6 +7,7 @@ import BackButton from '@/components/BackButton';
 import Calendar from '@/components/Calendar';
 import CurrencyToggle from '@/components/CurrencyToggle';
 import DestImage from "./DestImage";
+import { useI18n } from "@/lib/i18n";
 
 /* FIX: 2026-07-30 add-rating-reviews-tags-duration-to-detail-page */
 
@@ -154,6 +155,7 @@ function toSlug(text: string): string {
 }
 
 export default function DestinationPage() {
+  const { t } = useI18n();
   const router = useRouter();
   const routeParams = useParams();
   const cityParam = (routeParams?.city as string) || '';
@@ -203,8 +205,8 @@ export default function DestinationPage() {
     return (
       <div className="min-h-screen bg-white flex items-center justify-center">
         <div className="text-center">
-          <h1 className="text-2xl font-bold text-[#0A1628] mb-2">Destination Not Found</h1>
-          <p className="text-gray-500 mb-4">The destination you're looking for does not exist.</p>
+          <h1 className="text-2xl font-bold text-[#0A1628] mb-2">{t("dest.notFound")}</h1>
+          <p className="text-gray-500 mb-4">{t("dest.notFoundDesc")}</p>
           <Link href="/destinations" className="text-[#D4AF37] hover:underline font-semibold">
             ← Back to Destinations
           </Link>
@@ -250,7 +252,7 @@ export default function DestinationPage() {
     <main className="min-h-screen bg-white">
       {/* Back Button - absolute positioned over hero */}
       <div className="absolute top-4 left-4 z-30">
-        <BackButton label="Back to Destinations" />
+        <BackButton label={t("dest.backToDestinations")} />
       </div>
 
       {/* Hero Section */}
@@ -277,9 +279,9 @@ export default function DestinationPage() {
 
       {/* Breadcrumbs */}
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 pt-4 text-sm">
-        <Link href="/" className="text-gray-500 hover:text-[#D4AF37]">Home</Link>
+        <Link href="/" className="text-gray-500 hover:text-[#D4AF37]">{t("dest.home")}</Link>
         <span className="mx-2 text-gray-300">/</span>
-        <Link href="/destinations" className="text-gray-500 hover:text-[#D4AF37]">Destinations</Link>
+        <Link href="/destinations" className="text-gray-500 hover:text-[#D4AF37]">{t("dest.destinations")}</Link>
         <span className="mx-2 text-gray-300">/</span>
         <span className="text-[#0A1628] font-medium">{dest.city}</span>
       </nav>
@@ -311,7 +313,7 @@ export default function DestinationPage() {
             </svg>
             <div>
               <p className="text-[#0A1628] font-bold text-lg">{duration}</p>
-              <p className="text-gray-400 text-xs">Duration</p>
+              <p className="text-gray-400 text-xs">{t("dest.duration")}</p>
             </div>
           </div>
 
@@ -324,7 +326,7 @@ export default function DestinationPage() {
             </svg>
             <div>
               <p className="text-[#D4AF37] font-bold text-lg">{dest.minPrice}</p>
-              <p className="text-gray-400 text-xs">per person</p>
+              <p className="text-gray-400 text-xs">{t("dest.perPerson")}</p>
             </div>
           </div>
 
@@ -422,13 +424,13 @@ export default function DestinationPage() {
               <div className="bg-white border border-gray-200 rounded-2xl shadow-lg p-6 space-y-6">
                 {/* Price */}
                 <div>
-                  <p className="text-gray-500 text-xs uppercase tracking-wider mb-1">Starting from</p>
+                  <p className="text-gray-500 text-xs uppercase tracking-wider mb-1">{t("dest.startingFrom")}</p>
                   <div className="flex items-center justify-between">
                     <div>
                       <span className="text-3xl font-bold text-[#D4AF37]" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
                         {currencySymbol} {price.toLocaleString()}
                       </span>
-                      <span className="text-gray-400 text-sm ml-1">/ person</span>
+                      <span className="text-gray-400 text-sm ml-1">{t("dest.perPersonShort")}</span>
                     </div>
                     <CurrencyToggle activeCurrency={currency} onToggle={setCurrency} />
                   </div>
@@ -439,15 +441,15 @@ export default function DestinationPage() {
                 {/* Quick info */}
                 <div className="space-y-3 text-sm">
                   <div className="flex justify-between">
-                    <span className="text-gray-500">Duration</span>
+                    <span className="text-gray-500">{t("dest.duration")}</span>
                     <span className="text-[#0A1628] font-medium">{duration}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-500">Group Size</span>
-                    <span className="text-[#0A1628] font-medium">Up to 10 people</span>
+                    <span className="text-gray-500">{t("dest.groupSize")}</span>
+                    <span className="text-[#0A1628] font-medium">{t("dest.upToPeople", { n: 10 })}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-500">Rating</span>
+                    <span className="text-gray-500">{t("dest.rating")}</span>
                     <span className="text-[#0A1628] font-medium flex items-center gap-1">
                       <svg className="w-4 h-4 text-[#D4AF37]" fill="currentColor" viewBox="0 0 20 20">
                         <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
@@ -465,11 +467,11 @@ export default function DestinationPage() {
                                         <Calendar
                       value={travelDate}
                       onChange={setTravelDate}
-                      label="Travel Date"
+                      label={t("dest.travelDate")}
                     />
                   </div>
                   <div>
-                    <label className="text-gray-500 text-xs mb-1.5 block">Travelers</label>
+                    <label className="text-gray-500 text-xs mb-1.5 block">{t("dest.travelers")}</label>
                     <div className="flex items-center gap-3">
                       <button
                         type="button"
@@ -492,7 +494,7 @@ export default function DestinationPage() {
 
                 {/* Total */}
                 <div className="flex justify-between items-center py-3 border-t border-gray-100">
-                  <span className="text-gray-700 font-medium">Total</span>
+                  <span className="text-gray-700 font-medium">{t("dest.total")}</span>
                   <span className="text-2xl font-bold text-[#D4AF37]" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
                     {currencySymbol} {totalPrice.toLocaleString()}
                   </span>
@@ -506,7 +508,7 @@ export default function DestinationPage() {
                   Book Now
                 </button>
 
-                <p className="text-center text-gray-400 text-xs">No payment required to book</p>
+                <p className="text-center text-gray-400 text-xs">{t("dest.noPayment")}</p>
               </div>
 
               {/* Back link */}
@@ -520,7 +522,7 @@ export default function DestinationPage() {
               {/* Trip Style tags */}
               {tags.length > 0 && (
                 <div className="bg-white border border-gray-200 rounded-2xl shadow-lg p-6">
-                  <h3 className="text-sm font-bold text-[#0A1628] mb-3 uppercase tracking-wider">Trip Style</h3>
+                  <h3 className="text-sm font-bold text-[#0A1628] mb-3 uppercase tracking-wider">{t("dest.tripStyle")}</h3>
                   <div className="flex flex-wrap gap-2">
                     {tags.map((tag, idx) => (
                       <span key={idx} className="px-3 py-1.5 rounded-full bg-[#D4AF37]/10 text-[#B8960F] text-sm font-medium border border-[#D4AF37]/20">
@@ -539,16 +541,16 @@ export default function DestinationPage() {
         {/* Bottom CTA */}
         <section className="text-center py-12">
           <h2 className="text-2xl font-bold text-[#0A1628] mb-4">
-            Ready to Explore {dest.city}?
+            {t("dest.readyToExplore", { city: dest.city })}
           </h2>
           <p className="text-gray-500 mb-6 max-w-xl mx-auto">
-            Book your trip today and experience the best of {dest.city} with A9 Global Travels.
+            {t("dest.ctaDesc", { city: dest.city })}
           </p>
           <button
             onClick={handleBookNow}
             className="inline-flex items-center gap-2 px-8 py-3.5 rounded-xl text-center font-bold text-base bg-gradient-to-r from-[#D4AF37] to-[#F5A623] text-[#0A1628] shadow-lg shadow-[#D4AF37]/30 hover:shadow-xl hover:shadow-[#D4AF37]/40 hover:scale-[1.02] transition-all duration-300"
           >
-            Book Your Trip to {dest.city}
+            {t("dest.bookTrip", { city: dest.city })}
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
             </svg>
