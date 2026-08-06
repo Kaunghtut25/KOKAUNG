@@ -8,6 +8,7 @@ import ServiceIcons from "@/components/ServiceIcons";
 import Footer from "@/components/Footer";
 import LiveChatWidget from "@/components/LiveChatWidget";
 import { Toaster } from "react-hot-toast";
+import { LanguageProvider } from "@/lib/i18n";
 
 export default function RootClient({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -40,6 +41,7 @@ export default function RootClient({ children }: { children: React.ReactNode }) 
   }
 
   return (
+    <LanguageProvider>
     <SearchModeProvider>
       <Navbar />
       <ServiceIcons />
@@ -65,5 +67,6 @@ export default function RootClient({ children }: { children: React.ReactNode }) 
         }}
       />
     </SearchModeProvider>
+    </LanguageProvider>
   );
 }

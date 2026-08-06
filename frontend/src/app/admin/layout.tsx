@@ -4,6 +4,8 @@ import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { decodeTokenPayload } from "@/lib/auth";
 import AdminSidebar from "@/components/AdminSidebar";
+import { LanguageProvider } from "@/lib/i18n";
+import LanguageSwitcher from "@/components/LanguageSwitcher";
 
 function AdminErrorFallback() {
   return (
@@ -98,13 +100,18 @@ export default function AdminLayout({
   }
 
   return (
-    <div className="min-h-screen bg-deepblue">
-      <AdminSidebar />
-      <main className="md:ml-64 transition-all duration-300 min-h-screen p-6 md:p-8">
-        <AdminErrorBoundary>
-          {children}
-        </AdminErrorBoundary>
-      </main>
-    </div>
+    <LanguageProvider>
+      <div className="min-h-screen bg-deepblue">
+        <AdminSidebar />
+        <main className="md:ml-64 transition-all duration-300 min-h-screen p-6 md:p-8">
+          <div className="flex justify-end mb-4">
+            <LanguageSwitcher dark={false} />
+          </div>
+          <AdminErrorBoundary>
+            {children}
+          </AdminErrorBoundary>
+        </main>
+      </div>
+    </LanguageProvider>
   );
 }

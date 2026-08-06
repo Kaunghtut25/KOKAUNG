@@ -5,6 +5,8 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { HiMenuAlt3, HiX } from "react-icons/hi";
+import { useI18n } from "@/lib/i18n";
+import LanguageSwitcher from "@/components/LanguageSwitcher";
 
 interface NavLink {
   label: string;
@@ -20,7 +22,7 @@ interface SiteConfig {
 
 const DEFAULT_LOGO = "/logo.jpeg";
 const DEFAULT_SITE_NAME = "𝐀𝟗 𝐆𝐥𝐨𝐛𝐚𝐥 𝐓𝐫𝐚𝐯𝐞𝐥𝐬 & 𝐓𝐨𝐮𝐫𝐬";
-const DEFAULT_TAGLINE = "Where every journey is a story waiting to be told!";
+const DEFAULT_TAGLINE_KEY = "footer.tagline";
 const DEFAULT_NAV_LINKS: NavLink[] = [
   { label: "Home", href: "/" },
   { label: "About Us", href: "/about" },
@@ -28,6 +30,7 @@ const DEFAULT_NAV_LINKS: NavLink[] = [
 ];
 
 export default function Navbar() {
+  const { t } = useI18n();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [logoUrl, setLogoUrl] = useState(DEFAULT_LOGO);
@@ -68,6 +71,13 @@ export default function Navbar() {
     "/cruises": "cruises", "/mingalar": "skyLounge",
   };
   const visibleNavLinks = navLinks.filter(l => { const k = MODULE_BY_HREF[l.href]; return !k || moduleToggles[k] !== false; });
+  const NAV_LABEL_BY_HREF: Record<string, string> = {
+    "/": "nav.home", "/about": "nav.about", "/blog": "nav.blog", "/tours": "nav.tours",
+    "/hotels": "nav.hotels", "/cars": "nav.cars", "/buses": "nav.buses", "/visas": "nav.visas",
+    "/insurance": "nav.insurance", "/cruises": "nav.cruises", "/mingalar": "nav.skyLounge",
+    "/destinations": "nav.destinations", "/search": "nav.search", "/faq": "nav.faq", "/contact": "nav.contact",
+  };
+  const linkLabel = (l: NavLink) => (NAV_LABEL_BY_HREF[l.href] ? t(NAV_LABEL_BY_HREF[l.href]) : l.label);
   const isActive = (href: string) => pathname === href;
 
   return (
@@ -87,28 +97,29 @@ export default function Navbar() {
                   {siteName}
                 </h1>
                 <p className="text-[10px] md:text-xs italic text-[#D4AF37] tracking-wide group-hover:text-[#F5A623] transition-colors">
-                  {DEFAULT_TAGLINE}
+                  {t(DEFAULT_TAGLINE_KEY)}
                 </p>
               </div>
             </Link>
 
             <div className="hidden lg:flex items-center space-x-3">
+              <LanguageSwitcher />
               {visibleNavLinks.map((link) => (
                 <Link key={link.href} href={link.href}
                   className={`px-4 py-2 text-sm font-semibold transition-all duration-200 rounded-lg [text-shadow:0_1px_3px_rgba(0,0,0,0.5)] ${
                     isActive(link.href) ? 'bg-[#D4AF37] text-[#0A1628] [text-shadow:none] shadow-sm' : 'text-white hover:text-[#D4AF37] hover:bg-white/10'
-                  }`}>{link.label}</Link>
+                  }`}>{linkLabel(link)}</Link>
               ))}
 
               <div className="relative group">
                 <button className="flex items-center gap-1 text-sm font-medium text-white hover:text-[#D4AF37] transition-colors px-3 py-2 rounded-lg hover:bg-white/10">
                   <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>
-                  Account
+                  {t("nav.account")}
                   <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
                 </button>
                 <div className="absolute right-0 top-full mt-1 w-48 bg-white rounded-xl border border-gray-200 shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
-                  <Link href="/auth/login" className="block px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 hover:text-[#D4AF37] rounded-t-xl transition-colors">Login</Link>
-                  <Link href="/auth/register" className="block px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 hover:text-[#D4AF37] rounded-b-xl border-t border-gray-100 transition-colors">Sign Up</Link>
+                  <Link href="/auth/login" className="block px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 hover:text-[#D4AF37] rounded-t-xl transition-colors">{t("nav.login")}</Link>
+                  <Link href="/auth/register" className="block px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 hover:text-[#D4AF37] rounded-b-xl border-t border-gray-100 transition-colors">{t("nav.signup")}</Link>
                 </div>
               </div>
               <div className="relative group">
@@ -116,12 +127,12 @@ export default function Navbar() {
                   isActive("/book-now") || isActive("/contact") ? "bg-[#C5A028] text-[#0A1628] shadow-md"
                   : "bg-[#D4AF37] text-[#0A1628] hover:bg-[#C5A028] hover:shadow-lg"
                 }`}>
-                  Contact & Book
+                  {t("nav.contactBook")}
                   <svg className="w-3 h-3 inline ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
                 </button>
                 <div className="absolute left-1/2 -translate-x-1/2 top-full mt-1 w-52 bg-white rounded-xl border border-gray-200 shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-[60]">
-                  <Link href="/book-now" className="block px-4 py-3 text-sm font-semibold text-gray-700 hover:bg-gray-50 hover:text-[#D4AF37] rounded-t-xl transition-colors">📋 Book Now</Link>
-                  <Link href="/contact" className="block px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 hover:text-[#D4AF37] rounded-b-xl border-t border-gray-100 transition-colors">📞 Contact Us</Link>
+                  <Link href="/book-now" className="block px-4 py-3 text-sm font-semibold text-gray-700 hover:bg-gray-50 hover:text-[#D4AF37] rounded-t-xl transition-colors">📋 {t("nav.bookNow")}</Link>
+                  <Link href="/contact" className="block px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 hover:text-[#D4AF37] rounded-b-xl border-t border-gray-100 transition-colors">📞 {t("nav.contactUs")}</Link>
                 </div>
               </div>
             </div>
@@ -152,25 +163,26 @@ export default function Navbar() {
               </div>
               <div>
                 <h2 className="font-display text-base font-bold text-white tracking-wide">{siteName}</h2>
-                <p className="text-[10px] italic text-[#D4AF37]/70">{DEFAULT_TAGLINE}</p>
+                <p className="text-[10px] italic text-[#D4AF37]/70">{t(DEFAULT_TAGLINE_KEY)}</p>
               </div>
             </Link>
           </div>
 
           <div className="flex-1 px-6 py-6 space-y-1 overflow-y-auto">
+            <div className="pb-2"><LanguageSwitcher /></div>
             {visibleNavLinks.map((link) => (
               <Link key={link.href} href={link.href} onClick={() => setMobileOpen(false)}
                 className={`block py-3 px-4 text-base font-medium rounded-lg transition-all duration-200 ${
                   isActive(link.href) ? "bg-[#D4AF37] text-[#0A1628]" : "text-white hover:text-[#D4AF37] hover:bg-white/10"
-                }`}>{link.label}</Link>
+                }`}>{linkLabel(link)}</Link>
             ))}
           </div>
 
           <div className="px-6 py-6 border-t border-[#D4AF37]/20 space-y-3">
             <Link href="/book-now" onClick={() => setMobileOpen(false)}
-              className="block text-center w-full bg-[#D4AF37] text-[#0A1628] font-bold rounded-full py-3 text-sm hover:bg-[#C5A028] hover:shadow-lg transition-all whitespace-nowrap">📋 Book Now</Link>
+              className="block text-center w-full bg-[#D4AF37] text-[#0A1628] font-bold rounded-full py-3 text-sm hover:bg-[#C5A028] hover:shadow-lg transition-all whitespace-nowrap">📋 {t("nav.bookNow")}</Link>
             <Link href="/contact" onClick={() => setMobileOpen(false)}
-              className="block text-center w-full border-2 border-[#D4AF37]/40 text-[#D4AF37] font-semibold rounded-full py-3 text-sm hover:bg-[#D4AF37]/10 transition-all">📞 Contact Us</Link>
+              className="block text-center w-full border-2 border-[#D4AF37]/40 text-[#D4AF37] font-semibold rounded-full py-3 text-sm hover:bg-[#D4AF37]/10 transition-all">📞 {t("nav.contactUs")}</Link>
           </div>
         </div>
       </div>

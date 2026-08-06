@@ -3,33 +3,35 @@
 import React, { useState, useEffect } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
+import { useI18n } from "@/lib/i18n";
 
 interface NavItem {
-  label: string;
+  labelKey: string;
   icon: string;
   path: string;
 }
 
 const navItems: NavItem[] = [
-  { label: "Dashboard", icon: "📊", path: "/admin/dashboard" },
-  { label: "Site Manager", icon: "⚙️", path: "/admin/site-manager" },
-  { label: "Manage About", icon: "📄", path: "/admin/about" },
-  { label: "Manage Flights", icon: "✈️", path: "/admin/bookings" },
-  { label: "Manage Tours", icon: "🏔️", path: "/admin/tours" },
-  { label: "Manage Hotels", icon: "🏨", path: "/admin/hotels" },
-  { label: "Manage Cars", icon: "🚗", path: "/admin/cars" },
-  { label: "Manage Visas", icon: "🛂", path: "/admin/visas" },
-  { label: "Manage Insurance", icon: "🛡️", path: "/admin/insurance" },
-  { label: "Manage Cruises", icon: "🚢", path: "/admin/cruises" },
-  { label: "Manage Blog", icon: "📝", path: "/admin/blog" },
-  { label: "Manage Users", icon: "👥", path: "/admin/users" },
-  { label: "Sky Lounge", icon: "✨", path: "/admin/sky-lounge" },
-  { label: "Site Settings", icon: "⚙️", path: "/admin/settings" },
+  { labelKey: "admin.dashboard", icon: "📊", path: "/admin/dashboard" },
+  { labelKey: "admin.siteManager", icon: "⚙️", path: "/admin/site-manager" },
+  { labelKey: "admin.manageAbout", icon: "📄", path: "/admin/about" },
+  { labelKey: "admin.manageFlights", icon: "✈️", path: "/admin/bookings" },
+  { labelKey: "admin.manageTours", icon: "🏔️", path: "/admin/tours" },
+  { labelKey: "admin.manageHotels", icon: "🏨", path: "/admin/hotels" },
+  { labelKey: "admin.manageCars", icon: "🚗", path: "/admin/cars" },
+  { labelKey: "admin.manageVisas", icon: "🛂", path: "/admin/visas" },
+  { labelKey: "admin.manageInsurance", icon: "🛡️", path: "/admin/insurance" },
+  { labelKey: "admin.manageCruises", icon: "🚢", path: "/admin/cruises" },
+  { labelKey: "admin.manageBlog", icon: "📝", path: "/admin/blog" },
+  { labelKey: "admin.manageUsers", icon: "👥", path: "/admin/users" },
+  { labelKey: "admin.skyLounge", icon: "✨", path: "/admin/sky-lounge" },
+  { labelKey: "admin.siteSettings", icon: "⚙️", path: "/admin/settings" },
 ];
 
 export default function AdminSidebar() {
   const router = useRouter();
   const pathname = usePathname();
+  const { t } = useI18n();
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [adminUser, setAdminUser] = useState<string>("");
@@ -122,7 +124,7 @@ export default function AdminSidebar() {
               >
                 <span className="text-lg">{item.icon}</span>
                 <span className={`${collapsed && !mobileOpen ? "hidden" : "block"}`}>
-                  {item.label}
+                  {t(item.labelKey)}
                 </span>
               </Link>
             </li>

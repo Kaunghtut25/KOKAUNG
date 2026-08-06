@@ -3,42 +3,45 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { FaFacebookF, FaInstagram, FaTelegramPlane, FaMapMarkerAlt, FaPhoneAlt, FaEnvelope, FaClock } from "react-icons/fa";
+import { useI18n } from "@/lib/i18n";
+import LanguageSwitcher from "@/components/LanguageSwitcher";
 
 const quickLinks = [
-  { label: "Home", href: "/" },
-  { label: "Tours", href: "/tours" },
-  { label: "Hotels", href: "/hotels" },
-  { label: "Car Rentals", href: "/cars" },
-  { label: "Buses", href: "/buses" },
-  { label: "Visa Services", href: "/visas" },
-  { label: "Travel Insurance", href: "/insurance" },
-  { label: "Cruises", href: "/cruises" },
-  { label: "Mingalar", href: "/mingalar" },
-  { label: "Blog", href: "/blog" },
-  { label: "About Us", href: "/about" },
-  { label: "Contact", href: "/contact" },
-  { label: "Book Now", href: "/book-now" },
+  { labelKey: "nav.home", href: "/" },
+  { labelKey: "nav.tours", href: "/tours" },
+  { labelKey: "nav.hotels", href: "/hotels" },
+  { labelKey: "footer.carRentals", href: "/cars" },
+  { labelKey: "nav.buses", href: "/buses" },
+  { labelKey: "footer.visaServices", href: "/visas" },
+  { labelKey: "footer.travelInsurance", href: "/insurance" },
+  { labelKey: "nav.cruises", href: "/cruises" },
+  { labelKey: "nav.skyLounge", href: "/mingalar" },
+  { labelKey: "nav.blog", href: "/blog" },
+  { labelKey: "nav.about", href: "/about" },
+  { labelKey: "nav.contact", href: "/contact" },
+  { labelKey: "nav.bookNow", href: "/book-now" },
 ];
 
 const supportLinks = [
-  { label: "About Us", href: "/about" },
-  { label: "Tours", href: "/tours" },
-  { label: "Hotels", href: "/hotels" },
-  { label: "Contact", href: "/contact" },
-  { label: "FAQ", href: "/faq" },
-  { label: "Privacy Policy", href: "/privacy" },
-  { label: "Terms of Service", href: "/terms" },
+  { labelKey: "nav.about", href: "/about" },
+  { labelKey: "nav.tours", href: "/tours" },
+  { labelKey: "nav.hotels", href: "/hotels" },
+  { labelKey: "nav.contact", href: "/contact" },
+  { labelKey: "nav.faq", href: "/faq" },
+  { labelKey: "footer.privacy", href: "/privacy" },
+  { labelKey: "footer.terms", href: "/terms" },
 ];
 
 const DEPT_LABELS: Record<string, string> = {
-  ticket: "Ticket Department",
-  visa: "Visa Department",
-  hotel: "Hotel Department",
-  outbound: "Outbound Department",
-  inbound: "Inbound Department",
+  ticket: "footer.deptTicket",
+  visa: "footer.deptVisa",
+  hotel: "footer.deptHotel",
+  outbound: "footer.deptOutbound",
+  inbound: "footer.deptInbound",
 };
 
 export default function Footer() {
+  const { t } = useI18n();
   const currentYear = new Date().getFullYear();
   const [config, setConfig] = useState<any>(null);
 
@@ -90,13 +93,10 @@ export default function Footer() {
               </p>
             </Link>
             <p className="text-sm text-white/60 leading-relaxed">
-              A9 Global Travels & Tours — your premier IATA-accredited luxury travel partner in Myanmar.
-              Since our founding, we have been dedicated to crafting extraordinary travel
-              experiences — from curated tours and premium hotel stays to seamless visa
-              processing and comprehensive travel insurance.
+              {t("footer.about")}
             </p>
             <p className="text-sm italic text-[#D4AF37]/50">
-              Where every journey is a story waiting to be told!
+              {t("footer.tagline")}
             </p>
             {/* Social Icons */}
             <div className="flex items-center space-x-3 pt-2">
@@ -133,7 +133,7 @@ export default function Footer() {
           {/* Column 2: Quick Links */}
           <div>
             <h4 className="font-display text-lg font-semibold text-[#D4AF37] mb-6 pb-2 border-b border-[#D4AF37]/20">
-              Quick Links
+              {t("footer.explore")}
             </h4>
             <ul className="space-y-3">
               {quickLinksFiltered.map((link) => (
@@ -143,7 +143,7 @@ export default function Footer() {
                     className="text-sm text-white/60 hover:text-[#D4AF37] transition-colors duration-200 flex items-center group"
                   >
                     <span className="mr-2 text-[#D4AF37]/0 group-hover:text-[#D4AF37]/70 transition-all duration-200 text-[10px]">►</span>
-                    {link.label}
+                    {t(link.labelKey)}
                   </Link>
                 </li>
               ))}
@@ -153,7 +153,7 @@ export default function Footer() {
           {/* Column 3: Support Links */}
           <div>
             <h4 className="font-display text-lg font-semibold text-[#D4AF37] mb-6 pb-2 border-b border-[#D4AF37]/20">
-              Support
+              {t("footer.services")}
             </h4>
             <ul className="space-y-3">
               {supportLinksFiltered.map((link) => (
@@ -163,7 +163,7 @@ export default function Footer() {
                     className="text-sm text-white/60 hover:text-[#D4AF37] transition-colors duration-200 flex items-center group"
                   >
                     <span className="mr-2 text-[#D4AF37]/0 group-hover:text-[#D4AF37]/70 transition-all duration-200 text-[10px]">►</span>
-                    {link.label}
+                    {t(link.labelKey)}
                   </Link>
                 </li>
               ))}
@@ -173,7 +173,7 @@ export default function Footer() {
           {/* Column 4: Contact Info */}
           <div>
             <h4 className="font-display text-lg font-semibold text-[#D4AF37] mb-6 pb-2 border-b border-[#D4AF37]/20">
-              Contact Info
+              {t("footer.contact")}
             </h4>
             <div className="space-y-4">
               <div className="flex items-start space-x-3">
@@ -218,7 +218,7 @@ export default function Footer() {
                     <div key={dept} className="flex items-start space-x-3">
                       <FaPhoneAlt className="text-[#D4AF37] mt-1 flex-shrink-0 text-xs" />
                       <div className="leading-tight">
-                        <span className="text-[10px] text-white/30 uppercase tracking-wider block">{DEPT_LABELS[dept] || dept}</span>
+                        <span className="text-[10px] text-white/30 uppercase tracking-wider block">{t(DEPT_LABELS[dept] || dept)}</span>
                         <a href={`tel:${String(phoneNum).replace(/\s/g, "")}`} className="text-sm text-white/60 hover:text-[#D4AF37] transition-colors">{phoneNum}</a>
                       </div>
                     </div>
@@ -235,18 +235,19 @@ export default function Footer() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             <p className="text-center text-xs text-white/50">
-              &copy; {currentYear} A9 Global Travels &amp; Tours. All rights reserved.
+              &copy; {currentYear} A9 Global Travels &amp; Tours. {t("footer.rights")}
             </p>
             <div className="flex items-center gap-4">
               <Link href="/privacy" className="text-xs text-white/40 hover:text-[#D4AF37] transition-colors">
-                Privacy
+                {t("footer.privacy")}
               </Link>
               <Link href="/terms" className="text-xs text-white/40 hover:text-[#D4AF37] transition-colors">
-                Terms
+                {t("footer.terms")}
               </Link>
               <Link href="/faq" className="text-xs text-white/40 hover:text-[#D4AF37] transition-colors">
-                FAQ
+                {t("nav.faq")}
               </Link>
+              <LanguageSwitcher />
             </div>
           </div>
           <p className="text-center text-[10px] text-white/30 mt-3 tracking-wide">
