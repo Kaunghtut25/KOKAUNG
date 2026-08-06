@@ -12,6 +12,7 @@ import BackButton from '@/components/BackButton';
 import Calendar from '@/components/Calendar';
 import ErrorBoundary from '@/components/ErrorBoundary';
 import { useI18n } from '@/lib/i18n';
+import { mmTours } from '@/lib/mm-content';
 type TabKey = 'overview' | 'itinerary' | 'included' | 'reviews';
 
 // ─── Fallback tours when API is unavailable ─────────────────
@@ -392,38 +393,38 @@ interface GeneratedDay {
   meals: string[];
 }
 
-function generateItinerary(days: number, destination: string): GeneratedDay[] {
+function generateItinerary(days: number, destination: string, t?: (key: string, params?: Record<string, string | number>) => string): GeneratedDay[] {
   if (days <= 0) return [];
 
   const middleTemplates: { title: string; description: string; meals: string[] }[] = [
     {
-      title: 'Exploration',
-      description: `Discover the highlights of ${destination} with a guided tour of the most iconic landmarks and attractions. Immerse yourself in the rich history and vibrant atmosphere of this incredible destination.`,
+      title: t ? t("tour.itinerary.explorationTitle") : 'Exploration',
+      description: t ? t("tour.itinerary.explorationDesc", { destination }) : `Discover the highlights of ${destination} with a guided tour of the most iconic landmarks and attractions. Immerse yourself in the rich history and vibrant atmosphere of this incredible destination.`,
       meals: ['Breakfast', 'Lunch'],
     },
     {
-      title: 'Cultural Experience',
-      description: `Dive deep into the local culture with visits to traditional markets, artisan workshops, and historic sites. Interact with local communities and learn about their way of life in ${destination}.`,
+      title: t ? t("tour.itinerary.culturalTitle") : 'Cultural Experience',
+      description: t ? t("tour.itinerary.culturalDesc", { destination }) : `Dive deep into the local culture with visits to traditional markets, artisan workshops, and historic sites. Interact with local communities and learn about their way of life in ${destination}.`,
       meals: ['Breakfast'],
     },
     {
-      title: 'Leisure & Relaxation',
-      description: `Enjoy a free day at your own pace. Explore the surroundings, relax at the hotel, or opt for optional excursions. This is your day to create your own adventure in ${destination}.`,
+      title: t ? t("tour.itinerary.leisureTitle") : 'Leisure & Relaxation',
+      description: t ? t("tour.itinerary.leisureDesc", { destination }) : `Enjoy a free day at your own pace. Explore the surroundings, relax at the hotel, or opt for optional excursions. This is your day to create your own adventure in ${destination}.`,
       meals: ['Breakfast'],
     },
     {
-      title: 'Nature & Adventure',
-      description: `Venture into the natural wonders surrounding ${destination}. Experience breathtaking landscapes, scenic trails, and outdoor activities that showcase the region's natural beauty.`,
+      title: t ? t("tour.itinerary.natureTitle") : 'Nature & Adventure',
+      description: t ? t("tour.itinerary.natureDesc", { destination }) : `Venture into the natural wonders surrounding ${destination}. Experience breathtaking landscapes, scenic trails, and outdoor activities that showcase the region's natural beauty.`,
       meals: ['Breakfast', 'Lunch'],
     },
     {
-      title: 'Hidden Gems',
-      description: `Go off the beaten path to discover ${destination}'s hidden treasures. Visit lesser-known spots, secret viewpoints, and local favorites that most tourists miss.`,
+      title: t ? t("tour.itinerary.hiddenTitle") : 'Hidden Gems',
+      description: t ? t("tour.itinerary.hiddenDesc", { destination }) : `Go off the beaten path to discover ${destination}'s hidden treasures. Visit lesser-known spots, secret viewpoints, and local favorites that most tourists miss.`,
       meals: ['Breakfast'],
     },
     {
-      title: 'Gastronomic Journey',
-      description: `Embark on a culinary adventure through ${destination}. Visit local food markets, participate in a cooking class, and savor authentic dishes at handpicked restaurants.`,
+      title: t ? t("tour.itinerary.gastroTitle") : 'Gastronomic Journey',
+      description: t ? t("tour.itinerary.gastroDesc", { destination }) : `Embark on a culinary adventure through ${destination}. Visit local food markets, participate in a cooking class, and savor authentic dishes at handpicked restaurants.`,
       meals: ['Breakfast', 'Lunch', 'Dinner'],
     },
   ];
@@ -435,14 +436,14 @@ function generateItinerary(days: number, destination: string): GeneratedDay[] {
 
     if (d === 1) {
       dayPlan = {
-        title: 'Arrival',
-        description: `Welcome to ${destination}! Upon arrival, you will be greeted by our representative and transferred to your hotel. Take the rest of the day to relax and settle in. In the evening, enjoy a welcome dinner featuring local cuisine.`,
+        title: t ? t("tour.itinerary.arrivalTitle") : 'Arrival',
+        description: t ? t("tour.itinerary.arrivalDesc", { destination }) : `Welcome to ${destination}! Upon arrival, you will be greeted by our representative and transferred to your hotel. Take the rest of the day to relax and settle in. In the evening, enjoy a welcome dinner featuring local cuisine.`,
         meals: ['Dinner'],
       };
     } else if (d === days) {
       dayPlan = {
-        title: 'Departure',
-        description: `After breakfast, check out from the hotel. Our representative will transfer you to the airport for your onward journey. Take home unforgettable memories of ${destination}!`,
+        title: t ? t("tour.itinerary.departureTitle") : 'Departure',
+        description: t ? t("tour.itinerary.departureDesc", { destination }) : `After breakfast, check out from the hotel. Our representative will transfer you to the airport for your onward journey. Take home unforgettable memories of ${destination}!`,
         meals: ['Breakfast'],
       };
     } else {
@@ -464,12 +465,16 @@ interface BookingFormData {
 }
 
 export default function TourDetailPage() {
-  const { t } = useI18n();
+  const { t, lang } = useI18n();
   const params = useParams();
   const router = useRouter();
   const slug = params?.slug as string;
 
-  const [tour, setTour] = useState<Tour | null>(null);
+  const [rawTour, setRawTour] = useState<Tour | null>(null);
+  const tour = useMemo(() => {
+    if (lang !== "mm" || !rawTour) return rawTour;
+    return { ...rawTour, ...(mmTours[rawTour.slug] || {}) };
+  }, [rawTour, lang]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [activeTab, setActiveTab] = useState<TabKey>('overview');
@@ -493,13 +498,13 @@ export default function TourDetailPage() {
       setError('');
       try {
         const response = await getTour(slug);
-        setTour(response.data);
+        setRawTour(response.data);
         if (!response.data) throw new Error('Not found');
       } catch (err) {
         console.error('Failed to fetch tour:', err);
         const fallback = FALLBACK_TOURS.find(t => t.slug === slug || t._id === slug);
         if (fallback) {
-          setTour(fallback);
+          setRawTour(fallback);
         } else {
           setError('Tour not found');
         }
@@ -565,8 +570,8 @@ export default function TourDetailPage() {
   };
 
   const generatedItinerary = useMemo(
-    () => generateItinerary(parseDays(tour?.duration || ''), tour?.destination || ''),
-    [tour?.duration, tour?.destination]
+    () => generateItinerary(parseDays(tour?.duration || ''), tour?.destination || '', lang === "mm" ? t : undefined),
+    [tour?.duration, tour?.destination, lang]
   );
 
     // Dynamic tabs from site config — filter visible and respect ordering
@@ -597,8 +602,14 @@ export default function TourDetailPage() {
   }, []);
 
   const tabs = detailPageTabs
-    .filter(t => t.visible)
-    .map(t => ({ key: t.key as TabKey, label: t.label }));
+    .filter((tab) => tab.visible)
+    .map((tab) => ({
+      key: tab.key as TabKey,
+      label:
+        lang === "mm" && ["overview", "itinerary", "included", "reviews"].includes(tab.key)
+          ? t("tour.tab" + tab.key.charAt(0).toUpperCase() + tab.key.slice(1))
+          : tab.label,
+    }));
 
   // ─── Loading State ────────────────────────────────────────
   if (loading) {
@@ -797,7 +808,7 @@ export default function TourDetailPage() {
                                       key={meal}
                                       className="px-2.5 py-1 rounded-full bg-[#D4AF37]/10 text-[#D4AF37] text-xs font-medium border border-[#D4AF37]/20"
                                     >
-                                      🍽 {meal}
+                                      🍽 {t("tour.meal." + meal.toLowerCase())}
                                     </span>
                                   ))}
                                 </div>
