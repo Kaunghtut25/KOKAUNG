@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import Calendar from '@/components/Calendar';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
@@ -11,6 +11,7 @@ import BackButton from '@/components/BackButton';
 import RelatedItems from '@/components/RelatedItems';
 import ErrorBoundary from '@/components/ErrorBoundary';
 import { useI18n } from "@/lib/i18n";
+import { mmLookup, mmInsurance } from "@/lib/mm-content";
 
 const FALLBACK_PLANS: any[] = [
   { _id: "basic-travel-shield", id: "i1", planName: "Basic Travel Shield", coverage: "Medical Emergency + Trip Delay", priceMMK: 15000, priceUSD: 7, duration: "Per trip", benefits: "Medical Emergency up to $50,000, Trip Cancellation, Lost Baggage, 24/7 Assistance", status: "active" },
@@ -34,12 +35,16 @@ interface InsurancePlan {
 }
 
 export default function InsuranceDetailPage() {
-  const { t } = useI18n();
+  const { t, lang } = useI18n();
   const params = useParams();
   const router = useRouter();
   const slug = params?.slug as string;
 
-  const [plan, setPlan] = useState<InsurancePlan | null>(null);
+  const [rawPlan, setRawPlan] = useState<InsurancePlan | null>(null);
+  const plan = useMemo(() => {
+    if (lang !== "mm" || !rawPlan) return rawPlan;
+    return { ...rawPlan, ...mmLookup(mmInsurance, rawPlan) };
+  }, [rawPlan, lang]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [currency, setCurrency] = useState<'MMK' | 'USD'>('MMK');
@@ -62,11 +67,11 @@ export default function InsuranceDetailPage() {
           return planSlug === slug || p._id === slug;
         }) || null;
         if (found) {
-          setPlan(found);
+          setRawPlan(found);
         } else {
           const fallback = FALLBACK_PLANS.find(p => p._id === slug || (p.planName || '').toLowerCase().replace(/[^a-z0-9]+/g, '-') === slug);
           if (fallback) {
-            setPlan(fallback as InsurancePlan);
+            setRawPlan(fallback as InsurancePlan);
           } else {
             setError('Insurance plan not found');
           }
@@ -75,7 +80,7 @@ export default function InsuranceDetailPage() {
         console.error('Failed to fetch insurance plan:', err);
         const fallback = FALLBACK_PLANS.find(p => p._id === slug || (p.planName || '').toLowerCase().replace(/[^a-z0-9]+/g, '-') === slug);
         if (fallback) {
-          setPlan(fallback as InsurancePlan);
+          setRawPlan(fallback as InsurancePlan);
         } else {
           setError('Insurance plan not found');
         }

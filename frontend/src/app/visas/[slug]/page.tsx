@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import Calendar from '@/components/Calendar';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
@@ -11,6 +11,7 @@ import BackButton from '@/components/BackButton';
 import RelatedItems from '@/components/RelatedItems';
 import { getAll } from '@/lib/persistentStore';
 import { useI18n } from "@/lib/i18n";
+import { mmLookup, mmVisas } from "@/lib/mm-content";
 
 const FALLBACK_VISAS: any[] = [
   { id: "myanmar-visa", _id: "v1", country: "Myanmar", description: "Comprehensive Myanmar visa services for tourists and business travelers. Fast processing and expert guidance through the entire application process.", process: "eVisa available online", priceMMK: 85000, priceUSD: 40, duration: "28 Days (Single Entry)", requirements: "Passport, Digital Photo, Completed Application, Hotel Booking", status: "active" },
@@ -21,11 +22,15 @@ const FALLBACK_VISAS: any[] = [
 ];
 
 export default function VisaDetailPage() {
-  const { t } = useI18n();
+  const { t, lang } = useI18n();
   const params = useParams();
   const slug = params?.slug as string;
 
-  const [visa, setVisa] = useState<any>(null);
+  const [rawVisa, setRawVisa] = useState<any>(null);
+  const visa = useMemo(() => {
+    if (lang !== "mm" || !rawVisa) return rawVisa;
+    return { ...rawVisa, ...mmLookup(mmVisas, rawVisa) };
+  }, [rawVisa, lang]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [currency, setCurrency] = useState<'MMK' | 'USD'>('MMK');
@@ -54,7 +59,7 @@ export default function VisaDetailPage() {
           v.slug === slug
         );
         if (found) {
-          setVisa(found);
+          setRawVisa(found);
         } else {
           setError('Visa not found');
         }

@@ -1,6 +1,6 @@
 'use client';
 
-﻿import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect, useMemo } from 'react';
 import Link from "next/link";
 import { useRouter, useParams } from 'next/navigation';
 import BackButton from '@/components/BackButton';
@@ -8,6 +8,7 @@ import Calendar from '@/components/Calendar';
 import CurrencyToggle from '@/components/CurrencyToggle';
 import DestImage from "./DestImage";
 import { useI18n } from "@/lib/i18n";
+import { mmLookup, mmDestinations } from "@/lib/mm-content";
 
 /* FIX: 2026-07-30 add-rating-reviews-tags-duration-to-detail-page */
 
@@ -155,7 +156,7 @@ function toSlug(text: string): string {
 }
 
 export default function DestinationPage() {
-  const { t } = useI18n();
+  const { t, lang } = useI18n();
   const router = useRouter();
   const routeParams = useParams();
   const cityParam = (routeParams?.city as string) || '';
@@ -166,7 +167,11 @@ export default function DestinationPage() {
   const [travelDate, setTravelDate] = useState('');
 
   const key = cityParam.toLowerCase();
-  const [storeDest, setStoreDest] = useState<PopularDestination | null>(null);
+  const [rawStoreDest, setRawStoreDest] = useState<PopularDestination | null>(null);
+  const storeDest = useMemo(() => {
+    if (lang !== "mm" || !rawStoreDest) return rawStoreDest;
+    return { ...rawStoreDest, ...mmLookup(mmDestinations, rawStoreDest) };
+  }, [rawStoreDest, lang]);
 
   useEffect(() => {
     let cancelled = false;
@@ -177,7 +182,7 @@ export default function DestinationPage() {
         const arr = Array.isArray(d) ? d : (d.data || d.items || []);
         const found = arr.find((x: any) => toSlug(x.city || x.name || '') === key || (x.slug || '') === key);
         if (found && !cancelled) {
-          setStoreDest({
+          setRawStoreDest({
             city: found.city || found.name || '',
             country: found.country || '',
             image: found.image || '',

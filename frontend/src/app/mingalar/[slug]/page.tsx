@@ -1,12 +1,13 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import BackButton from '@/components/BackButton';
 import Calendar from '@/components/Calendar';
 import SocialShare from '@/components/SocialShare';
 import { useI18n } from "@/lib/i18n";
+import { mmLookup, mmMingalar } from "@/lib/mm-content";
 
 export const dynamic = 'force-dynamic';
 
@@ -28,9 +29,13 @@ const FALLBACK_MINGALAR: MingalarItem[] = [
 ];
 
 export default function MingalarDetailPage({ params }: { params: { slug: string } }) {
-  const { t } = useI18n();
+  const { t, lang } = useI18n();
   const slug = params.slug;
-  const [item, setItem] = useState<MingalarItem | null>(null);
+  const [rawItem, setRawItem] = useState<MingalarItem | null>(null);
+  const item = useMemo(() => {
+    if (lang !== "mm" || !rawItem) return rawItem;
+    return { ...rawItem, ...mmLookup(mmMingalar, rawItem) };
+  }, [rawItem, lang]);
   const [loading, setLoading] = useState(true);
   const [travelers, setTravelers] = useState(1);
   const [travelDate, setTravelDate] = useState('');
@@ -50,9 +55,9 @@ export default function MingalarDetailPage({ params }: { params: { slug: string 
             d._id === slug ||
             (d.title || '').toLowerCase().replace(/\s+/g, '-') === slug
         );
-        setItem(found || null);
+        setRawItem(found || null);
       })
-      .catch(() => { if (!cancelled) setItem(null); })
+      .catch(() => { if (!cancelled) setRawItem(null); })
       .finally(() => { if (!cancelled) setLoading(false); });
     return () => { cancelled = true; };
   }, [slug]);
