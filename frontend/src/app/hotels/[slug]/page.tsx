@@ -1,7 +1,7 @@
 'use client';
 
 import { getAll } from '@/lib/persistentStore';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import type { Metadata } from 'next';
@@ -12,6 +12,7 @@ import BackButton from '@/components/BackButton';
 import Calendar from '@/components/Calendar';
 import RelatedItems from '@/components/RelatedItems';
 import { useI18n } from "@/lib/i18n";
+import { mmLookup, mmHotels } from "@/lib/mm-content";
 export const dynamic = 'force-dynamic';
 
 interface HotelDetail {
@@ -119,11 +120,15 @@ async function getHotelBySlug(slug: string): Promise<HotelDetail | null> {
 
 
 export default function HotelDetailPage() {
-  const { t } = useI18n();
+  const { t, lang } = useI18n();
   const params = useParams();
   const slug = params?.slug as string;
 
-  const [hotel, setHotel] = useState<HotelDetail | null>(null);
+  const [rawHotel, setRawHotel] = useState<HotelDetail | null>(null);
+  const hotel = useMemo(() => {
+    if (lang !== "mm" || !rawHotel) return rawHotel;
+    return { ...rawHotel, ...mmLookup(mmHotels, rawHotel) };
+  }, [rawHotel, lang]);
   const [loading, setLoading] = useState(true);
   const [currency, setCurrency] = useState<'MMK' | 'USD'>('MMK');
   const [rooms, setRooms] = useState(1);
@@ -134,7 +139,7 @@ export default function HotelDetailPage() {
     setLoading(true);
     getHotelBySlug(slug)
       .then((h) => {
-        if (h) setHotel(h);
+        if (h) setRawHotel(h);
         setLoading(false);
       })
       .catch(() => setLoading(false));

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -11,6 +11,7 @@ import BackButton from '@/components/BackButton';
 import Calendar from '@/components/Calendar';
 import RelatedItems from '@/components/RelatedItems';
 import { useI18n } from "@/lib/i18n";
+import { mmLookup, mmCars } from "@/lib/mm-content";
 
 interface CarData {
   id: string;
@@ -110,12 +111,16 @@ async function getCarBySlug(slug: string): Promise<CarData | null> {
 }
 
 export default function CarDetailPage() {
-  const { t } = useI18n();
+  const { t, lang } = useI18n();
   const params = useParams();
   const router = useRouter();
   const slug = params?.slug as string;
 
-  const [car, setCar] = useState<CarData | null>(null);
+  const [rawCar, setRawCar] = useState<CarData | null>(null);
+  const car = useMemo(() => {
+    if (lang !== "mm" || !rawCar) return rawCar;
+    return { ...rawCar, ...mmLookup(mmCars, rawCar) };
+  }, [rawCar, lang]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [currency, setCurrency] = useState<'MMK' | 'USD'>('MMK');
@@ -130,7 +135,7 @@ export default function CarDetailPage() {
       try {
         const fetched = await getCarBySlug(slug);
         if (!fetched) throw new Error('Not found');
-        setCar(fetched);
+        setRawCar(fetched);
       } catch (err) {
         console.error('Failed to fetch car:', err);
         setError('Car not found');

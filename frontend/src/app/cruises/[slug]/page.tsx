@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { getAll } from '@/lib/persistentStore';
@@ -11,6 +11,7 @@ import Calendar from '@/components/Calendar';
 import RelatedItems from '@/components/RelatedItems';
 import ErrorBoundary from '@/components/ErrorBoundary';
 import { useI18n } from "@/lib/i18n";
+import { mmLookup, mmCruises } from "@/lib/mm-content";
 export const dynamic = 'force-dynamic';
 
 const FALLBACK_CRUISES = [
@@ -357,9 +358,13 @@ function CruiseDetailClient({ cruise, slug }: CruiseDetailPageProps) {
 }
 
 export default function CruiseDetailPage({ params }: { params: { slug: string } }) {
-  const { t } = useI18n();
+  const { t, lang } = useI18n();
   const slug = params.slug;
-  const [cruise, setCruise] = useState<any>(null);
+  const [rawCruise, setRawCruise] = useState<any>(null);
+  const cruise = useMemo(() => {
+    if (lang !== "mm" || !rawCruise) return rawCruise;
+    return { ...rawCruise, ...mmLookup(mmCruises, rawCruise) };
+  }, [rawCruise, lang]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -374,9 +379,9 @@ export default function CruiseDetailPage({ params }: { params: { slug: string } 
           return ((c.title || c.name || '').toLowerCase().replace(/[^a-z0-9]+/g, '-') === slug ||
             c.id === slug || c._id === slug || c.slug === slug);
         });
-        setCruise(found || null);
+        setRawCruise(found || null);
       })
-      .catch(function(e) { console.error('cruises api fetch failed', e); setCruise(null); })
+      .catch(function(e) { console.error('cruises api fetch failed', e); setRawCruise(null); })
       .finally(function() { if (!cancelled) setLoading(false); });
     return function() { cancelled = true; };
   }, [slug]);
