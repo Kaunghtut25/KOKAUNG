@@ -1,6 +1,7 @@
 'use client';
 
 import { useSearchMode } from '@/providers/SearchModeContext';
+import LanguageSwitcher from '@/components/LanguageSwitcher';
 import { useState, useEffect } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import Link from 'next/link';
@@ -99,6 +100,9 @@ export default function ServiceIcons___FINALV5() {
                 />
               );
             })}
+            <div className="flex items-center pl-1 md:pl-2 ml-1 md:ml-2 border-l border-gray-200">
+              <LanguageSwitcher dark={false} />
+            </div>
           </div>
         </div>
       </div>
