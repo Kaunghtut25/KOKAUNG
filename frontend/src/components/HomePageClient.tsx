@@ -58,7 +58,7 @@ function StatsCard({ icon, title, description, imgSrc }: { icon: string; title: 
     <div className="bg-white rounded-xl p-6 text-center shadow-md hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
       {imgSrc ? (
         <div className="w-full h-32 mx-auto mb-4 relative rounded-lg overflow-hidden bg-gray-50">
-          <img src={imgSrc} alt={title} className="w-full h-full object-contain" loading="lazy" />
+          <Image src={imgSrc} alt={title} fill sizes="(max-width: 768px) 50vw, 25vw" className="object-contain" />
         </div>
       ) : (
         <div className="text-[#D4AF37] text-4xl mb-3">{icon}</div>
