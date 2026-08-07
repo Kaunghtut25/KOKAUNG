@@ -430,7 +430,7 @@ export default function HomePageClient({ siteConfig: ssrConfig }: { siteConfig?:
             {/* FLIGHTS FORM */}
             {searchMode==='flights' && (<>
               <div className="flex gap-1 mb-5 bg-gray-100 rounded-lg p-1 w-fit">
-                {(["oneway","roundtrip","multicity"] as TabType[]).map((tab)=><button key={tab} onClick={()=>{setActiveTab(tab);if(tab!=="roundtrip")setReturnDate("");if(tab==="multicity")setMultiCityLegs([{from:"",to:"",date:""},{from:"",to:"",date:""}]);}} className={"px-4 py-2 rounded-md text-sm font-medium transition-all duration-300 cursor-pointer "+(activeTab===tab?"bg-[#D4AF37] text-[#0A1628] shadow-md":"text-gray-500 hover:text-gray-900 hover:bg-gray-200")}>{tab==="oneway"?"✈ "+t("home.oneWay"):tab==="roundtrip"?"🔄 "+t("home.roundTrip"):"🌐 "+t("home.multiCity")}</button>)}
+                {(["oneway","roundtrip","multicity"] as TabType[]).map((tab)=><button key={tab} onClick={()=>{setActiveTab(tab);if(tab!=="roundtrip")setReturnDate("");if(tab==="multicity")setMultiCityLegs([{from:"",to:"",date:""},{from:"",to:"",date:""}]);}} className={"px-4 py-2 rounded-md text-sm font-medium transition-all duration-300 cursor-pointer "+(activeTab===tab?"bg-[#D4AF37] text-[#0A1628] shadow-md":"text-gray-600 hover:text-gray-900 hover:bg-gray-200")}>{tab==="oneway"?"✈ "+t("home.oneWay"):tab==="roundtrip"?"🔄 "+t("home.roundTrip"):"🌐 "+t("home.multiCity")}</button>)}
               </div>
               <form onSubmit={handleSearch} className="space-y-3">
                 {activeTab==="multicity" ? (<>
