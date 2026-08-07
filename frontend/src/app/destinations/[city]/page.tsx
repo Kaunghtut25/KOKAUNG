@@ -521,7 +521,7 @@ export default function DestinationPage() {
                 href="/destinations"
                 className="block w-full py-3 rounded-xl text-center font-semibold text-sm border-2 border-[#D4AF37] text-[#D4AF37] hover:bg-[#D4AF37] hover:text-[#0A1628] transition-all duration-300"
               >
-                ← Back to All Destinations
+                {lang === "mm" ? "← ခရီးစဉ်များအားလုံးသို့ ပြန်သွားရန်" : "← Back to All Destinations"}
               </Link>
 
               {/* Trip Style tags */}
