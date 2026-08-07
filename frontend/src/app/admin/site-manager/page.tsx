@@ -581,7 +581,7 @@ const tabs: { key: Tab; label: string }[] = [
             <div className="space-y-4">
               <h2 className="text-lg font-bold text-white">{t("admin.sm.navLinks")}</h2>
               {cfg.navLinks.map((n, i) => (
-                <div key={i} className="flex gap-3 items-center">
+                <div key={i} className="flex flex-col md:flex-row md:items-center gap-3">
                   <input className={`inputCls inputCls`} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} placeholder={t("admin.sm.label")} value={n.label} onChange={e => { const a = [...cfg.navLinks]; a[i] = { ...n, label: e.target.value }; set("navLinks", a); }} />
                   <button onClick={() => set("navLinks", cfg.navLinks.filter((_, idx) => idx !== i))} className="text-red-400 text-sm">{t("admin.common.delete")}</button>
                 </div>
@@ -905,7 +905,7 @@ const tabs: { key: Tab; label: string }[] = [
                     <button onClick={() => set("footerSections", cfg.footerSections.filter((_, idx) => idx !== i))} className="text-red-400 text-sm ml-2">{t("admin.common.delete")}</button>
                   </div>
                   {sec.links.map((link, j) => (
-                    <div key={j} className="flex gap-2">
+                    <div key={j} className="flex flex-col md:flex-row gap-2">
                       <input className={`inputCls inputCls`} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} placeholder={t("admin.sm.label")} value={link.label} onChange={e => { const a = [...cfg.footerSections]; a[i].links[j] = { ...link, label: e.target.value }; set("footerSections", [...a]); }} />
                       <button onClick={() => { const a = [...cfg.footerSections]; a[i].links = a[i].links.filter((_, idx) => idx !== j); set("footerSections", a); }} className="text-red-400 text-sm">X</button>
                     </div>
@@ -1179,20 +1179,20 @@ const tabs: { key: Tab; label: string }[] = [
             <div className="space-y-4">
               <h2 className="text-lg font-bold text-white">{t("admin.sm.testimonials")}</h2>
               <p className="text-sm text-white/60">{t("admin.sm.testHint")}</p>
-              {cfg.testimonials.map((t, i) => (
+              {cfg.testimonials.map((tm, i) => (
                 <div key={i} className="border border-white/10 bg-white/5 text-white rounded-lg p-4 space-y-3">
                   <div className="flex justify-between">
                     <h3 className="font-medium">{t("admin.sm.reviewNum")} {i + 1}</h3>
                     <button onClick={() => set("testimonials", cfg.testimonials.filter((_, idx) => idx !== i))} className="text-red-400 text-sm">{t("admin.common.delete")}</button>
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                    <div><label className={labelCls}>{t("admin.sm.name")}</label><input className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} value={t.name} onChange={e => { const a = [...cfg.testimonials]; a[i] = { ...t, name: e.target.value }; set("testimonials", a); }} /></div>
-                    <div><label className={labelCls}>{t("admin.sm.country")}</label><input className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} value={t.country} onChange={e => { const a = [...cfg.testimonials]; a[i] = { ...t, country: e.target.value }; set("testimonials", a); }} /></div>
+                    <div><label className={labelCls}>{t("admin.sm.name")}</label><input className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} value={tm.name} onChange={e => { const a = [...cfg.testimonials]; a[i] = { ...t, name: e.target.value }; set("testimonials", a); }} /></div>
+                    <div><label className={labelCls}>{t("admin.sm.country")}</label><input className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} value={tm.country} onChange={e => { const a = [...cfg.testimonials]; a[i] = { ...t, country: e.target.value }; set("testimonials", a); }} /></div>
                   </div>
-                  <div><label className={labelCls}>{t("admin.sm.tour")}</label><input className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} value={t.tour} onChange={e => { const a = [...cfg.testimonials]; a[i] = { ...t, tour: e.target.value }; set("testimonials", a); }} /></div>
-                  <div><label className={labelCls}>{t("admin.sm.textQuote")}</label><textarea className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} rows={3} value={t.text} onChange={e => { const a = [...cfg.testimonials]; a[i] = { ...t, text: e.target.value }; set("testimonials", a); }} /></div>
-                  <div><label className={labelCls}>{t("admin.sm.rating")}</label><input type="number" min="1" max="5" className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} value={t.rating} onChange={e => { const a = [...cfg.testimonials]; a[i] = { ...t, rating: parseInt(e.target.value) || 5 }; set("testimonials", a); }} /></div>
-                  <div><label className={labelCls}>{t("admin.sm.photoUrl")}</label><input type="text" placeholder="https://..." className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} value={t.image || ""} onChange={e => { const a = [...cfg.testimonials]; a[i] = { ...t, image: e.target.value }; set("testimonials", a); }} /></div>
+                  <div><label className={labelCls}>{t("admin.sm.tour")}</label><input className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} value={tm.tour} onChange={e => { const a = [...cfg.testimonials]; a[i] = { ...t, tour: e.target.value }; set("testimonials", a); }} /></div>
+                  <div><label className={labelCls}>{t("admin.sm.textQuote")}</label><textarea className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} rows={3} value={tm.text} onChange={e => { const a = [...cfg.testimonials]; a[i] = { ...t, text: e.target.value }; set("testimonials", a); }} /></div>
+                  <div><label className={labelCls}>{t("admin.sm.rating")}</label><input type="number" min="1" max="5" className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} value={tm.rating} onChange={e => { const a = [...cfg.testimonials]; a[i] = { ...t, rating: parseInt(e.target.value) || 5 }; set("testimonials", a); }} /></div>
+                  <div><label className={labelCls}>{t("admin.sm.photoUrl")}</label><input type="text" placeholder="https://..." className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} value={tm.image || ""} onChange={e => { const a = [...cfg.testimonials]; a[i] = { ...t, image: e.target.value }; set("testimonials", a); }} /></div>
                 </div>
               ))}
               <button onClick={() => set("testimonials", [...cfg.testimonials, { name: "", country: "", tour: "", text: "", rating: 5, image: "" }])} className="px-4 py-2 bg-white/10 rounded-lg text-sm">{t("admin.sm.addTestimonial")}</button>
@@ -1539,7 +1539,7 @@ const tabs: { key: Tab; label: string }[] = [
               <h2 className="text-lg font-bold text-white">{t("admin.sm.partners")}</h2>
               <p className="text-sm text-white/60">{t("admin.sm.partnersHint")}</p>
               {cfg.partners.map((p, i) => (
-                <div key={i} className="flex gap-3 items-center">
+                <div key={i} className="flex flex-col md:flex-row md:items-center gap-3">
                   <input className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} placeholder={t("admin.sm.partnerName")} value={p} onChange={e => { const a = [...cfg.partners]; a[i] = e.target.value; set("partners", a); }} />
                   <button onClick={() => set("partners", cfg.partners.filter((_, idx) => idx !== i))} className="text-red-400 text-sm">{t("admin.common.delete")}</button>
                 </div>
