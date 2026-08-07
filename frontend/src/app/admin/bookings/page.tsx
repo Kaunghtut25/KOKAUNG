@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useState, useCallback } from "react";
+import { useI18n } from "@/lib/i18n";
 
 interface Booking {
   id: string;
@@ -61,6 +62,7 @@ type StatusFilter = "all" | "pending" | "paid" | "cancelled" | "completed";
 type InquiryStatusFilter = "all" | "New" | "Contacted" | "Confirmed" | "Cancelled";
 
 export default function AdminBookingsPage() {
+  const { t } = useI18n();
   const [activeTab, setActiveTab] = useState<ActiveTab>("bookings");
 
   // ─── Bookings state (existing) ───
@@ -165,7 +167,18 @@ export default function AdminBookingsPage() {
       completed: "bg-blue-500/20 text-blue-400 border-blue-500/30",
     };
     const cls = map[status] || "bg-gray-500/20 text-gray-400 border-gray-500/30";
-    return <span className={`px-2.5 py-1 rounded-full text-xs font-semibold border ${cls}`}>{status}</span>;
+    const labels: Record<string, string> = {
+      New: t("admin.book.inq.New"),
+      Contacted: t("admin.book.inq.Contacted"),
+      Confirmed: t("admin.book.inq.Confirmed"),
+      Cancelled: t("admin.book.inq.Cancelled"),
+      pending: t("admin.book.fPending"),
+      paid: t("admin.book.fPaid"),
+      completed: t("admin.book.fCompleted"),
+      confirmed: t("admin.dash.confirmed"),
+      cancelled: t("admin.book.fCancelled"),
+    };
+    return <span className={`px-2.5 py-1 rounded-full text-xs font-semibold border ${cls}`}>{labels[status] || status}</span>;
   };
 
   const getTypeIcon = (type: string) => {
@@ -183,8 +196,8 @@ export default function AdminBookingsPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl md:text-4xl font-bold text-[#D4AF37]" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>Bookings & Inquiries</h1>
-        <p className="text-white/40 text-sm mt-1">Track and manage bookings and customer inquiries</p>
+        <h1 className="text-3xl md:text-4xl font-bold text-[#D4AF37]" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>{t("admin.book.title")}</h1>
+        <p className="text-white/40 text-sm mt-1">{t("admin.book.subtitle")}</p>
       </div>
 
       {/* Tab Switcher */}
@@ -192,7 +205,7 @@ export default function AdminBookingsPage() {
         {(["bookings", "inquiries"] as ActiveTab[]).map((tab) => (
           <button key={tab} onClick={() => setActiveTab(tab)}
             className={`px-6 py-2 rounded-lg text-sm font-semibold transition-all duration-200 capitalize ${activeTab === tab ? "bg-gold text-deepblue" : "text-white/50 hover:text-white"}`}>
-            {tab}
+            {tab === "bookings" ? t("admin.book.tabBookings") : t("admin.book.tabInquiries")}
           </button>
         ))}
       </div>
@@ -205,7 +218,7 @@ export default function AdminBookingsPage() {
             {(["all", "pending", "paid", "cancelled", "completed"] as StatusFilter[]).map((f) => (
               <button key={f} onClick={() => setStatusFilter(f)}
                 className={`px-4 py-2 rounded-full text-sm font-semibold border transition-all duration-200 capitalize ${statusFilter === f ? "bg-gold/20 text-gold border-gold/40" : "bg-white/5 text-white/50 border-white/10 hover:border-gold/30"}`}>
-                {f}
+                {f === "all" ? t("admin.book.fAll") : t("admin.book.f" + f.charAt(0).toUpperCase() + f.slice(1))}
               </button>
             ))}
           </div>
@@ -215,21 +228,21 @@ export default function AdminBookingsPage() {
               <table className="w-full text-sm">
                 <thead>
                   <tr className="border-b border-white/10 bg-white/[0.02]">
-                    <th className="text-left p-4 text-white/40 font-semibold uppercase tracking-wider text-[11px]">Booking ID</th>
-                    <th className="text-left p-4 text-white/40 font-semibold uppercase tracking-wider text-[11px]">Customer</th>
-                    <th className="text-left p-4 text-white/40 font-semibold uppercase tracking-wider text-[11px]">Type</th>
-                    <th className="text-left p-4 text-white/40 font-semibold uppercase tracking-wider text-[11px]">Item</th>
-                    <th className="text-left p-4 text-white/40 font-semibold uppercase tracking-wider text-[11px]">Payment</th>
-                    <th className="text-left p-4 text-white/40 font-semibold uppercase tracking-wider text-[11px]">Status</th>
-                    <th className="text-left p-4 text-white/40 font-semibold uppercase tracking-wider text-[11px]">Date</th>
-                    <th className="text-left p-4 text-white/40 font-semibold uppercase tracking-wider text-[11px]">Actions</th>
+                    <th className="text-left p-4 text-white/40 font-semibold uppercase tracking-wider text-[11px]">{t("admin.dash.bookingId")}</th>
+                    <th className="text-left p-4 text-white/40 font-semibold uppercase tracking-wider text-[11px]">{t("admin.dash.customer")}</th>
+                    <th className="text-left p-4 text-white/40 font-semibold uppercase tracking-wider text-[11px]">{t("admin.dash.type")}</th>
+                    <th className="text-left p-4 text-white/40 font-semibold uppercase tracking-wider text-[11px]">{t("admin.book.item")}</th>
+                    <th className="text-left p-4 text-white/40 font-semibold uppercase tracking-wider text-[11px]">{t("admin.book.payment")}</th>
+                    <th className="text-left p-4 text-white/40 font-semibold uppercase tracking-wider text-[11px]">{t("admin.dash.status")}</th>
+                    <th className="text-left p-4 text-white/40 font-semibold uppercase tracking-wider text-[11px]">{t("admin.dash.date")}</th>
+                    <th className="text-left p-4 text-white/40 font-semibold uppercase tracking-wider text-[11px]">{t("admin.dash.actions")}</th>
                   </tr>
                 </thead>
                 <tbody>
                   {bookingLoading ? (
-                    <tr><td colSpan={8} className="p-10 text-center text-white/30"><span className="animate-pulse">Loading bookings...</span></td></tr>
+                    <tr><td colSpan={8} className="p-10 text-center text-white/30"><span className="animate-pulse">{t("admin.book.loadingBookings")}</span></td></tr>
                   ) : bookings.length === 0 ? (
-                    <tr><td colSpan={8} className="p-10 text-center text-white/30">No bookings found.</td></tr>
+                    <tr><td colSpan={8} className="p-10 text-center text-white/30">{t("admin.book.noBookings")}</td></tr>
                   ) : (
                     bookings.map((b) => (
                       <tr key={b.id} className="border-b border-white/5 hover:bg-white/[0.04] transition-colors">
@@ -241,7 +254,7 @@ export default function AdminBookingsPage() {
                         <td className="p-4">{getStatusBadge(b.bookingStatus)}</td>
                         <td className="p-4 text-white/50 text-xs">{formatDate(b.createdAt)}</td>
                         <td className="p-4">
-                          <button onClick={() => setDetailsModal(b)} className="px-3 py-1.5 rounded-lg bg-gold/10 text-gold text-xs font-medium hover:bg-gold/20 transition-colors">View</button>
+                          <button onClick={() => setDetailsModal(b)} className="px-3 py-1.5 rounded-lg bg-gold/10 text-gold text-xs font-medium hover:bg-gold/20 transition-colors">{t("admin.common.view")}</button>
                         </td>
                       </tr>
                     ))
@@ -251,9 +264,9 @@ export default function AdminBookingsPage() {
             </div>
             {totalPages > 1 && (
               <div className="flex items-center justify-between p-4 border-t border-white/10">
-                <button onClick={() => setPage((p) => Math.max(1, p - 1))} disabled={page <= 1} className="px-3 py-1.5 rounded-lg text-sm font-medium text-white/50 hover:text-white hover:bg-white/5 disabled:opacity-30 disabled:cursor-not-allowed">\u2190 Previous</button>
-                <span className="text-white/50 text-sm">Page {page} of {totalPages}</span>
-                <button onClick={() => setPage((p) => Math.min(totalPages, p + 1))} disabled={page >= totalPages} className="px-3 py-1.5 rounded-lg text-sm font-medium text-white/50 hover:text-white hover:bg-white/5 disabled:opacity-30 disabled:cursor-not-allowed">Next \u2192</button>
+                <button onClick={() => setPage((p) => Math.max(1, p - 1))} disabled={page <= 1} className="px-3 py-1.5 rounded-lg text-sm font-medium text-white/50 hover:text-white hover:bg-white/5 disabled:opacity-30 disabled:cursor-not-allowed">{t("admin.book.previous")}</button>
+                <span className="text-white/50 text-sm">{t("admin.book.page")} {page} {t("admin.book.of")} {totalPages}</span>
+                <button onClick={() => setPage((p) => Math.min(totalPages, p + 1))} disabled={page >= totalPages} className="px-3 py-1.5 rounded-lg text-sm font-medium text-white/50 hover:text-white hover:bg-white/5 disabled:opacity-30 disabled:cursor-not-allowed">{t("admin.book.next")}</button>
               </div>
             )}
           </div>
@@ -278,22 +291,22 @@ export default function AdminBookingsPage() {
               <table className="w-full text-sm">
                 <thead>
                   <tr className="border-b border-white/10 bg-white/[0.02]">
-                    <th className="text-left p-4 text-white/40 font-semibold uppercase tracking-wider text-[11px]">Date</th>
-                    <th className="text-left p-4 text-white/40 font-semibold uppercase tracking-wider text-[11px]">Ref #</th>
-                    <th className="text-left p-4 text-white/40 font-semibold uppercase tracking-wider text-[11px]">Name</th>
-                    <th className="text-left p-4 text-white/40 font-semibold uppercase tracking-wider text-[11px]">Email</th>
-                    <th className="text-left p-4 text-white/40 font-semibold uppercase tracking-wider text-[11px]">Phone</th>
-                    <th className="text-left p-4 text-white/40 font-semibold uppercase tracking-wider text-[11px]">Travel Type</th>
-                    <th className="text-left p-4 text-white/40 font-semibold uppercase tracking-wider text-[11px]">Route</th>
-                    <th className="text-left p-4 text-white/40 font-semibold uppercase tracking-wider text-[11px]">Status</th>
-                    <th className="text-left p-4 text-white/40 font-semibold uppercase tracking-wider text-[11px]">Actions</th>
+                    <th className="text-left p-4 text-white/40 font-semibold uppercase tracking-wider text-[11px]">{t("admin.dash.date")}</th>
+                    <th className="text-left p-4 text-white/40 font-semibold uppercase tracking-wider text-[11px]">{t("admin.book.ref")}</th>
+                    <th className="text-left p-4 text-white/40 font-semibold uppercase tracking-wider text-[11px]">{t("admin.book.name")}</th>
+                    <th className="text-left p-4 text-white/40 font-semibold uppercase tracking-wider text-[11px]">{t("admin.book.email")}</th>
+                    <th className="text-left p-4 text-white/40 font-semibold uppercase tracking-wider text-[11px]">{t("admin.book.phone")}</th>
+                    <th className="text-left p-4 text-white/40 font-semibold uppercase tracking-wider text-[11px]">{t("admin.book.travelType")}</th>
+                    <th className="text-left p-4 text-white/40 font-semibold uppercase tracking-wider text-[11px]">{t("admin.book.route")}</th>
+                    <th className="text-left p-4 text-white/40 font-semibold uppercase tracking-wider text-[11px]">{t("admin.dash.status")}</th>
+                    <th className="text-left p-4 text-white/40 font-semibold uppercase tracking-wider text-[11px]">{t("admin.dash.actions")}</th>
                   </tr>
                 </thead>
                 <tbody>
                   {inquiryLoading ? (
-                    <tr><td colSpan={9} className="p-10 text-center text-white/30"><span className="animate-pulse">Loading inquiries...</span></td></tr>
+                    <tr><td colSpan={9} className="p-10 text-center text-white/30"><span className="animate-pulse">{t("admin.book.loadingInq")}</span></td></tr>
                   ) : inquiries.length === 0 ? (
-                    <tr><td colSpan={9} className="p-10 text-center text-white/30">No inquiries found.</td></tr>
+                    <tr><td colSpan={9} className="p-10 text-center text-white/30">{t("admin.book.noInq")}</td></tr>
                   ) : (
                     inquiries.map((inq) => (
                       <tr key={inq._id} className="border-b border-white/5 hover:bg-white/[0.04] transition-colors">
@@ -312,7 +325,7 @@ export default function AdminBookingsPage() {
                         </td>
                         <td className="p-4">{getStatusBadge(inq.status)}</td>
                         <td className="p-4">
-                          <button onClick={() => setInquiryModal(inq)} className="px-3 py-1.5 rounded-lg bg-gold/10 text-gold text-xs font-medium hover:bg-gold/20 transition-colors">View</button>
+                          <button onClick={() => setInquiryModal(inq)} className="px-3 py-1.5 rounded-lg bg-gold/10 text-gold text-xs font-medium hover:bg-gold/20 transition-colors">{t("admin.common.view")}</button>
                         </td>
                       </tr>
                     ))
@@ -322,9 +335,9 @@ export default function AdminBookingsPage() {
             </div>
             {inquiryTotalPages > 1 && (
               <div className="flex items-center justify-between p-4 border-t border-white/10">
-                <button onClick={() => setInquiryPage((p) => Math.max(1, p - 1))} disabled={inquiryPage <= 1} className="px-3 py-1.5 rounded-lg text-sm font-medium text-white/50 hover:text-white hover:bg-white/5 disabled:opacity-30 disabled:cursor-not-allowed">\u2190 Previous</button>
-                <span className="text-white/50 text-sm">Page {inquiryPage} of {inquiryTotalPages}</span>
-                <button onClick={() => setInquiryPage((p) => Math.min(inquiryTotalPages, p + 1))} disabled={inquiryPage >= inquiryTotalPages} className="px-3 py-1.5 rounded-lg text-sm font-medium text-white/50 hover:text-white hover:bg-white/5 disabled:opacity-30 disabled:cursor-not-allowed">Next \u2192</button>
+                <button onClick={() => setInquiryPage((p) => Math.max(1, p - 1))} disabled={inquiryPage <= 1} className="px-3 py-1.5 rounded-lg text-sm font-medium text-white/50 hover:text-white hover:bg-white/5 disabled:opacity-30 disabled:cursor-not-allowed">{t("admin.book.previous")}</button>
+                <span className="text-white/50 text-sm">{t("admin.book.page")} {inquiryPage} {t("admin.book.of")} {inquiryTotalPages}</span>
+                <button onClick={() => setInquiryPage((p) => Math.min(inquiryTotalPages, p + 1))} disabled={inquiryPage >= inquiryTotalPages} className="px-3 py-1.5 rounded-lg text-sm font-medium text-white/50 hover:text-white hover:bg-white/5 disabled:opacity-30 disabled:cursor-not-allowed">{t("admin.book.next")}</button>
               </div>
             )}
           </div>
@@ -335,73 +348,73 @@ export default function AdminBookingsPage() {
               <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={() => setInquiryModal(null)} />
               <div className="relative bg-deepblue-dark border border-white/10 rounded-xl max-w-lg w-full max-h-[90vh] overflow-y-auto z-10">
                 <div className="flex items-center justify-between px-6 py-4 border-b border-white/10 sticky top-0 bg-deepblue-dark z-10">
-                  <h2 className="text-xl font-bold text-gold">Inquiry Details</h2>
+                  <h2 className="text-xl font-bold text-gold">{t("admin.book.inquiryDetails")}</h2>
                   <button onClick={() => setInquiryModal(null)} className="text-white/50 hover:text-white transition-colors text-2xl leading-none">\u2715</button>
                 </div>
                 <div className="p-6 space-y-4">
                   <div className="grid grid-cols-2 gap-4">
-                    <div><span className="text-white/40 text-xs uppercase tracking-wider">Reference</span><p className="text-gold font-mono">{inquiryModal.referenceNumber}</p></div>
+                    <div><span className="text-white/40 text-xs uppercase tracking-wider">{t("admin.book.reference")}</span><p className="text-gold font-mono">{inquiryModal.referenceNumber}</p></div>
                     <div><span className="text-white/40 text-xs uppercase tracking-wider">Date</span><p className="text-white">{new Date(inquiryModal.createdAt).toLocaleString()}</p></div>
                   </div>
                   <div className="border-t border-white/10 pt-4">
-                    <h3 className="text-white/50 text-xs uppercase tracking-wider mb-2">Customer Info</h3>
+                    <h3 className="text-white/50 text-xs uppercase tracking-wider mb-2">{t("admin.book.customerInfo")}</h3>
                     <div className="grid grid-cols-2 gap-4">
-                      <div><span className="text-white/40 text-xs">Name</span><p className="text-white">{inquiryModal.fullName}</p></div>
-                      <div><span className="text-white/40 text-xs">Email</span><p className="text-white break-all">{inquiryModal.email}</p></div>
-                      <div><span className="text-white/40 text-xs">Phone</span><p className="text-white">{inquiryModal.phone}</p></div>
-                      <div><span className="text-white/40 text-xs">Contact Preference</span><p className="text-white capitalize">{inquiryModal.contactPreference}</p></div>
+                      <div><span className="text-white/40 text-xs">{t("admin.book.name")}</span><p className="text-white">{inquiryModal.fullName}</p></div>
+                      <div><span className="text-white/40 text-xs">{t("admin.book.email")}</span><p className="text-white break-all">{inquiryModal.email}</p></div>
+                      <div><span className="text-white/40 text-xs">{t("admin.book.phone")}</span><p className="text-white">{inquiryModal.phone}</p></div>
+                      <div><span className="text-white/40 text-xs">{t("admin.book.contactPreference")}</span><p className="text-white capitalize">{inquiryModal.contactPreference}</p></div>
                     </div>
                   </div>
                   <div className="border-t border-white/10 pt-4">
-                    <h3 className="text-white/50 text-xs uppercase tracking-wider mb-2">Travel Details</h3>
+                    <h3 className="text-white/50 text-xs uppercase tracking-wider mb-2">{t("admin.book.travelDetails")}</h3>
                     <div className="grid grid-cols-2 gap-4">
-                      <div><span className="text-white/40 text-xs">Travel Type</span><p className="text-white capitalize">{inquiryModal.travelType}</p></div>
-                      <div><span className="text-white/40 text-xs">Trip Type</span><p className="text-white capitalize">{inquiryModal.tripType || "\u2014"}</p></div>
-                      <div><span className="text-white/40 text-xs">Travel Class</span><p className="text-white">{inquiryModal.travelClass || "\u2014"}</p></div>
-                      <div><span className="text-white/40 text-xs">Client Type</span><p className="text-white capitalize">{inquiryModal.clientType || "local"}</p></div>
-                      {inquiryModal.fromAirport && <div><span className="text-white/40 text-xs">From</span><p className="text-white">{inquiryModal.fromAirport}</p></div>}
-                      {inquiryModal.toAirport && <div><span className="text-white/40 text-xs">To</span><p className="text-white">{inquiryModal.toAirport}</p></div>}
-                      {inquiryModal.departDate && <div><span className="text-white/40 text-xs">Departure Date</span><p className="text-white">{inquiryModal.departDate}</p></div>}
-                      {inquiryModal.returnDate && <div><span className="text-white/40 text-xs">Return Date</span><p className="text-white">{inquiryModal.returnDate}</p></div>}
-                      <div><span className="text-white/40 text-xs">Passengers</span><p className="text-white">{inquiryModal.passengers}</p></div>
+                      <div><span className="text-white/40 text-xs">{t("admin.book.travelType")}</span><p className="text-white capitalize">{inquiryModal.travelType}</p></div>
+                      <div><span className="text-white/40 text-xs">{t("admin.book.tripType")}</span><p className="text-white capitalize">{inquiryModal.tripType || "\u2014"}</p></div>
+                      <div><span className="text-white/40 text-xs">{t("admin.book.travelClass")}</span><p className="text-white">{inquiryModal.travelClass || "\u2014"}</p></div>
+                      <div><span className="text-white/40 text-xs">{t("admin.book.clientType")}</span><p className="text-white capitalize">{inquiryModal.clientType || "local"}</p></div>
+                      {inquiryModal.fromAirport && <div><span className="text-white/40 text-xs">{t("admin.book.from")}</span><p className="text-white">{inquiryModal.fromAirport}</p></div>}
+                      {inquiryModal.toAirport && <div><span className="text-white/40 text-xs">{t("admin.book.to")}</span><p className="text-white">{inquiryModal.toAirport}</p></div>}
+                      {inquiryModal.departDate && <div><span className="text-white/40 text-xs">{t("admin.book.departDate")}</span><p className="text-white">{inquiryModal.departDate}</p></div>}
+                      {inquiryModal.returnDate && <div><span className="text-white/40 text-xs">{t("admin.book.returnDate")}</span><p className="text-white">{inquiryModal.returnDate}</p></div>}
+                      <div><span className="text-white/40 text-xs">{t("admin.book.passengers")}</span><p className="text-white">{inquiryModal.passengers}</p></div>
                     </div>
                   </div>
 
                   {(inquiryModal.airline || inquiryModal.flightNo || inquiryModal.departTime) && (
                   <div className="border-t border-white/10 pt-4">
-                    <h3 className="text-white/50 text-xs uppercase tracking-wider mb-2">Flight Details</h3>
+                    <h3 className="text-white/50 text-xs uppercase tracking-wider mb-2">{t("admin.book.flightDetails")}</h3>
                     <div className="grid grid-cols-2 gap-4">
-                      {inquiryModal.airline && <div><span className="text-white/40 text-xs">Airline</span><p className="text-white">{inquiryModal.airline}</p></div>}
-                      {inquiryModal.flightNo && <div><span className="text-white/40 text-xs">Flight No</span><p className="text-white font-mono">{inquiryModal.flightNo}</p></div>}
-                      {inquiryModal.departTime && <div><span className="text-white/40 text-xs">Departure Time</span><p className="text-white">{inquiryModal.departTime}</p></div>}
-                      {inquiryModal.arriveTime && <div><span className="text-white/40 text-xs">Arrival Time</span><p className="text-white">{inquiryModal.arriveTime}</p></div>}
-                      {inquiryModal.stops !== undefined && inquiryModal.stops !== "" && <div><span className="text-white/40 text-xs">Stops</span><p className="text-white">{inquiryModal.stops === "0" ? "Nonstop" : inquiryModal.stops + " stop(s)"}</p></div>}
-                      {inquiryModal.offerId && <div><span className="text-white/40 text-xs">Offer ID</span><p className="text-white font-mono text-xs">{inquiryModal.offerId}</p></div>}
-                      {inquiryModal.amount > 0 && <div><span className="text-white/40 text-xs">Price</span><p className="text-gold font-bold">{inquiryModal.amount} {inquiryModal.currency}</p></div>}
+                      {inquiryModal.airline && <div><span className="text-white/40 text-xs">{t("admin.book.airline")}</span><p className="text-white">{inquiryModal.airline}</p></div>}
+                      {inquiryModal.flightNo && <div><span className="text-white/40 text-xs">{t("admin.book.flightNo")}</span><p className="text-white font-mono">{inquiryModal.flightNo}</p></div>}
+                      {inquiryModal.departTime && <div><span className="text-white/40 text-xs">{t("admin.book.departTime")}</span><p className="text-white">{inquiryModal.departTime}</p></div>}
+                      {inquiryModal.arriveTime && <div><span className="text-white/40 text-xs">{t("admin.book.arriveTime")}</span><p className="text-white">{inquiryModal.arriveTime}</p></div>}
+                      {inquiryModal.stops !== undefined && inquiryModal.stops !== "" && <div><span className="text-white/40 text-xs">{t("admin.book.stops")}</span><p className="text-white">{inquiryModal.stops === "0" ? "Nonstop" : inquiryModal.stops + " stop(s)"}</p></div>}
+                      {inquiryModal.offerId && <div><span className="text-white/40 text-xs">{t("admin.book.offerId")}</span><p className="text-white font-mono text-xs">{inquiryModal.offerId}</p></div>}
+                      {inquiryModal.amount > 0 && <div><span className="text-white/40 text-xs">{t("admin.book.price")}</span><p className="text-gold font-bold">{inquiryModal.amount} {inquiryModal.currency}</p></div>}
                     </div>
                   </div>
                   )}
                   {inquiryModal.specialRequests && (
                     <div className="border-t border-white/10 pt-4">
-                      <span className="text-white/40 text-xs uppercase tracking-wider">Special Requests</span>
+                      <span className="text-white/40 text-xs uppercase tracking-wider">{t("admin.book.specialRequests")}</span>
                       <p className="text-white/70 mt-1">{inquiryModal.specialRequests}</p>
                     </div>
                   )}
                   <div className="border-t border-white/10 pt-4">
-                    <h3 className="text-white/50 text-xs uppercase tracking-wider mb-3">Update Status</h3>
+                    <h3 className="text-white/50 text-xs uppercase tracking-wider mb-3">{t("admin.book.updateStatus")}</h3>
                     <div className="flex items-center gap-2 flex-wrap">
                       {inquiryStatusOptions.map((opt) => (
                         <button key={opt} onClick={() => handleInquiryStatusUpdate(inquiryModal._id, opt)}
                           disabled={updatingInquiryId === inquiryModal._id || inquiryModal.status === opt}
                           className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${inquiryModal.status === opt ? "bg-gold/20 text-gold cursor-default" : "bg-white/5 text-white/70 hover:bg-white/10 hover:text-white"} disabled:opacity-50 disabled:cursor-not-allowed`}>
-                          {updatingInquiryId === inquiryModal._id ? "Updating..." : opt}
+                          {updatingInquiryId === inquiryModal._id ? t("admin.book.updating") : t("admin.book.inq." + opt)}
                         </button>
                       ))}
                     </div>
                   </div>
                 </div>
                 <div className="flex justify-end px-6 py-4 border-t border-white/10 bg-deepblue-dark/50">
-                  <button onClick={() => setInquiryModal(null)} className="px-5 py-2 rounded-lg border border-white/20 text-white/70 hover:text-white hover:border-white/40 transition-all text-sm">Close</button>
+                  <button onClick={() => setInquiryModal(null)} className="px-5 py-2 rounded-lg border border-white/20 text-white/70 hover:text-white hover:border-white/40 transition-all text-sm">{t("admin.book.close")}</button>
                 </div>
               </div>
             </div>

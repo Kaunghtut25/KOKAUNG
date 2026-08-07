@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useState, useCallback } from "react";
+import { useI18n } from "@/lib/i18n";
 
 interface DashboardStats {
   totalTours: number;
@@ -29,20 +30,21 @@ interface RecentBooking {
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || "/api";
 
 const statCards = [
-  { key: "totalTours", label: "Total Tours", icon: "🏔️" },
-  { key: "totalHotels", label: "Total Hotels", icon: "🏨" },
-  { key: "totalCars", label: "Total Cars", icon: "🚗" },
-  { key: "totalVisas", label: "Visa Services", icon: "🛂" },
-  { key: "totalInsurances", label: "Insurance Plans", icon: "🛡️" },
-  { key: "totalCruises", label: "Cruise Packages", icon: "🚢" },
-  { key: "totalBlogPosts", label: "Blog Posts", icon: "📝" },
-  { key: "totalBookings", label: "Total Bookings", icon: "📋" },
-  { key: "totalInquiries", label: "Inquiries", icon: "💬" },
-  { key: "revenueMMK", label: "Revenue (MMK)", icon: "💰", format: true },
-  { key: "pendingPayments", label: "Pending Payments", icon: "⏳", format: true },
+  { key: "totalTours", labelKey: "admin.dash.totalTours", icon: "🏔️" },
+  { key: "totalHotels", labelKey: "admin.dash.totalHotels", icon: "🏨" },
+  { key: "totalCars", labelKey: "admin.dash.totalCars", icon: "🚗" },
+  { key: "totalVisas", labelKey: "admin.dash.visaServices", icon: "🛂" },
+  { key: "totalInsurances", labelKey: "admin.dash.insurancePlans", icon: "🛡️" },
+  { key: "totalCruises", labelKey: "admin.dash.cruisePackages", icon: "🚢" },
+  { key: "totalBlogPosts", labelKey: "admin.dash.blogPosts", icon: "📝" },
+  { key: "totalBookings", labelKey: "admin.dash.totalBookings", icon: "📋" },
+  { key: "totalInquiries", labelKey: "admin.dash.inquiries", icon: "💬" },
+  { key: "revenueMMK", labelKey: "admin.dash.revenueMmk", icon: "💰", format: true },
+  { key: "pendingPayments", labelKey: "admin.dash.pendingPayments", icon: "⏳", format: true },
 ];
 
 export default function AdminDashboardPage() {
+  const { t } = useI18n();
   const [stats, setStats] = useState<DashboardStats>({
     totalTours: 0,
     totalHotels: 0,
@@ -113,23 +115,23 @@ export default function AdminDashboardPage() {
     const map: Record<string, { className: string; label: string }> = {
       pending: {
         className: "bg-yellow-500/20 text-yellow-400 border-yellow-500/30",
-        label: "Pending",
+        label: t("admin.dash.pending"),
       },
       paid: {
         className: "bg-green-500/20 text-green-400 border-green-500/30",
-        label: "Paid",
+        label: t("admin.dash.paid"),
       },
       completed: {
         className: "bg-green-500/20 text-green-400 border-green-500/30",
-        label: "Completed",
+        label: t("admin.dash.completed"),
       },
       confirmed: {
         className: "bg-blue-500/20 text-blue-400 border-blue-500/30",
-        label: "Confirmed",
+        label: t("admin.dash.confirmed"),
       },
       cancelled: {
         className: "bg-red-500/20 text-red-400 border-red-500/30",
-        label: "Cancelled",
+        label: t("admin.dash.cancelled"),
       },
     };
     const s = map[status] || {
@@ -158,20 +160,20 @@ export default function AdminDashboardPage() {
   };
 
   const quickActions = [
-    { label: "Add Tour", icon: "🏔️", href: "/admin/tours" },
-    { label: "Add Hotel", icon: "🏨", href: "/admin/hotels" },
-    { label: "Add Car", icon: "🚗", href: "/admin/cars" },
-    { label: "Add Visa", icon: "🛂", href: "/admin/visas" },
-    { label: "Add Insurance", icon: "🛡️", href: "/admin/insurance" },
-    { label: "Add Cruise", icon: "🚢", href: "/admin/cruises" },
-    { label: "New Blog Post", icon: "📝", href: "/admin/blog" },
-    { label: "View Settings", icon: "⚙️", href: "/admin/settings" },
+    { labelKey: "admin.dash.addTour", icon: "🏔️", href: "/admin/tours" },
+    { labelKey: "admin.dash.addHotel", icon: "🏨", href: "/admin/hotels" },
+    { labelKey: "admin.dash.addCar", icon: "🚗", href: "/admin/cars" },
+    { labelKey: "admin.dash.addVisa", icon: "🛂", href: "/admin/visas" },
+    { labelKey: "admin.dash.addInsurance", icon: "🛡️", href: "/admin/insurance" },
+    { labelKey: "admin.dash.addCruise", icon: "🚢", href: "/admin/cruises" },
+    { labelKey: "admin.dash.newBlog", icon: "📝", href: "/admin/blog" },
+    { labelKey: "admin.dash.viewSettings", icon: "⚙️", href: "/admin/settings" },
   ];
 
   if (loading) {
     return (
       <div className="flex items-center justify-center h-96">
-        <div className="text-gold/70 animate-pulse text-lg">Loading dashboard...</div>
+        <div className="text-gold/70 animate-pulse text-lg">{t("admin.dash.loading")}</div>
       </div>
     );
   }
@@ -184,10 +186,10 @@ export default function AdminDashboardPage() {
         <div className="absolute bottom-0 left-0 w-48 h-48 bg-gold/5 rounded-full blur-3xl translate-y-1/2 -translate-x-1/4" />
         <div className="relative z-10">
           <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-[#D4AF37] via-[#F0D060] to-[#D4AF37] bg-clip-text text-transparent pb-1">
-            Admin Dashboard
+            {t("admin.dash.title")}
           </h1>
           <p className="text-white/50 mt-2 text-lg font-light tracking-wide">
-            Manage your travel empire
+            {t("admin.dash.subtitle")}
           </p>
         </div>
       </div>
@@ -204,7 +206,7 @@ export default function AdminDashboardPage() {
               <div className="flex items-center justify-between mb-4">
                 <span className="text-[32px] leading-none">{card.icon}</span>
                 <span className="text-white/30 text-[10px] uppercase tracking-[0.2em] font-semibold">
-                  {card.label}
+                  {t(card.labelKey)}
                 </span>
               </div>
               <div className="text-2xl font-bold text-gold group-hover:text-[#F0D060] transition-colors">
@@ -219,7 +221,7 @@ export default function AdminDashboardPage() {
 
       {/* ─── Quick Actions ─── */}
       <div>
-        <h2 className="text-xl font-bold text-white mb-4">Quick Actions</h2>
+        <h2 className="text-xl font-bold text-white mb-4">{t("admin.dash.quickActions")}</h2>
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3">
           {quickActions.map((action) => (
             <a
@@ -231,7 +233,7 @@ export default function AdminDashboardPage() {
                 {action.icon}
               </span>
               <span className="text-white/70 text-xs font-medium group-hover:text-gold transition-colors">
-                {action.label}
+                {t(action.labelKey)}
               </span>
             </a>
           ))}
@@ -240,32 +242,32 @@ export default function AdminDashboardPage() {
 
       {/* ─── Recent Bookings ─── */}
       <div>
-        <h2 className="text-xl font-bold text-white mb-4">Recent Bookings</h2>
+        <h2 className="text-xl font-bold text-white mb-4">{t("admin.dash.recentBookings")}</h2>
         <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b border-white/10 bg-white/[0.02]">
                   <th className="text-left p-4 text-white/40 font-semibold uppercase tracking-wider text-[11px]">
-                    Booking ID
+                    {t("admin.dash.bookingId")}
                   </th>
                   <th className="text-left p-4 text-white/40 font-semibold uppercase tracking-wider text-[11px]">
-                    Customer
+                    {t("admin.dash.customer")}
                   </th>
                   <th className="text-left p-4 text-white/40 font-semibold uppercase tracking-wider text-[11px]">
-                    Type
+                    {t("admin.dash.type")}
                   </th>
                   <th className="text-left p-4 text-white/40 font-semibold uppercase tracking-wider text-[11px]">
-                    Amount
+                    {t("admin.dash.amount")}
                   </th>
                   <th className="text-left p-4 text-white/40 font-semibold uppercase tracking-wider text-[11px]">
-                    Status
+                    {t("admin.dash.status")}
                   </th>
                   <th className="text-left p-4 text-white/40 font-semibold uppercase tracking-wider text-[11px]">
-                    Date
+                    {t("admin.dash.date")}
                   </th>
                   <th className="text-left p-4 text-white/40 font-semibold uppercase tracking-wider text-[11px]">
-                    Actions
+                    {t("admin.dash.actions")}
                   </th>
                 </tr>
               </thead>
@@ -277,7 +279,7 @@ export default function AdminDashboardPage() {
                       className="p-10 text-center text-white/30"
                     >
                       <span className="text-3xl block mb-2">📋</span>
-                      No recent bookings found.
+                      {t("admin.dash.noRecent")}
                     </td>
                   </tr>
                 ) : (
@@ -312,7 +314,7 @@ export default function AdminDashboardPage() {
                       </td>
                       <td className="p-4">
                         <button className="text-gold hover:text-gold/80 text-sm font-medium transition-colors hover:underline underline-offset-4">
-                          View Details
+                          {t("admin.dash.viewDetails")}
                         </button>
                       </td>
                     </tr>
@@ -326,12 +328,12 @@ export default function AdminDashboardPage() {
 
       {/* ─── Revenue Overview ─── */}
       <div>
-        <h2 className="text-xl font-bold text-white mb-4">Revenue Overview</h2>
+        <h2 className="text-xl font-bold text-white mb-4">{t("admin.dash.revenue")}</h2>
         <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-12 text-center">
           <span className="text-5xl mb-4 block">📈</span>
-          <p className="text-white/50 text-lg">Chart coming soon</p>
+          <p className="text-white/50 text-lg">{t("admin.dash.chartSoon")}</p>
           <p className="text-white/30 text-sm mt-1">
-            Revenue analytics visualization will be available in a future update.
+            {t("admin.dash.chartText")}
           </p>
         </div>
       </div>
