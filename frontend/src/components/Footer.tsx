@@ -95,7 +95,7 @@ export default function Footer() {
             <p className="text-sm text-white/60 leading-relaxed">
               {t("footer.about")}
             </p>
-            <p className="text-sm italic text-[#D4AF37]/50">
+            <p className="text-sm italic text-[#D4AF37]/80">
               {t("footer.tagline")}
             </p>
             {/* Social Icons */}
@@ -218,7 +218,7 @@ export default function Footer() {
                     <div key={dept} className="flex items-start space-x-3">
                       <FaPhoneAlt className="text-[#D4AF37] mt-1 flex-shrink-0 text-xs" />
                       <div className="leading-tight">
-                        <span className="text-[10px] text-white/30 uppercase tracking-wider block">{t(DEPT_LABELS[dept] || dept)}</span>
+                        <span className="text-[10px] text-white/50 uppercase tracking-wider block">{t(DEPT_LABELS[dept] || dept)}</span>
                         <a href={`tel:${String(phoneNum).replace(/\s/g, "")}`} className="text-sm text-white/60 hover:text-[#D4AF37] transition-colors">{phoneNum}</a>
                       </div>
                     </div>
