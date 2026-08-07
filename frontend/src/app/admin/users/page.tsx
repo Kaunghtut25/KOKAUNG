@@ -151,8 +151,8 @@ export default function AdminUsersPage() {
         {users.length === 0 ? (
           <div className="text-white/60 text-center py-16 text-lg">{t("admin.users.empty")}</div>
         ) : (
-          <div className="bg-[#0F1E35] border border-white/10 rounded-xl overflow-x-auto max-w-5xl mx-auto">
-            <table className="w-full text-left">
+          <div className="bg-[#0F1E35] border border-white/10 rounded-xl overflow-x-auto">
+            <table className="w-full max-w-5xl mx-auto text-left">
               <thead className="bg-[#0A1628]">
                 <tr className="text-white/60 text-xs uppercase tracking-wider">
                   <th className="px-5 py-3">{t("admin.book.name")}</th>
