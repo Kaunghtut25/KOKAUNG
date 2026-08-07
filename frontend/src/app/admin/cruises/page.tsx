@@ -3,6 +3,7 @@
 import React, { useEffect, useState, useCallback } from "react";
 import Link from "next/link";
 import AdminFormModal from "@/components/AdminFormModal";
+import { useI18n } from "@/lib/i18n";
 
 interface cruise {
   id: string;
@@ -48,6 +49,7 @@ const emptyCruise: cruise = {
 };
 
 export default function AdminCruisesPage() {
+  const { t } = useI18n();
   const [cruises, setCruises] = useState<cruise[]>([]);
   const [loading, setLoading] = useState(true);
   const [modalOpen, setModalOpen] = useState(false);
@@ -226,11 +228,11 @@ export default function AdminCruisesPage() {
         fetchCruises();
       } else {
         const err = await res.json();
-        alert(err.message || "Failed to save cruise");
+        alert(err.message || t("admin.common.saveFailed"));
       }
     } catch (err) {
       console.error("Save failed:", err);
-      alert("Failed to save cruise");
+      alert(t("admin.common.saveFailed"));
     } finally {
       setSaving(false);
     }
@@ -246,11 +248,11 @@ export default function AdminCruisesPage() {
         setDeleteConfirm(null);
         fetchCruises();
       } else {
-        alert("Failed to delete cruise");
+        alert(t("admin.common.deleteFailed"));
       }
     } catch (err) {
       console.error("Delete failed:", err);
-      alert("Failed to delete cruise");
+      alert(t("admin.common.deleteFailed"));
     }
   };
 
@@ -302,7 +304,7 @@ export default function AdminCruisesPage() {
 
       <div>
         <label className="block text-white/70 text-sm mb-1">
-          Description
+          {t("admin.form.description")}
         </label>
         <textarea
           value={editingCruise.description}
@@ -346,7 +348,7 @@ export default function AdminCruisesPage() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
           <label className="block text-white/70 text-sm mb-1">
-            Duration
+            {t("admin.form.duration")}
           </label>
           <input
             type="text"
@@ -360,7 +362,7 @@ export default function AdminCruisesPage() {
         </div>
         <div>
           <label className="block text-white/70 text-sm mb-1">
-            Max Group Size
+            {t("admin.form.maxGroupSize")}
           </label>
           <input
             type="number"
@@ -380,7 +382,7 @@ export default function AdminCruisesPage() {
           <input
             type="tel"
             name="phone"
-            placeholder="Contact phone"
+            placeholder={t("admin.form.contactPhone")}
             className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-gold/50 transition-colors"
             value={editingCruise.phone}
             onChange={(e) => handleFieldChange("phone", e.target.value)}
@@ -488,7 +490,7 @@ export default function AdminCruisesPage() {
                     type="button"
                     onClick={() => removeImage(index)}
                     className="p-1.5 rounded bg-red-500/80 text-white hover:bg-red-600 text-xs"
-                    title="Remove"
+                    title={t("admin.form.remove")}
                   >
                     ✕
                   </button>
@@ -518,7 +520,7 @@ export default function AdminCruisesPage() {
 
       <div>
         <label className="block text-white/70 text-sm mb-1">
-          Amenities (comma-separated)
+          {t("admin.form.amenities")}
         </label>
         <input
           type="text"
@@ -533,7 +535,7 @@ export default function AdminCruisesPage() {
 
       <div>
         <label className="block text-white/70 text-sm mb-1">
-          Included (comma-separated)
+          {t("admin.form.included")}
         </label>
         <input
           type="text"
@@ -541,14 +543,14 @@ export default function AdminCruisesPage() {
           onChange={(e) =>
             handleFieldChange("included", e.target.value)
           }
-          placeholder="Hotel, Meals, Guide"
+          placeholder={t("admin.form.includedPh")}
           className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-gold/50 transition-colors"
         />
       </div>
 
       <div>
         <label className="block text-white/70 text-sm mb-1">
-          Excluded (comma-separated)
+          {t("admin.form.excluded")}
         </label>
         <input
           type="text"
@@ -571,9 +573,9 @@ export default function AdminCruisesPage() {
             }
             className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-gold/50 transition-colors"
           >
-            <option value="active">Active</option>
-            <option value="inactive">Inactive</option>
-            <option value="featured">Featured</option>
+            <option value="active">{t("admin.form.active")}</option>
+            <option value="inactive">{t("admin.form.inactive")}</option>
+            <option value="featured">{t("admin.form.featured")}</option>
           </select>
         </div>
         <div className="flex items-end pb-0.5">
@@ -587,7 +589,7 @@ export default function AdminCruisesPage() {
               className="w-5 h-5 rounded border-white/20 bg-white/5 checked:bg-gold checked:border-gold focus:ring-gold/30 cursor-pointer"
             />
             <span className="text-white/70 text-sm">
-              ⭐ Featured — Show on homepage
+              {t("admin.form.featuredHome")}
             </span>
           </label>
         </div>
@@ -599,7 +601,7 @@ export default function AdminCruisesPage() {
     return (
       <div className="flex items-center justify-center h-96">
         <div className="text-gold/70 animate-pulse text-lg">
-          Loading cruises...
+{t("admin.cruises.loading")}
         </div>
       </div>
     );
@@ -614,17 +616,17 @@ export default function AdminCruisesPage() {
             className="text-3xl md:text-4xl font-bold text-[#D4AF37]"
             style={{ fontFamily: "'Playfair Display', Georgia, serif" }}
           >
-            Manage Cruise Packages
+            {t("admin.cruises.title")}
           </h1>
           <p className="text-white/40 text-sm mt-1">
-            Create and manage your cruise offerings
+            {t("admin.cruises.subtitle")}
           </p>
         </div>
         <button
           onClick={openCreateModal}
           className="px-5 py-2.5 rounded-lg bg-gold text-deepblue-dark font-semibold text-sm hover:bg-gold/90 transition-all flex items-center gap-2"
         >
-          <span>🚢</span> Add New Cruise
+          <span>🚢</span> {t("admin.cruises.addNew")}
         </button>
       </div>
 
@@ -635,10 +637,10 @@ export default function AdminCruisesPage() {
             <thead>
               <tr className="border-b border-white/10 bg-white/[0.02]">
                 <th className="text-left p-4 text-white/40 font-semibold uppercase tracking-wider text-[11px]">
-                  Cruise
+                  {t("admin.cruises.thCruise")}
                 </th>
                 <th className="text-left p-4 text-white/40 font-semibold uppercase tracking-wider text-[11px]">
-                  Destination
+                  {t("admin.tours.thDestination")}
                 </th>
                 <th className="text-left p-4 text-white/40 font-semibold uppercase tracking-wider text-[11px]">
                   Price (MMK)
@@ -647,13 +649,13 @@ export default function AdminCruisesPage() {
                   Price (USD)
                 </th>
                 <th className="text-left p-4 text-white/40 font-semibold uppercase tracking-wider text-[11px]">
-                  Duration
+                  {t("admin.tours.thDuration")}
                 </th>
                 <th className="text-left p-4 text-white/40 font-semibold uppercase tracking-wider text-[11px]">
-                  Status
+                  {t("admin.tours.thStatus")}
                 </th>
                 <th className="text-left p-4 text-white/40 font-semibold uppercase tracking-wider text-[11px]">
-                  Actions
+                  {t("admin.tours.thActions")}
                 </th>
               </tr>
             </thead>
@@ -665,8 +667,7 @@ export default function AdminCruisesPage() {
                     className="p-10 text-center text-white/30"
                   >
                     <span className="text-3xl block mb-2">🚢</span>
-                    No cruises found. Click &quot;Add New Cruise&quot; to create
-                    one.
+                    {t("admin.cruises.empty")}
                   </td>
                 </tr>
               ) : (
@@ -723,19 +724,19 @@ export default function AdminCruisesPage() {
                       <td className="p-4">
                         <div className="flex items-center gap-2">
                           <Link href={`/cruises/${cruise.id}`} target="_blank" rel="noopener noreferrer" className="px-3 py-1.5 rounded-lg bg-blue-500/10 text-blue-400 text-xs font-medium hover:bg-blue-500/20 transition-colors">
-                            View
+                            {t("admin.common.view")}
                           </Link>
                           <button
                             onClick={() => openEditModal(cruise)}
                             className="px-3 py-1.5 rounded-lg bg-gold/10 text-gold text-xs font-medium hover:bg-gold/20 transition-colors"
                           >
-                            Edit
+                            {t("admin.common.edit")}
                           </button>
                           <button
                             onClick={() => setDeleteConfirm(cruise.id)}
                             className="px-3 py-1.5 rounded-lg bg-red-500/10 text-red-400 text-xs font-medium hover:bg-red-500/20 transition-colors"
                           >
-                            Delete
+                            {t("admin.common.delete")}
                           </button>
                         </div>
                       </td>
@@ -752,9 +753,9 @@ export default function AdminCruisesPage() {
       <AdminFormModal
         isOpen={modalOpen}
         onClose={() => setModalOpen(false)}
-        title={isNew ? "Add New Cruise" : "Edit Cruise"}
+        title={isNew ? t("admin.cruises.addNewModal") : t("admin.cruises.editTitle")}
         onSubmit={handleSubmit}
-        submitLabel={isNew ? "Create Cruise" : "Update Cruise"}
+        submitLabel={isNew ? t("admin.cruises.create") : t("admin.cruises.update")}
         isLoading={saving}
       >
         {renderFormFields()}
@@ -769,24 +770,23 @@ export default function AdminCruisesPage() {
           />
           <div className="relative bg-deepblue-dark border border-white/10 rounded-xl p-6 max-w-sm w-full z-10">
             <h3 className="text-lg font-bold text-white mb-2">
-              Confirm Delete
+              {t("admin.common.confirmDelete")}
             </h3>
             <p className="text-white/60 text-sm mb-6">
-              Are you sure you want to delete this cruise? This action cannot be
-              undone.
+              {t("admin.cruises.deleteMsg")}
             </p>
             <div className="flex gap-3 justify-end">
               <button
                 onClick={() => setDeleteConfirm(null)}
                 className="px-4 py-2 rounded-lg border border-white/20 text-white/70 hover:text-white transition-colors text-sm"
               >
-                Cancel
+                {t("common.cancel")}
               </button>
               <button
                 onClick={() => handleDelete(deleteConfirm)}
                 className="px-4 py-2 rounded-lg bg-red-600 text-white font-medium text-sm hover:bg-red-700 transition-colors"
               >
-                Delete
+                {t("common.delete")}
               </button>
             </div>
           </div>

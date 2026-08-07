@@ -3,6 +3,7 @@
 import React, { useEffect, useState, useCallback } from "react";
 import Link from "next/link";
 import AdminFormModal from "@/components/AdminFormModal";
+import { useI18n } from "@/lib/i18n";
 
 interface Pricing {
   duration: string;
@@ -47,6 +48,7 @@ const emptyCar: Car = {
 };
 
 export default function AdminCarsPage() {
+  const { t } = useI18n();
   const [cars, setCars] = useState<Car[]>([]);
   const [loading, setLoading] = useState(true);
   const [modalOpen, setModalOpen] = useState(false);
@@ -217,11 +219,11 @@ export default function AdminCarsPage() {
         fetchCars();
       } else {
         const err = await res.json();
-        alert(err.message || "Failed to save car");
+        alert(err.message || t("admin.common.saveFailed"));
       }
     } catch (err) {
       console.error("Save failed:", err);
-      alert("Failed to save car");
+      alert(t("admin.common.saveFailed"));
     } finally {
       setSaving(false);
     }
@@ -237,11 +239,11 @@ export default function AdminCarsPage() {
         setDeleteConfirm(null);
         fetchCars();
       } else {
-        alert("Failed to delete car");
+        alert(t("admin.common.deleteFailed"));
       }
     } catch (err) {
       console.error("Delete failed:", err);
-      alert("Failed to delete car");
+      alert(t("admin.common.deleteFailed"));
     }
   };
 
@@ -263,7 +265,7 @@ export default function AdminCarsPage() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div>
           <label className="block text-white/70 text-sm mb-1">
-            Car Name / Model
+            {t("admin.form.carName")}
           </label>
           <input
             type="text"
@@ -278,7 +280,7 @@ export default function AdminCarsPage() {
         </div>
         <div>
           <label className="block text-white/70 text-sm mb-1">
-            Seats
+            {t("admin.form.seats")}
           </label>
           <input
             type="number"
@@ -291,7 +293,7 @@ export default function AdminCarsPage() {
         </div>
         <div>
           <label className="block text-white/70 text-sm mb-1">
-            Transmission
+            {t("admin.form.transmission")}
           </label>
           <select
             value={editingCar.transmission}
@@ -300,9 +302,9 @@ export default function AdminCarsPage() {
             }
             className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-gold/50 transition-colors"
           >
-            <option value="Automatic">Automatic</option>
-            <option value="Manual">Manual</option>
-            <option value="CVT">CVT</option>
+            <option value="Automatic">{t("admin.form.automatic")}</option>
+            <option value="Manual">{t("admin.form.manual")}</option>
+            <option value="CVT">{t("admin.form.cvt")}</option>
           </select>
         </div>
       </div>
@@ -310,7 +312,7 @@ export default function AdminCarsPage() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
         <div>
           <label className="block text-white/70 text-sm mb-1">
-            Capacity (luggage/people)
+            {t("admin.form.capacityLuggage")}
           </label>
           <input
             type="number"
@@ -325,7 +327,7 @@ export default function AdminCarsPage() {
 
       <div>
         <label className="block text-white/70 text-sm mb-1">
-          Description
+          {t("admin.form.description")}
         </label>
         <textarea
           value={editingCar.description}
@@ -339,7 +341,7 @@ export default function AdminCarsPage() {
 
       <div>
         <label className="block text-white/70 text-sm mb-1">
-          Features (comma-separated)
+          {t("admin.form.features")}
         </label>
         <input
           type="text"
@@ -347,7 +349,7 @@ export default function AdminCarsPage() {
           onChange={(e) =>
             handleFieldChange("features", e.target.value)
           }
-          placeholder="AC, GPS, Leather Seats"
+          placeholder={t("admin.form.featuresPh")}
           className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-gold/50 transition-colors"
         />
       </div>
@@ -360,7 +362,7 @@ export default function AdminCarsPage() {
             name="phone"
             value={editingCar.phone}
             onChange={(e) => handleFieldChange("phone", e.target.value)}
-            placeholder="Contact phone"
+            placeholder={t("admin.form.contactPhone")}
             className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-gold/50 transition-colors"
           />
         </div>
@@ -382,7 +384,7 @@ export default function AdminCarsPage() {
             name="pickupLocation"
             value={editingCar.pickupLocation}
             onChange={(e) => handleFieldChange("pickupLocation", e.target.value)}
-            placeholder="Pickup location"
+            placeholder={t("admin.form.pickupPh")}
             className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-gold/50 transition-colors"
           />
         </div>
@@ -391,7 +393,7 @@ export default function AdminCarsPage() {
       {/* ─── Image URL with Preview ─── */}
       <div>
         <label className="block text-white/70 text-sm mb-1">
-          Images (upload file or enter URL)
+          {t("admin.form.imagesEnter")}
         </label>
         <div className="flex gap-2 mb-3">
           <div
@@ -466,17 +468,17 @@ export default function AdminCarsPage() {
               imagePreviewUrl ? "hidden" : "flex"
             } items-center justify-center w-full h-full`}
           >
-            Image Preview
+            {t("admin.form.imagePreview")}
           </span>
         </div>
-        <p className="text-xs text-gray-400 mt-1">Recommended: 1200x630px (JPEG, max 2MB)</p>
+        <p className="text-xs text-gray-400 mt-1">{t("admin.form.recommended")}</p>
       </div>
 
       {/* ─── Pricing (Dynamic) ─── */}
       <div>
         <div className="flex items-center justify-between mb-2">
           <label className="text-white/70 text-sm font-medium">
-            Pricing Options
+            {t("admin.form.pricingOptions")}
           </label>
           <button
             type="button"
@@ -488,7 +490,7 @@ export default function AdminCarsPage() {
         </div>
         {editingCar.pricing.length === 0 && (
           <p className="text-white/30 text-sm italic">
-            No pricing options added yet.
+            {t("admin.form.noPricing")}
           </p>
         )}
         <div className="space-y-3">
@@ -506,13 +508,13 @@ export default function AdminCarsPage() {
                   onClick={() => removePricing(index)}
                   className="text-red-400 text-xs hover:text-red-300 transition-colors"
                 >
-                  Remove
+                  {t("admin.form.remove")}
                 </button>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
                 <div>
                   <label className="block text-white/40 text-xs mb-1">
-                    Duration
+                    {t("admin.form.duration")}
                   </label>
                   <input
                     type="text"
@@ -577,8 +579,8 @@ export default function AdminCarsPage() {
           }
           className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-gold/50 transition-colors"
         >
-          <option value="active">Active</option>
-          <option value="inactive">Inactive</option>
+          <option value="active">{t("admin.form.active")}</option>
+          <option value="inactive">{t("admin.form.inactive")}</option>
         </select>
       </div>
     </div>
@@ -588,7 +590,7 @@ export default function AdminCarsPage() {
     return (
       <div className="flex items-center justify-center h-96">
         <div className="text-gold/70 animate-pulse text-lg">
-          Loading cars...
+{t("admin.cars.loading")}
         </div>
       </div>
     );
@@ -603,17 +605,17 @@ export default function AdminCarsPage() {
             className="text-3xl md:text-4xl font-bold text-[#D4AF37]"
             style={{ fontFamily: "'Playfair Display', Georgia, serif" }}
           >
-            Manage Cars
+            {t("admin.cars.title")}
           </h1>
           <p className="text-white/40 text-sm mt-1">
-            Manage your vehicle fleet and pricing
+            {t("admin.cars.subtitle")}
           </p>
         </div>
         <button
           onClick={openCreateModal}
           className="px-5 py-2.5 rounded-lg bg-gold text-deepblue-dark font-semibold text-sm hover:bg-gold/90 transition-all flex items-center gap-2"
         >
-          <span>🚗</span> Add New Car
+          <span>🚗</span> {t("admin.cars.addNew")}
         </button>
       </div>
 
@@ -624,22 +626,22 @@ export default function AdminCarsPage() {
             <thead>
               <tr className="border-b border-white/10 bg-white/[0.02]">
                 <th className="text-left p-4 text-white/40 font-semibold uppercase tracking-wider text-[11px]">
-                  Vehicle
+                  {t("admin.cars.thVehicle")}
                 </th>
                 <th className="text-left p-4 text-white/40 font-semibold uppercase tracking-wider text-[11px]">
-                  Seats
+                  {t("admin.cars.thSeats")}
                 </th>
                 <th className="text-left p-4 text-white/40 font-semibold uppercase tracking-wider text-[11px]">
-                  Transmission
+                  {t("admin.cars.thTransmission")}
                 </th>
                 <th className="text-left p-4 text-white/40 font-semibold uppercase tracking-wider text-[11px]">
                   Pricing
                 </th>
                 <th className="text-left p-4 text-white/40 font-semibold uppercase tracking-wider text-[11px]">
-                  Status
+                  {t("admin.tours.thStatus")}
                 </th>
                 <th className="text-left p-4 text-white/40 font-semibold uppercase tracking-wider text-[11px]">
-                  Actions
+                  {t("admin.tours.thActions")}
                 </th>
               </tr>
             </thead>
@@ -651,8 +653,7 @@ export default function AdminCarsPage() {
                     className="p-10 text-center text-white/30"
                   >
                     <span className="text-3xl block mb-2">🚗</span>
-                    No cars found. Click &quot;Add New Car&quot; to
-                    create one.
+                    {t("admin.cars.empty")}
                   </td>
                 </tr>
               ) : (
@@ -708,13 +709,13 @@ export default function AdminCarsPage() {
                       <td className="p-4">
                         <div className="flex items-center gap-2">
                           <Link href={`/cars/${car.id}`} target="_blank" rel="noopener noreferrer" className="px-3 py-1.5 rounded-lg bg-blue-500/10 text-blue-400 text-xs font-medium hover:bg-blue-500/20 transition-colors">
-                            View
+                            {t("admin.common.view")}
                           </Link>
                           <button
                             onClick={() => openEditModal(car)}
                             className="px-3 py-1.5 rounded-lg bg-gold/10 text-gold text-xs font-medium hover:bg-gold/20 transition-colors"
                           >
-                            Edit
+                            {t("admin.common.edit")}
                           </button>
                           <button
                             onClick={() =>
@@ -722,7 +723,7 @@ export default function AdminCarsPage() {
                             }
                             className="px-3 py-1.5 rounded-lg bg-red-500/10 text-red-400 text-xs font-medium hover:bg-red-500/20 transition-colors"
                           >
-                            Delete
+                            {t("admin.common.delete")}
                           </button>
                         </div>
                       </td>
@@ -739,7 +740,7 @@ export default function AdminCarsPage() {
       <AdminFormModal
         isOpen={modalOpen}
         onClose={() => setModalOpen(false)}
-        title={isNew ? "Add New Car" : "Edit Car"}
+        title={isNew ? t("admin.cars.addNewModal") : t("admin.cars.editTitle")}
         onSubmit={handleSubmit}
         submitLabel={isNew ? "Create Car" : "Update Car"}
         isLoading={saving}
@@ -756,24 +757,23 @@ export default function AdminCarsPage() {
           />
           <div className="relative bg-deepblue-dark border border-white/10 rounded-xl p-6 max-w-sm w-full z-10">
             <h3 className="text-lg font-bold text-white mb-2">
-              Confirm Delete
+              {t("admin.common.confirmDelete")}
             </h3>
             <p className="text-white/60 text-sm mb-6">
-              Are you sure you want to delete this car? This action cannot
-              be undone.
+              {t("admin.cars.deleteMsg")}
             </p>
             <div className="flex gap-3 justify-end">
               <button
                 onClick={() => setDeleteConfirm(null)}
                 className="px-4 py-2 rounded-lg border border-white/20 text-white/70 hover:text-white transition-colors text-sm"
               >
-                Cancel
+                {t("common.cancel")}
               </button>
               <button
                 onClick={() => handleDelete(deleteConfirm)}
                 className="px-4 py-2 rounded-lg bg-red-600 text-white font-medium text-sm hover:bg-red-700 transition-colors"
               >
-                Delete
+                {t("common.delete")}
               </button>
             </div>
           </div>

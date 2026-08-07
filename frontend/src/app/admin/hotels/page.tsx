@@ -3,6 +3,7 @@
 import React, { useEffect, useState, useCallback } from "react";
 import Link from "next/link";
 import AdminFormModal from "@/components/AdminFormModal";
+import { useI18n } from "@/lib/i18n";
 
 interface RoomType {
   name: string;
@@ -67,6 +68,7 @@ const emptyHotel: Hotel = {
 };
 
 export default function AdminHotelsPage() {
+  const { t } = useI18n();
   const [hotels, setHotels] = useState<Hotel[]>([]);
   const [loading, setLoading] = useState(true);
   const [modalOpen, setModalOpen] = useState(false);
@@ -235,11 +237,11 @@ export default function AdminHotelsPage() {
         fetchHotels();
       } else {
         const err = await res.json();
-        alert(err.message || "Failed to save hotel");
+        alert(err.message || t("admin.common.saveFailed"));
       }
     } catch (err) {
       console.error("Save failed:", err);
-      alert("Failed to save hotel");
+      alert(t("admin.common.saveFailed"));
     } finally {
       setSaving(false);
     }
@@ -255,11 +257,11 @@ export default function AdminHotelsPage() {
         setDeleteConfirm(null);
         fetchHotels();
       } else {
-        alert("Failed to delete hotel");
+        alert(t("admin.common.deleteFailed"));
       }
     } catch (err) {
       console.error("Delete failed:", err);
-      alert("Failed to delete hotel");
+      alert(t("admin.common.deleteFailed"));
     }
   };
 
@@ -296,7 +298,7 @@ export default function AdminHotelsPage() {
         </div>
         <div>
           <label className="block text-white/70 text-sm mb-1">
-            Location
+            {t("admin.form.location")}
           </label>
           <input
             type="text"
@@ -328,7 +330,7 @@ export default function AdminHotelsPage() {
             name="phone"
             value={editingHotel.phone}
             onChange={(e) => handleFieldChange("phone", e.target.value)}
-            placeholder="Contact phone"
+            placeholder={t("admin.form.contactPhone")}
             className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-gold/50 transition-colors"
           />
         </div>
@@ -347,7 +349,7 @@ export default function AdminHotelsPage() {
 
       <div>
         <label className="block text-white/70 text-sm mb-1">
-          Description
+          {t("admin.form.description")}
         </label>
         <textarea
           value={editingHotel.description}
@@ -362,7 +364,7 @@ export default function AdminHotelsPage() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div>
           <label className="block text-white/70 text-sm mb-1">
-            Rating (1-5)
+            {t("admin.form.rating")}
           </label>
           <input
             type="number"
@@ -377,7 +379,7 @@ export default function AdminHotelsPage() {
         </div>
         <div>
           <label className="block text-white/70 text-sm mb-1">
-            Available Rooms
+            {t("admin.form.availableRooms")}
           </label>
           <input
             type="number"
@@ -390,7 +392,7 @@ export default function AdminHotelsPage() {
         </div>
         <div>
           <label className="block text-white/70 text-sm mb-1">
-            Total Rooms
+            {t("admin.form.totalRooms")}
           </label>
           <input
             type="number"
@@ -411,7 +413,7 @@ export default function AdminHotelsPage() {
         <div>
           <label className="block text-white/70 text-sm mb-1">Row</label>
           <select value={editingHotel.row} onChange={(e) => handleFieldChange("row", Number(e.target.value))} className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-gold/50 transition-colors">
-            {[1,2,3,4,5,6].map((r) => (<option key={r} value={r}>Row {r}</option>))}
+            {[1,2,3,4,5,6].map((r) => (<option key={r} value={r}>{t("admin.form.row")} {r}</option>))}
           </select>
         </div>
       </div>
@@ -419,7 +421,7 @@ export default function AdminHotelsPage() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
           <label className="block text-white/70 text-sm mb-1">
-            Price/Night MMK
+            {t("admin.form.priceNightMmk")}
           </label>
           <input
             type="number"
@@ -435,7 +437,7 @@ export default function AdminHotelsPage() {
         </div>
         <div>
           <label className="block text-white/70 text-sm mb-1">
-            Price/Night USD
+            {t("admin.form.priceNightUsd")}
           </label>
           <input
             type="number"
@@ -453,7 +455,7 @@ export default function AdminHotelsPage() {
 
       <div>
         <label className="block text-white/70 text-sm mb-1">
-          Amenities (comma-separated)
+          {t("admin.form.amenities")}
         </label>
         <input
           type="text"
@@ -469,7 +471,7 @@ export default function AdminHotelsPage() {
       {/* ─── Image URL with Preview ─── */}
       <div>
         <label className="block text-white/70 text-sm mb-1">
-          Images (upload file or enter URL)
+          {t("admin.form.imagesEnter")}
         </label>
         <div className="flex gap-2 mb-3">
           <div
@@ -543,29 +545,29 @@ export default function AdminHotelsPage() {
               imagePreviewUrl ? "hidden" : "flex"
             } items-center justify-center w-full h-full`}
           >
-            Image Preview
+            {t("admin.form.imagePreview")}
           </span>
         </div>
-        <p className="text-xs text-gray-400 mt-1">Recommended: 1200x630px (JPEG, max 2MB)</p>
+        <p className="text-xs text-gray-400 mt-1">{t("admin.form.recommended")}</p>
       </div>
 
       {/* ─── Room Types (Dynamic) ─── */}
       <div>
         <div className="flex items-center justify-between mb-2">
           <label className="text-white/70 text-sm font-medium">
-            Room Types
+            {t("admin.form.roomTypes")}
           </label>
           <button
             type="button"
             onClick={addRoomType}
             className="px-3 py-1 rounded bg-gold/10 text-gold text-xs hover:bg-gold/20 transition-colors"
           >
-            + Add Room Type
+            {t("admin.form.addRoomType")}
           </button>
         </div>
         {editingHotel.roomTypes.length === 0 && (
           <p className="text-white/30 text-sm italic">
-            No room types added yet.
+            {t("admin.form.noRoomTypes")}
           </p>
         )}
         <div className="space-y-3">
@@ -576,20 +578,20 @@ export default function AdminHotelsPage() {
             >
               <div className="flex items-center justify-between">
                 <span className="text-white/70 text-xs font-medium">
-                  Room Type #{index + 1}
+                  {t("admin.form.roomType")} #{index + 1}
                 </span>
                 <button
                   type="button"
                   onClick={() => removeRoomType(index)}
                   className="text-red-400 text-xs hover:text-red-300 transition-colors"
                 >
-                  Remove
+                  {t("admin.form.remove")}
                 </button>
               </div>
               <div className="grid grid-cols-2 md:grid-cols-5 gap-2">
                 <div>
                   <label className="block text-white/40 text-xs mb-1">
-                    Name
+                    {t("admin.form.name")}
                   </label>
                   <input
                     type="text"
@@ -641,7 +643,7 @@ export default function AdminHotelsPage() {
                 </div>
                 <div>
                   <label className="block text-white/40 text-xs mb-1">
-                    Capacity
+                    {t("admin.form.capacity")}
                   </label>
                   <input
                     type="number"
@@ -689,9 +691,9 @@ export default function AdminHotelsPage() {
             }
             className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-gold/50 transition-colors"
           >
-            <option value="active">Active</option>
-            <option value="inactive">Inactive</option>
-            <option value="featured">Featured</option>
+            <option value="active">{t("admin.form.active")}</option>
+            <option value="inactive">{t("admin.form.inactive")}</option>
+            <option value="featured">{t("admin.form.featured")}</option>
           </select>
         </div>
         <div className="flex items-end pb-0.5">
@@ -705,7 +707,7 @@ export default function AdminHotelsPage() {
               className="w-5 h-5 rounded border-white/20 bg-white/5 checked:bg-gold checked:border-gold focus:ring-gold/30 cursor-pointer"
             />
             <span className="text-white/70 text-sm">
-              ⭐ Featured — Show on homepage
+              {t("admin.form.featuredHome")}
             </span>
           </label>
         </div>
@@ -717,7 +719,7 @@ export default function AdminHotelsPage() {
     return (
       <div className="flex items-center justify-center h-96">
         <div className="text-gold/70 animate-pulse text-lg">
-          Loading hotels...
+{t("admin.hotels.loading")}
         </div>
       </div>
     );
@@ -732,17 +734,17 @@ export default function AdminHotelsPage() {
             className="text-3xl md:text-4xl font-bold text-[#D4AF37]"
             style={{ fontFamily: "'Playfair Display', Georgia, serif" }}
           >
-            Manage Hotels
+            {t("admin.hotels.title")}
           </h1>
           <p className="text-white/40 text-sm mt-1">
-            Manage your hotel listings and room types
+            {t("admin.hotels.subtitle")}
           </p>
         </div>
         <button
           onClick={openCreateModal}
           className="px-5 py-2.5 rounded-lg bg-gold text-deepblue-dark font-semibold text-sm hover:bg-gold/90 transition-all flex items-center gap-2"
         >
-          <span>🏨</span> Add New Hotel
+          <span>🏨</span> {t("admin.hotels.addNew")}
         </button>
       </div>
 
@@ -753,25 +755,25 @@ export default function AdminHotelsPage() {
             <thead>
               <tr className="border-b border-white/10 bg-white/[0.02]">
                 <th className="text-left p-4 text-white/40 font-semibold uppercase tracking-wider text-[11px]">
-                  Hotel
+                  {t("admin.hotels.thHotel")}
                 </th>
                 <th className="text-left p-4 text-white/40 font-semibold uppercase tracking-wider text-[11px]">
-                  Location
+                  {t("admin.hotels.thLocation")}
                 </th>
                 <th className="text-left p-4 text-white/40 font-semibold uppercase tracking-wider text-[11px]">
-                  Rating
+                  {t("admin.tours.thRating")}
                 </th>
                 <th className="text-left p-4 text-white/40 font-semibold uppercase tracking-wider text-[11px]">
-                  Price/Night
+                  {t("admin.hotels.thPrice")}
                 </th>
                 <th className="text-left p-4 text-white/40 font-semibold uppercase tracking-wider text-[11px]">
                   Rooms
                 </th>
                 <th className="text-left p-4 text-white/40 font-semibold uppercase tracking-wider text-[11px]">
-                  Status
+                  {t("admin.tours.thStatus")}
                 </th>
                 <th className="text-left p-4 text-white/40 font-semibold uppercase tracking-wider text-[11px]">
-                  Actions
+                  {t("admin.tours.thActions")}
                 </th>
               </tr>
             </thead>
@@ -783,8 +785,7 @@ export default function AdminHotelsPage() {
                     className="p-10 text-center text-white/30"
                   >
                     <span className="text-3xl block mb-2">🏨</span>
-                    No hotels found. Click &quot;Add New Hotel&quot; to
-                    create one.
+                    {t("admin.hotels.empty")}
                   </td>
                 </tr>
               ) : (
@@ -848,13 +849,13 @@ export default function AdminHotelsPage() {
                       <td className="p-4">
                         <div className="flex items-center gap-2">
                           <Link href={`/hotels/${hotel.id}`} target="_blank" rel="noopener noreferrer" className="px-3 py-1.5 rounded-lg bg-blue-500/10 text-blue-400 text-xs font-medium hover:bg-blue-500/20 transition-colors">
-                            View
+                            {t("admin.common.view")}
                           </Link>
                           <button
                             onClick={() => openEditModal(hotel)}
                             className="px-3 py-1.5 rounded-lg bg-gold/10 text-gold text-xs font-medium hover:bg-gold/20 transition-colors"
                           >
-                            Edit
+                            {t("admin.common.edit")}
                           </button>
                           <button
                             onClick={() =>
@@ -862,7 +863,7 @@ export default function AdminHotelsPage() {
                             }
                             className="px-3 py-1.5 rounded-lg bg-red-500/10 text-red-400 text-xs font-medium hover:bg-red-500/20 transition-colors"
                           >
-                            Delete
+                            {t("admin.common.delete")}
                           </button>
                         </div>
                       </td>
@@ -879,9 +880,9 @@ export default function AdminHotelsPage() {
       <AdminFormModal
         isOpen={modalOpen}
         onClose={() => setModalOpen(false)}
-        title={isNew ? "Add New Hotel" : "Edit Hotel"}
+        title={isNew ? t("admin.hotels.addNewModal") : t("admin.hotels.editTitle")}
         onSubmit={handleSubmit}
-        submitLabel={isNew ? "Create Hotel" : "Update Hotel"}
+        submitLabel={isNew ? t("admin.hotels.create") : t("admin.hotels.update")}
         isLoading={saving}
       >
         {renderFormFields()}
@@ -896,24 +897,23 @@ export default function AdminHotelsPage() {
           />
           <div className="relative bg-deepblue-dark border border-white/10 rounded-xl p-6 max-w-sm w-full z-10">
             <h3 className="text-lg font-bold text-white mb-2">
-              Confirm Delete
+              {t("admin.common.confirmDelete")}
             </h3>
             <p className="text-white/60 text-sm mb-6">
-              Are you sure you want to delete this hotel? This action
-              cannot be undone.
+              {t("admin.hotels.deleteMsg")}
             </p>
             <div className="flex gap-3 justify-end">
               <button
                 onClick={() => setDeleteConfirm(null)}
                 className="px-4 py-2 rounded-lg border border-white/20 text-white/70 hover:text-white transition-colors text-sm"
               >
-                Cancel
+                {t("common.cancel")}
               </button>
               <button
                 onClick={() => handleDelete(deleteConfirm)}
                 className="px-4 py-2 rounded-lg bg-red-600 text-white font-medium text-sm hover:bg-red-700 transition-colors"
               >
-                Delete
+                {t("common.delete")}
               </button>
             </div>
           </div>
