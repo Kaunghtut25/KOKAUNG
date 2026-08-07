@@ -38,8 +38,15 @@ export default function TestimonialSlider() {
   }, []);
 
   useEffect(() => {
-    const t = setInterval(() => setIdx(i => (i + 1) % reviews.length), 5000);
-    return () => clearInterval(t);
+    // Autoplay only while the slider is actually visible (saves main-thread work)
+    const el = document.getElementById('testimonial-slider');
+    if (!el) return;
+    let t: ReturnType<typeof setInterval> | null = null;
+    const start = () => { if (!t) t = setInterval(() => setIdx(i => (i + 1) % reviews.length), 5000); };
+    const stop = () => { if (t) { clearInterval(t); t = null; } };
+    const obs = new IntersectionObserver(([e]) => { if (e.isIntersecting) start(); else stop(); }, { threshold: 0.15 });
+    obs.observe(el);
+    return () => { stop(); obs.disconnect(); };
   }, [reviews]);
 
   const mmTexts: Record<string, Partial<Review>> = {
