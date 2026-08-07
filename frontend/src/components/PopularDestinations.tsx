@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import ScrollingRow from "./ScrollingRow";
 import { useI18n } from "@/lib/i18n";
+import { mmDestinations, mmLookup } from "@/lib/mm-content";
 
 const FALLBACK_IMG = "/images_v2/cta-bg-v2.jpg";
 
@@ -26,10 +27,11 @@ const CITY_FIX_MAP: Record<string, string> = {
 };
 
 function DestinationCard({ dest, destText = {} }: { dest: { city: string; country: string; image: string; minPrice: string; rating?: number; reviews?: number; duration?: string; tags?: string[]; description?: string } }) {
-  const { t } = useI18n();
+  const { t, lang } = useI18n();
   const [imgError, setImgError] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const router = useRouter();
+  const d = lang === "mm" ? { ...dest, ...mmLookup(mmDestinations, dest) } : dest;
 
   return (
     <div
@@ -65,8 +67,8 @@ function DestinationCard({ dest, destText = {} }: { dest: { city: string; countr
         <div className="relative h-[280px] w-full overflow-hidden bg-gray-200">
           {!imgError ? (
             <img
-              src={dest.image}
-              alt={dest.city}
+              src={d.image}
+              alt={d.city}
               className="w-full h-full object-cover transition-transform duration-700 ease-out"
               style={{ position: "absolute", inset: 0, transform: isHovered ? "scale(1.08)" : "scale(1)" }}
               onError={() => setImgError(true)}
@@ -76,19 +78,19 @@ function DestinationCard({ dest, destText = {} }: { dest: { city: string; countr
             <div className="absolute inset-0 bg-gradient-to-br from-[#0A1628] to-[#1a2744] flex items-center justify-center">
               <div className="text-center">
                 <span className="text-3xl mb-2 block">📍</span>
-                <span className="text-[#D4AF37] text-sm font-semibold block">{dest.city}</span>
+                <span className="text-[#D4AF37] text-sm font-semibold block">{d.city}</span>
               </div>
             </div>
           )}
           <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/15 to-transparent" />
           <div className="absolute top-7 left-3 z-20">
             <span className="inline-block px-2.5 py-0.5 rounded-full bg-[#0A1628]/85 text-[#D4AF37] text-[11px] font-semibold backdrop-blur-sm border border-[#D4AF37]/40 shadow-lg shadow-black/30">
-              📍 {dest.city}
+              📍 {d.city}
             </span>
           </div>
           <div className="absolute top-7 right-3 z-20">
             <span className="inline-block px-2.5 py-0.5 rounded-full bg-black/60 text-white text-[11px] font-medium backdrop-blur-sm border border-white/15">
-              {dest.country}
+              {d.country}
             </span>
           </div>
         </div>
@@ -102,7 +104,7 @@ function DestinationCard({ dest, destText = {} }: { dest: { city: string; countr
             className="text-[#0A1628] text-base font-bold leading-tight line-clamp-1 group-hover:text-[#D4AF37] transition-colors duration-300"
             style={{ fontFamily: "'Playfair Display', Georgia, serif" }}
           >
-            {dest.city}
+            {d.city}
           </h3>
           <div className="flex items-center gap-1.5">
             <div className="flex items-center gap-0.5">
@@ -114,19 +116,19 @@ function DestinationCard({ dest, destText = {} }: { dest: { city: string; countr
             </div>
             <span className="text-gray-400 text-[10px]">({(dest.reviews || 1500).toLocaleString()})</span>
             <span className="text-gray-300 text-[10px] mx-1">·</span>
-            <span className="text-gray-400 text-[10px]">{dest.duration || "5 Days"}</span>
+            <span className="text-gray-400 text-[10px]">{d.duration || "5 Days"}</span>
           </div>
           <div className="flex items-center justify-between">
-            <span className="text-gray-400 text-xs">{dest.country}</span>
+            <span className="text-gray-400 text-xs">{d.country}</span>
             <div className="text-right">
-              <span className="text-[#0A1628] text-base font-bold">{dest.minPrice}</span>
+              <span className="text-[#0A1628] text-base font-bold">{d.minPrice}</span>
               <span className="text-gray-400 text-[11px] ml-0.5">/person</span>
             </div>
           </div>
-          {dest.description ? (
-            <p className="text-gray-500 text-[11px] leading-relaxed text-gray-500 text-[11px] leading-relaxed">{dest.description}</p>
+          {d.description ? (
+            <p className="text-gray-500 text-[11px] leading-relaxed text-gray-500 text-[11px] leading-relaxed">{d.description}</p>
           ) : (
-            <p className="text-gray-500 text-[11px] leading-relaxed line-clamp-2">Discover the best of {dest.city}'s iconic landmarks, vibrant culture, and unforgettable experiences with A9 Global Travels.</p>
+            <p className="text-gray-500 text-[11px] leading-relaxed line-clamp-2">{lang === "mm" ? `ထင်ရှားသော အထင်ကရနေရာများ၊ တက်ကြွသော ယဉ်ကျေးမှုနှင့် မမေ့နိုင်သော အတွေ့အကြုံများကို ${d.city} တွင် A9 Global Travels နှင့်အတူ ရှာဖွေတွေ့ရှိပါ။` : `Discover the best of ${d.city}'s iconic landmarks, vibrant culture, and unforgettable experiences with A9 Global Travels.`}</p>
           )}
           {Array.isArray(dest.tags) && dest.tags.length > 0 && (
             <div className="flex flex-wrap gap-1 pt-0.5">
@@ -162,7 +164,7 @@ function DestinationCard({ dest, destText = {} }: { dest: { city: string; countr
 }
 
 export default function PopularDestinations({ siteConfig }: { siteConfig?: any } = {}) {
-  const { t } = useI18n();
+  const { t, lang } = useI18n();
   const [dests, setDests] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [destText, setDestText] = useState<any>({});
@@ -188,8 +190,8 @@ export default function PopularDestinations({ siteConfig }: { siteConfig?: any }
   return (
     <section className="max-w-7xl mx-auto px-4 py-12">
       <div className="text-center mb-10">
-        <h2 className="font-bold mb-2" style={{ fontFamily: destText?.titleFont || "'Playfair Display', Georgia, serif", fontSize: destText?.titleSize || "2.5rem", color: destText?.titleColor || "#0A1628" }}>{destText?.title || t("home.exploreWorld")}</h2>
-        <p style={{ fontSize: destText?.subtitleSize || "1rem" }} className="text-gray-500">{destText?.subtitle || t("home.popularDestinations")}</p>
+        <h2 className="font-bold mb-2" style={{ fontFamily: destText?.titleFont || "'Playfair Display', Georgia, serif", fontSize: destText?.titleSize || "2.5rem", color: destText?.titleColor || "#0A1628" }}>{lang === "mm" ? t("home.exploreWorld") : (destText?.title || t("home.exploreWorld"))}</h2>
+        <p style={{ fontSize: destText?.subtitleSize || "1rem" }} className="text-gray-500">{lang === "mm" ? t("home.popularDestinations") : (destText?.subtitle || t("home.popularDestinations"))}</p>
       </div>
       {loading && dests.length === 0 ? (
         <div className="flex gap-4 overflow-hidden">

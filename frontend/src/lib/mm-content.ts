@@ -658,6 +658,10 @@ export const mmDestinations: Record<string, Partial<any>> = {
     minPrice: "Ks 150,000 မှစ၍",
   },
 };
+// FIX: 2026-08-07 popular destinations alias (home cards use city 'Ho Chi Minh')
+Object.assign(mmDestinations, {
+  "ho-chi-minh": mmDestinations["ho-chi-minh-city"],
+});
 
 // FIX: 2026-08-07 data-level Burmese content for blog posts (keyed by slugified title)
 export const mmBlogs: Record<string, Partial<any>> = {
