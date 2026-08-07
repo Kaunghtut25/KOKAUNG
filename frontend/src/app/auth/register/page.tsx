@@ -231,7 +231,7 @@ export default function RegisterPage() {
                 {t("auth.register.creating")}
               </span>
             ) : (
-              {t("auth.register.register")}
+              t("auth.register.register")
             )}
           </button>
         </form>
