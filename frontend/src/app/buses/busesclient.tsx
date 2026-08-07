@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { HiLocationMarker, HiClock, HiUser, HiSearch, HiHome } from 'react-icons/hi';
+import { useI18n } from '@/lib/i18n';
 
 interface BusRoute {
   _id: string;
@@ -33,6 +34,7 @@ interface BusesClientProps {
 }
 
 export default function BusesClient({ initialRoutes, siteConfig }: BusesClientProps) {
+  const { t } = useI18n();
   const heroImage = siteConfig?.heroImages?.buses || "/images_v2/bus-hero.jpg";
   const [routes] = useState<BusRoute[]>(initialRoutes.length > 0 ? initialRoutes : FALLBACK_BUS_ROUTES);
 
@@ -53,7 +55,7 @@ export default function BusesClient({ initialRoutes, siteConfig }: BusesClientPr
       <div className="max-w-7xl mx-auto px-4 sm:px-6 pt-24 pb-2">
         <Link href="/#services" className="inline-flex items-center gap-2 text-sm text-[#D4AF37] hover:text-[#C5A028] transition-colors font-medium">
           <HiHome className="w-4 h-4" />
-          Back to All Services
+          {t("buses.backToServices")}
         </Link>
       </div>
 
@@ -61,17 +63,17 @@ export default function BusesClient({ initialRoutes, siteConfig }: BusesClientPr
       <section className="relative w-full h-64 sm:h-80 overflow-hidden">
         <img
           src={heroImage}
-          alt="Express Bus Services"
+          alt={t("buses.heroAlt")}
           className="w-full h-full object-cover"
           onError={(e) => { (e.target as HTMLImageElement).src = "/images_v2/hero-cars.jpg"; }}
         />
         <div className="absolute inset-0 bg-gradient-to-b from-[#0A1628]/70 to-[#0A1628]/40" />
         <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4">
           <h1 className="font-bold text-white text-3xl sm:text-4xl md:text-5xl mb-3" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
-            Express Bus Tickets
+            {t("buses.heroTitle")}
           </h1>
           <p className="text-[#D4AF37] text-sm sm:text-base max-w-xl">
-            Book premium express bus tickets across Myanmar at the best prices
+            {t("buses.heroSubtitle")}
           </p>
         </div>
       </section>
@@ -81,27 +83,27 @@ export default function BusesClient({ initialRoutes, siteConfig }: BusesClientPr
         <div className="bg-white rounded-2xl shadow-xl border border-[#D4AF37]/20 p-5 sm:p-6">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
             <div>
-              <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">From City</label>
+              <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">{t("buses.fromCity")}</label>
               <input
                 type="text"
-                placeholder="e.g. Yangon"
+                placeholder={t("buses.fromPh")}
                 value={fromCity}
                 onChange={(e) => setFromCity(e.target.value)}
                 className="w-full px-3 py-2.5 border border-gray-200 rounded-xl text-sm text-gray-900 font-medium focus:outline-none focus:border-[#D4AF37] focus:ring-2 focus:ring-[#D4AF37]/20 transition-all"
               />
             </div>
             <div>
-              <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">To City</label>
+              <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">{t("buses.toCity")}</label>
               <input
                 type="text"
-                placeholder="e.g. Mandalay"
+                placeholder={t("buses.toPh")}
                 value={toCity}
                 onChange={(e) => setToCity(e.target.value)}
                 className="w-full px-3 py-2.5 border border-gray-200 rounded-xl text-sm text-gray-900 font-medium focus:outline-none focus:border-[#D4AF37] focus:ring-2 focus:ring-[#D4AF37]/20 transition-all"
               />
             </div>
             <div>
-              <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Date</label>
+              <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">{t("home.date")}</label>
               <input
                 type="date"
                 value={date}
@@ -110,21 +112,21 @@ export default function BusesClient({ initialRoutes, siteConfig }: BusesClientPr
               />
             </div>
             <div>
-              <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Passengers</label>
+              <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">{t("buses.passengers")}</label>
               <select
                 value={passengers}
                 onChange={(e) => setPassengers(Number(e.target.value))}
                 className="w-full px-3 py-2.5 border border-gray-200 rounded-xl text-sm text-gray-900 font-medium focus:outline-none focus:border-[#D4AF37] focus:ring-2 focus:ring-[#D4AF37]/20 transition-all"
               >
                 {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((n) => (
-                  <option key={n} value={n}>{n} {n === 1 ? "Passenger" : "Passengers"}</option>
+                  <option key={n} value={n}>{n} {n === 1 ? t("buses.passenger") : t("buses.passengers")}</option>
                 ))}
               </select>
             </div>
           </div>
           <div className="text-center text-xs text-gray-400 mt-1">
-            Showing {filteredRoutes.length} of {routes.length} routes
-            {(fromCity || toCity) && " (filtered)"}
+            {t("buses.showing", { count: filteredRoutes.length, total: routes.length })}
+            {(fromCity || toCity) && t("buses.filtered")}
           </div>
         </div>
       </section>
@@ -164,7 +166,7 @@ export default function BusesClient({ initialRoutes, siteConfig }: BusesClientPr
 
                 {/* Price */}
                 <div className="border-t border-gray-100 pt-3 mb-4">
-                  <p className="text-xs text-gray-400 mb-1">Starting from</p>
+                  <p className="text-xs text-gray-400 mb-1">{t("car.startingFrom")}</p>
                   <p className="text-2xl font-bold text-[#D4AF37]" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
                     Ks {route.priceMMK.toLocaleString()}
                   </p>
@@ -175,7 +177,7 @@ export default function BusesClient({ initialRoutes, siteConfig }: BusesClientPr
                   href={`/book-now?type=bus&from=${encodeURIComponent(route.from)}&to=${encodeURIComponent(route.to)}&priceMMK=${route.priceMMK}&duration=${encodeURIComponent(route.duration)}&operators=${encodeURIComponent(route.operators.join(","))}&route=${encodeURIComponent(route.route)}`}
                   className="w-full block text-center py-3 rounded-xl font-semibold text-sm transition-all duration-300 bg-gradient-to-r from-[#D4AF37] to-[#F5A623] text-[#0A1628] hover:shadow-lg group-hover:from-[#C5A028] group-hover:to-[#E09600]"
                 >
-                  Book Now
+                  {t("common.bookNow")}
                 </Link>
               </div>
             </div>
@@ -185,8 +187,8 @@ export default function BusesClient({ initialRoutes, siteConfig }: BusesClientPr
         {filteredRoutes.length === 0 && (
           <div className="text-center py-20">
             <HiSearch className="w-16 h-16 mx-auto text-gray-300 mb-4" />
-            <h3 className="text-xl font-semibold text-gray-500" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>No Routes Found</h3>
-            <p className="text-gray-400 mt-2">Try adjusting your search filters</p>
+            <h3 className="text-xl font-semibold text-gray-500" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>{t("buses.noRoutes")}</h3>
+            <p className="text-gray-400 mt-2">{t("buses.tryAdjusting")}</p>
           </div>
         )}
       </section>
@@ -194,16 +196,16 @@ export default function BusesClient({ initialRoutes, siteConfig }: BusesClientPr
       {/* ── Why Book Buses With Us ── */}
       <section className="py-16 border-t border-gray-200 bg-white">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 text-center">
-          <span className="text-[#D4AF37] text-sm font-semibold uppercase tracking-widest">Why Book With A9</span>
+          <span className="text-[#D4AF37] text-sm font-semibold uppercase tracking-widest">{t("buses.whyTitle")}</span>
           <h2 className="font-bold text-3xl mt-2 mb-10" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
-            Why Book Bus Tickets With Us
+            {t("buses.whyHeading")}
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {[
-              { icon: "🎫", title: "Best Prices", desc: "Guaranteed lowest fares on all express bus routes across Myanmar" },
-              { icon: "🛡️", title: "Trusted Operators", desc: "Only vetted premium operators like JJ Express and Elite Express" },
-              { icon: "📞", title: "24/7 Support", desc: "Round-the-clock assistance for your bus travel needs" },
-              { icon: "🔄", title: "Easy Booking", desc: "Simple booking process with instant confirmation" },
+              { icon: "🎫", title: t("buses.featPrices"), desc: t("buses.featPricesDesc") },
+              { icon: "🛡️", title: t("buses.featOperators"), desc: t("buses.featOperatorsDesc") },
+              { icon: "📞", title: t("buses.featSupport"), desc: t("buses.featSupportDesc") },
+              { icon: "🔄", title: t("buses.featEasy"), desc: t("buses.featEasyDesc") },
             ].map((item, i) => (
               <div key={i} className="bg-gray-50 rounded-2xl p-6 hover:shadow-md transition-shadow border border-gray-100">
                 <div className="text-4xl mb-3">{item.icon}</div>
@@ -218,9 +220,9 @@ export default function BusesClient({ initialRoutes, siteConfig }: BusesClientPr
       {/* ── Operator Partners ── */}
       <section className="py-16 border-t border-gray-200">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 text-center">
-          <span className="text-[#D4AF37] text-sm font-semibold uppercase tracking-widest">Trusted Partners</span>
+          <span className="text-[#D4AF37] text-sm font-semibold uppercase tracking-widest">{t("buses.trusted")}</span>
           <h2 className="font-bold text-3xl mt-2 mb-10" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
-            Our Bus Operator Partners
+            {t("buses.operatorHeading")}
           </h2>
           <div className="flex flex-wrap justify-center gap-4">
             {[
@@ -243,7 +245,7 @@ export default function BusesClient({ initialRoutes, siteConfig }: BusesClientPr
                 </h4>
                 {operator.tier === "premier" && (
                   <span className="inline-block bg-[#D4AF37] text-white text-[10px] font-bold uppercase px-2 py-0.5 rounded-full mt-1">
-                    Premier
+                    {t("buses.premier")}
                   </span>
                 )}
               </div>
@@ -257,23 +259,23 @@ export default function BusesClient({ initialRoutes, siteConfig }: BusesClientPr
         <div className="max-w-4xl mx-auto px-4 text-center">
           <div className="bg-gradient-to-r from-[#D4AF37]/10 via-[#D4AF37]/5 to-[#D4AF37]/10 border border-[#D4AF37]/20 rounded-2xl p-10 md:p-14">
             <h2 className="text-2xl md:text-3xl font-bold text-[#0A1628] mb-4" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
-              Ready to Explore Myanmar?
+              {t("buses.ctaTitle")}
             </h2>
             <p className="text-gray-600 mb-8 max-w-xl mx-auto">
-              Book your express bus tickets today and discover the beauty of the Golden Land in comfort and style.
+              {t("buses.ctaDesc")}
             </p>
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
               <Link
                 href="/contact"
                 className="px-8 py-3 border border-[#D4AF37] text-[#D4AF37] font-semibold rounded-xl hover:bg-[#D4AF37] hover:text-white transition-all"
               >
-                Contact Us
+                {t("common.contactUs")}
               </Link>
               <Link
                 href="/tours"
                 className="px-8 py-3 bg-gradient-to-r from-[#D4AF37] to-[#F5A623] text-[#0A1628] font-bold rounded-xl hover:shadow-lg transition-all"
               >
-                Explore Tours
+                {t("buses.exploreTours")}
               </Link>
             </div>
           </div>
