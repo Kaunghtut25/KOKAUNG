@@ -3,11 +3,14 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import LanguageSwitcher from "@/components/LanguageSwitcher";
+import { useI18n } from "@/lib/i18n";
 
 type Step = 'login' | 'forgot' | 'otp' | 'newpw' | 'done';
 
 export default function LoginPage() {
   const router = useRouter();
+  const { t } = useI18n();
   const [step, setStep] = useState<Step>('login');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -34,7 +37,7 @@ export default function LoginPage() {
       });
       const data = await res.json();
       if (!res.ok) {
-        showError(data.message || 'Login failed');
+        showError(data.message || t("auth.login.errLoginFailed"));
         return;
       }
       // Store admin token
@@ -46,7 +49,7 @@ export default function LoginPage() {
         router.refresh();
       }, 100);
     } catch {
-      showError('Network error. Please try again.');
+      showError(t("auth.login.errNetwork"));
     } finally {
       setLoading(false);
     }
@@ -57,7 +60,7 @@ export default function LoginPage() {
     e.preventDefault();
     setError(''); setInfo('');
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      showError('Enter a valid email address.');
+      showError(t("auth.login.errEmail"));
       return;
     }
     setLoading(true);
@@ -69,15 +72,15 @@ export default function LoginPage() {
       });
       const data = await res.json();
       if (!res.ok) {
-        showError(data.message || 'Something went wrong.');
+        showError(data.message || t("auth.login.errGeneric"));
         setLoading(false);
         return;
       }
-      showInfo(data.message || 'Check your inbox for a reset code.');
+      showInfo(data.message || t("auth.login.infoInbox"));
       setOtp('');
       setStep('otp');
     } catch {
-      showError('Network error. Please try again.');
+      showError(t("auth.login.errNetwork"));
     } finally {
       setLoading(false);
     }
@@ -88,7 +91,7 @@ export default function LoginPage() {
     e.preventDefault();
     setError(''); setInfo('');
     if (!/^\d{6}$/.test(otp)) {
-      showError('Enter the 6-digit code.');
+      showError(t("auth.login.errOtp"));
       return;
     }
     setLoading(true);
@@ -100,7 +103,7 @@ export default function LoginPage() {
       });
       const data = await res.json();
       if (!res.ok) {
-        showError(data.message || 'Invalid code.');
+        showError(data.message || t("auth.login.errInvalidCode"));
         setLoading(false);
         return;
       }
@@ -109,7 +112,7 @@ export default function LoginPage() {
       setConfirmPassword('');
       setStep('newpw');
     } catch {
-      showError('Network error. Please try again.');
+      showError(t("auth.login.errNetwork"));
     } finally {
       setLoading(false);
     }
@@ -120,11 +123,11 @@ export default function LoginPage() {
     e.preventDefault();
     setError(''); setInfo('');
     if (newPassword.length < 6) {
-      showError('Password must be at least 6 characters.');
+      showError(t("auth.login.errPwLen"));
       return;
     }
     if (newPassword !== confirmPassword) {
-      showError('Passwords do not match.');
+      showError(t("auth.login.errPwMatch"));
       return;
     }
     setLoading(true);
@@ -136,15 +139,15 @@ export default function LoginPage() {
       });
       const data = await res.json();
       if (!res.ok) {
-        showError(data.message || 'Failed to reset password.');
+        showError(data.message || t("auth.login.errReset"));
         setLoading(false);
         return;
       }
-      showInfo('Password updated. You can now sign in with your new password.');
+      showInfo(t("auth.login.infoUpdated"));
       setPassword('');
       setStep('done');
     } catch {
-      showError('Network error. Please try again.');
+      showError(t("auth.login.errNetwork"));
     } finally {
       setLoading(false);
     }
@@ -160,10 +163,10 @@ export default function LoginPage() {
         body: JSON.stringify({ email }),
       });
       const data = await res.json();
-      if (!res.ok) { showError(data.message || 'Something went wrong.'); setLoading(false); return; }
-      showInfo(data.message || 'A new code has been sent.');
+      if (!res.ok) { showError(data.message || t("auth.login.errGeneric")); setLoading(false); return; }
+      showInfo(data.message || t("auth.login.infoResent"));
       setOtp('');
-    } catch { showError('Network error. Please try again.'); }
+    } catch { showError(t("auth.login.errNetwork")); }
     setLoading(false);
   };
 
@@ -184,6 +187,7 @@ export default function LoginPage() {
       </div>
 
       <div className="relative w-full max-w-md">
+        <div className="absolute top-0 right-0 z-10"><LanguageSwitcher dark={false} /></div>
         {/* Logo */}
         <div className="text-center mb-8">
           <Link href="/" className="inline-block">
@@ -191,64 +195,64 @@ export default function LoginPage() {
               A9 GLOBAL
             </span>
           </Link>
-          <p className="text-white/40 text-sm mt-2">Admin Panel</p>
+          <p className="text-white/40 text-sm mt-2">{t("auth.login.adminPanel")}</p>
         </div>
 
         {/* Card */}
         <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-8 shadow-2xl">
           {step !== 'login' && (
             <button onClick={restart} className="text-white/40 hover:text-white/80 text-sm mb-4 transition">
-              ← Back to sign in
+              {t("auth.login.backToSignIn")}
             </button>
           )}
 
           {step === 'login' && (
             <>
               <h2 className="text-xl font-bold text-white mb-6" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
-                🔐 Sign In
+                {t("auth.login.signInTitle")}
               </h2>
               {error && <div className="mb-4 p-3 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 text-sm">{error}</div>}
               {info && <div className="mb-4 p-3 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-300 text-sm">{info}</div>}
               <form onSubmit={handleLogin} className="space-y-5">
                 <div>
-                  <label className="block text-white/60 text-sm mb-2">Email</label>
+                  <label className="block text-white/60 text-sm mb-2">{t("auth.login.email")}</label>
                   <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="admin@a9global.com" required className={inputCls} />
                 </div>
                 <div>
-                  <label className="block text-white/60 text-sm mb-2">Password</label>
+                  <label className="block text-white/60 text-sm mb-2">{t("auth.login.password")}</label>
                   <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="••••••••" required className={inputCls} />
                 </div>
                 <button type="submit" disabled={loading}
                   className="w-full py-3 rounded-lg bg-gradient-to-r from-[#D4AF37] to-[#F5A623] text-[#0A1628] font-bold hover:shadow-lg hover:shadow-[#D4AF37]/30 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300">
-                  {loading ? 'Signing in...' : 'Sign In'}
+                  {loading ? t("auth.login.signingIn") : t("auth.login.signIn")}
                 </button>
               </form>
               <div className="mt-4 text-center">
                 <button onClick={() => { setStep('forgot'); setError(''); setInfo(''); }}
                   className="text-[#D4AF37]/80 hover:text-[#D4AF37] text-sm transition">
-                  Forgot password?
+                  {t("auth.login.forgotPassword")}
                 </button>
               </div>
-              <p className="mt-6 text-center text-white/30 text-xs">Protected area. Authorized personnel only.</p>
+              <p className="mt-6 text-center text-white/30 text-xs">{t("auth.login.protectedArea")}</p>
             </>
           )}
 
           {step === 'forgot' && (
             <>
               <h2 className="text-xl font-bold text-white mb-2" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
-                🔑 Reset Password
+                {t("auth.login.resetTitle")}
               </h2>
-              <p className="text-white/40 text-sm mb-6">Enter your admin email and we'll send a 6-digit reset code.</p>
+              <p className="text-white/40 text-sm mb-6">{t("auth.login.resetDesc")}</p>
               {error && <div className="mb-4 p-3 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 text-sm">{error}</div>}
               {info && <div className="mb-4 p-3 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-300 text-sm">{info}</div>}
               <form onSubmit={handleForgot} className="space-y-5">
                 <div>
-                  <label className="block text-white/60 text-sm mb-2">Email</label>
+                  <label className="block text-white/60 text-sm mb-2">{t("auth.login.email")}</label>
                   <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="admin@a9global.com" required className={inputCls} />
                 </div>
                 <button type="submit" disabled={loading}
                   className="w-full py-3 rounded-lg bg-gradient-to-r from-[#D4AF37] to-[#F5A623] text-[#0A1628] font-bold hover:shadow-lg hover:shadow-[#D4AF37]/30 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300">
-                  {loading ? 'Sending...' : 'Send Reset Code'}
+                  {loading ? t("auth.login.sending") : t("auth.login.sendResetCode")}
                 </button>
               </form>
             </>
@@ -257,25 +261,25 @@ export default function LoginPage() {
           {step === 'otp' && (
             <>
               <h2 className="text-xl font-bold text-white mb-2" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
-                📩 Enter Code
+                {t("auth.login.otpTitle")}
               </h2>
-              <p className="text-white/40 text-sm mb-6">We sent a 6-digit code to <span className="text-[#D4AF37]">{email}</span>. It expires in 10 minutes.</p>
+              <p className="text-white/40 text-sm mb-6">{t("auth.login.otpDescPrefix")} <span className="text-[#D4AF37]">{email}</span>{t("auth.login.otpDescSuffix")}</p>
               {error && <div className="mb-4 p-3 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 text-sm">{error}</div>}
               {info && <div className="mb-4 p-3 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-300 text-sm">{info}</div>}
               <form onSubmit={handleVerifyOtp} className="space-y-5">
                 <div>
-                  <label className="block text-white/60 text-sm mb-2">6-digit code</label>
+                  <label className="block text-white/60 text-sm mb-2">{t("auth.login.otpLabel")}</label>
                   <input type="text" inputMode="numeric" maxLength={6} value={otp} onChange={(e) => setOtp(e.target.value.replace(/\D/g, ''))} placeholder="000000" required className={`${inputCls} text-center text-2xl tracking-[0.5em]`} />
                 </div>
                 <button type="submit" disabled={loading}
                   className="w-full py-3 rounded-lg bg-gradient-to-r from-[#D4AF37] to-[#F5A623] text-[#0A1628] font-bold hover:shadow-lg hover:shadow-[#D4AF37]/30 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300">
-                  {loading ? 'Verifying...' : 'Verify Code'}
+                  {loading ? t("auth.login.verifying") : t("auth.login.verifyCode")}
                 </button>
               </form>
               <div className="mt-4 text-center">
                 <button onClick={handleResend} disabled={loading}
                   className="text-white/40 hover:text-white/80 text-sm transition">
-                  Didn't get it? Resend code
+                  {t("auth.login.resend")}
                 </button>
               </div>
             </>
@@ -284,22 +288,22 @@ export default function LoginPage() {
           {step === 'newpw' && (
             <>
               <h2 className="text-xl font-bold text-white mb-2" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
-                🔒 New Password
+                {t("auth.login.newpwTitle")}
               </h2>
-              <p className="text-white/40 text-sm mb-6">Set a new password for <span className="text-[#D4AF37]">{email}</span>.</p>
+              <p className="text-white/40 text-sm mb-6">{t("auth.login.newpwDescPrefix")} <span className="text-[#D4AF37]">{email}</span>.</p>
               {error && <div className="mb-4 p-3 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 text-sm">{error}</div>}
               <form onSubmit={handleResetPassword} className="space-y-5">
                 <div>
-                  <label className="block text-white/60 text-sm mb-2">New password (min 6 characters)</label>
+                  <label className="block text-white/60 text-sm mb-2">{t("auth.login.newPwLabel")}</label>
                   <input type="password" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} placeholder="••••••••" required className={inputCls} />
                 </div>
                 <div>
-                  <label className="block text-white/60 text-sm mb-2">Confirm new password</label>
+                  <label className="block text-white/60 text-sm mb-2">{t("auth.login.confirmPwLabel")}</label>
                   <input type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} placeholder="••••••••" required className={inputCls} />
                 </div>
                 <button type="submit" disabled={loading}
                   className="w-full py-3 rounded-lg bg-gradient-to-r from-[#D4AF37] to-[#F5A623] text-[#0A1628] font-bold hover:shadow-lg hover:shadow-[#D4AF37]/30 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300">
-                  {loading ? 'Saving...' : 'Reset Password'}
+                  {loading ? t("auth.login.saving") : t("auth.login.resetPassword")}
                 </button>
               </form>
             </>
@@ -308,13 +312,13 @@ export default function LoginPage() {
           {step === 'done' && (
             <>
               <h2 className="text-xl font-bold text-white mb-2" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
-                ✅ All Set
+                {t("auth.login.doneTitle")}
               </h2>
               {info && <div className="mb-4 p-3 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-300 text-sm">{info}</div>}
-              <p className="text-white/40 text-sm mb-6">Use your new password to sign in.</p>
+              <p className="text-white/40 text-sm mb-6">{t("auth.login.doneDesc")}</p>
               <button onClick={() => { setStep('login'); setPassword(''); }}
                 className="w-full py-3 rounded-lg bg-gradient-to-r from-[#D4AF37] to-[#F5A623] text-[#0A1628] font-bold hover:shadow-lg hover:shadow-[#D4AF37]/30 transition-all duration-300">
-                Back to Sign In
+                {t("auth.login.backToSignInBtn")}
               </button>
             </>
           )}

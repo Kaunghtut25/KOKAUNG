@@ -5,9 +5,12 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import toast from "react-hot-toast";
 import api from "@/lib/api";
+import LanguageSwitcher from "@/components/LanguageSwitcher";
+import { useI18n } from "@/lib/i18n";
 
 export default function RegisterPage() {
   const router = useRouter();
+  const { t } = useI18n();
   const [form, setForm] = useState({
     fullName: "",
     email: "",
@@ -29,17 +32,17 @@ export default function RegisterPage() {
     setError("");
 
     if (!form.fullName || !form.email || !form.phone || !form.password || !form.confirmPassword) {
-      setError("All fields are required.");
+      setError(t("auth.register.errRequired"));
       return;
     }
 
     if (form.password !== form.confirmPassword) {
-      setError("Passwords do not match.");
+      setError(t("auth.register.errPwMatch"));
       return;
     }
 
     if (form.password.length < 6) {
-      setError("Password must be at least 6 characters.");
+      setError(t("auth.register.errPwLen"));
       return;
     }
 
@@ -51,13 +54,13 @@ export default function RegisterPage() {
         phone: form.phone,
         password: form.password,
       });
-      toast.success("Registration successful!");
+      toast.success(t("auth.register.ok"));
       router.push("/auth/login");
     } catch (err: unknown) {
       const message =
         err && typeof err === "object" && "response" in err
-          ? (err as { response?: { data?: { message?: string } } }).response?.data?.message || "Registration failed. Please try again."
-          : "Registration failed. Please try again.";
+          ? (err as { response?: { data?: { message?: string } } }).response?.data?.message || t("auth.register.errFail")
+          : t("auth.register.errFail");
       setError(message);
       toast.error(message);
     } finally {
@@ -68,6 +71,7 @@ export default function RegisterPage() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#0A1628] via-[#0F1F3D] to-[#0A1628] px-4 py-12">
       <div className="glass-card w-full max-w-md p-8 sm:p-10">
+        <div className="flex justify-end -mb-4"><LanguageSwitcher dark={false} /></div>
         {/* Heading */}
         <div className="text-center mb-8">
           <h1
@@ -75,11 +79,11 @@ export default function RegisterPage() {
             style={{ fontFamily: "'Playfair Display', serif" }}
           >
             <span className="bg-gradient-to-r from-[#D4AF37] to-[#F5A623] bg-clip-text text-transparent">
-              Create Your Account
+              {t("auth.register.title")}
             </span>
           </h1>
           <p className="text-white/60 text-sm sm:text-base">
-            Join A9 Global for exclusive luxury travel experiences
+            {t("auth.register.subtitle")}
           </p>
         </div>
 
@@ -90,7 +94,7 @@ export default function RegisterPage() {
               htmlFor="fullName"
               className="block text-white/80 text-sm font-medium mb-1.5"
             >
-              Full Name
+              {t("auth.register.fullName")}
             </label>
             <input
               id="fullName"
@@ -98,7 +102,7 @@ export default function RegisterPage() {
               type="text"
               value={form.fullName}
               onChange={handleChange}
-              placeholder="Enter your full name"
+              placeholder={t("auth.register.phName")}
               className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-white/30
                          focus:outline-none focus:border-[#D4AF37] focus:ring-1 focus:ring-[#D4AF37]/50
                          transition-colors duration-200"
@@ -110,7 +114,7 @@ export default function RegisterPage() {
               htmlFor="email"
               className="block text-white/80 text-sm font-medium mb-1.5"
             >
-              Email Address
+              {t("auth.register.email")}
             </label>
             <input
               id="email"
@@ -118,7 +122,7 @@ export default function RegisterPage() {
               type="email"
               value={form.email}
               onChange={handleChange}
-              placeholder="you@example.com"
+              placeholder={t("auth.register.phEmail")}
               className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-white/30
                          focus:outline-none focus:border-[#D4AF37] focus:ring-1 focus:ring-[#D4AF37]/50
                          transition-colors duration-200"
@@ -130,7 +134,7 @@ export default function RegisterPage() {
               htmlFor="phone"
               className="block text-white/80 text-sm font-medium mb-1.5"
             >
-              Phone Number
+              {t("auth.register.phone")}
             </label>
             <input
               id="phone"
@@ -138,7 +142,7 @@ export default function RegisterPage() {
               type="tel"
               value={form.phone}
               onChange={handleChange}
-              placeholder="09 123 456 789"
+              placeholder={t("auth.register.phPhone")}
               className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-white/30
                          focus:outline-none focus:border-[#D4AF37] focus:ring-1 focus:ring-[#D4AF37]/50
                          transition-colors duration-200"
@@ -150,7 +154,7 @@ export default function RegisterPage() {
               htmlFor="password"
               className="block text-white/80 text-sm font-medium mb-1.5"
             >
-              Password
+              {t("auth.register.password")}
             </label>
             <input
               id="password"
@@ -170,7 +174,7 @@ export default function RegisterPage() {
               htmlFor="confirmPassword"
               className="block text-white/80 text-sm font-medium mb-1.5"
             >
-              Confirm Password
+              {t("auth.register.confirmPassword")}
             </label>
             <input
               id="confirmPassword"
@@ -224,22 +228,22 @@ export default function RegisterPage() {
                     d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
                   />
                 </svg>
-                Creating Account...
+                {t("auth.register.creating")}
               </span>
             ) : (
-              "Register"
+              {t("auth.register.register")}
             )}
           </button>
         </form>
 
         {/* Sign In link */}
         <p className="text-center text-white/50 text-sm mt-6">
-          Already have an account?{" "}
+          {t("auth.register.haveAccount")}{" "}
           <Link
             href="/auth/login"
             className="text-[#D4AF37] hover:text-[#F5A623] font-medium transition-colors"
           >
-            Sign In
+            {t("auth.register.signIn")}
           </Link>
         </p>
       </div>
