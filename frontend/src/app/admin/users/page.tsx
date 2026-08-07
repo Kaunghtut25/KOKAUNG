@@ -138,7 +138,7 @@ export default function AdminUsersPage() {
   return (
     <div className="min-h-screen bg-[#0A1628] p-6">
       <div className="max-w-7xl mx-auto">
-        <div className="flex items-center justify-between mb-8">
+        <div className="flex flex-wrap items-center justify-between gap-3 mb-8">
           <h1 className="text-3xl font-light text-white">{t("admin.users.title")} ({users.length})</h1>
           <button onClick={openAdd}
             className="bg-[#D4AF37] text-[#0A1628] px-5 py-2 rounded-lg font-medium hover:bg-[#C4A030] transition">
@@ -151,7 +151,7 @@ export default function AdminUsersPage() {
         {users.length === 0 ? (
           <div className="text-white/60 text-center py-16 text-lg">{t("admin.users.empty")}</div>
         ) : (
-          <div className="bg-[#0F1E35] border border-white/10 rounded-xl overflow-hidden">
+          <div className="bg-[#0F1E35] border border-white/10 rounded-xl overflow-x-auto">
             <table className="w-full text-left">
               <thead className="bg-[#0A1628]">
                 <tr className="text-white/60 text-xs uppercase tracking-wider">
@@ -238,7 +238,7 @@ export default function AdminUsersPage() {
               </div>
               <div>
                 <label className="text-white/60 text-xs block mb-1">{t("admin.users.sectionAccess")}</label>
-                <div className="grid grid-cols-3 gap-1.5">
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-1.5">
                   {AUTHORITIES.map((a) => (
                     <label key={a.key} className={`flex items-center gap-1.5 text-xs px-2 py-1.5 rounded border cursor-pointer transition ${auths.includes(a.key) ? "bg-[#D4AF37]/10 border-[#D4AF37]/40 text-white" : "bg-white/5 border-white/10 text-white/60 hover:bg-white/10"}`}>
                       <input type="checkbox" checked={auths.includes(a.key)} onChange={() => toggleAuth(a.key)} className="accent-[#D4AF37]" />

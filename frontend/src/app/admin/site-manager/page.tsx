@@ -328,7 +328,7 @@ const tabs: { key: Tab; label: string }[] = [
     <main className="min-h-screen bg-[#0A1628] text-white p-4 md:p-8">
       <div className="max-w-5xl mx-auto">
         {/* Header */}
-        <div className="flex items-center justify-between mb-6">
+        <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
           <div>
             <h1 className="text-2xl font-bold text-white" style={{ fontFamily: "'Playfair Display', serif" }}>{t("admin.sm.title")}</h1>
             <p className="text-white/60 text-sm">{t("admin.sm.subtitle")}</p>
@@ -366,7 +366,7 @@ const tabs: { key: Tab; label: string }[] = [
           {tab === "hero" && (
             <div className="space-y-6">
               <h2 className="text-lg font-bold text-white">{t("admin.sm.heroSlides")}</h2>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className={`labelCls inputCls`}>{t("admin.sm.mobileHeight")}</label>
                 </div>
@@ -381,14 +381,14 @@ const tabs: { key: Tab; label: string }[] = [
                     <button onClick={() => set("heroSlides", cfg.heroSlides.filter((_, idx) => idx !== i))} className="text-red-400 text-sm">{t("admin.common.delete")}</button>
                   </div>
                   <ImageZone field="heroSlides" index={i} label={t("admin.sm.slideImage")} />
-                  <div className="grid grid-cols-2 gap-3">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                     <div><label className={`labelCls labelCls`}>{t("admin.sm.label")}</label><input className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} value={slide.label} onChange={e => { const a = [...cfg.heroSlides]; a[i] = { ...slide, label: e.target.value }; set("heroSlides", a); }} /></div>
                     <div><label className={labelCls}>{t("admin.sm.title")}</label><input className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} value={slide.title} onChange={e => { const a = [...cfg.heroSlides]; a[i] = { ...slide, title: e.target.value }; set("heroSlides", a); }} /></div>
                   </div>
                   <div><label className={labelCls}>{t("admin.sm.subtitle")}</label><input className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} value={slide.subtitle} onChange={e => { const a = [...cfg.heroSlides]; a[i] = { ...slide, subtitle: e.target.value }; set("heroSlides", a); }} /></div>
 
                   {/* Font & Size Controls */}
-                  <div className="grid grid-cols-1 md:grid-cols-4 gap-3 mt-2">
+                  <div className="grid grid-cols-1 lg:grid-cols-4 gap-3 mt-2">
                     <div>
                       <label className={labelCls}>{t("admin.sm.titleFont")}</label>
                       <select className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} value={slide.titleFont || "'Playfair Display', Georgia, serif"} onChange={e => { const a = [...cfg.heroSlides]; a[i] = { ...slide, titleFont: e.target.value }; set("heroSlides", a); }}>
@@ -430,7 +430,7 @@ const tabs: { key: Tab; label: string }[] = [
                       </select>
                     </div>
                   </div>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                  <div className="grid grid-cols-1 lg:grid-cols-3 gap-3">
                     <div>
                       <label className={labelCls}>{t("admin.sm.labelSize")}</label>
                       <select className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} value={slide.labelSize || "0.75rem"} onChange={e => { const a = [...cfg.heroSlides]; a[i] = { ...slide, labelSize: e.target.value }; set("heroSlides", a); }}>
@@ -565,7 +565,7 @@ const tabs: { key: Tab; label: string }[] = [
             <div className="space-y-4">
               <h2 className="text-lg font-bold text-white">{t("admin.sm.serviceIcons")}</h2>
               {cfg.serviceIcons.map((s, i) => (
-                <div key={i} className="border border-white/10 bg-white/5 text-white rounded-lg p-3 grid grid-cols-4 gap-3 items-center">
+                <div key={i} className="border border-white/10 bg-white/5 text-white rounded-lg p-3 grid grid-cols-2 lg:grid-cols-4 gap-3 items-center">
                   <input className={`inputCls inputCls`} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} placeholder={t("admin.sm.iconEmoji")} value={s.icon} onChange={e => { const a = [...cfg.serviceIcons]; a[i] = { ...s, icon: e.target.value }; set("serviceIcons", a); }} />
                   <div className="flex items-center gap-2">
                     <input type="checkbox" checked={s.enabled} onChange={e => { const a = [...cfg.serviceIcons]; a[i] = { ...s, enabled: e.target.checked }; set("serviceIcons", a); }} />
@@ -596,7 +596,7 @@ const tabs: { key: Tab; label: string }[] = [
               {cfg.statsCards.map((s, i) => (
                 <div key={i} className="border border-white/10 bg-white/5 text-white rounded-lg p-4 space-y-3">
                   <div className="flex justify-between"><h3 className="font-medium">{t("admin.sm.cardNum")} {i + 1}</h3><button onClick={() => set("statsCards", cfg.statsCards.filter((_, idx) => idx !== i))} className="text-red-400 text-sm">{t("admin.common.delete")}</button></div>
-                  <div className="grid grid-cols-3 gap-3">
+                  <div className="grid grid-cols-1 lg:grid-cols-3 gap-3">
                     <div><label className={labelCls}>{t("admin.sm.icon")}</label><input className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} placeholder="⭐" value={s.icon || ""} onChange={e => { const a = [...cfg.statsCards]; a[i] = { ...s, icon: e.target.value }; set("statsCards", a); }} /></div>
                     <div><label className={labelCls}>Title (e.g. 5,000+ Happy Travelers)</label><input className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} placeholder="5,000+ Happy Travelers" value={s.title || ""} onChange={e => { const a = [...cfg.statsCards]; a[i] = { ...s, title: e.target.value }; set("statsCards", a); }} /></div>
                     <div><label className={labelCls}>{t("admin.sm.description")}</label><input className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} placeholder="Trusted by thousands of customers" value={s.description || ""} onChange={e => { const a = [...cfg.statsCards]; a[i] = { ...s, description: e.target.value }; set("statsCards", a); }} /></div>
@@ -614,7 +614,7 @@ const tabs: { key: Tab; label: string }[] = [
               <p className="text-sm text-white/60">{t("admin.sm.whyHint")}</p>
               <div className="border border-white/10 bg-white/5 text-white rounded-lg p-4 space-y-3">
                 <h3 className="text-sm font-semibold text-[#D4AF37] mb-3">{t("admin.sm.sectionHeader")}</h3>
-                <div className="grid grid-cols-3 gap-3">
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-3">
                   <div><label className={labelCls}>{t("admin.sm.sectionTitle")}</label><input className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} placeholder="Why Choose A9 Global Travel?" value={cfg.whyChooseTitle || ""} onChange={e => set("whyChooseTitle", e.target.value)} /></div>
                   <div className="col-span-2"><label className={labelCls}>{t("admin.sm.tagline")}</label><input className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} placeholder="Your trusted travel partner in Myanmar since 2015" value={cfg.whyChooseTagline || ""} onChange={e => set("whyChooseTagline", e.target.value)} /></div>
                 </div>
@@ -623,7 +623,7 @@ const tabs: { key: Tab; label: string }[] = [
               {cfg.whyChooseCards.map((w, i) => (
                 <div key={i} className="border border-white/10 bg-white/5 text-white rounded-lg p-4 space-y-3">
                   <div className="flex justify-between"><h3 className="font-medium">{t("admin.sm.cardNum")} {i + 1}</h3><button onClick={() => set("whyChooseCards", cfg.whyChooseCards.filter((_, idx) => idx !== i))} className="text-red-400 text-sm">{t("admin.common.delete")}</button></div>
-                  <div className="grid grid-cols-3 gap-3">
+                  <div className="grid grid-cols-1 lg:grid-cols-3 gap-3">
                     <div><label className={labelCls}>{t("admin.sm.iconEmoji")}</label><input className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} placeholder="🤝" value={w.icon || ""} onChange={e => { const a = [...cfg.whyChooseCards]; a[i] = { ...w, icon: e.target.value }; set("whyChooseCards", a); }} /></div>
                     <div className="col-span-2"><label className={labelCls}>{t("admin.sm.title")}</label><input className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} placeholder="Card title" value={w.title || ""} onChange={e => { const a = [...cfg.whyChooseCards]; a[i] = { ...w, title: e.target.value }; set("whyChooseCards", a); }} /></div>
                   </div>
@@ -641,13 +641,13 @@ const tabs: { key: Tab; label: string }[] = [
               {cfg.popularDestinations.map((d, i) => (
                 <div key={i} className="border border-white/10 bg-white/5 text-white rounded-lg p-4 space-y-3">
                   <div className="flex justify-between"><h3 className="font-medium">{d.city || `${t("admin.sm.destNum")} ${i + 1}`}</h3><button onClick={() => set("popularDestinations", cfg.popularDestinations.filter((_, idx) => idx !== i))} className="text-red-400 text-sm">{t("admin.common.delete")}</button></div>
-                  <div className="grid grid-cols-3 gap-3">
+                  <div className="grid grid-cols-1 lg:grid-cols-3 gap-3">
                     <input className={`inputCls inputCls`} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} placeholder={t("admin.sm.city")} value={d.city} onChange={e => { const a = [...cfg.popularDestinations]; a[i] = { ...d, city: e.target.value }; set("popularDestinations", a); }} />
                   </div>
                   
               <div className="mt-4 border-t border-white/10 pt-4">
                 <h3 className="text-sm font-semibold text-[#D4AF37] mb-3">{t("admin.sm.sectionHeaderText")}</h3>
-                <div className="grid grid-cols-2 gap-3 mb-3">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3">
                   <div><label className={labelCls}>{t("admin.sm.title")}</label>
                     <input className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }}
                       value={(cfg.destinationsText?.title) || "Explore The World"}
@@ -676,7 +676,7 @@ const tabs: { key: Tab; label: string }[] = [
                       onChange={e => setCfg(p => ({ ...p, destinationsText: { ...(p.destinationsText || {}), titleColor: e.target.value } }))} /></div>
                 </div>
                 <h4 className="text-xs font-semibold text-white/50 mb-2">{t("admin.sm.cardTitleStyle")}</h4>
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                   <div><label className={labelCls}>{t("admin.sm.font")}</label>
                     <select className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }}
                       value={(cfg.destinationsText?.cardTitleFont) || "'Playfair Display', Georgia, serif"}
@@ -711,7 +711,7 @@ const tabs: { key: Tab; label: string }[] = [
               <div><label className={labelCls}>{t("admin.sm.showBanner")}</label><label className="flex items-center gap-2 text-sm text-white/70"><input type="checkbox" checked={!!(cfg.dealsBanner && cfg.dealsBanner.enabled)} onChange={e => set("dealsBanner", { ...(cfg.dealsBanner || { enabled: true, badge: "", title: "", buttonLabel: "Book Now", buttonHref: "/book-now", countdownDays: 30 }), enabled: e.target.checked })} /> {t("admin.sm.enabled")}</label></div>
               <div><label className={labelCls}>{t("admin.sm.badgeText")}</label><input className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} value={(cfg.dealsBanner && cfg.dealsBanner.badge) || ""} onChange={e => set("dealsBanner", { ...(cfg.dealsBanner || {}), badge: e.target.value })} /></div>
               <div><label className={labelCls}>{t("admin.sm.title")}</label><input className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} placeholder="30% OFF Bagan Explorer Tour" value={(cfg.dealsBanner && cfg.dealsBanner.title) || ""} onChange={e => set("dealsBanner", { ...(cfg.dealsBanner || {}), title: e.target.value })} /></div>
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 <div><label className={labelCls}>{t("admin.sm.buttonLabel")}</label><input className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} value={(cfg.dealsBanner && cfg.dealsBanner.buttonLabel) || ""} onChange={e => set("dealsBanner", { ...(cfg.dealsBanner || {}), buttonLabel: e.target.value })} /></div>
                 <div><label className={labelCls}>{t("admin.sm.buttonLink")}</label><input className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} value={(cfg.dealsBanner && cfg.dealsBanner.buttonHref) || ""} onChange={e => set("dealsBanner", { ...(cfg.dealsBanner || {}), buttonHref: e.target.value })} /></div>
               </div>
@@ -725,7 +725,7 @@ const tabs: { key: Tab; label: string }[] = [
               <p className="text-sm text-white/60">{t("admin.sm.ctaHint")}</p>
               <div><label className={labelCls}>{t("admin.sm.title")}</label><input className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} value={cfg.ctaTitle} onChange={e => set("ctaTitle", e.target.value)} /></div>
               <div><label className={labelCls}>{t("admin.sm.description")}</label><textarea className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} rows={2} value={cfg.ctaDescription} onChange={e => set("ctaDescription", e.target.value)} /></div>
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 <div><label className={labelCls}>{t("admin.sm.buttonLabel")}</label><input className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} value={cfg.ctaButtonLabel} onChange={e => set("ctaButtonLabel", e.target.value)} /></div>
                 <div><label className={labelCls}>{t("admin.sm.buttonLink")}</label><input className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} value={cfg.ctaButtonHref} onChange={e => set("ctaButtonHref", e.target.value)} /></div>
               </div>
@@ -737,12 +737,12 @@ const tabs: { key: Tab; label: string }[] = [
             <div className="space-y-4">
               <h2 className="text-lg font-bold text-white">{t("admin.sm.contactInfo")}</h2>
               <p className="text-sm text-white/60">{t("admin.sm.contactHint")}</p>
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 <div><label className={`labelCls labelCls`}>{t("admin.sm.phone")}</label><input className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} value={cfg.contact.phone} onChange={e => set("contact", { ...cfg.contact, phone: e.target.value })} /></div>
                 <div><label className={labelCls}>{t("admin.sm.email")}</label><input className={inputCls} type="email" style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} value={cfg.contact.email || ""} onChange={e => set("contact", { ...cfg.contact, email: e.target.value })} /></div>
               </div>
               <div><label className={labelCls}>{t("admin.sm.address")}</label><input className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} value={cfg.contact.address} onChange={e => set("contact", { ...cfg.contact, address: e.target.value })} /></div>
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 <div><label className={`labelCls labelCls`}>{t("admin.sm.whatsapp")}</label><input className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} value={cfg.contact.whatsapp} onChange={e => set("contact", { ...cfg.contact, whatsapp: e.target.value })} /></div>
               </div>
               
@@ -926,7 +926,7 @@ const tabs: { key: Tab; label: string }[] = [
                 return (
                   <div key={sk.key} className="border border-white/10 bg-white/5 text-white rounded-lg p-4 space-y-3">
                     <h3 className="font-medium text-white">{sk.label}</h3>
-                    <div className="grid grid-cols-3 gap-4">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                       <div>
                         <label className="block text-xs font-medium text-white/60 mb-1">{t("admin.sm.desktop")}</label>
                         <select className="w-full px-3 py-2 rounded-lg border border-white/10 text-white text-sm" style={{ backgroundColor: "rgba(255,255,255,0.06)", color: "white" }} value={sl.desktop} onChange={e => {
@@ -1185,7 +1185,7 @@ const tabs: { key: Tab; label: string }[] = [
                     <h3 className="font-medium">{t("admin.sm.reviewNum")} {i + 1}</h3>
                     <button onClick={() => set("testimonials", cfg.testimonials.filter((_, idx) => idx !== i))} className="text-red-400 text-sm">{t("admin.common.delete")}</button>
                   </div>
-                  <div className="grid grid-cols-2 gap-3">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                     <div><label className={labelCls}>{t("admin.sm.name")}</label><input className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} value={t.name} onChange={e => { const a = [...cfg.testimonials]; a[i] = { ...t, name: e.target.value }; set("testimonials", a); }} /></div>
                     <div><label className={labelCls}>{t("admin.sm.country")}</label><input className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} value={t.country} onChange={e => { const a = [...cfg.testimonials]; a[i] = { ...t, country: e.target.value }; set("testimonials", a); }} /></div>
                   </div>
@@ -1287,7 +1287,7 @@ const tabs: { key: Tab; label: string }[] = [
                 return (
                   <div key={key} className="border border-white/10 bg-white/5 text-white rounded-lg p-4">
                     <h4 className="font-medium mb-2">{label} {t("admin.sm.cards")}</h4>
-                    <div className="grid grid-cols-2 gap-3">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                       <div>
                         <label className={labelCls}>{t("admin.sm.widthPx")}</label>
                         <input type="number" className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }}
@@ -1325,7 +1325,7 @@ const tabs: { key: Tab; label: string }[] = [
                 return (
                   <div key={key} className="border border-white/10 bg-white/5 text-white rounded-lg p-4">
                     <h4 className="font-medium mb-2">{label} {t("admin.sm.hero")}</h4>
-                    <div className="grid grid-cols-2 gap-3">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                       <div>
                         <label className={labelCls}>{t("admin.sm.mobileHeightPx")}</label>
                         <input type="number" className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }}
