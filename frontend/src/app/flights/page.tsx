@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { HiSearch, HiArrowRight, HiCalendar, HiUser, HiGlobe, HiClock, HiStar, HiShieldCheck, HiLocationMarker } from "react-icons/hi";
+import { useI18n } from "@/lib/i18n";
 
 // ── types ──
 interface FlightOffer {
@@ -99,14 +100,15 @@ const airlinePartners = [
 ];
 
 const whyBookWithUs = [
-  { icon: "💰", title: "Best Price Guarantee", desc: "We match or beat any published fare for the same itinerary" },
-  { icon: "🎫", title: "IATA Accredited", desc: "Licensed and bonded IATA travel agency since 2015" },
-  { icon: "📞", title: "24/7 Support", desc: "Round-the-clock assistance before, during, and after your flight" },
-  { icon: "🔄", title: "Free Cancellation", desc: "Flexible booking options with free cancellation on most fares" },
+  { icon: "💰", titleKey: "flights.whyPrice", descKey: "flights.whyPriceDesc" },
+  { icon: "🎫", titleKey: "flights.whyIata", descKey: "flights.whyIataDesc" },
+  { icon: "📞", titleKey: "flights.whySupport", descKey: "flights.whySupportDesc" },
+  { icon: "🔄", titleKey: "flights.whyCancel", descKey: "flights.whyCancelDesc" },
 ];
 
 // ── component ──
 export default function FlightsPage() {
+  const { t } = useI18n();
   const [origin, setOrigin] = useState("");
   const [destination, setDestination] = useState("");
   const [departDate, setDepartDate] = useState("");
@@ -226,10 +228,10 @@ export default function FlightsPage() {
         <div className="absolute inset-0 bg-gradient-to-b from-[#0A1628]/70 via-[#0A1628]/50 to-[#0A1628]" />
         <div className="relative z-10 text-center px-4 max-w-4xl">
           <h1 className="font-['Playfair_Display',serif] text-4xl md:text-6xl font-bold text-white mb-4 drop-shadow-lg">
-            Fly the World
+            {t("flights.title")}
           </h1>
           <p className="text-[#D4AF37] text-lg md:text-xl font-light max-w-2xl mx-auto">
-            Search and book flights from Myanmar to worldwide destinations at the best fares
+            {t("flights.subtitle")}
           </p>
         </div>
       </section>
@@ -243,10 +245,10 @@ export default function FlightsPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
             {/* From */}
             <div className="relative">
-              <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">From</label>
+              <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">{t("flights.from")}</label>
               <input
                 type="text"
-                placeholder="City or Airport"
+                placeholder={t("flights.airportPh")}
                 value={origin}
                 onChange={(e) => handleOriginInput(e.target.value)}
                 onFocus={() => originAirports.length > 0 && setShowOriginDropdown(true)}
@@ -270,10 +272,10 @@ export default function FlightsPage() {
 
             {/* To */}
             <div className="relative">
-              <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">To</label>
+              <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">{t("flights.to")}</label>
               <input
                 type="text"
-                placeholder="City or Airport"
+                placeholder={t("flights.airportPh")}
                 value={destination}
                 onChange={(e) => handleDestInput(e.target.value)}
                 onFocus={() => destAirports.length > 0 && setShowDestDropdown(true)}
@@ -297,7 +299,7 @@ export default function FlightsPage() {
 
             {/* Depart Date */}
             <div>
-              <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Depart</label>
+              <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">{t("flights.depart")}</label>
               <input
                 type="date"
                 value={departDate}
@@ -308,7 +310,7 @@ export default function FlightsPage() {
 
             {/* Return Date */}
             <div>
-              <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Return</label>
+              <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">{t("flights.return")}</label>
               <input
                 type="date"
                 value={returnDate}
@@ -326,7 +328,7 @@ export default function FlightsPage() {
                   className="flex-1 px-2 py-3 border border-gray-200 rounded-xl text-xs text-gray-700 font-medium focus:outline-none focus:border-[#D4AF37] focus:ring-2 focus:ring-[#D4AF37]/20 transition-all"
                 >
                   {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((n) => (
-                    <option key={n} value={n}>{n} {n === 1 ? "Adult" : "Adults"}</option>
+                    <option key={n} value={n}>{n} {n === 1 ? t("flights.adult") : t("flights.adults")}</option>
                   ))}
                 </select>
                 <select
@@ -334,10 +336,10 @@ export default function FlightsPage() {
                   onChange={(e) => setTravelClass(e.target.value)}
                   className="flex-1 px-2 py-3 border border-gray-200 rounded-xl text-xs text-gray-700 font-medium focus:outline-none focus:border-[#D4AF37] focus:ring-2 focus:ring-[#D4AF37]/20 transition-all"
                 >
-                  <option value="ECONOMY">Economy</option>
-                  <option value="PREMIUM_ECONOMY">Prem. Econ</option>
-                  <option value="BUSINESS">Business</option>
-                  <option value="FIRST">First</option>
+                  <option value="ECONOMY">{t("flights.classEconomy")}</option>
+                  <option value="PREMIUM_ECONOMY">{t("flights.classPremEcon")}</option>
+                  <option value="BUSINESS">{t("flights.classBusiness")}</option>
+                  <option value="FIRST">{t("flights.classFirst")}</option>
                 </select>
               </div>
               <button
@@ -350,7 +352,7 @@ export default function FlightsPage() {
                 ) : (
                   <HiSearch className="w-4 h-4" />
                 )}
-                {loading ? "Searching..." : "Search Flights"}
+                {loading ? t("flights.searchingBtn") : t("flights.searchFlights")}
               </button>
             </div>
           </div>
@@ -362,23 +364,23 @@ export default function FlightsPage() {
         {error && (
           <div className="bg-red-50 border border-red-200 rounded-xl p-6 text-center mb-8">
             <p className="text-red-600 font-semibold">{error}</p>
-            <p className="text-red-500 text-sm mt-1">Please check your inputs and try again.</p>
+            <p className="text-red-500 text-sm mt-1">{t("flights.errInputs")}</p>
           </div>
         )}
 
         {loading && (
           <div className="flex flex-col items-center py-20">
             <div className="w-10 h-10 border-4 border-[#D4AF37] border-t-transparent rounded-full animate-spin" />
-            <p className="mt-4 text-[#D4AF37] font-medium">Searching for the best flights...</p>
+            <p className="mt-4 text-[#D4AF37] font-medium">{t("flights.searching")}</p>
           </div>
         )}
 
         {searched && !loading && !error && offers.length === 0 && (
           <div className="text-center py-20">
             <HiGlobe className="w-16 h-16 mx-auto text-gray-500 mb-4" />
-            <h3 className="text-2xl font-['Playfair_Display',serif] text-white mb-2">No Flights Found</h3>
+            <h3 className="text-2xl font-['Playfair_Display',serif] text-white mb-2">{t("flights.noFlights")}</h3>
             <p className="text-gray-400 max-w-md mx-auto">
-              We couldn&apos;t find any flights matching your search criteria. Try different dates or destinations.
+              {t("flights.noFlightsDesc")}
             </p>
           </div>
         )}
@@ -386,7 +388,7 @@ export default function FlightsPage() {
         {offers.length > 0 && (
           <div>
             <h2 className="font-['Playfair_Display',serif] text-2xl font-bold text-white mb-2">
-              {offers.length} Flight{offers.length !== 1 ? "s" : ""} Found
+              {offers.length} {t(offers.length === 1 ? "flights.foundOne" : "flights.foundMany")}
             </h2>
             <p className="text-gray-400 text-sm mb-8">
               {originSelected?.code || origin} → {destSelected?.code || destination}
@@ -417,7 +419,7 @@ export default function FlightsPage() {
                           <div>
                             <p className="text-white font-semibold text-sm">{airlineName}</p>
                             <p className="text-gray-400 text-xs">
-                              {firstSeg.carrierCode}{firstSeg.number} · {cabinLabels[cabin] || cabin}
+                              {firstSeg.carrierCode}{firstSeg.number} · {cabin === "ECONOMY" ? t("flights.cabinEconomy") : cabin === "PREMIUM_ECONOMY" ? t("flights.cabinPremium") : cabin === "BUSINESS" ? t("flights.cabinBusiness") : cabin === "FIRST" ? t("flights.cabinFirst") : cabin}
                             </p>
                           </div>
                         </div>
@@ -440,7 +442,7 @@ export default function FlightsPage() {
                               <HiArrowRight className="w-3 h-3 text-gray-500" />
                               <div className="flex-1 h-px bg-gray-600" />
                             </div>
-                            <p className="text-gray-500 text-xs mt-1">{stopsText(itin.segments.length - 1)}</p>
+                            <p className="text-gray-500 text-xs mt-1">{t(itin.segments.length - 1 === 0 ? "flights.nonstop" : itin.segments.length - 1 === 1 ? "flights.oneStop" : "flights.stops", { count: itin.segments.length - 1 })}</p>
                           </div>
 
                           <div className="text-center">
@@ -459,13 +461,13 @@ export default function FlightsPage() {
                               minimumFractionDigits: 2,
                             })}
                           </p>
-                          <p className="text-gray-500 text-xs">per adult</p>
+                          <p className="text-gray-500 text-xs">{t("flights.perAdult")}</p>
                         </div>
                         <Link
                           href={`/book-now?type=flight&from=${originSelected?.code || origin}&to=${destSelected?.code || destination}&fromCity=${encodeURIComponent(originSelected?.city || origin)}&toCity=${encodeURIComponent(destSelected?.city || destination)}&depart=${departDate}${returnDate ? `&return=${returnDate}` : ""}&adults=${adults}&class=${travelClass}&airline=${encodeURIComponent(airlineName)}&airlineCode=${airlineCode}&flightNo=${firstSeg.carrierCode}${firstSeg.number}&price=${offer.price.total}&currency=${offer.price.currency}&departTime=${formatTime(firstSeg.departure.at)}&arriveTime=${formatTime(lastSeg.arrival.at)}&stops=${itin.segments.length - 1}&offerId=${offer.id}`}
                           className="bg-[#D4AF37] text-[#0A1628] font-bold rounded-xl px-6 py-3 text-sm hover:bg-[#C5A028] transition-all shadow-md hover:shadow-lg whitespace-nowrap flex items-center gap-1.5"
                         >
-                          Book Now <HiArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+                          {t("common.bookNow")} <HiArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
                         </Link>
                       </div>
                     </div>
@@ -473,7 +475,7 @@ export default function FlightsPage() {
                     {itin.segments.length > 1 && (
                       <details className="mt-4 pt-4 border-t border-[#D4AF37]/10">
                         <summary className="text-[#D4AF37] text-xs cursor-pointer hover:text-[#F5A623] transition-colors inline-block">
-                          View {itin.segments.length} segments details
+                          {t("flights.viewSegments", { count: itin.segments.length })}
                         </summary>
                         <div className="mt-3 space-y-2">
                           {itin.segments.map((seg: any, i: number) => (
@@ -503,17 +505,17 @@ export default function FlightsPage() {
       <section className="py-16 border-t border-[#D4AF37]/10">
         <div className="max-w-6xl mx-auto px-4">
           <div className="text-center mb-12">
-            <span className="text-[#D4AF37] text-sm font-semibold uppercase tracking-widest">Why Choose A9</span>
+            <span className="text-[#D4AF37] text-sm font-semibold uppercase tracking-widest">{t("flights.whyTitle")}</span>
             <h2 className="font-['Playfair_Display',serif] text-3xl md:text-4xl font-bold text-white mt-2">
-              Why Book Flights With Us
+              {t("flights.whyHeading")}
             </h2>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {whyBookWithUs.map((item, i) => (
               <div key={i} className="bg-white/5 backdrop-blur-sm border border-[#D4AF37]/10 rounded-2xl p-6 text-center hover:border-[#D4AF37]/30 hover:bg-white/[0.07] transition-all group">
                 <div className="text-4xl mb-4">{item.icon}</div>
-                <h3 className="text-white font-semibold text-lg mb-2">{item.title}</h3>
-                <p className="text-gray-400 text-sm leading-relaxed">{item.desc}</p>
+                <h3 className="text-white font-semibold text-lg mb-2">{t(item.titleKey)}</h3>
+                <p className="text-gray-400 text-sm leading-relaxed">{t(item.descKey)}</p>
               </div>
             ))}
           </div>
@@ -524,12 +526,12 @@ export default function FlightsPage() {
       <section className="py-16 border-t border-[#D4AF37]/10">
         <div className="max-w-6xl mx-auto px-4">
           <div className="text-center mb-12">
-            <span className="text-[#D4AF37] text-sm font-semibold uppercase tracking-widest">Trending Now</span>
+            <span className="text-[#D4AF37] text-sm font-semibold uppercase tracking-widest">{t("flights.trending")}</span>
             <h2 className="font-['Playfair_Display',serif] text-3xl md:text-4xl font-bold text-white mt-2">
-              Popular Flight Routes
+              {t("flights.popular")}
             </h2>
             <p className="text-gray-400 mt-3 max-w-2xl mx-auto">
-              Discover our most-booked routes from Myanmar to destinations across Asia and beyond
+              {t("flights.popularDesc")}
             </p>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -544,7 +546,7 @@ export default function FlightsPage() {
               >
                 {route.featured && (
                   <span className="inline-block bg-[#D4AF37] text-[#0A1628] text-[10px] font-bold uppercase px-2 py-0.5 rounded-full mb-3">
-                    Best Seller
+                    {t("flights.bestSeller")}
                   </span>
                 )}
                 <div className="flex items-center gap-2 mb-3">
@@ -565,7 +567,7 @@ export default function FlightsPage() {
                     href={`/flights?from=${encodeURIComponent(route.from)}&to=${encodeURIComponent(route.to)}`}
                     className="text-[#D4AF37] text-xs font-semibold hover:text-white transition-colors flex items-center gap-1"
                   >
-                    Search <HiArrowRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
+                    {t("flights.search")} <HiArrowRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
                   </Link>
                 </div>
               </div>
@@ -578,19 +580,19 @@ export default function FlightsPage() {
       <section className="py-16 border-t border-[#D4AF37]/10">
         <div className="max-w-6xl mx-auto px-4">
           <div className="text-center mb-12">
-            <span className="text-[#D4AF37] text-sm font-semibold uppercase tracking-widest">Trusted Partners</span>
+            <span className="text-[#D4AF37] text-sm font-semibold uppercase tracking-widest">{t("buses.trusted")}</span>
             <h2 className="font-['Playfair_Display',serif] text-3xl md:text-4xl font-bold text-white mt-2">
-              Our Airline Partners
+              {t("flights.airlinePartners")}
             </h2>
             <p className="text-gray-400 mt-3 max-w-2xl mx-auto">
-              We work with over 50+ airlines worldwide to find you the best routes and prices
+              {t("flights.partnersDesc")}
             </p>
           </div>
 
           {/* Premier Tier */}
           <div className="mb-10">
             <h3 className="text-[#D4AF37] text-sm font-semibold uppercase tracking-wider text-center mb-6">
-              ⭐ Premier Partners
+              {t("flights.tierPremier")}
             </h3>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               {airlinePartners.filter(a => a.tier === "premier").map((airline, i) => (
@@ -606,7 +608,7 @@ export default function FlightsPage() {
           {/* Gold Tier */}
           <div className="mb-10">
             <h3 className="text-gray-400 text-sm font-semibold uppercase tracking-wider text-center mb-6">
-              🥇 Gold Partners
+              {t("flights.tierGold")}
             </h3>
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-3 gap-4">
               {airlinePartners.filter(a => a.tier === "gold").map((airline, i) => (
@@ -622,7 +624,7 @@ export default function FlightsPage() {
           {/* Silver Tier */}
           <div>
             <h3 className="text-gray-500 text-sm font-semibold uppercase tracking-wider text-center mb-6">
-              🥈 Silver Partners
+              {t("flights.tierSilver")}
             </h3>
             <div className="flex flex-wrap justify-center gap-4">
               {airlinePartners.filter(a => a.tier === "silver").map((airline, i) => (
@@ -641,23 +643,23 @@ export default function FlightsPage() {
         <div className="max-w-4xl mx-auto px-4 text-center">
           <div className="bg-gradient-to-r from-[#D4AF37]/10 via-[#D4AF37]/5 to-[#D4AF37]/10 border border-[#D4AF37]/20 rounded-2xl p-10 md:p-14">
             <h2 className="font-['Playfair_Display',serif] text-2xl md:text-3xl font-bold text-white mb-4">
-              Ready to Take Off?
+              {t("flights.ctaTitle")}
             </h2>
             <p className="text-gray-400 mb-8 max-w-xl mx-auto">
-              Search hundreds of airlines and thousands of routes. Your next adventure starts here.
+              {t("flights.ctaDesc")}
             </p>
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
               <Link
                 href="/contact"
                 className="px-8 py-3 border border-[#D4AF37] text-[#D4AF37] font-semibold rounded-xl hover:bg-[#D4AF37] hover:text-[#0A1628] transition-all"
               >
-                Contact Us
+                {t("common.contactUs")}
               </Link>
               <Link
                 href="/destinations"
                 className="px-8 py-3 bg-[#D4AF37] text-[#0A1628] font-bold rounded-xl hover:bg-[#C5A028] transition-all shadow-md"
               >
-                Explore Destinations
+                {t("flights.exploreDests")}
               </Link>
             </div>
           </div>
