@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useI18n } from "@/lib/i18n";
 
 interface Destination {
   _id?: string; id?: string;
@@ -11,6 +12,7 @@ interface Destination {
 }
 
 export default function AdminDestinationsPage() {
+  const { t } = useI18n();
   const [items, setItems] = useState<Destination[]>([]);
   const [loading, setLoading] = useState(true);
   const [modal, setModal] = useState(false);
@@ -57,25 +59,25 @@ export default function AdminDestinationsPage() {
   };
 
   const del = async (id: string) => {
-    if (!confirm("Delete this destination?")) return;
+    if (!confirm(t("admin.dest.confirmDel"))) return;
     try {
       await fetch(`/api/admin/destinations?id=${id}`, { method: "DELETE" });
       await load();
     } catch (e) { console.error(e); }
   };
 
-  if (loading) return <div className="min-h-screen bg-[#0A1628] flex items-center justify-center"><div className="text-white/60 text-lg">Loading destinations...</div></div>;
+  if (loading) return <div className="min-h-screen bg-[#0A1628] flex items-center justify-center"><div className="text-white/60 text-lg">{t("admin.dest.loading")}</div></div>;
 
   return (
     <div className="min-h-screen bg-[#0A1628] p-6">
       <div className="max-w-7xl mx-auto">
         <div className="flex items-center justify-between mb-8">
-          <h1 className="text-3xl font-light text-white">Manage Destinations ({items.length})</h1>
-          <button onClick={openNew} className="bg-[#D4AF37] text-[#0A1628] px-5 py-2 rounded-lg font-medium hover:bg-[#C4A030] transition">+ Add Destination</button>
+          <h1 className="text-3xl font-light text-white">{t("admin.dest.title")} ({items.length})</h1>
+          <button onClick={openNew} className="bg-[#D4AF37] text-[#0A1628] px-5 py-2 rounded-lg font-medium hover:bg-[#C4A030] transition">{t("admin.dest.addNew")}</button>
         </div>
 
         {items.length === 0 ? (
-          <div className="text-white/40 text-center py-16 text-lg">No destinations yet. Click "+ Add Destination" to create one.</div>
+          <div className="text-white/40 text-center py-16 text-lg">{t("admin.dest.empty")}</div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {items.map((d: any) => (
@@ -98,14 +100,14 @@ export default function AdminDestinationsPage() {
       {modal && editing && (
         <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
           <div className="bg-[#0F1E35] border border-white/20 rounded-2xl p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto">
-            <h2 className="text-xl text-white font-semibold mb-4">{editing._id || editing.id ? "Edit" : "New"} Destination</h2>
+            <h2 className="text-xl text-white font-semibold mb-4">{editing._id || editing.id ? t("admin.dest.editD") : t("admin.dest.newD")}</h2>
             <div className="space-y-3">
               {[
-                { key: "city", label: "City" },
-                { key: "country", label: "Country" },
-                { key: "image", label: "Image URL" },
-                { key: "minPrice", label: "Min Price (e.g. From Ks 150,000)" },
-                { key: "bestTime", label: "Best Time to Visit" },
+                { key: "city", label: t("admin.dest.fCity") },
+                { key: "country", label: t("admin.dest.fCountry") },
+                { key: "image", label: t("admin.dest.fImageUrl") },
+                { key: "minPrice", label: t("admin.dest.fMinPrice") },
+                { key: "bestTime", label: t("admin.dest.fBestTime") },
               ].map(f => (
                 <div key={f.key}>
                   <label className="text-white/60 text-xs block mb-1">{f.label}</label>
@@ -113,17 +115,17 @@ export default function AdminDestinationsPage() {
                 </div>
               ))}
               <div>
-                <label className="text-white/60 text-xs block mb-1">Description</label>
+                <label className="text-white/60 text-xs block mb-1">{t("admin.form.description")}</label>
                 <textarea className="w-full bg-[#0A1628] border border-white/10 rounded-lg px-3 py-2 text-white text-sm focus:border-[#D4AF37] outline-none h-20 resize-none" value={editing.description} onChange={e => setEditing({ ...editing, description: e.target.value })} />
               </div>
               <div>
-                <label className="text-white/60 text-xs block mb-1">Highlights (comma separated)</label>
+                <label className="text-white/60 text-xs block mb-1">{t("admin.dest.highlights")}</label>
                 <input className="w-full bg-[#0A1628] border border-white/10 rounded-lg px-3 py-2 text-white text-sm focus:border-[#D4AF37] outline-none" value={editing.highlights} onChange={e => setEditing({ ...editing, highlights: e.target.value })} />
               </div>
             </div>
             <div className="flex gap-3 mt-6">
-              <button onClick={save} disabled={saving} className="flex-1 bg-[#D4AF37] text-[#0A1628] py-2.5 rounded-lg font-medium hover:bg-[#C4A030] disabled:opacity-50 transition">{saving ? "Saving..." : "Save"}</button>
-              <button onClick={closeModal} className="flex-1 border border-white/20 text-white/60 py-2.5 rounded-lg hover:border-white/40 transition">Cancel</button>
+              <button onClick={save} disabled={saving} className="flex-1 bg-[#D4AF37] text-[#0A1628] py-2.5 rounded-lg font-medium hover:bg-[#C4A030] disabled:opacity-50 transition">{saving ? t("admin.common.saving") : t("common.save")}</button>
+              <button onClick={closeModal} className="flex-1 border border-white/20 text-white/60 py-2.5 rounded-lg hover:border-white/40 transition">{t("common.cancel")}</button>
             </div>
           </div>
         </div>

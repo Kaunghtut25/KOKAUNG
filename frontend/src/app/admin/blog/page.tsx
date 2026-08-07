@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { api } from '@/lib/api';
 import Link from 'next/link';
+import { useI18n } from '@/lib/i18n';
 
 interface BlogPost {
   _id: string;
@@ -17,6 +18,7 @@ interface BlogPost {
 }
 
 export default function AdminBlogPage() {
+  const { t } = useI18n();
   const token = typeof window !== "undefined" ? localStorage.getItem("admin_token") : "";
   const [posts, setPosts] = useState<BlogPost[]>([]);
   const [loading, setLoading] = useState(true);
@@ -55,7 +57,7 @@ export default function AdminBlogPage() {
   };
 
   const uploadFile = async (file: File) => {
-    if (!file.type.startsWith('image/')) { setUploadError('Only image files are accepted.'); return; }
+    if (!file.type.startsWith('image/')) { setUploadError(t('admin.common.imgOnly')); return; }
     setUploading(true); setUploadError('');
     try {
       const fd = new FormData();
@@ -67,7 +69,7 @@ export default function AdminBlogPage() {
       setImage(url);
       setImagePreview(url);
     } catch (err: any) {
-      setUploadError('Upload failed. Try URL paste instead.');
+      setUploadError(t('admin.common.uploadFailPaste'));
     } finally { setUploading(false); }
   };
 
@@ -121,7 +123,7 @@ export default function AdminBlogPage() {
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm('Delete this post?')) return;
+    if (!confirm(t('admin.blog.confirmDel'))) return;
     try {
       await fetch('/api/admin/blog/' + id, { method: 'DELETE', headers: { Authorization: `Bearer ${token}` } });
       fetchPosts();
@@ -148,26 +150,26 @@ export default function AdminBlogPage() {
   return (
     <div className="min-h-screen bg-[#0A1628] text-white pt-6 px-4 max-w-5xl mx-auto" style={{ paddingTop: '5rem' }}>
       <div className="flex items-center justify-between mb-8">
-        <h1 className="text-3xl font-bold text-white">📝 Blog Management</h1>
-        <Link href="/admin/dashboard" className="text-[#D4AF37] hover:text-[#C5A028] text-sm">← Dashboard</Link>
+        <h1 className="text-3xl font-bold text-white">{t("admin.blog.title")}</h1>
+        <Link href="/admin/dashboard" className="text-[#D4AF37] hover:text-[#C5A028] text-sm">{t("admin.common.dashboardBack")}</Link>
       </div>
 
       {/* Create/Edit Form */}
       <form onSubmit={handleSubmit} className="bg-white/5 rounded-xl p-6 mb-8 border border-white/10 space-y-4">
-        <h2 className="text-lg font-semibold">{editingId ? 'Edit Post' : 'New Post'}</h2>
-        <input type="text" value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Post title" required
+        <h2 className="text-lg font-semibold">{editingId ? t("admin.blog.editPost") : t("admin.blog.newPost")}</h2>
+        <input type="text" value={title} onChange={(e) => setTitle(e.target.value)} placeholder={t("admin.blog.phTitle")} required
           className="w-full px-4 py-2 border border-white/10 bg-white/5 text-white rounded-lg text-sm placeholder:text-white/30" />
-        <textarea value={content} onChange={(e) => setContent(e.target.value)} placeholder="Post content" required rows={4}
+        <textarea value={content} onChange={(e) => setContent(e.target.value)} placeholder={t("admin.blog.phContent")} required rows={4}
           className="w-full px-4 py-2 border border-white/10 bg-white/5 text-white rounded-lg text-sm placeholder:text-white/30" />
 
         <div>
-          <label className="block text-sm text-gray-600 mb-1">Image</label>
+          <label className="block text-sm text-gray-600 mb-1">{t("admin.blog.image")}</label>
           <input
             type="text"
             name="imageUrl"
             value={image}
             onChange={(e) => { setImage(e.target.value); setImagePreview(e.target.value); setUploadError(''); }}
-            placeholder="https://... or pick a file below"
+            placeholder={t("admin.blog.phUrl")}
             className="w-full px-4 py-2 border border-white/10 bg-white/5 text-white rounded-lg text-sm placeholder:text-white/30"
           />
           {/* Drag & Drop Zone */}
@@ -179,11 +181,11 @@ export default function AdminBlogPage() {
             onClick={() => fileInputRef.current?.click()}
           >
             <input ref={fileInputRef} type="file" accept="image/*" className="hidden" onChange={handleFileSelect} />
-            <p className="text-sm text-gray-500">Drag &amp; drop image here or click to upload</p>
-            {uploading && <p className="text-xs text-[#D4AF37] mt-1">Uploading...</p>}
+            <p className="text-sm text-gray-500">{t("admin.blog.dragDrop")}</p>
+            {uploading && <p className="text-xs text-[#D4AF37] mt-1">{t("admin.form.uploading")}</p>}
             {uploadError && <p className="text-xs text-red-500 mt-1">{uploadError}</p>}
-            {imageSize && <p className="text-xs text-gray-500 mt-1">File size: {imageSize}</p>}
-            <p className="text-xs text-gray-400 mt-1">Recommended: 800x600px (JPEG, max 1MB)</p>
+            {imageSize && <p className="text-xs text-gray-500 mt-1">{t("admin.blog.fileSize")} {imageSize}</p>}
+            <p className="text-xs text-gray-400 mt-1">{t("admin.form.recommended1mb")}</p>
           </div>
           <input
             type="text"
@@ -191,40 +193,40 @@ export default function AdminBlogPage() {
             onChange={(e) => {
               handleImageUrlChange(e.target.value);
             }}
-            placeholder="Or paste image URL"
+            placeholder={t("admin.form.pasteUrl")}
             className="w-full mt-2 px-3 py-2 border border-white/10 bg-white/5 text-white rounded-lg text-sm placeholder:text-white/30 focus:outline-none focus:border-[#D4AF37] transition-colors"
           />
           {imagePreview && (
             <div className="mt-2">
-              <img src={imagePreview} alt="Preview" className="w-full h-32 object-cover rounded-lg border border-gray-200" />
+              <img src={imagePreview} alt={t("admin.form.imagePreview")} className="w-full h-32 object-cover rounded-lg border border-gray-200" />
             </div>
           )}
         </div>
 
-        <input type="text" value={tags} onChange={(e) => setTags(e.target.value)} placeholder="Tags (comma separated)"
+        <input type="text" value={tags} onChange={(e) => setTags(e.target.value)} placeholder={t("admin.blog.phTags")}
           className="w-full px-4 py-2 border border-white/10 bg-white/5 text-white rounded-lg text-sm placeholder:text-white/30" />
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <input type="text" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="Phone (optional)"
+          <input type="text" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder={t("admin.blog.phPhone")}
             className="w-full px-4 py-2 border border-white/10 bg-white/5 text-white rounded-lg text-sm placeholder:text-white/30" />
-          <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Email (optional)"
+          <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder={t("admin.blog.phEmail")}
             className="w-full px-4 py-2 border border-white/10 bg-white/5 text-white rounded-lg text-sm placeholder:text-white/30" />
         </div>
 
         <div className="flex gap-3">
           <button type="submit" className="px-6 py-2 bg-[#D4AF37] text-white rounded-lg font-medium hover:bg-[#C5A028]">
-            {editingId ? 'Update' : 'Publish'}
+            {editingId ? t("admin.blog.update") : t("admin.blog.publish")}
           </button>
           {editingId && (
             <button type="button" onClick={() => { setEditingId(null); setTitle(''); setContent(''); setImage(''); setTags(''); setPhone(''); setEmail(''); setImagePreview(''); setImageSize(''); setUploadError(''); }}
-              className="px-6 py-2 bg-white/10 text-white/70 rounded-lg font-medium hover:bg-gray-300">Cancel</button>
+              className="px-6 py-2 bg-white/10 text-white/70 rounded-lg font-medium hover:bg-gray-300">{t("common.cancel")}</button>
           )}
         </div>
       </form>
 
       {/* Posts List */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {loading ? <p className="text-gray-500">Loading...</p> :
+        {loading ? <p className="text-gray-500">{t("common.loading")}</p> :
           posts.map((post: BlogPost) => (
             <div key={post._id} className="bg-white/5 backdrop-blur rounded-xl p-5 border border-white/10 flex items-start gap-4 hover:border-[#D4AF37]/30 transition-all">
               <img src={post.image} alt="" className="w-16 h-16 rounded-lg object-cover flex-shrink-0" />
@@ -240,8 +242,8 @@ export default function AdminBlogPage() {
                 <span className="text-xs text-gray-500 mt-2 block">{new Date(post.createdAt).toLocaleDateString()}</span>
               </div>
               <div className="flex gap-2 flex-shrink-0">
-                <button onClick={() => handleEdit(post)} className="px-3 py-1 text-xs bg-blue-500/20 text-blue-400 rounded-lg hover:bg-blue-100">Edit</button>
-                <button onClick={() => handleDelete(post._id)} className="px-3 py-1 text-xs bg-red-500/20 text-red-400 rounded-lg hover:bg-red-100">Delete</button>
+                <button onClick={() => handleEdit(post)} className="px-3 py-1 text-xs bg-blue-500/20 text-blue-400 rounded-lg hover:bg-blue-100">{t("admin.common.edit")}</button>
+                <button onClick={() => handleDelete(post._id)} className="px-3 py-1 text-xs bg-red-500/20 text-red-400 rounded-lg hover:bg-red-100">{t("admin.common.delete")}</button>
               </div>
             </div>
           ))
