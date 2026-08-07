@@ -228,7 +228,7 @@ export default function AdminBlogPage() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {loading ? <p className="text-gray-500">{t("common.loading")}</p> :
           posts.map((post: BlogPost) => (
-            <div key={post._id} className="bg-white/5 backdrop-blur rounded-xl p-5 border border-white/10 flex flex-col sm:flex-row sm:items-start gap-4 hover:border-[#D4AF37]/30 transition-all">
+            <div key={post._id} className="bg-white/5 backdrop-blur rounded-xl p-5 border border-white/10 flex flex-col md:flex-row md:items-start gap-4 hover:border-[#D4AF37]/30 transition-all">
               <img src={post.image} alt="" className="w-16 h-16 rounded-lg object-cover flex-shrink-0" />
               <div className="flex-1 min-w-0">
                 <h3 className="font-semibold text-white line-clamp-2">{post.title}</h3>
