@@ -213,7 +213,7 @@ export default function DestinationPage() {
           <h1 className="text-2xl font-bold text-[#0A1628] mb-2">{t("dest.notFound")}</h1>
           <p className="text-gray-500 mb-4">{t("dest.notFoundDesc")}</p>
           <Link href="/destinations" className="text-[#D4AF37] hover:underline font-semibold">
-            ← Back to Destinations
+            {lang === "mm" ? "← ခရီးစဉ်များသို့ ပြန်သွားရန်" : "← Back to Destinations"}
           </Link>
         </div>
       </div>
@@ -305,7 +305,7 @@ export default function DestinationPage() {
             </div>
             <div>
               <p className="text-[#0A1628] font-bold text-lg">{rating}</p>
-              <p className="text-gray-400 text-xs">({reviews.toLocaleString()} reviews)</p>
+              <p className="text-gray-400 text-xs">({reviews.toLocaleString()} {lang === "mm" ? "သုံးသပ်ချက်" : "reviews"})</p>
             </div>
           </div>
 
@@ -410,7 +410,7 @@ export default function DestinationPage() {
             {dest.bestTime && (
               <section className="bg-gradient-to-r from-[#D4AF37]/5 to-[#D4AF37]/10 rounded-2xl p-6 md:p-8">
                 <h2 className="text-2xl font-bold text-[#0A1628] mb-2">
-                  Best Time to Visit
+                  {lang === "mm" ? "လည်ပတ်ရန် အကောင်းဆုံးအချိန်" : "Best Time to Visit"}
                 </h2>
                 <p className="text-gray-700 text-lg">{dest.bestTime}</p>
                 <p className="text-gray-600 leading-relaxed mt-3 text-lg">

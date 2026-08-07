@@ -3,8 +3,22 @@
 import { useSearchMode } from '@/providers/SearchModeContext';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
 import { useState, useEffect } from 'react';
+import { useI18n } from "@/lib/i18n";
 import { usePathname, useRouter } from 'next/navigation';
 import Link from 'next/link';
+
+// FIX: 2026-08-07 Burmese labels for category bar (MM mode)
+const MM_LABELS: Record<string, string> = {
+  Flights: "လေယာဉ်",
+  Buses: "ဘတ်စ်ကားများ",
+  Tours: "ခရီးစဉ်များ",
+  Hotels: "ဟိုတယ်များ",
+  Cars: "ကားများ",
+  Visas: "ဗီဇာများ",
+  Insurance: "အာမခံ",
+  Cruises: "အပျော်စီးသင်္ဘောများ",
+  "Sky Lounge": "စကိုင်းလောင်ဂျီ",
+};
 
 const services = [
   { label: 'Flights', icon: '✈️', key: 'flights' as const },
@@ -57,6 +71,7 @@ function NavLink({ label, icon, href, active }: { label: string; icon: string; h
 }
 
 export default function ServiceIcons___FINALV5() {
+  const { lang } = useI18n();
   const pathname = usePathname();
   const router = useRouter();
   const { mode, setMode } = useSearchMode();
@@ -78,13 +93,13 @@ export default function ServiceIcons___FINALV5() {
             {services.filter(item => moduleToggles[item.key] !== false).map((item) => {
               if ('href' in item) {
                 const active = item.href !== '/' && (pathname === item.href || pathname.startsWith(item.href + '/'));
-                return <NavLink key={item.href} label={item.label} icon={item.icon} href={item.href} active={active} />;
+                return <NavLink key={item.href} label={lang === "mm" ? (MM_LABELS[item.label] || item.label) : item.label} icon={item.icon} href={item.href} active={active} />;
               }
               const active = isHomePage && mode === item.key;
               return (
                 <ToggleButton
                   key={item.label}
-                  label={item.label}
+                  label={lang === "mm" ? (MM_LABELS[item.label] || item.label) : item.label}
                   icon={item.icon}
                   active={active}
                   onToggle={() => {
