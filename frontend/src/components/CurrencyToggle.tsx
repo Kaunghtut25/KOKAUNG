@@ -16,7 +16,7 @@ export default function CurrencyToggle({ activeCurrency, onToggle }: CurrencyTog
         className={`px-4 py-2 text-xs font-semibold transition-all duration-200 ${
           activeCurrency === 'MMK'
             ? 'bg-gradient-to-r from-[#D4AF37] to-[#C5A028] text-gray-900 shadow-sm'
-            : 'bg-transparent text-gold hover:bg-gold/10'
+            : 'bg-transparent text-[#8A6C0B] hover:bg-[#D4AF37]/10'
         }`}
       >
         MMK
@@ -27,7 +27,7 @@ export default function CurrencyToggle({ activeCurrency, onToggle }: CurrencyTog
         className={`px-4 py-2 text-xs font-semibold transition-all duration-200 ${
           activeCurrency === 'USD'
             ? 'bg-gradient-to-r from-[#D4AF37] to-[#C5A028] text-gray-900 shadow-sm'
-            : 'bg-transparent text-gold hover:bg-gold/10'
+            : 'bg-transparent text-[#8A6C0B] hover:bg-[#D4AF37]/10'
         }`}
       >
         USD

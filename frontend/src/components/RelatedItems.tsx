@@ -120,7 +120,7 @@ export default function RelatedItems({ section, excludeSlug, destination, countr
                   <img src={item.image || item.displayImage || (Array.isArray(item.images) ? item.images[0] : (typeof item.images === "string" ? item.images : "")) || `/images_v2/hero-${section}-v2.jpg`} alt={item.name || item.title} style={{ width: '100%', height: 120, objectFit: 'cover' }} />
                   <div style={{ padding: 10 }}>
                     <div style={{ fontSize: 13, fontWeight: 600, color: '#0A1628', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{item.name || item.title || item.planName || item.carType || item.country}</div>
-                    <div style={{ fontSize: 12, color: '#D4AF37', fontWeight: 600, marginTop: 4 }}>{item.priceMMK ? 'Ks ' + item.priceMMK.toLocaleString() : item.priceUSD ? '$' + item.priceUSD : item.pricePerNightMMK ? 'Ks ' + item.pricePerNightMMK.toLocaleString() + '/night' : item.pricePerNightUSD ? '$' + item.pricePerNightUSD + '/night' : item.visaFeeMMK ? 'Ks ' + item.visaFeeMMK.toLocaleString() : ''}</div>
+                    <div style={{ fontSize: 12, color: '#8A6C0B', fontWeight: 600, marginTop: 4 }}>{item.priceMMK ? 'Ks ' + item.priceMMK.toLocaleString() : item.priceUSD ? '$' + item.priceUSD : item.pricePerNightMMK ? 'Ks ' + item.pricePerNightMMK.toLocaleString() + '/night' : item.pricePerNightUSD ? '$' + item.pricePerNightUSD + '/night' : item.visaFeeMMK ? 'Ks ' + item.visaFeeMMK.toLocaleString() : ''}</div>
                   </div>
                 </div>
               </a>
@@ -132,7 +132,7 @@ export default function RelatedItems({ section, excludeSlug, destination, countr
       {/* Cross-section "Explore in [Destination]" */}
       {mergedCross.map(({ section: s, items: sItems }) => (
         <div key={s.key} style={{ marginTop: 32 }}>
-          <h3 style={{ fontFamily: "'Playfair Display',serif", fontSize: 18, color: '#D4AF37', marginBottom: 12 }}>
+          <h3 style={{ fontFamily: "'Playfair Display',serif", fontSize: 18, color: '#8A6C0B', marginBottom: 12 }}>
             {s.label} {destination ? `in ${destination}` : country ? `for ${country}` : ''}
           </h3>
           <ScrollingRow containerWidth={RELATED_CONTAINER_WIDTH}>
@@ -142,7 +142,7 @@ export default function RelatedItems({ section, excludeSlug, destination, countr
                   <img src={item[s.imageField] || item.image || item.displayImage || (Array.isArray(item.images) ? item.images[0] : (typeof item.images === "string" ? item.images : "")) || `/images_v2/hero-${s.key}-v2.jpg`} alt={item[s.nameField] || ''} style={{ width: '100%', height: 110, objectFit: 'cover' }} />
                   <div style={{ padding: 8 }}>
                     <div style={{ fontSize: 12, fontWeight: 600, color: '#0A1628', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{item[s.nameField] || item.name || item.title || item.planName || item.carType || ''}</div>
-                    <div style={{ fontSize: 11, color: '#D4AF37', fontWeight: 600, marginTop: 4 }}>{item[s.priceField] ? (s.key === 'hotels' ? 'Ks ' + (item[s.priceField] || 0).toLocaleString() + '/night' : 'Ks ' + (item[s.priceField] || 0).toLocaleString()) : ''}</div>
+                    <div style={{ fontSize: 11, color: '#8A6C0B', fontWeight: 600, marginTop: 4 }}>{item[s.priceField] ? (s.key === 'hotels' ? 'Ks ' + (item[s.priceField] || 0).toLocaleString() + '/night' : 'Ks ' + (item[s.priceField] || 0).toLocaleString()) : ''}</div>
                   </div>
                 </div>
               </a>

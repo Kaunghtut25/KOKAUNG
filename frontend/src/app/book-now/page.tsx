@@ -260,7 +260,7 @@ function BookNowContent() {
         <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(10,22,40,0.9), rgba(10,22,40,0.3))" }} />
         <div style={{ position: "absolute", bottom: 40, left: 0, right: 0, textAlign: "center", padding: "0 20px" }}>
           <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: 42, color: "white", marginBottom: 8 }}>{t("book.title")}</h1>
-          <p style={{ color: "#D4AF37", fontSize: 18 }}>{t("book.subtitle")}</p>
+          <p style={{ color: "#8A6C0B", fontSize: 18 }}>{t("book.subtitle")}</p>
         </div>
       </section>
 

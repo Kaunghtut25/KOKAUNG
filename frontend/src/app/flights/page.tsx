@@ -521,7 +521,7 @@ export default function FlightsPage() {
               <div key={i} className="bg-white/5 backdrop-blur-sm border border-[#D4AF37]/10 rounded-2xl p-6 text-center hover:border-[#D4AF37]/30 hover:bg-white/[0.07] transition-all group">
                 <div className="text-4xl mb-4">{item.icon}</div>
                 <h3 className="text-white font-semibold text-lg mb-2">{t(item.titleKey)}</h3>
-                <p className="text-gray-500 text-sm leading-relaxed">{t(item.descKey)}</p>
+                <p className="text-gray-600 text-sm leading-relaxed">{t(item.descKey)}</p>
               </div>
             ))}
           </div>

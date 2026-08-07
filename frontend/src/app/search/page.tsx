@@ -62,7 +62,7 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
     <main style={{ minHeight: '100vh', background: '#f8f9fa' }}>
       <section style={{ background: '#0A1628', padding: '60px 20px', textAlign: 'center' }}>
         <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: 32, color: 'white' }}>Search Results</h1>
-        <p style={{ color: '#D4AF37', fontSize: 16, marginTop: 8 }}>Found {results.length} results for "{query}"</p>
+        <p style={{ color: '#8A6C0B', fontSize: 16, marginTop: 8 }}>Found {results.length} results for "{query}"</p>
       </section>
       <section style={{ maxWidth: 800, margin: '0 auto', padding: '40px 20px' }}>
         {results.length === 0 ? (

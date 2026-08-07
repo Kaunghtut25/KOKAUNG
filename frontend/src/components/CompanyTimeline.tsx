@@ -31,7 +31,7 @@ export default function CompanyTimeline({
           <div key={m.year + '-' + i} style={{ display: 'flex', justifyContent: i % 2 === 0 ? 'flex-start' : 'flex-end', marginBottom: 24 }}>
             <div style={{ width: '45%', background: 'white', borderRadius: 12, padding: 16, border: '1px solid #eee', position: 'relative' }}>
               <div style={{ position: 'absolute', top: 16, right: i % 2 === 0 ? -20 : 'auto', left: i % 2 !== 0 ? -20 : 'auto', width: 12, height: 12, borderRadius: '50%', background: '#D4AF37' }} />
-              <div style={{ color: '#D4AF37', fontSize: 18, fontWeight: 700 }}>{m.year}</div>
+              <div style={{ color: '#8A6C0B', fontSize: 18, fontWeight: 700 }}>{m.year}</div>
               <div style={{ color: '#0A1628', fontSize: 15, fontWeight: 600, marginTop: 4 }}>{m.title}</div>
               <div style={{ color: '#666', fontSize: 13, marginTop: 4 }}>{m.desc}</div>
             </div>
