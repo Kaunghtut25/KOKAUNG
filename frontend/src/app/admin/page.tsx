@@ -4,8 +4,10 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { decodeTokenPayload } from "@/lib/auth";
+import { useI18n } from "@/lib/i18n";
 
 export default function AdminRootPage() {
+  const { t } = useI18n();
   const router = useRouter();
 
   useEffect(() => {
@@ -22,7 +24,7 @@ export default function AdminRootPage() {
 
   return (
     <div className="min-h-screen bg-[#0A1628] flex items-center justify-center">
-      <div className="text-[#D4AF37] text-lg animate-pulse">Redirecting...</div>
+      <div className="text-[#D4AF37] text-lg animate-pulse">{t("admin.root.redirecting")}</div>
     </div>
   );
 }

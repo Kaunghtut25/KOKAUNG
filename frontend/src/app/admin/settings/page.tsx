@@ -139,7 +139,7 @@ export default function AdminSettingsPage() {
 
   const uploadFileToUrl = async (file: File): Promise<string> => {
     if (!file.type.startsWith("image/")) {
-      showToast("Only image files are accepted.", "error");
+      showToast(t("admin.common.imgOnly"), "error");
       return "";
     }
     try {
@@ -150,7 +150,7 @@ export default function AdminSettingsPage() {
       const blob = data.uploads?.[0];
       return blob.url;
     } catch {
-      showToast("Upload failed. Check connection.", "error");
+      showToast(t("admin.settings.uploadFailConn"), "error");
       return "";
     }
   };
@@ -158,7 +158,7 @@ export default function AdminSettingsPage() {
   const uploadFile = async (file: File, target: "logo" | keyof HeroImages) => {
     if (!file.type.startsWith("image/")) {
       setUploadError("Only image files are accepted.");
-      showToast("Only image files are accepted.", "error");
+      showToast(t("admin.common.imgOnly"), "error");
       return;
     }
     setUploading(true);
@@ -180,7 +180,7 @@ export default function AdminSettingsPage() {
       }
     } catch {
       setUploadError("Upload failed. Try URL paste instead.");
-      showToast("Upload failed. Try URL paste instead.", "error");
+      showToast(t("admin.common.uploadFailPaste"), "error");
     } finally {
       setUploading(false);
     }
@@ -193,7 +193,7 @@ export default function AdminSettingsPage() {
     const file = e.dataTransfer.files[0];
     if (!file) return;
     if (file.size > 5 * 1024 * 1024) {
-      showToast("Image must be under 5MB", "error");
+      showToast(t("admin.settings.imgUnder5"), "error");
       return;
     }
     // Show local preview first
@@ -211,7 +211,7 @@ export default function AdminSettingsPage() {
     const file = e.dataTransfer.files[0];
     if (!file) return;
     if (file.size > 5 * 1024 * 1024) {
-      showToast("Image must be under 5MB", "error");
+      showToast(t("admin.settings.imgUnder5"), "error");
       return;
     }
     // Show local preview first
@@ -252,13 +252,13 @@ export default function AdminSettingsPage() {
             });
           }
         } catch (err) { console.error("Certifications sync failed:", err); }
-        showToast("Settings saved successfully!", "success");
+        showToast(t("admin.settings.savedOk"), "success");
       } else {
-        showToast("Failed to save settings", "error");
+        showToast(t("admin.settings.saveFailed"), "error");
       }
     } catch (err) {
       console.error("Save failed:", err);
-      showToast("Failed to save settings", "error");
+      showToast(t("admin.settings.saveFailed"), "error");
     } finally {
       setSaving(false);
     }
@@ -268,7 +268,7 @@ export default function AdminSettingsPage() {
     const file = e.target.files?.[0];
     if (!file) return;
     if (file.size > 5 * 1024 * 1024) {
-      showToast("Image must be under 5MB", "error");
+      showToast(t("admin.settings.imgUnder5"), "error");
       return;
     }
     // Show local preview first
@@ -292,7 +292,7 @@ export default function AdminSettingsPage() {
     const file = e.target.files?.[0];
     if (!file) return;
     if (file.size > 5 * 1024 * 1024) {
-      showToast("Image must be under 5MB", "error");
+      showToast(t("admin.settings.imgUnder5"), "error");
       return;
     }
     // Show local preview first
@@ -312,7 +312,7 @@ export default function AdminSettingsPage() {
     <div className="space-y-6">
       {/* Logo Section */}
       <div className="bg-white/5 border border-white/10 rounded-xl p-6">
-        <h3 className="text-lg font-semibold text-gold mb-4">Site Logo</h3>
+        <h3 className="text-lg font-semibold text-gold mb-4">{t("admin.settings.siteLogo")}</h3>
         <div className="flex items-start gap-6">
           <div className="w-[180px] h-[80px] rounded-lg border border-white/20 bg-white/5 flex items-center justify-center overflow-hidden flex-shrink-0" onDragOver={handleDragOver} onDrop={handleLogoDrop}>
             {settings.logo ? (
@@ -320,12 +320,12 @@ export default function AdminSettingsPage() {
             ) : (
               <div className="text-white/20 text-center">
                 <span className="text-3xl block">🏷️</span>
-                <span className="text-xs">No logo</span>
+                <span className="text-xs">{t("admin.settings.noLogo")}</span>
               </div>
             )}
           </div>
           <div className="flex-1 space-y-3">
-            <p className="text-white/50 text-sm">Upload a logo for your site. Recommended: 200x60px, max 5MB.</p>
+            <p className="text-white/50 text-sm">{t("admin.settings.logoHint")}</p>
             <input
               ref={logoInputRef}
               type="file"
@@ -374,10 +374,10 @@ export default function AdminSettingsPage() {
 
       {/* Site Text */}
       <div className="bg-white/5 border border-white/10 rounded-xl p-6">
-        <h3 className="text-lg font-semibold text-gold mb-4">Site Text</h3>
+        <h3 className="text-lg font-semibold text-gold mb-4">{t("admin.settings.siteText")}</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label className="block text-white/60 text-sm mb-1">Site Title</label>
+            <label className="block text-white/60 text-sm mb-1">{t("admin.settings.siteTitle")}</label>
             <input
               type="text"
               value={settings.siteTitle}
@@ -386,7 +386,7 @@ export default function AdminSettingsPage() {
             />
           </div>
           <div>
-            <label className="block text-white/60 text-sm mb-1">Tagline</label>
+            <label className="block text-white/60 text-sm mb-1">{t("admin.settings.tagline")}</label>
             <input
               type="text"
               value={settings.tagline}
@@ -396,7 +396,7 @@ export default function AdminSettingsPage() {
           </div>
         </div>
         <div className="mt-4">
-          <label className="block text-white/60 text-sm mb-1">Footer Text</label>
+          <label className="block text-white/60 text-sm mb-1">{t("admin.settings.footerText")}</label>
           <input
             type="text"
             value={settings.footerText}
@@ -408,7 +408,7 @@ export default function AdminSettingsPage() {
 
       {/* Contact Info */}
       <div className="bg-white/5 border border-white/10 rounded-xl p-6">
-        <h3 className="text-lg font-semibold text-gold mb-4">Contact Information</h3>
+        <h3 className="text-lg font-semibold text-gold mb-4">{t("admin.settings.contactInfo")}</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <label className="block text-white/60 text-sm mb-1">Email</label>
@@ -430,7 +430,7 @@ export default function AdminSettingsPage() {
           </div>
         </div>
         <div className="mt-4">
-          <label className="block text-white/60 text-sm mb-1">Address</label>
+          <label className="block text-white/60 text-sm mb-1">{t("admin.settings.address")}</label>
           <textarea
             value={settings.contactAddress}
             onChange={(e) => setSettings((prev) => ({ ...prev, contactAddress: e.target.value }))}
@@ -444,7 +444,7 @@ export default function AdminSettingsPage() {
 
   const renderHeroTab = () => (
     <div className="bg-white/5 border border-white/10 rounded-xl p-6">
-      <h3 className="text-lg font-semibold text-gold mb-4">Hero Section Images</h3>
+      <h3 className="text-lg font-semibold text-gold mb-4">{t("admin.settings.heroImages")}</h3>
       <p className="text-white/40 text-sm mb-6">
         Set hero background images for each page. Provide a URL or upload an image. Recommended: 1920×600px, max 5MB.
       </p>
@@ -470,7 +470,7 @@ export default function AdminSettingsPage() {
                 ) : null}
                 <div className={`hero-fallback text-white/20 text-xs ${settings.heroImages[page] ? "hidden" : "flex"} items-center justify-center w-full h-full flex-col`}>
                   <span className="text-2xl">🖼️</span>
-                  <span>No image set</span>
+                  <span>{t("admin.settings.noImageSet")}</span>
                 </div>
               </div>
               <div className="flex-1 space-y-3">
@@ -525,9 +525,9 @@ export default function AdminSettingsPage() {
 
   const renderSocialTab = () => (
     <div className="bg-white/5 border border-white/10 rounded-xl p-6">
-      <h3 className="text-lg font-semibold text-gold mb-4">Social Media Links</h3>
+      <h3 className="text-lg font-semibold text-gold mb-4">{t("admin.settings.socialLinks")}</h3>
       <p className="text-white/40 text-sm mb-6">
-        Add links to your social media profiles. Leave empty to hide from the footer.
+        {t("admin.settings.socialHint")}
       </p>
       <div className="space-y-4">
         {(
@@ -562,9 +562,9 @@ export default function AdminSettingsPage() {
 
   const renderThemeTab = () => (
     <div className="bg-white/5 border border-white/10 rounded-xl p-6">
-      <h3 className="text-lg font-semibold text-gold mb-2">Theme Colors</h3>
+      <h3 className="text-lg font-semibold text-gold mb-2">{t("admin.settings.themeColors")}</h3>
       <p className="text-white/40 text-sm mb-6">
-        Current theme colors are read-only. Changes to theme require developer access.
+        {t("admin.settings.themeHint")}
       </p>
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
         {themeColors.map((tc) => (
@@ -586,18 +586,18 @@ export default function AdminSettingsPage() {
 
   const renderCertificationsTab = () => (
     <div className="bg-white/5 border border-white/10 rounded-xl p-6">
-      <h3 className="text-lg font-semibold text-gold mb-2">Accreditations & Certifications</h3>
+      <h3 className="text-lg font-semibold text-gold mb-2">{t("admin.settings.certs")}</h3>
       <p className="text-white/40 text-sm mb-6">
-        Update your certifications shown on the About Us page.
+        {t("admin.settings.certsHint")}
       </p>
       <div className="space-y-4">
         {settings.certifications.length === 0 && (
-          <p className="text-white/40 text-sm">No certifications yet. Click "+ Add Certification" below to create one.</p>
+          <p className="text-white/40 text-sm">{t("admin.settings.noCerts")}</p>
         )}
         {settings.certifications.map((cert, idx) => (
           <div key={idx} className="bg-white/[0.03] border border-white/10 rounded-lg p-4 space-y-3">
             <div className="flex justify-between items-center">
-              <span className="text-white/40 text-xs font-medium">Certification {idx + 1}</span>
+              <span className="text-white/40 text-xs font-medium">{t("admin.settings.certNum")} {idx + 1}</span>
               <button
                 type="button"
                 onClick={() => {
@@ -607,12 +607,12 @@ export default function AdminSettingsPage() {
                 }}
                 className="text-red-400 hover:text-red-300 text-xs font-medium px-2 py-1 rounded hover:bg-red-400/10 transition-colors"
               >
-                🗑 Delete
+                {t("admin.settings.delete")}
               </button>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
               <div>
-                <label className="block text-white/60 text-xs mb-1">Title</label>
+                <label className="block text-white/60 text-xs mb-1">{t("admin.settings.titleLbl")}</label>
                 <input
                   type="text"
                   value={cert.title}
@@ -625,7 +625,7 @@ export default function AdminSettingsPage() {
                 />
               </div>
               <div>
-                <label className="block text-white/60 text-xs mb-1">Code/Number</label>
+                <label className="block text-white/60 text-xs mb-1">{t("admin.settings.codeNumber")}</label>
                 <input
                   type="text"
                   value={cert.code}
@@ -661,7 +661,7 @@ export default function AdminSettingsPage() {
                       if (!file) return;
                       const url = await uploadFileToUrl(file);
                       if (url) {
-                        showToast("Image uploaded!", "success");
+                        showToast(t("admin.settings.imgUploaded"), "success");
                         const updated = [...settings.certifications];
                         updated[idx] = { ...updated[idx], image: url };
                         setSettings((prev) => ({ ...prev, certifications: updated }));
@@ -673,7 +673,7 @@ export default function AdminSettingsPage() {
                     onClick={() => fileInputRefs.current[idx]?.click()}
                     className="px-3 py-2 rounded-lg bg-gold/10 text-gold text-xs font-medium hover:bg-gold/20 transition-colors whitespace-nowrap"
                   >
-                    📎 Upload
+                    {t("admin.settings.upload")}
                   </button>
                 </div>
                 {cert.image && (
@@ -690,7 +690,7 @@ export default function AdminSettingsPage() {
           onClick={() => setSettings((prev) => ({ ...prev, certifications: [...prev.certifications, { title: "", code: "", image: "" }] }))}
           className="w-full py-2.5 rounded-lg border border-dashed border-gold/30 text-gold text-sm font-medium hover:bg-gold/10 transition-colors"
         >
-          ➕ Add Certification
+          {t("admin.settings.addCert")}
         </button>
       </div>
     </div>
@@ -699,18 +699,18 @@ export default function AdminSettingsPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-96">
-        <div className="text-gold/70 animate-pulse text-lg">Loading settings...</div>
+        <div className="text-gold/70 animate-pulse text-lg">{t("admin.settings.loading")}</div>
       </div>
     );
   }
 
   const tabs = [
-    { key: "general", label: "🏷️ General", icon: "⚙️" },
+    { key: "general", labelKey: "admin.settings.tabGeneral", icon: "⚙️" },
     // Hero Images moved to Site Manager (uses /api/admin/site-config)
     // { key: "hero", label: "🖼️ Hero Images", icon: "🖼️" },
-    { key: "social", label: "🌐 Social Links", icon: "🔗" },
-    { key: "certs", label: "🏅 Certifications", icon: "🏅" },
-    { key: "theme", label: "🎨 Theme Colors", icon: "🎨" },
+    { key: "social", labelKey: "admin.settings.tabSocial", icon: "🔗" },
+    { key: "certs", labelKey: "admin.settings.tabCerts", icon: "🏅" },
+    { key: "theme", labelKey: "admin.settings.tabTheme", icon: "🎨" },
   ] as const;
 
   return (
@@ -735,10 +735,10 @@ export default function AdminSettingsPage() {
             className="text-3xl md:text-4xl font-bold text-[#D4AF37]"
             style={{ fontFamily: "'Playfair Display', Georgia, serif" }}
           >
-            Site Settings
+            {t("admin.siteSettings")}
           </h1>
           <p className="text-white/40 text-sm mt-1">
-            Control your website appearance and content
+            {t("admin.settings.subtitle")}
           </p>
         </div>
         <button
@@ -748,11 +748,11 @@ export default function AdminSettingsPage() {
         >
           {saving ? (
             <>
-              <span className="animate-spin">⏳</span> Saving...
+              <span className="animate-spin">⏳</span> {t("admin.common.saving")}
             </>
           ) : (
             <>
-              <span>💾</span> Save Changes
+              <span>💾</span> {t("admin.users.saveChanges")}
             </>
           )}
         </button>

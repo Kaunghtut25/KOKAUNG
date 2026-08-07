@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useI18n } from "@/lib/i18n";
 
 // ── known duplicates & junk ──
 // Each entry: { collection, label, matcher: (item) => boolean, action: "delete" }
@@ -31,6 +32,7 @@ const PRICE_FIXES: Record<string, Record<string, any>> = {
 };
 
 export default function CleanupPage() {
+  const { t } = useI18n();
   const [log, setLog] = useState<string[]>([]);
   const [running, setRunning] = useState(false);
   const [done, setDone] = useState(false);
@@ -41,7 +43,7 @@ export default function CleanupPage() {
     setRunning(true);
     setDone(false);
     setLog([]);
-    const t = localStorage.getItem("admin_token") || "";
+    const tok = localStorage.getItem("admin_token") || "";
 
     logLine("🔍 Scanning catalog via admin API...");
 
@@ -50,7 +52,7 @@ export default function CleanupPage() {
     const all: Record<string, any[]> = {};
     for (const c of cols) {
       try {
-        const res = await fetch("/api/admin/" + c, { headers: { Authorization: "Bearer " + t } });
+        const res = await fetch("/api/admin/" + c, { headers: { Authorization: "Bearer " + tok } });
         const data = await res.json();
         // some routes return {data:[...]}, some return array directly
         const items = Array.isArray(data) ? data : (Array.isArray(data.data) ? data.data : []);
@@ -80,7 +82,7 @@ export default function CleanupPage() {
         // junk with single entry — delete it
         const id = keep.id || keep._id;
         try {
-          await fetch("/api/admin/" + plan.collection + "/" + id, { method: "DELETE", headers: { Authorization: "Bearer " + t } });
+          await fetch("/api/admin/" + plan.collection + "/" + id, { method: "DELETE", headers: { Authorization: "Bearer " + tok } });
           logLine(`  ✅ ${plan.label}: deleted (id=${id}, title="${(keep.title || keep.name || keep.planName || keep.carType || "")}")`);
           // remove from local list
           all[plan.collection] = all[plan.collection].filter((it) => it.id !== id);
@@ -96,7 +98,7 @@ export default function CleanupPage() {
       for (const d of dupes) {
         const id = d.id || d._id;
         try {
-          await fetch("/api/admin/" + plan.collection + "/" + id, { method: "DELETE", headers: { Authorization: "Bearer " + t } });
+          await fetch("/api/admin/" + plan.collection + "/" + id, { method: "DELETE", headers: { Authorization: "Bearer " + tok } });
           logLine(`  ✅ ${plan.label}: deleted dupe (id=${id})`);
           all[plan.collection] = all[plan.collection].filter((it) => it.id !== id);
         } catch (e) {
@@ -114,7 +116,7 @@ export default function CleanupPage() {
       hiace: 120000, toyota: 80000, honda: 95000,
     };
     for (const car of cars) {
-      const t = (car.carType || "").toLowerCase();
+      const ct = (car.carType || "").toLowerCase();
       const pricingArr = Array.isArray(car.pricingWithDriver) ? car.pricingWithDriver : (Array.isArray(car.pricing) ? car.pricing : []);
       const pricingObj = car.pricing && !Array.isArray(car.pricing) ? car.pricing : null;
       const id = car.id || car._id;
@@ -123,12 +125,12 @@ export default function CleanupPage() {
       if (!hasPrice) {
         let bestPrice = 120000;
         for (const [kw, p] of Object.entries(carPriceMap)) {
-          if (t.includes(kw)) { bestPrice = p; break; }
+          if (ct.includes(kw)) { bestPrice = p; break; }
         }
         try {
           await fetch("/api/admin/cars/" + id, {
             method: "PUT",
-            headers: { "Content-Type": "application/json", Authorization: "Bearer " + t },
+            headers: { "Content-Type": "application/json", Authorization: "Bearer " + tok },
             body: JSON.stringify({ ...car, pricingWithDriver: [{ duration: "Full Day", priceMMK: bestPrice, priceUSD: Math.round(bestPrice / 2100) }] }),
           });
           logLine(`  ✅ ${car.carType}: price set to ${bestPrice} MMK`);
@@ -152,7 +154,7 @@ export default function CleanupPage() {
       try {
         await fetch("/api/admin/visas/" + id, {
           method: "PUT",
-          headers: { "Content-Type": "application/json", Authorization: "Bearer " + t },
+          headers: { "Content-Type": "application/json", Authorization: "Bearer " + tok },
           body: JSON.stringify({ ...v, visaFeeMMK: 60000, visaFeeUSD: 29 }),
         });
         logLine(`  ✅ Thailand visa (id=${id}): fee set to 60000 MMK / $29`);
@@ -170,10 +172,10 @@ export default function CleanupPage() {
   return (
     <div className="min-h-screen bg-[#0A1628] p-8">
       <div className="max-w-3xl mx-auto">
-        <h1 className="text-3xl font-light text-white mb-2">Phase 2: Data Cleanup</h1>
+        <h1 className="text-3xl font-light text-white mb-2">{t("admin.cleanup.title")}</h1>
         <p className="text-white/40 text-sm mb-6">
-          Deletes duplicates, removes junk records, fixes zero-price cars, and corrects Thailand visa fee.
-          This uses your logged-in admin session — nothing leaves the browser.
+          {t("admin.cleanup.desc1")}
+          {t("admin.cleanup.desc2")}
         </p>
 
         {!running && !done && (
@@ -181,7 +183,7 @@ export default function CleanupPage() {
             onClick={run}
             className="bg-[#D4AF37] text-[#0A1628] px-8 py-3 rounded-lg font-bold text-lg hover:bg-[#C4A030] transition"
           >
-            🧹 Run Cleanup
+            {t("admin.cleanup.run")}
           </button>
         )}
 
@@ -190,7 +192,7 @@ export default function CleanupPage() {
             {log.map((line, i) => (
               <div key={i} className="text-white/80 leading-relaxed">{line}</div>
             ))}
-            <div className="text-[#D4AF37] mt-2 animate-pulse">Running...</div>
+            <div className="text-[#D4AF37] mt-2 animate-pulse">{t("admin.cleanup.running")}</div>
           </div>
         )}
 

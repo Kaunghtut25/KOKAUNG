@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useState, useCallback } from "react";
+import { useI18n } from "@/lib/i18n";
 
 /* ─────────────────────────────────────────────────────────────
    Manage About Us — full text/image control for /about page
@@ -91,6 +92,7 @@ const btnGhost =
   "px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-white/70 text-sm hover:border-white/25 transition-all";
 
 export default function AdminAboutPage() {
+  const { t } = useI18n();
   const token = typeof window !== "undefined" ? localStorage.getItem("admin_token") : "";
   const [about, setAbout] = useState<AboutConfig>(defaultAbout);
   const [loading, setLoading] = useState(true);
@@ -135,7 +137,7 @@ export default function AdminAboutPage() {
   // ── Upload ──
   const uploadFile = async (file: File, target: string) => {
     if (!file.type.startsWith("image/")) {
-      setUploadError("Only image files are accepted.");
+      setUploadError(t("admin.common.imgOnly"));
       return;
     }
     setUploadingKey(target);
@@ -162,10 +164,10 @@ export default function AdminAboutPage() {
           });
         }
       } else {
-        setUploadError(data.error || "Upload failed. Please try again.");
+        setUploadError(data.error || t("admin.about.uploadFailTry"));
       }
     } catch {
-      setUploadError("Upload failed. Check your connection and try again.");
+      setUploadError(t("admin.about.uploadFailConn"));
     } finally {
       setUploadingKey(null);
     }
@@ -240,9 +242,9 @@ export default function AdminAboutPage() {
         body: JSON.stringify(payload),
       });
       const data = await put.json();
-      setSavedMsg(data.success ? "✅ About page saved! Refresh the public page to see changes." : data.message || "Save failed.");
+      setSavedMsg(data.success ? t("admin.about.saved") : data.message || t("admin.about.saveFail"));
     } catch {
-      setSavedMsg("❌ Save failed. Check your connection.");
+      setSavedMsg(t("admin.about.saveFailConn"));
     } finally {
       setSaving(false);
     }
@@ -251,7 +253,7 @@ export default function AdminAboutPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-96">
-        <div className="text-gold/70 animate-pulse text-lg">Loading About page content...</div>
+        <div className="text-gold/70 animate-pulse text-lg">{t("admin.about.loading")}</div>
       </div>
     );
   }
@@ -262,14 +264,14 @@ export default function AdminAboutPage() {
       <div className="flex items-center justify-between flex-wrap gap-4">
         <div>
           <h1 className="text-3xl md:text-4xl font-bold text-[#D4AF37]" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
-            Manage About Us
+            {t("admin.about.title")}
           </h1>
-          <p className="text-white/40 text-sm mt-1">Edit every text and image on the About page</p>
+          <p className="text-white/40 text-sm mt-1">{t("admin.about.subtitle")}</p>
         </div>
         <div className="flex items-center gap-3">
           {savedMsg && <span className="text-sm text-emerald-400">{savedMsg}</span>}
           <button onClick={save} disabled={saving} className={btnGold}>
-            {saving ? "Saving..." : "💾 Save About Page"}
+            {saving ? t("admin.common.saving") : t("admin.about.saveBtn")}
           </button>
         </div>
       </div>
@@ -290,29 +292,29 @@ export default function AdminAboutPage() {
 
       {/* ─── Hero ─── */}
       <div className={cardCls}>
-        <h2 className="text-lg font-bold text-white mb-4">🏞️ Hero Section</h2>
+        <h2 className="text-lg font-bold text-white mb-4">{t("admin.about.heroSection")}</h2>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           <div className="space-y-4">
             <div>
-              <label className={labelCls}>Hero Title</label>
+              <label className={labelCls}>{t("admin.about.heroTitle")}</label>
               <input className={inputCls} value={about.heroTitle} onChange={(e) => set("heroTitle", e.target.value)} />
             </div>
             <div>
-              <label className={labelCls}>Hero Subtitle</label>
+              <label className={labelCls}>{t("admin.about.heroSubtitle")}</label>
               <textarea className={inputCls} rows={3} value={about.heroSubtitle} onChange={(e) => set("heroSubtitle", e.target.value)} />
             </div>
           </div>
           <div>
-            <label className={labelCls}>Hero Image</label>
+            <label className={labelCls}>{t("admin.about.heroImage")}</label>
             <div className="relative rounded-xl overflow-hidden border border-white/10 h-48 bg-white/5">
               {about.heroImage ? (
                 <img src={about.heroImage} alt="Hero" className="w-full h-full object-cover" onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }} />
               ) : (
-                <div className="flex items-center justify-center h-full text-white/30 text-sm">No image</div>
+                <div className="flex items-center justify-center h-full text-white/30 text-sm">{t("admin.about.noImage")}</div>
               )}
             </div>
             <button onClick={() => openUploader("heroImage")} disabled={uploadingKey === "heroImage"} className={`${btnGhost} mt-2 w-full`}>
-              {uploadingKey === "heroImage" ? "Uploading..." : "📤 Upload Hero Image"}
+              {uploadingKey === "heroImage" ? t("admin.form.uploading") : t("admin.about.uploadHero")}
             </button>
           </div>
         </div>
@@ -320,7 +322,7 @@ export default function AdminAboutPage() {
 
       {/* ─── Who We Are ─── */}
       <div className={cardCls}>
-        <h2 className="text-lg font-bold text-white mb-4">📖 Who We Are (Paragraphs)</h2>
+        <h2 className="text-lg font-bold text-white mb-4">{t("admin.about.whoWeAre")}</h2>
         <div className="space-y-3">
           {about.whoWeAreText.map((p, i) => (
             <div key={i} className="flex flex-col md:flex-row items-stretch md:items-start gap-2">
@@ -331,23 +333,23 @@ export default function AdminAboutPage() {
             </div>
           ))}
         </div>
-        <button onClick={() => addStringItem("whoWeAreText")} className={`${btnGhost} mt-3`}>＋ Add Paragraph</button>
+        <button onClick={() => addStringItem("whoWeAreText")} className={`${btnGhost} mt-3`}>{t("admin.about.addParagraph")}</button>
       </div>
 
       {/* ─── Mission & Vision ─── */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div className={cardCls}>
-          <h2 className="text-lg font-bold text-white mb-4">🎯 Mission</h2>
+          <h2 className="text-lg font-bold text-white mb-4">{t("admin.about.mission")}</h2>
           <div className="space-y-3">
-            <div><label className={labelCls}>Title</label><input className={inputCls} value={about.missionTitle} onChange={(e) => set("missionTitle", e.target.value)} /></div>
-            <div><label className={labelCls}>Text</label><textarea className={inputCls} rows={4} value={about.missionText} onChange={(e) => set("missionText", e.target.value)} /></div>
+            <div><label className={labelCls}>{t("admin.about.title")}</label><input className={inputCls} value={about.missionTitle} onChange={(e) => set("missionTitle", e.target.value)} /></div>
+            <div><label className={labelCls}>{t("admin.about.text")}</label><textarea className={inputCls} rows={4} value={about.missionText} onChange={(e) => set("missionText", e.target.value)} /></div>
           </div>
         </div>
         <div className={cardCls}>
-          <h2 className="text-lg font-bold text-white mb-4">🔭 Vision</h2>
+          <h2 className="text-lg font-bold text-white mb-4">{t("admin.about.vision")}</h2>
           <div className="space-y-3">
-            <div><label className={labelCls}>Title</label><input className={inputCls} value={about.visionTitle} onChange={(e) => set("visionTitle", e.target.value)} /></div>
-            <div><label className={labelCls}>Text</label><textarea className={inputCls} rows={4} value={about.visionText} onChange={(e) => set("visionText", e.target.value)} /></div>
+            <div><label className={labelCls}>{t("admin.about.title")}</label><input className={inputCls} value={about.visionTitle} onChange={(e) => set("visionTitle", e.target.value)} /></div>
+            <div><label className={labelCls}>{t("admin.about.text")}</label><textarea className={inputCls} rows={4} value={about.visionText} onChange={(e) => set("visionText", e.target.value)} /></div>
           </div>
         </div>
       </div>
@@ -355,10 +357,10 @@ export default function AdminAboutPage() {
       {/* ─── Values ─── */}
       <div className={cardCls}>
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-bold text-white">💎 Values</h2>
-          <button onClick={addValue} className={btnGhost}>＋ Add Value</button>
+          <h2 className="text-lg font-bold text-white">{t("admin.about.values")}</h2>
+          <button onClick={addValue} className={btnGhost}>{t("admin.about.addValue")}</button>
         </div>
-        <div className="mb-3"><label className={labelCls}>Values Section Title</label><input className={inputCls} value={about.valuesTitle} onChange={(e) => set("valuesTitle", e.target.value)} /></div>
+        <div className="mb-3"><label className={labelCls}>{t("admin.about.valuesSectionTitle")}</label><input className={inputCls} value={about.valuesTitle} onChange={(e) => set("valuesTitle", e.target.value)} /></div>
         <div className="space-y-3">
           {about.values.map((v, i) => (
             <div key={i} className="flex flex-col md:flex-row items-stretch md:items-start gap-2">
@@ -374,10 +376,10 @@ export default function AdminAboutPage() {
       {/* ─── Services ─── */}
       <div className={cardCls}>
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-bold text-white">🛎️ Services</h2>
-          <button onClick={() => addStringItem("services")} className={btnGhost}>＋ Add Service</button>
+          <h2 className="text-lg font-bold text-white">{t("admin.about.services")}</h2>
+          <button onClick={() => addStringItem("services")} className={btnGhost}>{t("admin.about.addService")}</button>
         </div>
-        <div className="mb-3"><label className={labelCls}>Services Section Title</label><input className={inputCls} value={about.servicesTitle} onChange={(e) => set("servicesTitle", e.target.value)} /></div>
+        <div className="mb-3"><label className={labelCls}>{t("admin.about.servicesSectionTitle")}</label><input className={inputCls} value={about.servicesTitle} onChange={(e) => set("servicesTitle", e.target.value)} /></div>
         <div className="space-y-2">
           {about.services.map((s, i) => (
             <div key={i} className="flex flex-col md:flex-row items-stretch md:items-center gap-2">
@@ -391,10 +393,10 @@ export default function AdminAboutPage() {
       {/* ─── Why Choose Us ─── */}
       <div className={cardCls}>
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-bold text-white">⭐ Why Choose Us</h2>
-          <button onClick={() => addStringItem("whyChooseUs")} className={btnGhost}>＋ Add Item</button>
+          <h2 className="text-lg font-bold text-white">{t("admin.about.whyChooseUs")}</h2>
+          <button onClick={() => addStringItem("whyChooseUs")} className={btnGhost}>{t("admin.about.addItem")}</button>
         </div>
-        <div className="mb-3"><label className={labelCls}>Section Title</label><input className={inputCls} value={about.whyChooseUsTitle} onChange={(e) => set("whyChooseUsTitle", e.target.value)} /></div>
+        <div className="mb-3"><label className={labelCls}>{t("admin.about.sectionTitle")}</label><input className={inputCls} value={about.whyChooseUsTitle} onChange={(e) => set("whyChooseUsTitle", e.target.value)} /></div>
         <div className="space-y-2">
           {about.whyChooseUs.map((w, i) => (
             <div key={i} className="flex flex-col md:flex-row items-stretch md:items-center gap-2">
@@ -408,11 +410,11 @@ export default function AdminAboutPage() {
       {/* ─── Our Journey ─── */}
       <div className={cardCls}>
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-bold text-white">🗺️ Our Journey (Timeline)</h2>
-          <button onClick={addJourney} className={btnGhost}>＋ Add Milestone</button>
+          <h2 className="text-lg font-bold text-white">{t("admin.about.journey")}</h2>
+          <button onClick={addJourney} className={btnGhost}>{t("admin.about.addMilestone")}</button>
         </div>
         <div className="mb-3">
-          <label className={labelCls}>Journey Section Title</label>
+          <label className={labelCls}>{t("admin.about.journeySectionTitle")}</label>
           <input className={inputCls} value={about.journeyTitle} onChange={(e) => set("journeyTitle", e.target.value)} />
         </div>
         <div className="space-y-3">
@@ -429,21 +431,21 @@ export default function AdminAboutPage() {
 
       {/* ─── Commitment ─── */}
       <div className={cardCls}>
-        <h2 className="text-lg font-bold text-white mb-4">🤝 Commitment (CTA Section)</h2>
+        <h2 className="text-lg font-bold text-white mb-4">{t("admin.about.commitment")}</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-          <div><label className={labelCls}>Title</label><input className={inputCls} value={about.commitmentTitle} onChange={(e) => set("commitmentTitle", e.target.value)} /></div>
-          <div><label className={labelCls}>Button Label</label><input className={inputCls} value={about.commitmentButtonLabel} onChange={(e) => set("commitmentButtonLabel", e.target.value)} /></div>
-          <div className="md:col-span-2"><label className={labelCls}>Text</label><textarea className={inputCls} rows={2} value={about.commitmentText} onChange={(e) => set("commitmentText", e.target.value)} /></div>
-          <div className="md:col-span-2"><label className={labelCls}>Subtext</label><textarea className={inputCls} rows={2} value={about.commitmentSubtext} onChange={(e) => set("commitmentSubtext", e.target.value)} /></div>
-          <div className="md:col-span-2"><label className={labelCls}>Button Link (href)</label><input className={inputCls} value={about.commitmentButtonHref} onChange={(e) => set("commitmentButtonHref", e.target.value)} /></div>
+          <div><label className={labelCls}>{t("admin.about.title")}</label><input className={inputCls} value={about.commitmentTitle} onChange={(e) => set("commitmentTitle", e.target.value)} /></div>
+          <div><label className={labelCls}>{t("admin.about.buttonLabel")}</label><input className={inputCls} value={about.commitmentButtonLabel} onChange={(e) => set("commitmentButtonLabel", e.target.value)} /></div>
+          <div className="md:col-span-2"><label className={labelCls}>{t("admin.about.text")}</label><textarea className={inputCls} rows={2} value={about.commitmentText} onChange={(e) => set("commitmentText", e.target.value)} /></div>
+          <div className="md:col-span-2"><label className={labelCls}>{t("admin.about.subtext")}</label><textarea className={inputCls} rows={2} value={about.commitmentSubtext} onChange={(e) => set("commitmentSubtext", e.target.value)} /></div>
+          <div className="md:col-span-2"><label className={labelCls}>{t("admin.about.buttonHref")}</label><input className={inputCls} value={about.commitmentButtonHref} onChange={(e) => set("commitmentButtonHref", e.target.value)} /></div>
         </div>
       </div>
 
       {/* ─── Certifications ─── */}
       <div className={cardCls}>
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-bold text-white">🏅 Accreditations & Licenses</h2>
-          <button onClick={addCert} className={btnGhost}>＋ Add Certification</button>
+          <h2 className="text-lg font-bold text-white">{t("admin.about.certs")}</h2>
+          <button onClick={addCert} className={btnGhost}>{t("admin.about.addCert")}</button>
         </div>
         <div className="space-y-3">
           {about.certifications.map((c, i) => (
@@ -456,8 +458,8 @@ export default function AdminAboutPage() {
                 )}
               </div>
               <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-2">
-                <input className={inputCls} placeholder="Title (e.g. IATA Accredited)" value={c.title} onChange={(e) => updateCert(i, { title: e.target.value })} />
-                <input className={inputCls} placeholder="Code (e.g. 05301026)" value={c.code} onChange={(e) => updateCert(i, { code: e.target.value })} />
+                <input className={inputCls} placeholder={t("admin.about.phCertTitle")} value={c.title} onChange={(e) => updateCert(i, { title: e.target.value })} />
+                <input className={inputCls} placeholder={t("admin.about.phCertCode")} value={c.code} onChange={(e) => updateCert(i, { code: e.target.value })} />
               </div>
               <div className="flex flex-row sm:flex-col gap-2 flex-shrink-0">
                 <button onClick={() => openUploader(`cert:${i}`)} disabled={uploadingKey === `cert:${i}`} className={`${btnGhost} text-xs px-3 py-1.5`}>
@@ -474,7 +476,7 @@ export default function AdminAboutPage() {
       <div className="sticky bottom-4 flex items-center justify-end gap-3 bg-[#0A1628]/90 backdrop-blur border border-white/10 rounded-xl px-5 py-3">
         {savedMsg && <span className="text-sm text-emerald-400 flex-1">{savedMsg}</span>}
         <button onClick={save} disabled={saving} className={btnGold}>
-          {saving ? "Saving..." : "💾 Save About Page"}
+          {saving ? t("admin.common.saving") : t("admin.about.saveBtn")}
         </button>
       </div>
     </div>

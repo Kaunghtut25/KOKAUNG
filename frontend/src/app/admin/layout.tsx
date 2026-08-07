@@ -6,22 +6,23 @@ import { decodeTokenPayload } from "@/lib/auth";
 import AdminSidebar from "@/components/AdminSidebar";
 import { LanguageProvider } from "@/lib/i18n";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
+import { useI18n } from "@/lib/i18n";
 
 function AdminErrorFallback() {
+  const { t } = useI18n();
   return (
     <div className="min-h-screen bg-deepblue flex items-center justify-center">
       <div className="text-center max-w-md p-8">
         <div className="text-5xl mb-4">⚠️</div>
-        <h2 className="text-xl font-bold text-white mb-2">Something went wrong</h2>
+        <h2 className="text-xl font-bold text-white mb-2">{t("admin.layout.errTitle")}</h2>
         <p className="text-white/50 text-sm mb-6">
-          A client-side error occurred while loading this admin page. 
-          This may be caused by outdated data or a network issue.
+          {t("admin.layout.errBody")}
         </p>
         <button
           onClick={() => window.location.reload()}
           className="px-5 py-2 rounded-lg bg-gold text-deepblue-dark font-semibold text-sm hover:bg-gold/90 transition-all"
         >
-          Reload Page
+          {t("admin.layout.reload")}
         </button>
       </div>
     </div>
@@ -58,6 +59,7 @@ export default function AdminLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const { t } = useI18n();
   const router = useRouter();
   const [authorized, setAuthorized] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -94,7 +96,7 @@ export default function AdminLayout({
   if (!authorized) {
     return (
       <div className="min-h-screen bg-deepblue flex items-center justify-center">
-        <div className="text-gold text-lg animate-pulse">Checking authentication...</div>
+        <div className="text-gold text-lg animate-pulse">{t("admin.layout.checking")}</div>
       </div>
     );
   }

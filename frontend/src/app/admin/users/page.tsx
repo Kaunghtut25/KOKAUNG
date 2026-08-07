@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import { useI18n } from "@/lib/i18n";
 
 interface UserRow {
   id?: string; _id?: string;
@@ -13,25 +14,25 @@ interface UserRow {
 const inputCls = "w-full bg-[#0A1628] border border-white/10 rounded-lg px-3 py-2 text-white text-sm focus:border-[#D4AF37] outline-none";
 
 const ROLES = [
-  { value: "admin", label: "Admin — full access", desc: "Everything" },
-  { value: "staff", label: "Staff — manage content", desc: "CRUD content, no user management" },
-  { value: "editor", label: "Editor — edit content", desc: "Content edits & bookings" },
-  { value: "viewer", label: "Viewer — read only", desc: "View dashboard & data" },
+  { value: "admin", labelKey: "admin.users.role.admin", descKey: "admin.users.roleDesc.admin" },
+  { value: "staff", labelKey: "admin.users.role.staff", descKey: "admin.users.roleDesc.staff" },
+  { value: "editor", labelKey: "admin.users.role.editor", descKey: "admin.users.roleDesc.editor" },
+  { value: "viewer", labelKey: "admin.users.role.viewer", descKey: "admin.users.roleDesc.viewer" },
 ];
 
 const AUTHORITIES = [
-  { key: "tours", label: "Tours" },
-  { key: "hotels", label: "Hotels" },
-  { key: "cars", label: "Cars" },
-  { key: "cruises", label: "Cruises" },
-  { key: "visas", label: "Visas" },
-  { key: "insurances", label: "Insurance" },
-  { key: "bookings", label: "Bookings" },
-  { key: "users", label: "Users" },
-  { key: "settings", label: "Settings" },
-  { key: "blog", label: "Blog" },
-  { key: "destinations", label: "Destinations" },
-  { key: "sky-lounge", label: "Sky Lounge" },
+  { key: "tours", labelKey: "admin.users.auth.tours" },
+  { key: "hotels", labelKey: "admin.users.auth.hotels" },
+  { key: "cars", labelKey: "admin.users.auth.cars" },
+  { key: "cruises", labelKey: "admin.users.auth.cruises" },
+  { key: "visas", labelKey: "admin.users.auth.visas" },
+  { key: "insurances", labelKey: "admin.users.auth.insurance" },
+  { key: "bookings", labelKey: "admin.users.auth.bookings" },
+  { key: "users", labelKey: "admin.users.auth.users" },
+  { key: "settings", labelKey: "admin.users.auth.settings" },
+  { key: "blog", labelKey: "admin.users.auth.blog" },
+  { key: "destinations", labelKey: "admin.users.auth.destinations" },
+  { key: "sky-lounge", labelKey: "admin.users.auth.sky" },
 ];
 
 // FIX: 2026-08-04 admin-users-v2b — admin API routes require the bearer token
@@ -48,6 +49,7 @@ const roleColor: Record<string, string> = {
 };
 
 export default function AdminUsersPage() {
+  const { t } = useI18n();
   const [users, setUsers] = useState<UserRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [modal, setModal] = useState(false);
@@ -91,15 +93,15 @@ export default function AdminUsersPage() {
 
   const save = async () => {
     if (!form.name.trim() || !form.email.trim()) {
-      setError("Name and email are required.");
+      setError(t("admin.users.errNameEmail"));
       return;
     }
     if (!editId && !form.password) {
-      setError("Password is required for new users.");
+      setError(t("admin.users.errPwReq"));
       return;
     }
     if (form.password && form.password.length < 6) {
-      setError("Password must be at least 6 characters.");
+      setError(t("admin.users.errPwLen"));
       return;
     }
     setSaving(true); setError("");
@@ -117,48 +119,48 @@ export default function AdminUsersPage() {
         setForm({ name: "", email: "", password: "", role: "admin" });
         await load();
       } else {
-        setError(data.message || "Failed to save user");
+        setError(data.message || t("admin.users.errSave"));
       }
-    } catch (e) { console.error(e); setError("Failed to save user"); }
+    } catch (e) { console.error(e); setError(t("admin.users.errSave")); }
     setSaving(false);
   };
 
   const del = async (id: string) => {
-    if (!confirm("Delete this user? They will no longer be able to log in.")) return;
+    if (!confirm(t("admin.users.confirmDel"))) return;
     try {
       await fetch(`/api/admin/users?id=${id}`, { method: "DELETE", headers: authHeaders() });
       await load();
     } catch (e) { console.error(e); }
   };
 
-  if (loading) return <div className="min-h-screen bg-[#0A1628] flex items-center justify-center"><div className="text-white/60 text-lg">Loading users...</div></div>;
+  if (loading) return <div className="min-h-screen bg-[#0A1628] flex items-center justify-center"><div className="text-white/60 text-lg">{t("admin.users.loading")}</div></div>;
 
   return (
     <div className="min-h-screen bg-[#0A1628] p-6">
       <div className="max-w-7xl mx-auto">
         <div className="flex items-center justify-between mb-8">
-          <h1 className="text-3xl font-light text-white">Manage Users ({users.length})</h1>
+          <h1 className="text-3xl font-light text-white">{t("admin.users.title")} ({users.length})</h1>
           <button onClick={openAdd}
             className="bg-[#D4AF37] text-[#0A1628] px-5 py-2 rounded-lg font-medium hover:bg-[#C4A030] transition">
-            + Add New User
+            {t("admin.users.addNew")}
           </button>
         </div>
 
-        <p className="text-white/40 text-sm mb-6">Create admin accounts so your team can log in at <span className="text-[#D4AF37]">/auth/login</span>. Passwords are stored hashed — never in plaintext. Assign roles & authorities to control what each user can access.</p>
+        <p className="text-white/40 text-sm mb-6">{t("admin.users.subtitle")} <span className="text-[#D4AF37]">/auth/login</span>. Passwords are stored hashed — never in plaintext. Assign roles & authorities to control what each user can access.</p>
 
         {users.length === 0 ? (
-          <div className="text-white/40 text-center py-16 text-lg">No users yet. Click "+ Add New User" to create the first admin account.</div>
+          <div className="text-white/40 text-center py-16 text-lg">{t("admin.users.empty")}</div>
         ) : (
           <div className="bg-[#0F1E35] border border-white/10 rounded-xl overflow-hidden">
             <table className="w-full text-left">
               <thead className="bg-[#0A1628]">
                 <tr className="text-white/40 text-xs uppercase tracking-wider">
-                  <th className="px-5 py-3">Name</th>
-                  <th className="px-5 py-3">Email</th>
-                  <th className="px-5 py-3">Role</th>
-                  <th className="px-5 py-3">Authorities</th>
-                  <th className="px-5 py-3">Created</th>
-                  <th className="px-5 py-3 text-right">Actions</th>
+                  <th className="px-5 py-3">{t("admin.book.name")}</th>
+                  <th className="px-5 py-3">{t("admin.book.email")}</th>
+                  <th className="px-5 py-3">{t("admin.users.role")}</th>
+                  <th className="px-5 py-3">{t("admin.users.authorities")}</th>
+                  <th className="px-5 py-3">{t("admin.users.created")}</th>
+                  <th className="px-5 py-3 text-right">{t("admin.dash.actions")}</th>
                 </tr>
               </thead>
               <tbody>
@@ -167,7 +169,7 @@ export default function AdminUsersPage() {
                     <td className="px-5 py-3">
                       <span className="text-white font-medium">{u.name || "—"}</span>
                       {u.isPrimary && (
-                        <span className="ml-2 text-[10px] uppercase tracking-wider bg-[#D4AF37]/20 text-[#D4AF37] border border-[#D4AF37]/40 rounded-full px-2 py-0.5">Primary</span>
+                        <span className="ml-2 text-[10px] uppercase tracking-wider bg-[#D4AF37]/20 text-[#D4AF37] border border-[#D4AF37]/40 rounded-full px-2 py-0.5">{t("admin.users.primary")}</span>
                       )}
                     </td>
                     <td className="px-5 py-3 text-white/60 text-sm">{u.email}</td>
@@ -184,19 +186,19 @@ export default function AdminUsersPage() {
                         {(u.authorities || []).length > 6 && (
                           <span className="text-[10px] text-white/40">+{(u.authorities || []).length - 6}</span>
                         )}
-                        {(!u.authorities || u.authorities.length === 0) && <span className="text-white/30 text-xs">all</span>}
+                        {(!u.authorities || u.authorities.length === 0) && <span className="text-white/30 text-xs">{t("admin.users.allAuth")}</span>}
                       </div>
                     </td>
                     <td className="px-5 py-3 text-white/40 text-xs">{u.createdAt ? new Date(u.createdAt).toLocaleString() : "—"}</td>
                     <td className="px-5 py-3 text-right whitespace-nowrap">
                       <button onClick={() => openEdit(u)}
                         className="text-[#D4AF37]/80 hover:text-[#D4AF37] text-sm px-3 py-1 border border-[#D4AF37]/20 rounded hover:border-[#D4AF37] transition mr-2">
-                        Edit
+                        {t("admin.common.edit")}
                       </button>
                       {!u.isPrimary && (
                         <button onClick={() => del(u.id || u._id || "")}
                           className="text-red-400/70 hover:text-red-400 text-sm px-3 py-1 border border-red-400/20 rounded hover:border-red-400 transition">
-                          Delete
+                          {t("admin.common.delete")}
                         </button>
                       )}
                     </td>
@@ -211,36 +213,36 @@ export default function AdminUsersPage() {
       {modal && (
         <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
           <div className="bg-[#0F1E35] border border-white/20 rounded-2xl p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto">
-            <h2 className="text-xl text-white font-semibold mb-4">{editId ? "Edit User" : "Add New User"}</h2>
+            <h2 className="text-xl text-white font-semibold mb-4">{editId ? t("admin.users.editTitle") : t("admin.users.addTitle")}</h2>
             <div className="space-y-3">
               <div>
-                <label className="text-white/60 text-xs block mb-1">Full Name</label>
-                <input className={inputCls} value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} placeholder="e.g. Su Myat" />
+                <label className="text-white/60 text-xs block mb-1">{t("admin.users.fullName")}</label>
+                <input className={inputCls} value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} placeholder={t("admin.users.phName")} />
               </div>
               <div>
-                <label className="text-white/60 text-xs block mb-1">Email</label>
+                <label className="text-white/60 text-xs block mb-1">{t("admin.book.email")}</label>
                 <input className={inputCls} type="email" value={form.email} onChange={e => setForm({ ...form, email: e.target.value })} placeholder="name@a9globaltravel.com.mm" />
               </div>
               <div>
                 <label className="text-white/60 text-xs block mb-1">
-                  Password {editId ? "(leave blank to keep current)" : "(min 6 characters)"}
+                  {t("admin.users.password")} {editId ? t("admin.users.pwKeep") : t("admin.users.pwMin")}
                 </label>
                 <input className={inputCls} type="password" value={form.password} onChange={e => setForm({ ...form, password: e.target.value })} placeholder="••••••••" />
               </div>
               <div>
-                <label className="text-white/60 text-xs block mb-1">Role / Authorities</label>
+                <label className="text-white/60 text-xs block mb-1">{t("admin.users.roleAuth")}</label>
                 <select className={inputCls} value={form.role} onChange={e => setForm({ ...form, role: e.target.value })}>
-                  {ROLES.map((r) => <option key={r.value} value={r.value}>{r.label}</option>)}
+                  {ROLES.map((r) => <option key={r.value} value={r.value}>{t(r.labelKey)}</option>)}
                 </select>
-                <p className="text-white/30 text-xs mt-1">{ROLES.find(r => r.value === form.role)?.desc}</p>
+                <p className="text-white/30 text-xs mt-1">{t(ROLES.find(r => r.value === form.role)?.descKey || "")}</p>
               </div>
               <div>
-                <label className="text-white/60 text-xs block mb-1">Section Access</label>
+                <label className="text-white/60 text-xs block mb-1">{t("admin.users.sectionAccess")}</label>
                 <div className="grid grid-cols-3 gap-1.5">
                   {AUTHORITIES.map((a) => (
                     <label key={a.key} className={`flex items-center gap-1.5 text-xs px-2 py-1.5 rounded border cursor-pointer transition ${auths.includes(a.key) ? "bg-[#D4AF37]/10 border-[#D4AF37]/40 text-white" : "bg-white/5 border-white/10 text-white/40 hover:bg-white/10"}`}>
                       <input type="checkbox" checked={auths.includes(a.key)} onChange={() => toggleAuth(a.key)} className="accent-[#D4AF37]" />
-                      {a.label}
+                      {t(a.labelKey)}
                     </label>
                   ))}
                 </div>
@@ -248,10 +250,10 @@ export default function AdminUsersPage() {
               {error && <p className="text-red-400 text-xs">{error}</p>}
             </div>
             <div className="flex gap-3 mt-6">
-              <button onClick={() => setModal(false)} className="flex-1 border border-white/20 text-white/70 py-2.5 rounded-lg hover:bg-white/5 transition">Cancel</button>
+              <button onClick={() => setModal(false)} className="flex-1 border border-white/20 text-white/70 py-2.5 rounded-lg hover:bg-white/5 transition">{t("common.cancel")}</button>
               <button onClick={save} disabled={saving}
                 className="flex-1 bg-[#D4AF37] text-[#0A1628] py-2.5 rounded-lg font-medium hover:bg-[#C4A030] transition disabled:opacity-50">
-                {saving ? "Saving..." : editId ? "Save Changes" : "Create User"}
+                {saving ? t("admin.common.saving") : editId ? t("admin.users.saveChanges") : t("admin.users.createUser")}
               </button>
             </div>
           </div>
