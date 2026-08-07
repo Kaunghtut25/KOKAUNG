@@ -393,7 +393,7 @@ export default function HomePageClient({ siteConfig: ssrConfig }: { siteConfig?:
         <div className="absolute inset-0 overflow-hidden">
           {slides.map((slide:any, index:number) => (
             <div key={index} className={`absolute inset-0 transition-opacity duration-1000 ${index === currentSlide ? "opacity-100" : "opacity-0"}`}>
-              <img src={slide.image || defaultSlides[0].image} alt={slide.title || "A9 Global"} className="w-full h-full object-cover" loading={index===0?"eager":"lazy"} />
+              <Image src={slide.image || defaultSlides[0].image} alt={slide.title || "A9 Global"} fill sizes="100vw" priority={index===0} className="w-full h-full object-cover" />
             </div>
           ))}
           <div className="absolute inset-0 bg-gradient-to-b from-[#1B2A4A]/60 via-[#1B2A4A]/30 to-transparent" />

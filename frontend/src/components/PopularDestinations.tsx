@@ -1,5 +1,6 @@
 ﻿"use client";
 
+import Image from "next/image";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import ScrollingRow from "./ScrollingRow";
@@ -66,13 +67,14 @@ function DestinationCard({ dest, destText = {} }: { dest: { city: string; countr
         {/* Image Section */}
         <div className="relative h-[280px] w-full overflow-hidden bg-gray-200">
           {!imgError ? (
-            <img
+            <Image
               src={d.image}
               alt={d.city}
+              fill
+              sizes="(max-width: 768px) 100vw, 33vw"
               className="w-full h-full object-cover transition-transform duration-700 ease-out"
-              style={{ position: "absolute", inset: 0, transform: isHovered ? "scale(1.08)" : "scale(1)" }}
+              style={{ transform: isHovered ? "scale(1.08)" : "scale(1)" }}
               onError={() => setImgError(true)}
-              loading="eager"
             />
           ) : (
             <div className="absolute inset-0 bg-gradient-to-br from-[#0A1628] to-[#1a2744] flex items-center justify-center">

@@ -65,7 +65,7 @@ export default function SocialFeed() {
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 8 }}>
         {photos.map((url, i) => (
           <a key={i} href={instagramLink?.url || 'https://instagram.com'} target="_blank" rel="noopener noreferrer" style={{ position: 'relative', display: 'block', borderRadius: 8, overflow: 'hidden', aspectRatio: '1' }}>
-            <img src={url} alt="Travel photo" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+            <img src={url} alt="Travel photo" loading="lazy" decoding="async" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
             <div style={{ position: 'absolute', inset: 0, background: 'rgba(10,22,40,0)', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'background 0.3s' }}
               onMouseEnter={(e: any)=>{e.currentTarget.style.background='rgba(10,22,40,0.5)';}}
               onMouseLeave={(e: any)=>{e.currentTarget.style.background='rgba(10,22,40,0)';}}>
