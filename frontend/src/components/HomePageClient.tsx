@@ -337,10 +337,20 @@ export default function HomePageClient({ siteConfig: ssrConfig }: { siteConfig?:
   const slides = siteConfig?.heroSlides?.length ? siteConfig.heroSlides : defaultSlides;
   const services = siteConfig?.serviceIcons?.length ? siteConfig.serviceIcons.filter((s:any)=>s.enabled!==false) : defaultServices;
 
-  // Auto-slide
+  // Auto-slide: delayed start (first advance after 10s so the initial slide settles fast),
+  // pauses when the tab is hidden, and never races the initial paint.
   useEffect(() => {
-    const timer = setInterval(() => setCurrentSlide(prev => (prev + 1) % slides.length), 4000);
-    return () => clearInterval(timer);
+    let timer: ReturnType<typeof setInterval> | null = null;
+    let delay: ReturnType<typeof setTimeout> | null = null;
+    const stop = () => { if (timer) { clearInterval(timer); timer = null; } };
+    const start = () => {
+      if (document.hidden) return;
+      if (!timer) timer = setInterval(() => setCurrentSlide(prev => (prev + 1) % slides.length), 4000);
+    };
+    const onVis = () => { if (document.hidden) stop(); else start(); };
+    document.addEventListener('visibilitychange', onVis);
+    delay = setTimeout(start, 10000);
+    return () => { stop(); if (delay) clearTimeout(delay); document.removeEventListener('visibilitychange', onVis); };
   }, [slides.length]);
 
   const nextSlide = () => setCurrentSlide(prev => (prev + 1) % slides.length);
