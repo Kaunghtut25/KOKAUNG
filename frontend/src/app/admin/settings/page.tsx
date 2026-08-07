@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useState, useCallback, useRef } from "react";
+import { useI18n } from "@/lib/i18n";
 interface HeroImages {
   flights: string;
   cruises: string;
@@ -91,6 +92,7 @@ const heroPageLabels: Record<keyof HeroImages, string> = {
 };
 
 export default function AdminSettingsPage() {
+  const { t } = useI18n();
   const [settings, setSettings] = useState<SiteSettings>(defaultSettings);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
