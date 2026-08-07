@@ -4,16 +4,18 @@ import React, { useState, useEffect } from "react";
 import toast from "react-hot-toast";
 import api from "@/lib/api";
 import Newsletter from '@/components/Newsletter';
+import { useI18n } from '@/lib/i18n';
 const subjectOptions = [
-  "General Inquiry",
-  "Tour Booking",
-  "Hotel Booking",
-  "Car Rental",
-  "Visa Service",
-  "Insurance",
+  { value: "General Inquiry", labelKey: "contact.subjectGeneral" },
+  { value: "Tour Booking", labelKey: "contact.subjectTour" },
+  { value: "Hotel Booking", labelKey: "contact.subjectHotel" },
+  { value: "Car Rental", labelKey: "contact.subjectCar" },
+  { value: "Visa Service", labelKey: "contact.subjectVisa" },
+  { value: "Insurance", labelKey: "contact.subjectInsurance" },
 ];
 
 export default function ContactClient({ siteConfig }: { siteConfig: any }) {
+  const { t } = useI18n();
   const [heroImage, setHeroImage] = useState(siteConfig?.heroImages?.contact || "/images_v2/contact-bg-v2.jpg");
   const [contactData, setContactData] = useState<any>(null);
   const [form, setForm] = useState({
@@ -54,7 +56,7 @@ export default function ContactClient({ siteConfig }: { siteConfig: any }) {
     e.preventDefault();
 
     if (!form.name || !form.email || !form.message) {
-      toast.error("Please fill in all required fields.");
+      toast.error(t("contact.errRequired"));
       return;
     }
 
@@ -67,7 +69,7 @@ export default function ContactClient({ siteConfig }: { siteConfig: any }) {
         subject: form.subject,
         message: form.message,
       });
-      toast.success("Message sent successfully! We'll get back to you soon.");
+      toast.success(t("contact.okSent"));
       setForm({
         name: "",
         email: "",
@@ -76,7 +78,7 @@ export default function ContactClient({ siteConfig }: { siteConfig: any }) {
         message: "",
       });
     } catch {
-      toast.error("Failed to send message. Please try again.");
+      toast.error(t("contact.errSend"));
     } finally {
       setLoading(false);
     }
@@ -100,19 +102,18 @@ export default function ContactClient({ siteConfig }: { siteConfig: any }) {
 
         <div className="relative z-10 max-w-3xl mx-auto">
           <p className="text-[#D4AF37] text-sm uppercase tracking-widest mb-4 font-semibold">
-            Contact Us
+            {t("nav.contactUs")}
           </p>
           <h1
             className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-6 leading-tight"
             style={{ fontFamily: "'Playfair Display', serif" }}
           >
             <span className="bg-gradient-to-r from-[#D4AF37] to-[#F5A623] bg-clip-text text-transparent">
-              Get in Touch
+              {t("contact.getInTouch")}
             </span>
           </h1>
           <p className="text-white/70 text-lg max-w-xl mx-auto">
-            Have a question or ready to plan your next adventure? We&rsquo;d
-            love to hear from you. Reach out and let&rsquo;s start planning.
+            {t("contact.heroDesc")}
           </p>
         </div>
       </section>
@@ -126,7 +127,7 @@ export default function ContactClient({ siteConfig }: { siteConfig: any }) {
                 className="text-2xl font-bold mb-6 text-[#0A1628]"
                 style={{ fontFamily: "'Playfair Display', serif" }}
               >
-                Send Us a Message
+                {t("contact.sendTitle")}
               </h2>
 
               <form onSubmit={handleSubmit} className="space-y-5">
@@ -135,7 +136,7 @@ export default function ContactClient({ siteConfig }: { siteConfig: any }) {
                     htmlFor="name"
                     className="block text-gray-700 text-sm font-medium mb-1.5"
                   >
-                    Full Name <span className="text-red-400">*</span>
+                    {t("auth.register.fullName")} <span className="text-red-400">*</span>
                   </label>
                   <input
                     id="name"
@@ -143,7 +144,7 @@ export default function ContactClient({ siteConfig }: { siteConfig: any }) {
                     type="text"
                     value={form.name}
                     onChange={handleChange}
-                    placeholder="Your full name"
+                    placeholder={t("contact.namePh")}
                     required
                     className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400
                                focus:outline-none focus:border-[#D4AF37] focus:ring-1 focus:ring-[#D4AF37]/50
@@ -157,7 +158,7 @@ export default function ContactClient({ siteConfig }: { siteConfig: any }) {
                       htmlFor="email"
                       className="block text-gray-700 text-sm font-medium mb-1.5"
                     >
-                      Email <span className="text-red-400">*</span>
+                      {t("auth.login.email")} <span className="text-red-400">*</span>
                     </label>
                     <input
                       id="email"
@@ -177,7 +178,7 @@ export default function ContactClient({ siteConfig }: { siteConfig: any }) {
                       htmlFor="phone"
                       className="block text-gray-700 text-sm font-medium mb-1.5"
                     >
-                      Phone
+                      {t("contact.phone")}
                     </label>
                     <input
                       id="phone"
@@ -198,7 +199,7 @@ export default function ContactClient({ siteConfig }: { siteConfig: any }) {
                     htmlFor="subject"
                     className="block text-gray-700 text-sm font-medium mb-1.5"
                   >
-                    Subject
+                    {t("contact.subject")}
                   </label>
                   <select
                     id="subject"
@@ -212,8 +213,8 @@ export default function ContactClient({ siteConfig }: { siteConfig: any }) {
                                bg-[length:12px] bg-[right_16px_center] bg-no-repeat"
                   >
                     {subjectOptions.map((opt) => (
-                      <option key={opt} value={opt} className="bg-white text-gray-900">
-                        {opt}
+                      <option key={opt.value} value={opt.value} className="bg-white text-gray-900">
+                        {t(opt.labelKey)}
                       </option>
                     ))}
                   </select>
@@ -224,7 +225,7 @@ export default function ContactClient({ siteConfig }: { siteConfig: any }) {
                     htmlFor="message"
                     className="block text-gray-700 text-sm font-medium mb-1.5"
                   >
-                    Message <span className="text-red-400">*</span>
+                    {t("contact.message")} <span className="text-red-400">*</span>
                   </label>
                   <textarea
                     id="message"
@@ -232,7 +233,7 @@ export default function ContactClient({ siteConfig }: { siteConfig: any }) {
                     value={form.message}
                     onChange={handleChange}
                     rows={5}
-                    placeholder="Tell us about your travel plans or questions..."
+                    placeholder={t("contact.msgPh")}
                     required
                     className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400
                                focus:outline-none focus:border-[#D4AF37] focus:ring-1 focus:ring-[#D4AF37]/50
@@ -271,10 +272,10 @@ export default function ContactClient({ siteConfig }: { siteConfig: any }) {
                           d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
                         />
                       </svg>
-                      Sending...
+                      {t("contact.sending")}
                     </span>
                   ) : (
-                    "Send Message"
+                    t("contact.sendMsg")
                   )}
                 </button>
               </form>
@@ -287,7 +288,7 @@ export default function ContactClient({ siteConfig }: { siteConfig: any }) {
               className="text-2xl font-bold text-[#0A1628]"
               style={{ fontFamily: "'Playfair Display', serif" }}
             >
-              Contact Information
+              {t("contact.infoTitle")}
             </h2>
 
             {/* Address */}
@@ -313,7 +314,7 @@ export default function ContactClient({ siteConfig }: { siteConfig: any }) {
                 </svg>
               </div>
               <div>
-                <p className="text-[#0A1628] font-semibold text-sm mb-1">📍 Address</p>
+                <p className="text-[#0A1628] font-semibold text-sm mb-1">{t("contact.address")}</p>
                 <p className="text-gray-600 text-sm leading-relaxed">
                   {address.split("\n").map((line: string, i: number) => (
                     <span key={i}>{line}{i < address.split("\n").length - 1 ? <br /> : null}</span>
@@ -329,14 +330,14 @@ export default function ContactClient({ siteConfig }: { siteConfig: any }) {
                 <svg className="w-5 h-5 text-[#D4AF37]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z" /></svg>
               </div>
               <div className="flex-1">
-                <p className="text-[#0A1628] font-semibold text-sm mb-2">📞 Contact Numbers</p>
+                <p className="text-[#0A1628] font-semibold text-sm mb-2">{t("contact.numbers")}</p>
                 <div className="space-y-1.5 text-sm">
                   {[
-                    {label:"Ticket Department",key:"ticket",phone:deptPhones.ticket},
-                    {label:"Visa Department",key:"visa",phone:deptPhones.visa},
-                    {label:"Hotel Department",key:"hotel",phone:deptPhones.hotel},
-                    {label:"Outbound Department",key:"outbound",phone:deptPhones.outbound},
-                    {label:"Inbound Department",key:"inbound",phone:deptPhones.inbound},
+                    {label:t("footer.deptTicket"),key:"ticket",phone:deptPhones.ticket},
+                    {label:t("footer.deptVisa"),key:"visa",phone:deptPhones.visa},
+                    {label:t("footer.deptHotel"),key:"hotel",phone:deptPhones.hotel},
+                    {label:t("footer.deptOutbound"),key:"outbound",phone:deptPhones.outbound},
+                    {label:t("footer.deptInbound"),key:"inbound",phone:deptPhones.inbound},
                   ].filter(d=>d.phone).map(d=><div key={d.key} className="flex justify-between items-center"><span className="text-gray-500 text-xs">{d.label}</span><a href={`tel:${String(d.phone).replace(/\s/g,"")}`} className="text-gray-700 font-medium hover:text-[#D4AF37] transition-colors">{d.phone}</a></div>)}
                 </div>
               </div>
@@ -362,7 +363,7 @@ export default function ContactClient({ siteConfig }: { siteConfig: any }) {
                 </svg>
               </div>
               <div>
-                <p className="text-[#0A1628] font-semibold text-sm mb-1">✉️ Email</p>
+                <p className="text-[#0A1628] font-semibold text-sm mb-1">{t("contact.emailLabel")}</p>
                 <a
                   href={`mailto:${email}`}
                   className="text-[#D4AF37] text-sm hover:text-[#F5A623] transition-colors"
@@ -391,16 +392,16 @@ export default function ContactClient({ siteConfig }: { siteConfig: any }) {
                 </svg>
               </div>
               <div>
-                <p className="text-[#0A1628] font-semibold text-sm mb-1">🕐 Working Hours</p>
+                <p className="text-[#0A1628] font-semibold text-sm mb-1">{t("contact.hours")}</p>
                 <div className="text-gray-600 text-sm space-y-0.5">
                   <p>
-                    <span className="text-gray-400">Mon – Fri:</span> 9:00 AM – 5:00 PM
+                    <span className="text-gray-400">{t("contact.monFri")}</span> 9:00 AM – 5:00 PM
                   </p>
                   <p>
-                    <span className="text-gray-400">Saturday:</span> 9:00 AM – 12:00 PM
+                    <span className="text-gray-400">{t("contact.sat")}</span> 9:00 AM – 12:00 PM
                   </p>
                   <p className="text-red-500/70">
-                    Sunday &amp; Public Holidays — Closed
+                    {t("contact.sunClosed")}
                   </p>
                 </div>
               </div>
@@ -411,12 +412,12 @@ export default function ContactClient({ siteConfig }: { siteConfig: any }) {
               <div className="w-full h-56 rounded-xl overflow-hidden">
                 <img
                   src="/images_v2/contact-info-v2.jpg"
-                  alt="World map travel concept"
+                  alt={t("contact.mapAlt")}
                   className="w-full h-full object-cover"
                 />
               </div>
               <div className="text-center mt-3">
-                <p className="text-[#0A1628] font-semibold">📍 A9 Global Office</p>
+                <p className="text-[#0A1628] font-semibold">{t("contact.office")}</p>
                 <p className="text-gray-500 text-sm">{address.split("\n")[0]}</p>
               </div>
             </div>
@@ -428,7 +429,7 @@ export default function ContactClient({ siteConfig }: { siteConfig: any }) {
         <div className="px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto py-8">
           <div className="flex flex-wrap gap-x-8 gap-y-3 justify-center text-center text-gray-500 text-xs sm:text-sm">
             <span>
-              Company Reg:{" "}
+              {t("contact.companyReg")}{" "}
               <span className="text-[#D4AF37]/70 font-mono">126395248</span>
             </span>
             <span className="hidden sm:inline text-gray-300">|</span>
@@ -454,10 +455,10 @@ export default function ContactClient({ siteConfig }: { siteConfig: any }) {
       <section style={{ maxWidth: 800, margin: "40px auto 0", padding: "0 20px" }}>
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20 }}>
           <div style={{ background: "white", borderRadius: 16, padding: 24, boxShadow: "0 1px 3px rgba(0,0,0,0.1)" }}>
-            <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 20, color: "#0A1628", marginBottom: 12 }}>Business Hours</h2>
-            <p style={{ color: "#555", padding: "4px 0" }}>Monday - Friday: 9:00 AM - 5:00 PM</p>
-            <p style={{ color: "#555", padding: "4px 0" }}>Saturday: 9:00 AM - 12:00 PM</p>
-            <p style={{ color: "#555", padding: "4px 0" }}>Sunday: Closed</p>
+            <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 20, color: "#0A1628", marginBottom: 12 }}>{t("contact.businessHours")}</h2>
+            <p style={{ color: "#555", padding: "4px 0" }}>{t("contact.hoursWeek")}</p>
+            <p style={{ color: "#555", padding: "4px 0" }}>{t("contact.hoursSat")}</p>
+            <p style={{ color: "#555", padding: "4px 0" }}>{t("contact.hoursSun")}</p>
             <div style={{ marginTop: 16, paddingTop: 16, borderTop: "1px solid #eee" }}>
               {phone && <p style={{ color: "#555" }}>&#9742; {phone}</p>}
               {email && <p style={{ color: "#555" }}>&#9993; {email}</p>}
