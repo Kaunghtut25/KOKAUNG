@@ -255,13 +255,13 @@ export default function VisaDetailPage() {
             {/* Processing Time */}
             <div className="bg-[#0A1628] rounded-2xl p-6 md:p-8">
               <h2 className="text-2xl font-bold text-white mb-2" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
-                Processing Time
+                {t("visa.processingTime")}
               </h2>
               <p className="text-white/60 text-sm mb-4">
-                Estimated processing: <span className="text-[#D4AF37] font-semibold">{processing}</span>
+                {t("visa.estimatedProcessing")}<span className="text-[#D4AF37] font-semibold">{processing}</span>
               </p>
               <p className="text-white/40 text-xs">
-                Processing time may vary depending on embassy workload and document completeness.
+                {t("visa.processingTimeNote")}
               </p>
             </div>
 

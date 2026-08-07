@@ -249,7 +249,7 @@ export default function InsuranceDetailPage() {
             {/* Coverage Details */}
             <div>
               <h2 className="text-2xl font-bold text-[#0A1628] mb-4" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
-                Coverage Details
+                {t("ins.coverageDetails")}
               </h2>
               <p className="text-gray-600 leading-relaxed text-base">
                 {coverage || 'Comprehensive travel insurance coverage for your peace of mind.'}
@@ -260,7 +260,7 @@ export default function InsuranceDetailPage() {
             {benefits.length > 0 && (
               <div>
                 <h2 className="text-2xl font-bold text-[#0A1628] mb-4" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
-                  Included Benefits
+                  {t("ins.includedBenefits")}
                 </h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                   {benefits.map((b: string, idx: number) => (
@@ -278,7 +278,7 @@ export default function InsuranceDetailPage() {
             {/* Plan Summary Card */}
             <div className="bg-[#0A1628] rounded-2xl p-6 md:p-8">
               <h2 className="text-2xl font-bold text-white mb-4" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
-                Plan Summary
+                {t("ins.planSummary")}
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div className="flex items-center gap-3">

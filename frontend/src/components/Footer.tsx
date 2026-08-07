@@ -41,7 +41,7 @@ const DEPT_LABELS: Record<string, string> = {
 };
 
 export default function Footer() {
-  const { t } = useI18n();
+  const { t, lang } = useI18n();
   const currentYear = new Date().getFullYear();
   const [config, setConfig] = useState<any>(null);
 
@@ -60,8 +60,8 @@ export default function Footer() {
   // ── Dynamic values with hardcoded fallbacks ──
   const phone = config?.contact?.phone || "";
   const email = config?.contact?.email || "";
-  const address = config?.contact?.address || "No-18, Ground Floor, Zayya Waddy Street, Baho Road, Sanchaung Tsp, Yangon, Myanmar";
-  const workingHours = config?.contact?.workingHours || "Mon-Sat: 9:00 AM - 6:00 PM";
+  const address = lang === "mm" ? "အမှတ် ၁၈၊ မြေညီထပ်၊ ဇေယျဝတီလမ်း၊ ဗဟိုလမ်း၊ စမ်းချောင်းမြို့နယ်၊ ရန်ကုန်၊ မြန်မာ" : (config?.contact?.address || "No-18, Ground Floor, Zayya Waddy Street, Baho Road, Sanchaung Tsp, Yangon, Myanmar");
+  const workingHours = lang === "mm" ? "တနင်္လာ-စနေ: နံနက် ၉:၀၀ - ညနေ ၆:၀၀" : (config?.contact?.workingHours || "Mon-Sat: 9:00 AM - 6:00 PM");
   const moduleToggles = (config as any)?.moduleToggles || {};
   const MODULE_BY_HREF: Record<string, string> = {
     "/tours": "tours", "/hotels": "hotels", "/cars": "cars", "/buses": "buses",

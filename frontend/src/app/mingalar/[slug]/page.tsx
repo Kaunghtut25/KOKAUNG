@@ -173,7 +173,7 @@ export default function MingalarDetailPage({ params }: { params: { slug: string 
             {desc && (
               <div>
                 <h2 className="text-2xl font-bold text-[#0A1628] mb-4" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
-                  About the Experience
+                  {t("mingalar.aboutExperience")}
                 </h2>
                 <p className="text-gray-600 leading-relaxed text-base">{desc}</p>
               </div>
@@ -182,7 +182,7 @@ export default function MingalarDetailPage({ params }: { params: { slug: string 
             {/* Details Card */}
             <div className="bg-[#0A1628] rounded-2xl p-6 md:p-8">
               <h2 className="text-2xl font-bold text-white mb-4" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
-                Experience Details
+                {t("mingalar.experienceDetails")}
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="flex items-center gap-3">

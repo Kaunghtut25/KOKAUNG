@@ -2,6 +2,9 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { useMemo } from 'react';
+import { useI18n } from "@/lib/i18n";
+import { mmVisas, mmLookup } from "@/lib/mm-content";
 import { api } from '@/lib/api';
 import BookingModal from '@/components/BookingModal';
 import DealsBanner from '@/components/DealsBanner';
@@ -85,8 +88,6 @@ const FALLBACK_VISAS: VisaService[] = [
     slug: 'myanmar', processingTime: '3-5 Days', visaFeeMMK: 90000, visaFeeUSD: 43, requirements: ['Passport 6m','Hotel'] },
 ];
 
-
-
 function VisaGridCard({ visa }: { visa: VisaService }) {
   const router = useRouter();
   const flag = COUNTRY_FLAGS[visa.country] || '🌏';
@@ -158,11 +159,14 @@ export default function VisasClient({ initialVisas, siteConfig }: VisasClientPro
   const vSubtitleSize = vt.subtitleSize || "1rem";
   
   const [visas, setVisas] = useState<VisaService[]>(initialVisas.length > 0 ? initialVisas : FALLBACK_VISAS);
+  const { lang } = useI18n();
+  const displayVisas = useMemo(
+    () => visas.map((v) => (lang === "mm" ? { ...v, ...mmLookup(mmVisas, v) } : v)),
+    [visas, lang]
+  );
   const [currency, setCurrency] = useState<'MMK' | 'USD'>('MMK');
   const [selectedVisa, setSelectedVisa] = useState<VisaService | null>(null);
 
-  
-  
   
 
   useEffect(() => {
@@ -204,7 +208,7 @@ export default function VisasClient({ initialVisas, siteConfig }: VisasClientPro
       </div>
 <section className="max-w-7xl mx-auto px-4 sm:px-6 pt-4 pb-20">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-          {visas.map(v => (
+          {displayVisas.map(v => (
             <VisaGridCard key={v._id} visa={v} />
           ))}
         </div>

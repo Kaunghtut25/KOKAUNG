@@ -193,7 +193,7 @@ function CruiseDetailClient({ cruise, slug }: CruiseDetailPageProps) {
             {/* Details Card */}
             <div className="bg-[#0A1628] rounded-2xl p-6 md:p-8">
               <h2 className="text-2xl font-bold text-white mb-4" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
-                Trip Information
+                {t("cruise.tripInformation")}
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {dest && (

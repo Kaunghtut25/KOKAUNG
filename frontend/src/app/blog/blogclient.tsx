@@ -1,6 +1,8 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
+import { useI18n } from "@/lib/i18n";
+import { mmBlogs, mmLookup } from "@/lib/mm-content";
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Newsletter from '@/components/Newsletter';
@@ -50,6 +52,11 @@ export default function BlogClient({ siteConfig }: { siteConfig: any }) {
   const router = useRouter();
   const [posts, setPosts] = useState<BlogPost[]>([]);
   const [loading, setLoading] = useState(true);
+  const { lang } = useI18n();
+  const displayPosts = useMemo(
+    () => posts.map((p) => (lang === "mm" ? { ...p, ...mmLookup(mmBlogs, p) } : p)),
+    [posts, lang]
+  );
   useEffect(() => { fetch("/api/admin/site-config").then(r => r.json()).then(d => { if (d?.heroImages?.blog) setHeroImage(d.heroImages.blog); }).catch(() => {}); }, []);
 
   useEffect(() => {
@@ -101,7 +108,7 @@ export default function BlogClient({ siteConfig }: { siteConfig: any }) {
       {/* Posts */}
       <section className="max-w-6xl mx-auto px-4 py-12">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {posts.map((post) => (
+          {displayPosts.map((post) => (
             <article
               key={post._id}
               onClick={() => router.push('/blog/' + post.slug + '?id=' + post._id)}

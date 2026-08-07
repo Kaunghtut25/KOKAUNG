@@ -1,6 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { useI18n } from "@/lib/i18n";
+import { mmTours, mmLookup } from "@/lib/mm-content";
 
 interface Review {
   name: string;
@@ -21,7 +22,7 @@ const FALLBACK_REVIEWS: Review[] = [
 ];
 
 export default function TestimonialSlider() {
-  const { t } = useI18n();
+  const { t, lang } = useI18n();
   const [reviews, setReviews] = useState<Review[]>(FALLBACK_REVIEWS);
   const [idx, setIdx] = useState(0);
 
@@ -41,7 +42,16 @@ export default function TestimonialSlider() {
     return () => clearInterval(t);
   }, [reviews]);
 
-  const r = reviews[idx];
+  const mmTexts: Record<string, Partial<Review>> = {
+    'Bagan Explorer': { text: 'အံ့မခန်းအတွေ့အကြုံ! မီးပုံးပျံစီးရတာ အသက်ရှူကျပ်လောက်အောင် လှပပါတယ်။ ကျွမ်းကျင်တဲ့အဖွဲ့၊ အစမှအဆုံး စနစ်ကျလှပါတယ်။', country: 'ဩစတြေးလျ' },
+    'Inle Lake Discovery': { text: 'လှပတဲ့ကန်၊ ဖော်ရွေတဲ့လူတွေ။ A9 က အရာရာကို ချောမွေ့စေခဲ့တယ်။ အကြံပြုပါတယ်!', country: 'စင်ကာပူ' },
+    'Yangon City Tour': { text: 'ကြွယ်ဝတဲ့ ယဉ်ကျေးမှုနဲ့ သမိုင်း။ ကျွန်တော်တို့ရဲ့ လမ်းညွှန်က ဗဟုသုတကြွယ်ဝပြီး အင်္ဂလိပ်လို ကောင်းကောင်းပြောတတ်ပါတယ်။', country: 'ဂျာမနီ' },
+    'Ngapali Beach Escape': { text: 'ပြီးပြည့်စုံတဲ့ ကမ်းခြေအားလပ်ရက်။ အပန်းဖြေစခန်းက လှပပြီး ကြိုဆိုရေးတွေ အချိန်မှန်ပါတယ်။', country: 'ဂျပန်' },
+    'Mrauk U Adventure': { text: 'လူသွားလူလာနည်းတဲ့ လမ်းကြောင်းအတွေ့အကြုံ။ A9 က မြန်မာကို အခြားအေဂျင်စီတွေထက် ပိုသိတယ်။', country: 'ယူကေ' },
+    'Golden Rock Pilgrimage': { text: 'တစ်သက်တာမှာ တစ်ကြိမ်သာရတဲ့ ဝိညာဉ်ရေးခရီး။ အရာရာ စနစ်ကျပြီး လုံခြုံပါတယ်။', country: 'အမေရိက' },
+  };
+  const r = lang === "mm" ? { ...reviews[idx], ...(mmTexts[reviews[idx].tour] || {}) } : reviews[idx];
+  const tourMM = lang === "mm" ? (mmLookup(mmTours, { title: r.tour }).title || r.tour) : r.tour;
   if (!r) return null;
 
   return (
@@ -53,7 +63,7 @@ export default function TestimonialSlider() {
           <p style={{ color: 'white', fontSize: 16, lineHeight: 1.6, fontStyle: 'italic', marginBottom: 16 }}>"{r.text}"</p>
           {r.image && <img src={r.image} alt={r.name} style={{ width: 60, height: 60, borderRadius: '50%', objectFit: 'cover', margin: '0 auto 12px', border: '2px solid #D4AF37' }} />}
           <div style={{ color: '#D4AF37', fontWeight: 600 }}>{r.name}</div>
-          <div style={{ color: '#999', fontSize: 13 }}>{r.country} — {r.tour}</div>
+          <div style={{ color: '#999', fontSize: 13 }}>{r.country} — {tourMM}</div>
         </div>
         <div style={{ display: 'flex', justifyContent: 'center', gap: 8, marginTop: 16 }}>
           {reviews.map((_, i) => (

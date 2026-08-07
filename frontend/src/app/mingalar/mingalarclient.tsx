@@ -1,7 +1,9 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
+import { useI18n } from "@/lib/i18n";
+import { mmMingalar, mmLookup } from "@/lib/mm-content";
 import Link from 'next/link';
 import DealsBanner from '@/components/DealsBanner';
 import FAQAccordion from '@/components/FAQAccordion';
@@ -30,6 +32,11 @@ export default function MingalarClient({ initialCards, siteConfig }: MingalarCli
   const mTitleSize = mt.titleSize || "3rem";
   const mSubtitleSize = mt.subtitleSize || "1.2rem";
   const [loungeCards, setLoungeCards] = useState<LoungeItem[]>(initialCards);
+  const { t, lang } = useI18n();
+  const displayCards = useMemo(
+    () => loungeCards.map((it) => (lang === "mm" ? { ...it, ...mmLookup(mmMingalar, it) } : it)),
+    [loungeCards, lang]
+  );
 
   const renderCard = (item: LoungeItem, i: number) => {
     const slug = item.slug || item.id || ('m' + (i + 1));
@@ -54,20 +61,20 @@ export default function MingalarClient({ initialCards, siteConfig }: MingalarCli
               href={'/mingalar/' + slug}
               className="flex-1 px-3 py-2 border border-[#D4AF37] text-[#D4AF37] text-sm font-semibold rounded-full text-center hover:bg-[#D4AF37] hover:text-white transition-colors"
             >
-              View Details
+              {t("common.viewDetails")}
             </Link>
             <Link
               href={'/book-now?type=lounge&name=' + encodeURIComponent(item.title) + '&id=' + slug}
               className="flex-1 px-3 py-2 bg-[#D4AF37] text-white text-sm font-semibold rounded-full text-center hover:bg-[#C19B2F] transition-colors"
             >
-              Book Now
+              {t("common.bookNow")}
             </Link>
           </div>
           <Link
             href={'/contact?subject=' + encodeURIComponent('Sky Lounge Inquiry') + '&item=' + encodeURIComponent(item.title)}
             className="w-full mt-2 py-2 text-sm text-gray-600 hover:text-[#D4AF37] transition-colors inline-block"
           >
-            Contact Us
+            {t("common.contactUs")}
           </Link>
         </div>
       </div>
@@ -90,15 +97,15 @@ export default function MingalarClient({ initialCards, siteConfig }: MingalarCli
       <section className="max-w-6xl mx-auto px-4 py-12">
         {/* Row 1 */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
-          {loungeCards.slice(0, 3).map((item, i) => renderCard(item, i))}
+          {displayCards.slice(0, 3).map((item, i) => renderCard(item, i))}
         </div>
         {/* Row 2 */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
-          {loungeCards.slice(3, 6).map((item, i) => renderCard(item, i + 3))}
+          {displayCards.slice(3, 6).map((item, i) => renderCard(item, i + 3))}
         </div>
         <div className="text-center">
           <Link href="/contact" className="inline-block px-8 py-3 bg-gradient-to-r from-[#D4AF37] to-[#C5A028] text-gray-900 font-bold rounded-xl hover:shadow-lg transition-all">
-            Book Lounge Access
+            {t("common.bookLoungeAccess")}
           </Link>
         </div>
       </section>

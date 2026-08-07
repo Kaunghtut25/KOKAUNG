@@ -3,6 +3,8 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useI18n } from "@/lib/i18n";
+import { useMemo } from 'react';
+import { mmInsurance, mmLookup } from "@/lib/mm-content";
 import { api } from '@/lib/api';
 import BookingModal from '@/components/BookingModal';
 import { getImageFallback } from '@/lib/imageFallback';
@@ -144,6 +146,7 @@ export default function InsuranceClient({ initialPlans, siteConfig }: InsuranceC
   const [loading, setLoading] = useState(initialPlans.length === 0);
   const [currency, setCurrency] = useState<'MMK' | 'USD'>('MMK');
   const [selectedPlan, setSelectedPlan] = useState<InsurancePlan | null>(null);
+  const { lang } = useI18n();
 
   useEffect(() => {
     if (initialPlans.length > 0) return;
@@ -161,7 +164,10 @@ export default function InsuranceClient({ initialPlans, siteConfig }: InsuranceC
     fetchInsurance();
   }, [initialPlans.length]);
 
-  const displayPlans = plans;
+  const displayPlans = useMemo(
+    () => plans.map((p) => (lang === "mm" ? { ...p, ...mmLookup(mmInsurance, p) } : p)),
+    [plans, lang]
+  );
 
   return (
     <div className="min-h-screen bg-gray-50">

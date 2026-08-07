@@ -1,6 +1,8 @@
 'use client';
 import React, { useState } from 'react';
 import { useI18n } from "@/lib/i18n";
+import { useMemo } from 'react';
+import { mmCruises, mmLookup } from "@/lib/mm-content";
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import DealsBanner from '@/components/DealsBanner';
@@ -127,8 +129,11 @@ export default function CruisesClient({ initialCruises, siteConfig }: { initialC
   const crTitleSize = crt.titleSize || "3rem";
   const crSubtitleSize = crt.subtitleSize || "1.2rem";
   const router = useRouter();
-  const { t } = useI18n();
-  const cruises = initialCruises.length > 0 ? initialCruises : FALLBACK_CRUISES;
+  const { t, lang } = useI18n();
+  const cruises = useMemo(() => {
+    const base = initialCruises.length > 0 ? initialCruises : FALLBACK_CRUISES;
+    return lang === "mm" ? base.map((c) => ({ ...c, ...mmLookup(mmCruises, c) })) : base;
+  }, [initialCruises, lang]);
   const [currency, setCurrency] = useState<'MMK' | 'USD'>('MMK');
 
   return (

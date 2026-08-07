@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { getAll } from '@/lib/persistentStore';
 import ScrollingRow from './ScrollingRow';
 import { useI18n } from "@/lib/i18n";
+import { mmTours, mmHotels, mmCars, mmCruises, mmVisas, mmInsurance, mmMingalar, mmDestinations, mmLookup } from "@/lib/mm-content";
 
 interface RelatedSection {
   key: string;
@@ -41,9 +42,13 @@ const RELATED_CARD_WIDTH = 200;
 const RELATED_CONTAINER_WIDTH = 4 * (RELATED_CARD_WIDTH + 16) + 4;
 
 export default function RelatedItems({ section, excludeSlug, destination, country }: { section: string; excludeSlug?: string; destination?: string; country?: string }) {
-  const { t } = useI18n();
+  const { t, lang } = useI18n();
   const [items, setItems] = useState<any[]>([]);
   const [crossItems, setCrossItems] = useState<{section: RelatedSection; items: any[]}[]>([]);
+  const mmMap: Record<string, any> = { tours: mmTours, hotels: mmHotels, cars: mmCars, cruises: mmCruises, visas: mmVisas, insurance: mmInsurance, mingalar: mmMingalar, destinations: mmDestinations };
+  const mmMerge = (sec: string, item: any) => (lang === "mm" && mmMap[sec] ? { ...item, ...mmLookup(mmMap[sec], item) } : item);
+  const mergedSame = (items ?? []).map((it: any) => mmMerge(section, it));
+  const mergedCross = crossItems.map(({ section: s, items: sItems }) => ({ section: s, items: sItems.map((it: any) => mmMerge(s.key, it)) }));
 
   // Same-section
   useEffect(() => {
@@ -109,7 +114,7 @@ export default function RelatedItems({ section, excludeSlug, destination, countr
         <>
           <h2 style={{ fontFamily: "'Playfair Display',serif", fontSize: 22, color: '#0A1628', marginBottom: 16 }}>{t("related.youMayAlsoLike")}</h2>
           <ScrollingRow containerWidth={RELATED_CONTAINER_WIDTH}>
-            {(items ?? []).map((item, i) => (
+            {mergedSame.map((item, i) => (
               <a key={i} href={`/${section}/${item.slug || slugify(item.name || item.title || item.planName) || item._id || item.id}`} className="flex-shrink-0 snap-start" style={{ width: RELATED_CARD_WIDTH, textDecoration: 'none' }}>
                 <div style={{ borderRadius: 12, overflow: 'hidden', border: '1px solid #eee' }}>
                   <img src={item.image || item.displayImage || (Array.isArray(item.images) ? item.images[0] : (typeof item.images === "string" ? item.images : "")) || `/images_v2/hero-${section}-v2.jpg`} alt={item.name || item.title} style={{ width: '100%', height: 120, objectFit: 'cover' }} />
@@ -125,7 +130,7 @@ export default function RelatedItems({ section, excludeSlug, destination, countr
       )}
 
       {/* Cross-section "Explore in [Destination]" */}
-      {crossItems.map(({ section: s, items: sItems }) => (
+      {mergedCross.map(({ section: s, items: sItems }) => (
         <div key={s.key} style={{ marginTop: 32 }}>
           <h3 style={{ fontFamily: "'Playfair Display',serif", fontSize: 18, color: '#D4AF37', marginBottom: 12 }}>
             {s.label} {destination ? `in ${destination}` : country ? `for ${country}` : ''}
