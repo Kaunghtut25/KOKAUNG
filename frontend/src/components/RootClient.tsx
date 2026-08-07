@@ -16,7 +16,7 @@ export default function RootClient({ children }: { children: React.ReactNode }) 
 
   if (isAdmin) {
     return (
-      <>
+      <LanguageProvider>
         <main>{children}</main>
         <Toaster
           position="top-center"
@@ -36,7 +36,7 @@ export default function RootClient({ children }: { children: React.ReactNode }) 
             },
           }}
         />
-      </>
+      </LanguageProvider>
     );
   }
 
