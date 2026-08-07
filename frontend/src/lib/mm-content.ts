@@ -504,6 +504,17 @@ export const mmInsurance: Record<string, Partial<any>> = {
   },
 };
 
+// FIX: 2026-08-07 insurance alias keys for SSR title-first plan names
+Object.assign(mmInsurance, {
+  "extreme-coverage": mmInsurance["adventure-sports-pack"],
+  "corporate-travel-plan": mmInsurance["business-travel-pro"],
+  "myanmar-domestic-plan": mmInsurance["domestic-travel-care"],
+  "ultimate-peace-of-mind": mmInsurance["premium-travel-protect"],
+  "senior-travelers-plan": mmInsurance["senior-travel-cover"],
+  "europe-schengen-plan": mmInsurance["schengen-travel-cover"],
+  "essential-protection": mmInsurance["basic-travel-shield"],
+});
+
 // FIX: 2026-08-07 data-level Burmese content for mingalar
 export const mmMingalar: Record<string, Partial<any>> = {
   "open-bar": {

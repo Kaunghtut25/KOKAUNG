@@ -165,7 +165,11 @@ export default function InsuranceClient({ initialPlans, siteConfig }: InsuranceC
   }, [initialPlans.length]);
 
   const displayPlans = useMemo(
-    () => plans.map((p) => (lang === "mm" ? { ...p, ...mmLookup(mmInsurance, p) } : p)),
+    () => plans.map((p) => {
+      if (lang !== "mm") return p;
+      const m = mmLookup(mmInsurance, p);
+      return { ...p, ...m, title: (m as any).planName || p.title };
+    }),
     [plans, lang]
   );
 
