@@ -581,7 +581,7 @@ const tabs: { key: Tab; label: string }[] = [
             <div className="space-y-4">
               <h2 className="text-lg font-bold text-white">{t("admin.sm.navLinks")}</h2>
               {cfg.navLinks.map((n, i) => (
-                <div key={i} className="flex flex-col md:flex-row md:items-center gap-3">
+                <div key={i} className="flex flex-col lg:flex-row lg:items-center gap-3">
                   <input className={`inputCls inputCls`} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} placeholder={t("admin.sm.label")} value={n.label} onChange={e => { const a = [...cfg.navLinks]; a[i] = { ...n, label: e.target.value }; set("navLinks", a); }} />
                   <button onClick={() => set("navLinks", cfg.navLinks.filter((_, idx) => idx !== i))} className="text-red-400 text-sm">{t("admin.common.delete")}</button>
                 </div>
@@ -905,7 +905,7 @@ const tabs: { key: Tab; label: string }[] = [
                     <button onClick={() => set("footerSections", cfg.footerSections.filter((_, idx) => idx !== i))} className="text-red-400 text-sm ml-2">{t("admin.common.delete")}</button>
                   </div>
                   {sec.links.map((link, j) => (
-                    <div key={j} className="flex flex-col md:flex-row gap-2">
+                    <div key={j} className="flex flex-col lg:flex-row gap-2">
                       <input className={`inputCls inputCls`} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} placeholder={t("admin.sm.label")} value={link.label} onChange={e => { const a = [...cfg.footerSections]; a[i].links[j] = { ...link, label: e.target.value }; set("footerSections", [...a]); }} />
                       <button onClick={() => { const a = [...cfg.footerSections]; a[i].links = a[i].links.filter((_, idx) => idx !== j); set("footerSections", a); }} className="text-red-400 text-sm">X</button>
                     </div>
@@ -1539,7 +1539,7 @@ const tabs: { key: Tab; label: string }[] = [
               <h2 className="text-lg font-bold text-white">{t("admin.sm.partners")}</h2>
               <p className="text-sm text-white/60">{t("admin.sm.partnersHint")}</p>
               {cfg.partners.map((p, i) => (
-                <div key={i} className="flex flex-col md:flex-row md:items-center gap-3">
+                <div key={i} className="flex flex-col lg:flex-row lg:items-center gap-3">
                   <input className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} placeholder={t("admin.sm.partnerName")} value={p} onChange={e => { const a = [...cfg.partners]; a[i] = e.target.value; set("partners", a); }} />
                   <button onClick={() => set("partners", cfg.partners.filter((_, idx) => idx !== i))} className="text-red-400 text-sm">{t("admin.common.delete")}</button>
                 </div>
