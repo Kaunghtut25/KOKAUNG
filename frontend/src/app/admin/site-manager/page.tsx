@@ -255,11 +255,11 @@ export default function SiteManagerPage() {
           {currentVal ? (
             <img src={currentVal} alt={t("admin.sm.preview")} className="mx-auto mt-2 w-full h-28 object-cover rounded" />
           ) : (
-            <p className="text-sm text-white/40">{t("admin.sm.dragDrop")}</p>
+            <p className="text-sm text-white/60">{t("admin.sm.dragDrop")}</p>
           )}
           {uploadingKey === field + "_" + (index ?? "") && <p className="text-xs text-[#D4AF37] mt-1">{t("admin.form.uploading")}</p>}
           {uploadErrors[field + "_" + (index ?? "")] && <p className="text-xs text-red-400 mt-1">{uploadErrors[field + "_" + (index ?? "")]}</p>}
-          <p className="text-xs text-white/30 mt-1">{t("admin.sm.rec2mb")}</p>
+          <p className="text-xs text-white/50 mt-1">{t("admin.sm.rec2mb")}</p>
         </div>
         <input
           type="text"
@@ -331,7 +331,7 @@ const tabs: { key: Tab; label: string }[] = [
         <div className="flex items-center justify-between mb-6">
           <div>
             <h1 className="text-2xl font-bold text-white" style={{ fontFamily: "'Playfair Display', serif" }}>{t("admin.sm.title")}</h1>
-            <p className="text-white/40 text-sm">{t("admin.sm.subtitle")}</p>
+            <p className="text-white/60 text-sm">{t("admin.sm.subtitle")}</p>
           </div>
           <button
             onClick={handleSave}
@@ -450,7 +450,7 @@ const tabs: { key: Tab; label: string }[] = [
           {tab === "heroImages" && (
             <div className="space-y-6">
               <h2 className="text-lg font-bold text-white">{t("admin.sm.heroImages")}</h2>
-              <p className="text-sm text-white/40">{t("admin.sm.heroImgHint")}</p>
+              <p className="text-sm text-white/60">{t("admin.sm.heroImgHint")}</p>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {[
                   { key: "about", label: "About Page" },
@@ -527,11 +527,11 @@ const tabs: { key: Tab; label: string }[] = [
                         {(cfg.heroImages && cfg.heroImages[key]) ? (
                           <img src={cfg.heroImages[key]} alt={t("admin.sm.preview")} className="mx-auto mt-2 w-full h-28 object-cover rounded" />
                         ) : (
-                          <p className="text-sm text-white/40">{t("admin.sm.clickUpload")}</p>
+                          <p className="text-sm text-white/60">{t("admin.sm.clickUpload")}</p>
                         )}
                         {uploadingKey === "heroImages_" + key && <p className="text-xs text-[#D4AF37] mt-1">{t("admin.form.uploading")}</p>}
                         {uploadErrors["heroImages_" + key] && <p className="text-xs text-red-400 mt-1">{uploadErrors["heroImages_" + key]}</p>}
-                        <p className="text-xs text-white/30 mt-1">1200x630px JPEG max 2MB</p>
+                        <p className="text-xs text-white/50 mt-1">1200x630px JPEG max 2MB</p>
                       </div>
                     </div>
                     <input
@@ -611,7 +611,7 @@ const tabs: { key: Tab; label: string }[] = [
           {tab === "why" && (
             <div className="space-y-4">
               <h2 className="text-lg font-bold text-white">{t("admin.sm.whyChooseUs")}</h2>
-              <p className="text-sm text-white/40">{t("admin.sm.whyHint")}</p>
+              <p className="text-sm text-white/60">{t("admin.sm.whyHint")}</p>
               <div className="border border-white/10 bg-white/5 text-white rounded-lg p-4 space-y-3">
                 <h3 className="text-sm font-semibold text-[#D4AF37] mb-3">{t("admin.sm.sectionHeader")}</h3>
                 <div className="grid grid-cols-3 gap-3">
@@ -707,7 +707,7 @@ const tabs: { key: Tab; label: string }[] = [
           {tab === "deals" && (
             <div className="space-y-4">
               <h2 className="text-lg font-bold text-white">{t("admin.sm.dealsBanner")}</h2>
-              <p className="text-sm text-white/40">{t("admin.sm.dealsHint")}</p>
+              <p className="text-sm text-white/60">{t("admin.sm.dealsHint")}</p>
               <div><label className={labelCls}>{t("admin.sm.showBanner")}</label><label className="flex items-center gap-2 text-sm text-white/70"><input type="checkbox" checked={!!(cfg.dealsBanner && cfg.dealsBanner.enabled)} onChange={e => set("dealsBanner", { ...(cfg.dealsBanner || { enabled: true, badge: "", title: "", buttonLabel: "Book Now", buttonHref: "/book-now", countdownDays: 30 }), enabled: e.target.checked })} /> {t("admin.sm.enabled")}</label></div>
               <div><label className={labelCls}>{t("admin.sm.badgeText")}</label><input className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} value={(cfg.dealsBanner && cfg.dealsBanner.badge) || ""} onChange={e => set("dealsBanner", { ...(cfg.dealsBanner || {}), badge: e.target.value })} /></div>
               <div><label className={labelCls}>{t("admin.sm.title")}</label><input className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} placeholder="30% OFF Bagan Explorer Tour" value={(cfg.dealsBanner && cfg.dealsBanner.title) || ""} onChange={e => set("dealsBanner", { ...(cfg.dealsBanner || {}), title: e.target.value })} /></div>
@@ -722,7 +722,7 @@ const tabs: { key: Tab; label: string }[] = [
           {tab === "cta" && (
             <div className="space-y-4">
               <h2 className="text-lg font-bold text-white">{t("admin.sm.ctaSection")}</h2>
-              <p className="text-sm text-white/40">{t("admin.sm.ctaHint")}</p>
+              <p className="text-sm text-white/60">{t("admin.sm.ctaHint")}</p>
               <div><label className={labelCls}>{t("admin.sm.title")}</label><input className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} value={cfg.ctaTitle} onChange={e => set("ctaTitle", e.target.value)} /></div>
               <div><label className={labelCls}>{t("admin.sm.description")}</label><textarea className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} rows={2} value={cfg.ctaDescription} onChange={e => set("ctaDescription", e.target.value)} /></div>
               <div className="grid grid-cols-2 gap-3">
@@ -736,7 +736,7 @@ const tabs: { key: Tab; label: string }[] = [
           {tab === "contact" && (
             <div className="space-y-4">
               <h2 className="text-lg font-bold text-white">{t("admin.sm.contactInfo")}</h2>
-              <p className="text-sm text-white/40">{t("admin.sm.contactHint")}</p>
+              <p className="text-sm text-white/60">{t("admin.sm.contactHint")}</p>
               <div className="grid grid-cols-2 gap-3">
                 <div><label className={`labelCls labelCls`}>{t("admin.sm.phone")}</label><input className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} value={cfg.contact.phone} onChange={e => set("contact", { ...cfg.contact, phone: e.target.value })} /></div>
                 <div><label className={labelCls}>{t("admin.sm.email")}</label><input className={inputCls} type="email" style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} value={cfg.contact.email || ""} onChange={e => set("contact", { ...cfg.contact, email: e.target.value })} /></div>
@@ -748,7 +748,7 @@ const tabs: { key: Tab; label: string }[] = [
               
               <div className="mt-6 border-t border-white/10 pt-4">
                 <h3 className="text-sm font-semibold text-[#D4AF37] mb-3">{t("admin.sm.deptPhones")}</h3>
-<p className="text-xs text-white/40 mb-3">{t("admin.sm.deptHint")}</p>
+<p className="text-xs text-white/60 mb-3">{t("admin.sm.deptHint")}</p>
 <div className="space-y-2 mb-3">
 {(cfg.departmentPhones && typeof cfg.departmentPhones === "object"
   ? Object.entries(cfg.departmentPhones).filter(([k]: [string, any]) => k !== "__proto__" && typeof k === "string")
@@ -789,7 +789,7 @@ const tabs: { key: Tab; label: string }[] = [
           {tab === "social" && (
             <div className="space-y-4">
               <h2 className="text-lg font-bold text-white">{t("admin.sm.socialLinks")}</h2>
-              <p className="text-sm text-white/40">{t("admin.sm.socialHint")}</p>
+              <p className="text-sm text-white/60">{t("admin.sm.socialHint")}</p>
               {cfg.socialLinks.map((s, i) => (
                 <div key={i} className="border border-white/10 bg-white/5 text-white rounded-lg p-3 space-y-2">
                   <div className="flex items-center gap-2">
@@ -806,7 +806,7 @@ const tabs: { key: Tab; label: string }[] = [
           {tab === "socialFeed" && (
             <div className="space-y-5">
               <h2 className="text-lg font-bold text-white">{t("admin.sm.socialFeed")}</h2>
-              <p className="text-white/40 text-sm">{t("admin.sm.feedHint")}</p>
+              <p className="text-white/60 text-sm">{t("admin.sm.feedHint")}</p>
 
               {/* Enable toggle */}
               <div className="flex items-center gap-3 bg-white/5 border border-white/10 rounded-lg p-3">
@@ -831,7 +831,7 @@ const tabs: { key: Tab; label: string }[] = [
                   value={cfg.socialFeed?.instagram || ""}
                   onChange={e => setCfg(p => ({ ...p, socialFeed: { enabled: p.socialFeed?.enabled ?? true, instagram: e.target.value, photos: p.socialFeed?.photos || [] } }))}
                 />
-                <p className="text-xs text-white/30 mt-1">{t("admin.sm.urlHandle")}</p>
+                <p className="text-xs text-white/50 mt-1">{t("admin.sm.urlHandle")}</p>
               </div>
 
               {/* 6 photo slots */}
@@ -858,7 +858,7 @@ const tabs: { key: Tab; label: string }[] = [
                           {photo ? (
                             <img src={photo} alt={t("admin.sm.photo") + " " + (i + 1)} className="w-full h-20 object-cover rounded" />
                           ) : (
-                            <div className="flex flex-col items-center justify-center h-20 text-white/30 text-xs">
+                            <div className="flex flex-col items-center justify-center h-20 text-white/50 text-xs">
                               <span className="text-xl mb-1">📷</span>
                               <span>{t("admin.sm.photo")} {i + 1}</span>
                               <span className="text-white/20">{t("admin.sm.dragClickUrl")}</span>
@@ -920,7 +920,7 @@ const tabs: { key: Tab; label: string }[] = [
           {tab === "layout" && (
             <div className="space-y-6">
               <h2 className="text-lg font-bold text-white">{t("admin.sm.sectionLayout")}</h2>
-              <p className="text-sm text-white/40">{t("admin.sm.layoutHint")}</p>
+              <p className="text-sm text-white/60">{t("admin.sm.layoutHint")}</p>
               {sectionKeys.map(sk => {
                 const sl = cfg.sectionLayouts?.[sk.key] || { desktop: 3, tablet: 2, mobile: 1 };
                 return (
@@ -928,7 +928,7 @@ const tabs: { key: Tab; label: string }[] = [
                     <h3 className="font-medium text-white">{sk.label}</h3>
                     <div className="grid grid-cols-3 gap-4">
                       <div>
-                        <label className="block text-xs font-medium text-white/40 mb-1">{t("admin.sm.desktop")}</label>
+                        <label className="block text-xs font-medium text-white/60 mb-1">{t("admin.sm.desktop")}</label>
                         <select className="w-full px-3 py-2 rounded-lg border border-white/10 text-white text-sm" style={{ backgroundColor: "rgba(255,255,255,0.06)", color: "white" }} value={sl.desktop} onChange={e => {
                           const v = parseInt(e.target.value);
                           setCfg(p => ({ ...p, sectionLayouts: { ...p.sectionLayouts, [sk.key]: { ...sl, desktop: v } } }));
@@ -937,7 +937,7 @@ const tabs: { key: Tab; label: string }[] = [
                         </select>
                       </div>
                       <div>
-                        <label className="block text-xs font-medium text-white/40 mb-1">{t("admin.sm.tablet")}</label>
+                        <label className="block text-xs font-medium text-white/60 mb-1">{t("admin.sm.tablet")}</label>
                         <select className="w-full px-3 py-2 rounded-lg border border-white/10 text-white text-sm" style={{ backgroundColor: "rgba(255,255,255,0.06)", color: "white" }} value={sl.tablet} onChange={e => {
                           const v = parseInt(e.target.value);
                           setCfg(p => ({ ...p, sectionLayouts: { ...p.sectionLayouts, [sk.key]: { ...sl, tablet: v } } }));
@@ -946,7 +946,7 @@ const tabs: { key: Tab; label: string }[] = [
                         </select>
                       </div>
                       <div>
-                        <label className="block text-xs font-medium text-white/40 mb-1">{t("admin.sm.mobile")}</label>
+                        <label className="block text-xs font-medium text-white/60 mb-1">{t("admin.sm.mobile")}</label>
                         <select className="w-full px-3 py-2 rounded-lg border border-white/10 text-white text-sm" style={{ backgroundColor: "rgba(255,255,255,0.06)", color: "white" }} value={sl.mobile} onChange={e => {
                           const v = parseInt(e.target.value);
                           setCfg(p => ({ ...p, sectionLayouts: { ...p.sectionLayouts, [sk.key]: { ...sl, mobile: v } } }));
@@ -986,7 +986,7 @@ const tabs: { key: Tab; label: string }[] = [
           {tab === "rows" && (
             <div className="space-y-6">
               <h2 className="text-lg font-bold text-white">{t("admin.sm.sectionRowTitles")}</h2>
-              <p className="text-sm text-white/40">{t("admin.sm.rowTitlesHint")}</p>
+              <p className="text-sm text-white/60">{t("admin.sm.rowTitlesHint")}</p>
               {rowSectionKeys.map(sk => {
                 const titles = cfg.sectionRows?.[sk.key] || ["Row 1", "Row 2", "Row 3", "Row 4", "Row 5"];
                 return (
@@ -994,7 +994,7 @@ const tabs: { key: Tab; label: string }[] = [
                     <h3 className="font-medium text-white">{sk.label} {t("admin.sm.rowTitles")}</h3>
                     {titles.map((title, i) => (
                       <div key={i}>
-                        <label className="block text-xs font-medium text-white/40 mb-1">{t("admin.sm.rowNum")} {i + 1}</label>
+                        <label className="block text-xs font-medium text-white/60 mb-1">{t("admin.sm.rowNum")} {i + 1}</label>
                         <input
                           className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }}
                           value={title}
@@ -1018,7 +1018,7 @@ const tabs: { key: Tab; label: string }[] = [
           {tab === "faq" && (
             <div className="space-y-5">
               <h2 className="text-lg font-bold text-white">{t("admin.sm.faqMgmt")}</h2>
-              <p className="text-sm text-white/40">{t("admin.sm.faqHint")}</p>
+              <p className="text-sm text-white/60">{t("admin.sm.faqHint")}</p>
               {cfg.faqs.map((faq, i) => (
                 <div key={faq.id} className="border border-white/10 bg-white/5 text-white rounded-lg p-4 space-y-3">
                   <div className="flex items-center justify-between">
@@ -1040,7 +1040,7 @@ const tabs: { key: Tab; label: string }[] = [
                     </div>
                   </div>
                   <div>
-                    <label className="block text-xs font-medium text-white/40 mb-1">{t("admin.sm.question")}</label>
+                    <label className="block text-xs font-medium text-white/60 mb-1">{t("admin.sm.question")}</label>
                     <textarea style={{ backgroundColor: "rgba(255,255,255,0.06)", color: "white" }}
                       id={`faq-question-${faq.id}`}
                       className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }}
@@ -1054,7 +1054,7 @@ const tabs: { key: Tab; label: string }[] = [
                     />
                   </div>
                   <div>
-                    <label className="block text-xs font-medium text-white/40 mb-1">{t("admin.sm.answer")}</label>
+                    <label className="block text-xs font-medium text-white/60 mb-1">{t("admin.sm.answer")}</label>
                     <textarea style={{ backgroundColor: "rgba(255,255,255,0.06)", color: "white" }}
                       className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }}
                       rows={3}
@@ -1080,7 +1080,7 @@ const tabs: { key: Tab; label: string }[] = [
           {tab === "terms" && (
             <div className="space-y-5">
               <h2 className="text-lg font-bold text-white">{t("admin.sm.terms")}</h2>
-              <p className="text-sm text-white/40">{t("admin.sm.termsHint")}</p>
+              <p className="text-sm text-white/60">{t("admin.sm.termsHint")}</p>
               {cfg.terms.map((item, i) => (
                 <div key={item.id} className="border border-white/10 bg-white/5 text-white rounded-lg p-4 space-y-3">
                   <div className="flex items-center justify-between">
@@ -1091,7 +1091,7 @@ const tabs: { key: Tab; label: string }[] = [
                     >{t("admin.common.delete")}</button>
                   </div>
                   <div>
-                    <label className="block text-xs font-medium text-white/40 mb-1">{t("admin.sm.title")}</label>
+                    <label className="block text-xs font-medium text-white/60 mb-1">{t("admin.sm.title")}</label>
                     <input
                       className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }}
                       value={item.title}
@@ -1103,7 +1103,7 @@ const tabs: { key: Tab; label: string }[] = [
                     />
                   </div>
                   <div>
-                    <label className="block text-xs font-medium text-white/40 mb-1">{t("admin.sm.content")}</label>
+                    <label className="block text-xs font-medium text-white/60 mb-1">{t("admin.sm.content")}</label>
                     <textarea style={{ backgroundColor: "rgba(255,255,255,0.06)", color: "white" }}
                       className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }}
                       rows={4}
@@ -1129,7 +1129,7 @@ const tabs: { key: Tab; label: string }[] = [
           {tab === "privacy" && (
             <div className="space-y-5">
               <h2 className="text-lg font-bold text-white">{t("admin.sm.privacy")}</h2>
-              <p className="text-sm text-white/40">{t("admin.sm.privacyHint")}</p>
+              <p className="text-sm text-white/60">{t("admin.sm.privacyHint")}</p>
               {cfg.privacy.map((item, i) => (
                 <div key={item.id} className="border border-white/10 bg-white/5 text-white rounded-lg p-4 space-y-3">
                   <div className="flex items-center justify-between">
@@ -1140,7 +1140,7 @@ const tabs: { key: Tab; label: string }[] = [
                     >{t("admin.common.delete")}</button>
                   </div>
                   <div>
-                    <label className="block text-xs font-medium text-white/40 mb-1">{t("admin.sm.title")}</label>
+                    <label className="block text-xs font-medium text-white/60 mb-1">{t("admin.sm.title")}</label>
                     <input
                       className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }}
                       value={item.title}
@@ -1152,7 +1152,7 @@ const tabs: { key: Tab; label: string }[] = [
                     />
                   </div>
                   <div>
-                    <label className="block text-xs font-medium text-white/40 mb-1">{t("admin.sm.content")}</label>
+                    <label className="block text-xs font-medium text-white/60 mb-1">{t("admin.sm.content")}</label>
                     <textarea style={{ backgroundColor: "rgba(255,255,255,0.06)", color: "white" }}
                       className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }}
                       rows={4}
@@ -1178,7 +1178,7 @@ const tabs: { key: Tab; label: string }[] = [
                     {tab === "testimonials" && (
             <div className="space-y-4">
               <h2 className="text-lg font-bold text-white">{t("admin.sm.testimonials")}</h2>
-              <p className="text-sm text-white/40">{t("admin.sm.testHint")}</p>
+              <p className="text-sm text-white/60">{t("admin.sm.testHint")}</p>
               {cfg.testimonials.map((t, i) => (
                 <div key={i} className="border border-white/10 bg-white/5 text-white rounded-lg p-4 space-y-3">
                   <div className="flex justify-between">
@@ -1203,7 +1203,7 @@ const tabs: { key: Tab; label: string }[] = [
           {tab === "heroText" && (
             <div className="space-y-6">
               <h2 className="text-lg font-bold text-white">{t("admin.sm.heroTextSettings")}</h2>
-              <p className="text-sm text-white/40">{t("admin.sm.heroTextHint")}</p>
+              <p className="text-sm text-white/60">{t("admin.sm.heroTextHint")}</p>
               {[
                 { key: "tours", label: t("admin.sm.heroPage.tours") },
                 { key: "hotels", label: t("admin.sm.heroPage.hotels") },
@@ -1271,7 +1271,7 @@ const tabs: { key: Tab; label: string }[] = [
           {tab === "cardDims" && (
             <div className="space-y-6">
               <h2 className="text-lg font-bold text-white">{t("admin.sm.cardDims")}</h2>
-              <p className="text-sm text-white/40">{t("admin.sm.cardDimsHint")}</p>
+              <p className="text-sm text-white/60">{t("admin.sm.cardDimsHint")}</p>
               
               <h3 className="text-md font-semibold text-[#D4AF37] mt-4">{t("admin.sm.cardDimensions")}</h3>
               {[
@@ -1349,7 +1349,7 @@ const tabs: { key: Tab; label: string }[] = [
           {tab === "moduleToggles" && (
             <div className="space-y-6">
               <h2 className="text-lg font-bold text-white">{t("admin.sm.moduleToggles")}</h2>
-              <p className="text-sm text-white/40">{t("admin.sm.moduleHint")}</p>
+              <p className="text-sm text-white/60">{t("admin.sm.moduleHint")}</p>
               {[
                 { key: "flights", label: t("admin.sm.section.flights"), desc: t("admin.sm.mod.flights") },
                 { key: "buses", label: t("admin.sm.section.buses"), desc: t("admin.sm.mod.buses") },
@@ -1368,7 +1368,7 @@ const tabs: { key: Tab; label: string }[] = [
                     <div className="flex items-center justify-between">
                       <div>
                         <h3 className="font-medium text-white text-sm">{label}</h3>
-                        <p className="text-xs text-white/40 mt-0.5">{desc}</p>
+                        <p className="text-xs text-white/60 mt-0.5">{desc}</p>
                       </div>
                       <button
                         onClick={() => setCfg(p => ({ ...p, moduleToggles: { ...(p.moduleToggles || {}), [key]: !active } }))}
@@ -1392,11 +1392,11 @@ const tabs: { key: Tab; label: string }[] = [
           {tab === "relatedItems" && (
             <div className="space-y-6">
               <h2 className="text-lg font-bold text-white">{t("admin.sm.relatedItems")}</h2>
-              <p className="text-sm text-white/40 mb-4">{t("admin.sm.relatedHint")}</p>
+              <p className="text-sm text-white/60 mb-4">{t("admin.sm.relatedHint")}</p>
               
               <div className="border border-white/10 bg-white/5 text-white rounded-lg p-4 mb-4">
                 <h3 className="font-medium text-white text-sm mb-3">{t("admin.sm.sameSection")}</h3>
-                <p className="text-xs text-white/40 mb-2">{t("admin.sm.sameSectionHint")}</p>
+                <p className="text-xs text-white/60 mb-2">{t("admin.sm.sameSectionHint")}</p>
                 <div className="flex items-center gap-3">
                   <span className="text-white/70 text-sm">{t("admin.sm.maxItems")}</span>
                   <select
@@ -1410,7 +1410,7 @@ const tabs: { key: Tab; label: string }[] = [
               </div>
 
               <h3 className="font-semibold text-[#D4AF37] mb-3">{t("admin.sm.crossSection")}</h3>
-              <p className="text-xs text-white/40 mb-4">{t("admin.sm.crossHint")}</p>
+              <p className="text-xs text-white/60 mb-4">{t("admin.sm.crossHint")}</p>
               {[
                 { key: "tours", label: t("admin.sm.section.tours") },
                 { key: "hotels", label: t("admin.sm.section.hotels") },
@@ -1478,7 +1478,7 @@ const tabs: { key: Tab; label: string }[] = [
 
             <div className="space-y-6">
               <h2 className="text-lg font-bold text-white">{t("admin.sm.tourTabs")}</h2>
-              <p className="text-sm text-white/40">{t("admin.sm.tourTabsHint")}</p>
+              <p className="text-sm text-white/60">{t("admin.sm.tourTabsHint")}</p>
               {(cfg.detailPageTabs?.tours || []).map((tab: any, i: number) => (
                 <div key={tab.key} className="border border-white/10 bg-white/5 text-white rounded-lg p-4">
                   <div className="flex items-center justify-between">
@@ -1509,7 +1509,7 @@ const tabs: { key: Tab; label: string }[] = [
                       </div>
                       <div>
                         <h3 className="font-medium text-white text-sm">{tab.label}</h3>
-                        <p className="text-xs text-white/40">{t("admin.sm.key")} {tab.key}</p>
+                        <p className="text-xs text-white/60">{t("admin.sm.key")} {tab.key}</p>
                       </div>
                     </div>
                     <button
@@ -1537,7 +1537,7 @@ const tabs: { key: Tab; label: string }[] = [
           {tab === "partners" && (
             <div className="space-y-4">
               <h2 className="text-lg font-bold text-white">{t("admin.sm.partners")}</h2>
-              <p className="text-sm text-white/40">{t("admin.sm.partnersHint")}</p>
+              <p className="text-sm text-white/60">{t("admin.sm.partnersHint")}</p>
               {cfg.partners.map((p, i) => (
                 <div key={i} className="flex gap-3 items-center">
                   <input className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} placeholder={t("admin.sm.partnerName")} value={p} onChange={e => { const a = [...cfg.partners]; a[i] = e.target.value; set("partners", a); }} />

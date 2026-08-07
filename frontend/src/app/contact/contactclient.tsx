@@ -366,7 +366,7 @@ export default function ContactClient({ siteConfig }: { siteConfig: any }) {
                 <p className="text-[#0A1628] font-semibold text-sm mb-1">{t("contact.emailLabel")}</p>
                 <a
                   href={`mailto:${email}`}
-                  className="text-[#D4AF37] text-sm hover:text-[#F5A623] transition-colors"
+                  className="text-[#8A6C0B] text-sm hover:text-[#7A5F08] transition-colors"
                 >
                   {email}
                 </a>
@@ -395,12 +395,12 @@ export default function ContactClient({ siteConfig }: { siteConfig: any }) {
                 <p className="text-[#0A1628] font-semibold text-sm mb-1">{t("contact.hours")}</p>
                 <div className="text-gray-600 text-sm space-y-0.5">
                   <p>
-                    <span className="text-gray-400">{t("contact.monFri")}</span> 9:00 AM – 5:00 PM
+                    <span className="text-gray-500">{t("contact.monFri")}</span> 9:00 AM – 5:00 PM
                   </p>
                   <p>
-                    <span className="text-gray-400">{t("contact.sat")}</span> 9:00 AM – 12:00 PM
+                    <span className="text-gray-500">{t("contact.sat")}</span> 9:00 AM – 12:00 PM
                   </p>
-                  <p className="text-red-500/70">
+                  <p className="text-red-600">
                     {t("contact.sunClosed")}
                   </p>
                 </div>
@@ -430,22 +430,22 @@ export default function ContactClient({ siteConfig }: { siteConfig: any }) {
           <div className="flex flex-wrap gap-x-8 gap-y-3 justify-center text-center text-gray-500 text-xs sm:text-sm">
             <span>
               {t("contact.companyReg")}{" "}
-              <span className="text-[#D4AF37]/70 font-mono">126395248</span>
+              <span className="text-[#8A6C0B] font-mono">126395248</span>
             </span>
             <span className="hidden sm:inline text-gray-300">|</span>
             <span>
               IATA:{" "}
-              <span className="text-[#D4AF37]/70 font-mono">05301026</span>
+              <span className="text-[#8A6C0B] font-mono">05301026</span>
             </span>
             <span className="hidden sm:inline text-gray-300">|</span>
             <span>
               T/I(YGN):{" "}
-              <span className="text-[#D4AF37]/70 font-mono">2889</span>
+              <span className="text-[#8A6C0B] font-mono">2889</span>
             </span>
             <span className="hidden sm:inline text-gray-300">|</span>
             <span>
               T/O(YGN):{" "}
-              <span className="text-[#D4AF37]/70 font-mono">0946</span>
+              <span className="text-[#8A6C0B] font-mono">0946</span>
             </span>
           </div>
         </div>
@@ -467,6 +467,7 @@ export default function ContactClient({ siteConfig }: { siteConfig: any }) {
           </div>
           <div style={{ borderRadius: 16, overflow: "hidden", boxShadow: "0 1px 3px rgba(0,0,0,0.1)" }}>
             <iframe
+              title="A9 Global Travel location map"
               src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d15276.78203238526!2d96.195!3d16.8409!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x30c194d3cb9fffff%3A0x0!2sYangon!5e0!3m2!1sen!2smm!4v1700000000000"
               width="100%"
               height="100%"

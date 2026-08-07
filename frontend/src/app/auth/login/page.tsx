@@ -195,13 +195,13 @@ export default function LoginPage() {
               A9 GLOBAL
             </span>
           </Link>
-          <p className="text-white/40 text-sm mt-2">{t("auth.login.adminPanel")}</p>
+          <p className="text-white/60 text-sm mt-2">{t("auth.login.adminPanel")}</p>
         </div>
 
         {/* Card */}
         <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-8 shadow-2xl">
           {step !== 'login' && (
-            <button onClick={restart} className="text-white/40 hover:text-white/80 text-sm mb-4 transition">
+            <button onClick={restart} className="text-white/60 hover:text-white/80 text-sm mb-4 transition">
               {t("auth.login.backToSignIn")}
             </button>
           )}
@@ -233,7 +233,7 @@ export default function LoginPage() {
                   {t("auth.login.forgotPassword")}
                 </button>
               </div>
-              <p className="mt-6 text-center text-white/30 text-xs">{t("auth.login.protectedArea")}</p>
+              <p className="mt-6 text-center text-white/50 text-xs">{t("auth.login.protectedArea")}</p>
             </>
           )}
 
@@ -242,7 +242,7 @@ export default function LoginPage() {
               <h2 className="text-xl font-bold text-white mb-2" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
                 {t("auth.login.resetTitle")}
               </h2>
-              <p className="text-white/40 text-sm mb-6">{t("auth.login.resetDesc")}</p>
+              <p className="text-white/60 text-sm mb-6">{t("auth.login.resetDesc")}</p>
               {error && <div className="mb-4 p-3 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 text-sm">{error}</div>}
               {info && <div className="mb-4 p-3 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-300 text-sm">{info}</div>}
               <form onSubmit={handleForgot} className="space-y-5">
@@ -263,7 +263,7 @@ export default function LoginPage() {
               <h2 className="text-xl font-bold text-white mb-2" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
                 {t("auth.login.otpTitle")}
               </h2>
-              <p className="text-white/40 text-sm mb-6">{t("auth.login.otpDescPrefix")} <span className="text-[#D4AF37]">{email}</span>{t("auth.login.otpDescSuffix")}</p>
+              <p className="text-white/60 text-sm mb-6">{t("auth.login.otpDescPrefix")} <span className="text-[#D4AF37]">{email}</span>{t("auth.login.otpDescSuffix")}</p>
               {error && <div className="mb-4 p-3 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 text-sm">{error}</div>}
               {info && <div className="mb-4 p-3 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-300 text-sm">{info}</div>}
               <form onSubmit={handleVerifyOtp} className="space-y-5">
@@ -278,7 +278,7 @@ export default function LoginPage() {
               </form>
               <div className="mt-4 text-center">
                 <button onClick={handleResend} disabled={loading}
-                  className="text-white/40 hover:text-white/80 text-sm transition">
+                  className="text-white/60 hover:text-white/80 text-sm transition">
                   {t("auth.login.resend")}
                 </button>
               </div>
@@ -290,7 +290,7 @@ export default function LoginPage() {
               <h2 className="text-xl font-bold text-white mb-2" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
                 {t("auth.login.newpwTitle")}
               </h2>
-              <p className="text-white/40 text-sm mb-6">{t("auth.login.newpwDescPrefix")} <span className="text-[#D4AF37]">{email}</span>.</p>
+              <p className="text-white/60 text-sm mb-6">{t("auth.login.newpwDescPrefix")} <span className="text-[#D4AF37]">{email}</span>.</p>
               {error && <div className="mb-4 p-3 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 text-sm">{error}</div>}
               <form onSubmit={handleResetPassword} className="space-y-5">
                 <div>
@@ -315,7 +315,7 @@ export default function LoginPage() {
                 {t("auth.login.doneTitle")}
               </h2>
               {info && <div className="mb-4 p-3 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-300 text-sm">{info}</div>}
-              <p className="text-white/40 text-sm mb-6">{t("auth.login.doneDesc")}</p>
+              <p className="text-white/60 text-sm mb-6">{t("auth.login.doneDesc")}</p>
               <button onClick={() => { setStep('login'); setPassword(''); }}
                 className="w-full py-3 rounded-lg bg-gradient-to-r from-[#D4AF37] to-[#F5A623] text-[#0A1628] font-bold hover:shadow-lg hover:shadow-[#D4AF37]/30 transition-all duration-300">
                 {t("auth.login.backToSignInBtn")}

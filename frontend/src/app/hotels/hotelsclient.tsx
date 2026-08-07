@@ -108,7 +108,7 @@ export default function HotelsClient({ initialHotels, siteConfig }: HotelsClient
                 placeholder={t("list.searchLocation")} className="w-full pl-9 pr-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-gray-900 placeholder-gray-400 text-sm focus:outline-none focus:border-[#D4AF37] transition-colors" />
             </div>
             <div className="relative">
-              <select value={rating} onChange={(e) => handleFilterChange(setRating, e.target.value)}
+              <select value={rating} onChange={(e) => handleFilterChange(setRating, e.target.value)} aria-label={t("list.ratingFilter")} aria-label={t("list.ratingFilter")} aria-label={t("list.ratingFilter")} aria-label={t("list.ratingFilter")} aria-label={t("list.ratingFilter")}
                 className="px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-gray-900 text-sm focus:outline-none focus:border-[#D4AF37] transition-colors appearance-none cursor-pointer pr-8">
                 <option value="">{t("list.anyRating")}</option>
                 <option value="3">3+ Stars</option>
@@ -119,12 +119,12 @@ export default function HotelsClient({ initialHotels, siteConfig }: HotelsClient
             <div className="flex gap-2 items-center">
               <input type="number" value={minPrice} onChange={(e) => handleFilterChange(setMinPrice, e.target.value)}
                 placeholder={t("list.minMMK")} className="w-[100px] px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-gray-900 placeholder-gray-400 text-sm focus:outline-none focus:border-[#D4AF37] transition-colors [appearance:textfield]" />
-              <span className="text-gray-400">–</span>
+              <span className="text-gray-600">–</span>
               <input type="number" value={maxPrice} onChange={(e) => handleFilterChange(setMaxPrice, e.target.value)}
                 placeholder={t("list.maxMMK")} className="w-[100px] px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-gray-900 placeholder-gray-400 text-sm focus:outline-none focus:border-[#D4AF37] transition-colors [appearance:textfield]" />
             </div>
             <div className="relative">
-              <select value={sort} onChange={(e) => handleFilterChange(setSort, e.target.value)}
+              <select value={sort} onChange={(e) => handleFilterChange(setSort, e.target.value)} aria-label={t("list.sortHotels")} aria-label={t("list.sortHotels")} aria-label={t("list.sortHotels")} aria-label={t("list.sortHotels")} aria-label={t("list.sortHotels")}
                 className="px-4 py-2 rounded-xl border border-[#D4AF37]/30 bg-white text-[#0A1628] text-sm font-medium">
                 <option value="">{t("list.sortByColon")}</option>
                 <option value="rating">{t("list.ratingColon")}</option>

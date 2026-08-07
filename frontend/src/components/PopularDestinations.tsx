@@ -135,7 +135,7 @@ function DestinationCard({ dest, destText = {} }: { dest: { city: string; countr
           {Array.isArray(dest.tags) && dest.tags.length > 0 && (
             <div className="flex flex-wrap gap-1 pt-0.5">
               {dest.tags.slice(0, 3).map((tag, idx) => (
-                <span key={idx} className="px-2 py-0.5 rounded-full bg-[#D4AF37]/10 text-[#B8960F] text-[10px] font-medium border border-[#D4AF37]/20">
+                <span key={idx} className="px-2 py-0.5 rounded-full bg-[#D4AF37]/10 text-[#7A5F08] text-[10px] font-medium border border-[#D4AF37]/20">
                   {tag}
                 </span>
               ))}

@@ -241,7 +241,7 @@ export default function AdminInsurancePage() {
             onChange={handleFileInputChange}
             className="hidden"
           />
-          <p className="text-sm text-white/40 mb-2">
+          <p className="text-sm text-white/60 mb-2">
             {uploading ? "Uploading..." : "Drag &amp; drop image here or click to upload"}
           </p>
           {uploadError && <p className="text-red-400 text-xs mt-1">{uploadError}</p>}
@@ -401,7 +401,7 @@ export default function AdminInsurancePage() {
           >
             {t("admin.insurance.title")}
           </h1>
-          <p className="text-white/40 text-sm mt-1">
+          <p className="text-white/60 text-sm mt-1">
             {t("admin.insurance.subtitle")}
           </p>
         </div>
@@ -418,18 +418,18 @@ export default function AdminInsurancePage() {
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-white/10 bg-white/[0.02]">
-                <th className="text-left p-4 text-white/40 font-semibold uppercase tracking-wider text-[11px]">{t("admin.visas.thImage")}</th>
-                <th className="text-left p-4 text-white/40 font-semibold uppercase tracking-wider text-[11px]">{t("admin.insurance.thPlan")}</th>
-                <th className="text-left p-4 text-white/40 font-semibold uppercase tracking-wider text-[11px]">{t("admin.insurance.thCoverage")}</th>
-                <th className="text-left p-4 text-white/40 font-semibold uppercase tracking-wider text-[11px]">{t("admin.insurance.thPremium")}</th>
-                <th className="text-left p-4 text-white/40 font-semibold uppercase tracking-wider text-[11px]">{t("admin.tours.thStatus")}</th>
-                <th className="text-left p-4 text-white/40 font-semibold uppercase tracking-wider text-[11px]">{t("admin.tours.thActions")}</th>
+                <th className="text-left p-4 text-white/60 font-semibold uppercase tracking-wider text-[11px]">{t("admin.visas.thImage")}</th>
+                <th className="text-left p-4 text-white/60 font-semibold uppercase tracking-wider text-[11px]">{t("admin.insurance.thPlan")}</th>
+                <th className="text-left p-4 text-white/60 font-semibold uppercase tracking-wider text-[11px]">{t("admin.insurance.thCoverage")}</th>
+                <th className="text-left p-4 text-white/60 font-semibold uppercase tracking-wider text-[11px]">{t("admin.insurance.thPremium")}</th>
+                <th className="text-left p-4 text-white/60 font-semibold uppercase tracking-wider text-[11px]">{t("admin.tours.thStatus")}</th>
+                <th className="text-left p-4 text-white/60 font-semibold uppercase tracking-wider text-[11px]">{t("admin.tours.thActions")}</th>
               </tr>
             </thead>
             <tbody>
               {insurances.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="p-8 text-center text-white/30">
+                  <td colSpan={6} className="p-8 text-center text-white/50">
                     {t("admin.insurance.empty")}
                   </td>
                 </tr>

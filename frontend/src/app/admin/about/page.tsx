@@ -266,7 +266,7 @@ export default function AdminAboutPage() {
           <h1 className="text-3xl md:text-4xl font-bold text-[#D4AF37]" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
             {t("admin.about.title")}
           </h1>
-          <p className="text-white/40 text-sm mt-1">{t("admin.about.subtitle")}</p>
+          <p className="text-white/60 text-sm mt-1">{t("admin.about.subtitle")}</p>
         </div>
         <div className="flex items-center gap-3">
           {savedMsg && <span className="text-sm text-emerald-400">{savedMsg}</span>}
@@ -310,7 +310,7 @@ export default function AdminAboutPage() {
               {about.heroImage ? (
                 <img src={about.heroImage} alt="Hero" className="w-full h-full object-cover" onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }} />
               ) : (
-                <div className="flex items-center justify-center h-full text-white/30 text-sm">{t("admin.about.noImage")}</div>
+                <div className="flex items-center justify-center h-full text-white/50 text-sm">{t("admin.about.noImage")}</div>
               )}
             </div>
             <button onClick={() => openUploader("heroImage")} disabled={uploadingKey === "heroImage"} className={`${btnGhost} mt-2 w-full`}>

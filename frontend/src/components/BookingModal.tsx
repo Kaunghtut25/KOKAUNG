@@ -211,7 +211,7 @@ export default function BookingModal({
         {/* Close button */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 text-white/40 hover:text-white transition-colors"
+          className="absolute top-4 right-4 text-white/60 hover:text-white transition-colors"
           aria-label="Close modal"
         >
           <svg
@@ -233,14 +233,14 @@ export default function BookingModal({
               <React.Fragment key={label}>
                 <div
                   className={`flex items-center gap-1.5 text-xs sm:text-sm ${
-                    i <= currentStepIndex ? "text-[#D4AF37]" : "text-white/30"
+                    i <= currentStepIndex ? "text-[#D4AF37]" : "text-white/50"
                   }`}
                 >
                   <span
                     className={`flex items-center justify-center w-5 h-5 rounded-full text-xs font-bold border ${
                       i <= currentStepIndex
                         ? "border-[#D4AF37] bg-[#D4AF37] text-[#0A1628]"
-                        : "border-white/20 text-white/30"
+                        : "border-white/20 text-white/50"
                     }`}
                   >
                     {i + 1}
@@ -332,7 +332,7 @@ export default function BookingModal({
               <div>
                 <label className="block text-white/80 text-sm font-medium mb-1.5">
                   Special Requests{" "}
-                  <span className="text-white/30 font-normal">(optional)</span>
+                  <span className="text-white/50 font-normal">(optional)</span>
                 </label>
                 <textarea
                   value={specialRequests}
@@ -391,7 +391,7 @@ export default function BookingModal({
                 <span className="text-white">Total</span>
                 <span className="text-[#D4AF37]">{totalMMK.toLocaleString()} Ks</span>
               </div>
-              <div className="text-white/40 text-xs text-right">
+              <div className="text-white/60 text-xs text-right">
                 ≈ ${((priceUSD || 0) * travelers).toLocaleString()} USD
               </div>
             </div>
@@ -445,7 +445,7 @@ export default function BookingModal({
                   <p className="text-white/50 text-sm">Scan QR with KBZPay app</p>
                 </div>
                 <svg
-                  className="ml-auto w-5 h-5 text-white/30 group-hover:text-[#D4AF37] transition-colors"
+                  className="ml-auto w-5 h-5 text-white/50 group-hover:text-[#D4AF37] transition-colors"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -470,7 +470,7 @@ export default function BookingModal({
                   <p className="text-white/50 text-sm">Scan QR with WavePay app</p>
                 </div>
                 <svg
-                  className="ml-auto w-5 h-5 text-white/30 group-hover:text-[#D4AF37] transition-colors"
+                  className="ml-auto w-5 h-5 text-white/50 group-hover:text-[#D4AF37] transition-colors"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -507,7 +507,7 @@ export default function BookingModal({
                   <p className="text-white/50 text-sm">Manual bank transfer</p>
                 </div>
                 <svg
-                  className="ml-auto w-5 h-5 text-white/30 group-hover:text-[#D4AF37] transition-colors"
+                  className="ml-auto w-5 h-5 text-white/50 group-hover:text-[#D4AF37] transition-colors"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -560,7 +560,7 @@ export default function BookingModal({
               </p>
             </div>
 
-            <p className="text-white/40 text-xs font-mono mb-6">
+            <p className="text-white/60 text-xs font-mono mb-6">
               Amount: {totalMMK.toLocaleString()} Ks
             </p>
 

@@ -125,12 +125,12 @@ export default function BlogClient({ siteConfig }: { siteConfig: any }) {
               <div className="p-5">
                 <div className="flex flex-wrap gap-1 mb-3">
                   {(post.tags || []).slice(0, 3).map((tag) => (
-                    <span key={tag} className="px-2 py-0.5 bg-[#D4AF37]/10 text-[#D4AF37] text-xs font-medium rounded-full">{tag}</span>
+                    <span key={tag} className="px-2 py-0.5 bg-[#D4AF37]/10 text-[#7A5F08] text-xs font-medium rounded-full">{tag}</span>
                   ))}
                 </div>
                 <h2 className="text-lg font-bold text-[#0A1628] mb-2 group-hover:text-[#D4AF37] transition-colors line-clamp-2" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>{post.title}</h2>
                 <p className="text-gray-500 text-sm line-clamp-3 mb-4">{post.content.replace(/[#*]/g, '')}</p>
-                <div className="flex items-center justify-between text-xs text-gray-400">
+                <div className="flex items-center justify-between text-xs text-gray-500">
                   <span>{post.author}</span>
                   <span>{new Date(post.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}</span>
                 </div>

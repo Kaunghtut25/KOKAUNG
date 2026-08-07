@@ -105,19 +105,19 @@ export default function HotelCard({ hotel, currency = "MMK", cardWidth, cardHeig
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-1">
               <div className="flex items-center gap-0.5">{renderStars(hotel.rating)}</div>
-              <span className="text-gray-400 text-[11px]">({hotel.reviewCount})</span>
+              <span className="text-gray-500 text-[11px]">({hotel.reviewCount})</span>
             </div>
             <div className="text-right">
               <span className="text-[#0A1628] text-base font-bold">{currencySymbol} {price.toLocaleString()}</span>
-              <span className="text-gray-400 text-[11px] ml-0.5">/night</span>
+              <span className="text-gray-500 text-[11px] ml-0.5">/night</span>
             </div>
           </div>
           {hotel.amenities && hotel.amenities.length > 0 && (
             <div className="flex flex-wrap gap-1 pt-0.5">
               {hotel.amenities.slice(0, 3).map((amenity, idx) => (
-                <span key={idx} className="px-2 py-0.5 rounded-full bg-[#D4AF37]/10 text-[#B8960F] text-[10px] font-medium border border-[#D4AF37]/20">{amenity}</span>
+                <span key={idx} className="px-2 py-0.5 rounded-full bg-[#D4AF37]/10 text-[#7A5F08] text-[10px] font-medium border border-[#D4AF37]/20">{amenity}</span>
               ))}
-              {hotel.amenities.length > 3 && <span className="px-2 py-0.5 rounded-full bg-gray-100 text-gray-400 text-[10px]">+{hotel.amenities.length - 3}</span>}
+              {hotel.amenities.length > 3 && <span className="px-2 py-0.5 rounded-full bg-gray-100 text-gray-600 text-[10px]">+{hotel.amenities.length - 3}</span>}
             </div>
           )}
         </div>

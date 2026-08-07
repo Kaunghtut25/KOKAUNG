@@ -118,7 +118,7 @@ function VisaGridCard({ visa }: { visa: VisaService }) {
         <p className="text-xs text-gray-500">{visa.processingTime}</p>
         <div className="flex flex-wrap gap-1.5 mt-1">
           {visa.requirements.slice(0, 3).map((r, i) => (
-            <span key={i} className="text-[11px] bg-[#D4AF37]/10 text-[#B8960F] px-2 py-1 rounded-full">{r}</span>
+            <span key={i} className="text-[11px] bg-[#D4AF37]/10 text-[#7A5F08] px-2 py-1 rounded-full">{r}</span>
           ))}
         </div>
         {(visa.visaFeeMMK > 0 || visa.visaFeeUSD > 0) && (

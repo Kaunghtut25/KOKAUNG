@@ -513,7 +513,7 @@ export default function AdminCruisesPage() {
         ) : (
           <div className="rounded-lg border border-dashed border-white/10 bg-white/[0.02] p-6 text-center">
             <span className="text-white/20 text-2xl block mb-1">🖼️</span>
-            <p className="text-white/30 text-sm">No images added yet</p>
+            <p className="text-white/50 text-sm">No images added yet</p>
           </div>
         )}
       </div>
@@ -618,7 +618,7 @@ export default function AdminCruisesPage() {
           >
             {t("admin.cruises.title")}
           </h1>
-          <p className="text-white/40 text-sm mt-1">
+          <p className="text-white/60 text-sm mt-1">
             {t("admin.cruises.subtitle")}
           </p>
         </div>
@@ -636,25 +636,25 @@ export default function AdminCruisesPage() {
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-white/10 bg-white/[0.02]">
-                <th className="text-left p-4 text-white/40 font-semibold uppercase tracking-wider text-[11px]">
+                <th className="text-left p-4 text-white/60 font-semibold uppercase tracking-wider text-[11px]">
                   {t("admin.cruises.thCruise")}
                 </th>
-                <th className="text-left p-4 text-white/40 font-semibold uppercase tracking-wider text-[11px]">
+                <th className="text-left p-4 text-white/60 font-semibold uppercase tracking-wider text-[11px]">
                   {t("admin.tours.thDestination")}
                 </th>
-                <th className="text-left p-4 text-white/40 font-semibold uppercase tracking-wider text-[11px]">
+                <th className="text-left p-4 text-white/60 font-semibold uppercase tracking-wider text-[11px]">
                   Price (MMK)
                 </th>
-                <th className="text-left p-4 text-white/40 font-semibold uppercase tracking-wider text-[11px]">
+                <th className="text-left p-4 text-white/60 font-semibold uppercase tracking-wider text-[11px]">
                   Price (USD)
                 </th>
-                <th className="text-left p-4 text-white/40 font-semibold uppercase tracking-wider text-[11px]">
+                <th className="text-left p-4 text-white/60 font-semibold uppercase tracking-wider text-[11px]">
                   {t("admin.tours.thDuration")}
                 </th>
-                <th className="text-left p-4 text-white/40 font-semibold uppercase tracking-wider text-[11px]">
+                <th className="text-left p-4 text-white/60 font-semibold uppercase tracking-wider text-[11px]">
                   {t("admin.tours.thStatus")}
                 </th>
-                <th className="text-left p-4 text-white/40 font-semibold uppercase tracking-wider text-[11px]">
+                <th className="text-left p-4 text-white/60 font-semibold uppercase tracking-wider text-[11px]">
                   {t("admin.tours.thActions")}
                 </th>
               </tr>
@@ -664,7 +664,7 @@ export default function AdminCruisesPage() {
                 <tr>
                   <td
                     colSpan={7}
-                    className="p-10 text-center text-white/30"
+                    className="p-10 text-center text-white/50"
                   >
                     <span className="text-3xl block mb-2">🚢</span>
                     {t("admin.cruises.empty")}

@@ -131,11 +131,11 @@ export default function ToursClient(props: any) {
               className={`relative px-6 py-2.5 rounded-xl text-sm font-medium transition-all duration-300 ${
                 activeTab === 'all'
                   ? 'bg-white text-[#0A1628] shadow-lg shadow-black/10'
-                  : 'text-gray-500 hover:text-[#D4AF37] hover:bg-[#D4AF37]/10'
+                  : 'text-gray-600 hover:text-[#D4AF37] hover:bg-[#D4AF37]/10'
               }`}
             >
               All Tours
-              <span className={`ml-2 text-xs px-2 py-0.5 rounded-full ${activeTab === 'all' ? 'bg-[#D4AF37]/15 text-[#B8930E]' : 'bg-gray-200 text-gray-400'}`}>
+              <span className={`ml-2 text-xs px-2 py-0.5 rounded-full ${activeTab === 'all' ? 'bg-[#D4AF37]/15 text-[#7A5F08]' : 'bg-gray-200 text-gray-600'}`}>
                 {apiTours.length}
               </span>
             </button>
@@ -144,11 +144,11 @@ export default function ToursClient(props: any) {
               className={`relative px-6 py-2.5 rounded-xl text-sm font-medium transition-all duration-300 ${
                 activeTab === 'inbound'
                   ? 'bg-white text-[#0A1628] shadow-lg shadow-black/10'
-                  : 'text-gray-500 hover:text-[#D4AF37] hover:bg-[#D4AF37]/10'
+                  : 'text-gray-600 hover:text-[#D4AF37] hover:bg-[#D4AF37]/10'
               }`}
             >
               🏔️ Inbound
-              <span className={`ml-2 text-xs px-2 py-0.5 rounded-full ${activeTab === 'inbound' ? 'bg-emerald-100 text-emerald-700' : 'bg-gray-200 text-gray-400'}`}>
+              <span className={`ml-2 text-xs px-2 py-0.5 rounded-full ${activeTab === 'inbound' ? 'bg-emerald-100 text-emerald-700' : 'bg-gray-200 text-gray-600'}`}>
                 {countInbound}
               </span>
             </button>
@@ -157,11 +157,11 @@ export default function ToursClient(props: any) {
               className={`relative px-6 py-2.5 rounded-xl text-sm font-medium transition-all duration-300 ${
                 activeTab === 'outbound'
                   ? 'bg-white text-[#0A1628] shadow-lg shadow-black/10'
-                  : 'text-gray-500 hover:text-[#D4AF37] hover:bg-[#D4AF37]/10'
+                  : 'text-gray-600 hover:text-[#D4AF37] hover:bg-[#D4AF37]/10'
               }`}
             >
               🌏 Outbound
-              <span className={`ml-2 text-xs px-2 py-0.5 rounded-full ${activeTab === 'outbound' ? 'bg-sky-100 text-sky-700' : 'bg-gray-200 text-gray-400'}`}>
+              <span className={`ml-2 text-xs px-2 py-0.5 rounded-full ${activeTab === 'outbound' ? 'bg-sky-100 text-sky-700' : 'bg-gray-200 text-gray-600'}`}>
                 {countOutbound}
               </span>
             </button>
@@ -171,7 +171,7 @@ export default function ToursClient(props: any) {
           <div className="text-center mt-8">
             <div className="inline-flex items-center gap-3">
               <span className="h-px w-10 bg-gradient-to-r from-transparent to-[#D4AF37]" />
-              <span className="text-[#D4AF37] text-xs font-semibold uppercase tracking-[0.25em]">
+              <span className="text-[#8A6C0B] text-xs font-semibold uppercase tracking-[0.25em]">
                 {activeTab === 'all' ? 'Curated Journeys' : activeTab === 'inbound' ? 'Golden Land' : 'Beyond Borders'}
               </span>
               <span className="h-px w-10 bg-gradient-to-l from-transparent to-[#D4AF37]" />
@@ -183,7 +183,7 @@ export default function ToursClient(props: any) {
               {activeTab === 'all' ? 'Explore Our Tours' : activeTab === 'inbound' ? 'Inbound Tours' : 'Outbound Tours'}
             </h2>
           </div>
-          <p className="text-center text-gray-400 text-sm mt-3 max-w-xl leading-relaxed">
+          <p className="text-center text-gray-500 text-sm mt-3 max-w-xl leading-relaxed">
             {activeTab === 'all' && (
               <>Explore our complete collection of premium tours — from Myanmar's ancient temples to Southeast Asia's vibrant cities.</>
             )}
@@ -201,14 +201,14 @@ export default function ToursClient(props: any) {
           <input value={destination} onChange={(e) => setDestination(e.target.value)} placeholder={t("list.destination")} className="px-4 py-2 rounded-xl border border-gray-200 text-sm" />
           <input value={minPrice} onChange={(e) => setMinPrice(e.target.value)} placeholder={t("list.minPrice")} type="number" className="px-4 py-2 rounded-xl border border-gray-200 text-sm w-28" />
           <input value={maxPrice} onChange={(e) => setMaxPrice(e.target.value)} placeholder={t("list.maxPrice")} type="number" className="px-4 py-2 rounded-xl border border-gray-200 text-sm w-28" />
-          <select value={durationFilter} onChange={(e) => setDurationFilter(e.target.value)} className="px-4 py-2 rounded-xl border border-gray-200 text-sm">
+          <select value={durationFilter} onChange={(e) => setDurationFilter(e.target.value)} aria-label={t("list.filterDuration")} className="px-4 py-2 rounded-xl border border-gray-200 text-sm">
             <option value="">{t("list.anyDuration")}</option>
             <option value="1-3">1-3 Days</option>
             <option value="4-7">4-7 Days</option>
             <option value="8-14">8-14 Days</option>
             <option value="15+">15+ Days</option>
           </select>
-          <select value={sort} onChange={(e) => setSort(e.target.value)} className="px-4 py-2 rounded-xl border border-gray-200 text-sm">
+          <select value={sort} onChange={(e) => setSort(e.target.value)} aria-label={t("list.sortTours")} className="px-4 py-2 rounded-xl border border-gray-200 text-sm">
             <option value="">{t("list.sortBy")}</option>
             <option value="rating">{t("list.ratingHighLow")}</option>
             <option value="price_asc">{t("list.priceLowHigh")}</option>

@@ -174,7 +174,7 @@ export default function DestinationsClient({ initialDestinations, siteConfig }: 
                   <h4 className="font-semibold text-gray-800 mb-2">{t("list.highlights")}</h4>
                   <div className="flex flex-wrap gap-2">
                     {selectedDest.highlights.map((h, i) => (
-                      <span key={i} className="px-3 py-1 bg-[#D4AF37]/10 text-[#B8960F] text-xs rounded-full">{h}</span>
+                      <span key={i} className="px-3 py-1 bg-[#D4AF37]/10 text-[#7A5F08] text-xs rounded-full">{h}</span>
                     ))}
                   </div>
                 </div>

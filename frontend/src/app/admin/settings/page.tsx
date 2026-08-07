@@ -363,7 +363,7 @@ export default function AdminSettingsPage() {
               )}
             </div>
             {uploading && (
-              <p className="text-white/40 text-xs flex items-center gap-2">
+              <p className="text-white/60 text-xs flex items-center gap-2">
                 <span className="animate-spin">⏳</span> Uploading...
               </p>
             )}
@@ -447,7 +447,7 @@ export default function AdminSettingsPage() {
   const renderHeroTab = () => (
     <div className="bg-white/5 border border-white/10 rounded-xl p-6">
       <h3 className="text-lg font-semibold text-gold mb-4">{t("admin.settings.heroImages")}</h3>
-      <p className="text-white/40 text-sm mb-6">
+      <p className="text-white/60 text-sm mb-6">
         Set hero background images for each page. Provide a URL or upload an image. Recommended: 1920×600px, max 5MB.
       </p>
       <div className="space-y-6">
@@ -510,7 +510,7 @@ export default function AdminSettingsPage() {
                   )}
                 </div>
                 {uploading && (
-                  <p className="text-white/40 text-xs flex items-center gap-2">
+                  <p className="text-white/60 text-xs flex items-center gap-2">
                     <span className="animate-spin">⏳</span> Uploading...
                   </p>
                 )}
@@ -528,7 +528,7 @@ export default function AdminSettingsPage() {
   const renderSocialTab = () => (
     <div className="bg-white/5 border border-white/10 rounded-xl p-6">
       <h3 className="text-lg font-semibold text-gold mb-4">{t("admin.settings.socialLinks")}</h3>
-      <p className="text-white/40 text-sm mb-6">
+      <p className="text-white/60 text-sm mb-6">
         {t("admin.settings.socialHint")}
       </p>
       <div className="space-y-4">
@@ -565,7 +565,7 @@ export default function AdminSettingsPage() {
   const renderThemeTab = () => (
     <div className="bg-white/5 border border-white/10 rounded-xl p-6">
       <h3 className="text-lg font-semibold text-gold mb-2">{t("admin.settings.themeColors")}</h3>
-      <p className="text-white/40 text-sm mb-6">
+      <p className="text-white/60 text-sm mb-6">
         {t("admin.settings.themeHint")}
       </p>
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
@@ -579,7 +579,7 @@ export default function AdminSettingsPage() {
               style={{ backgroundColor: tc.color }}
             />
             <p className="text-white/70 text-xs font-medium">{tc.name}</p>
-            <p className="text-white/30 text-xs font-mono mt-1">{tc.color}</p>
+            <p className="text-white/50 text-xs font-mono mt-1">{tc.color}</p>
           </div>
         ))}
       </div>
@@ -589,17 +589,17 @@ export default function AdminSettingsPage() {
   const renderCertificationsTab = () => (
     <div className="bg-white/5 border border-white/10 rounded-xl p-6">
       <h3 className="text-lg font-semibold text-gold mb-2">{t("admin.settings.certs")}</h3>
-      <p className="text-white/40 text-sm mb-6">
+      <p className="text-white/60 text-sm mb-6">
         {t("admin.settings.certsHint")}
       </p>
       <div className="space-y-4">
         {settings.certifications.length === 0 && (
-          <p className="text-white/40 text-sm">{t("admin.settings.noCerts")}</p>
+          <p className="text-white/60 text-sm">{t("admin.settings.noCerts")}</p>
         )}
         {settings.certifications.map((cert, idx) => (
           <div key={idx} className="bg-white/[0.03] border border-white/10 rounded-lg p-4 space-y-3">
             <div className="flex justify-between items-center">
-              <span className="text-white/40 text-xs font-medium">{t("admin.settings.certNum")} {idx + 1}</span>
+              <span className="text-white/60 text-xs font-medium">{t("admin.settings.certNum")} {idx + 1}</span>
               <button
                 type="button"
                 onClick={() => {
@@ -739,7 +739,7 @@ export default function AdminSettingsPage() {
           >
             {t("admin.siteSettings")}
           </h1>
-          <p className="text-white/40 text-sm mt-1">
+          <p className="text-white/60 text-sm mt-1">
             {t("admin.settings.subtitle")}
           </p>
         </div>

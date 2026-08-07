@@ -205,7 +205,7 @@ export default function AdminDashboardPage() {
             >
               <div className="flex items-center justify-between mb-4">
                 <span className="text-[32px] leading-none">{card.icon}</span>
-                <span className="text-white/30 text-[10px] uppercase tracking-[0.2em] font-semibold">
+                <span className="text-white/50 text-[10px] uppercase tracking-[0.2em] font-semibold">
                   {t(card.labelKey)}
                 </span>
               </div>
@@ -248,25 +248,25 @@ export default function AdminDashboardPage() {
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b border-white/10 bg-white/[0.02]">
-                  <th className="text-left p-4 text-white/40 font-semibold uppercase tracking-wider text-[11px]">
+                  <th className="text-left p-4 text-white/60 font-semibold uppercase tracking-wider text-[11px]">
                     {t("admin.dash.bookingId")}
                   </th>
-                  <th className="text-left p-4 text-white/40 font-semibold uppercase tracking-wider text-[11px]">
+                  <th className="text-left p-4 text-white/60 font-semibold uppercase tracking-wider text-[11px]">
                     {t("admin.dash.customer")}
                   </th>
-                  <th className="text-left p-4 text-white/40 font-semibold uppercase tracking-wider text-[11px]">
+                  <th className="text-left p-4 text-white/60 font-semibold uppercase tracking-wider text-[11px]">
                     {t("admin.dash.type")}
                   </th>
-                  <th className="text-left p-4 text-white/40 font-semibold uppercase tracking-wider text-[11px]">
+                  <th className="text-left p-4 text-white/60 font-semibold uppercase tracking-wider text-[11px]">
                     {t("admin.dash.amount")}
                   </th>
-                  <th className="text-left p-4 text-white/40 font-semibold uppercase tracking-wider text-[11px]">
+                  <th className="text-left p-4 text-white/60 font-semibold uppercase tracking-wider text-[11px]">
                     {t("admin.dash.status")}
                   </th>
-                  <th className="text-left p-4 text-white/40 font-semibold uppercase tracking-wider text-[11px]">
+                  <th className="text-left p-4 text-white/60 font-semibold uppercase tracking-wider text-[11px]">
                     {t("admin.dash.date")}
                   </th>
-                  <th className="text-left p-4 text-white/40 font-semibold uppercase tracking-wider text-[11px]">
+                  <th className="text-left p-4 text-white/60 font-semibold uppercase tracking-wider text-[11px]">
                     {t("admin.dash.actions")}
                   </th>
                 </tr>
@@ -276,7 +276,7 @@ export default function AdminDashboardPage() {
                   <tr>
                     <td
                       colSpan={7}
-                      className="p-10 text-center text-white/30"
+                      className="p-10 text-center text-white/50"
                     >
                       <span className="text-3xl block mb-2">📋</span>
                       {t("admin.dash.noRecent")}
@@ -302,7 +302,7 @@ export default function AdminDashboardPage() {
                       </td>
                       <td className="p-4 text-white font-medium">
                         {formatNumber(booking.amount)}{" "}
-                        <span className="text-white/40 text-xs">{booking.currency || "MMK"}</span>
+                        <span className="text-white/60 text-xs">{booking.currency || "MMK"}</span>
                       </td>
                       <td className="p-4">{getStatusBadge(booking.status)}</td>
                       <td className="p-4 text-white/50 text-xs">
@@ -332,7 +332,7 @@ export default function AdminDashboardPage() {
         <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-12 text-center">
           <span className="text-5xl mb-4 block">📈</span>
           <p className="text-white/50 text-lg">{t("admin.dash.chartSoon")}</p>
-          <p className="text-white/30 text-sm mt-1">
+          <p className="text-white/50 text-sm mt-1">
             {t("admin.dash.chartText")}
           </p>
         </div>

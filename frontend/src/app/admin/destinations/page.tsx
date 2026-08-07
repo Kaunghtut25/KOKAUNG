@@ -77,7 +77,7 @@ export default function AdminDestinationsPage() {
         </div>
 
         {items.length === 0 ? (
-          <div className="text-white/40 text-center py-16 text-lg">{t("admin.dest.empty")}</div>
+          <div className="text-white/60 text-center py-16 text-lg">{t("admin.dest.empty")}</div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {items.map((d: any) => (

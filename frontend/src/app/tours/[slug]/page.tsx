@@ -760,7 +760,7 @@ export default function TourDetailPage() {
                       {tour.amenities.map((amenity, idx) => (
                         <span
                           key={idx}
-                          className="px-3 py-1.5 rounded-full bg-[#D4AF37]/10 text-[#D4AF37] text-sm border border-[#D4AF37]/20"
+                          className="px-3 py-1.5 rounded-full bg-[#D4AF37]/10 text-[#7A5F08] text-sm border border-[#D4AF37]/20"
                         >
                           {amenity}
                         </span>
@@ -806,7 +806,7 @@ export default function TourDetailPage() {
                                   {day.meals.map((meal) => (
                                     <span
                                       key={meal}
-                                      className="px-2.5 py-1 rounded-full bg-[#D4AF37]/10 text-[#D4AF37] text-xs font-medium border border-[#D4AF37]/20"
+                                      className="px-2.5 py-1 rounded-full bg-[#D4AF37]/10 text-[#7A5F08] text-xs font-medium border border-[#D4AF37]/20"
                                     >
                                       🍽 {t("tour.meal." + meal.toLowerCase())}
                                     </span>

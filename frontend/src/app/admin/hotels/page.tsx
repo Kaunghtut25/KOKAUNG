@@ -566,7 +566,7 @@ export default function AdminHotelsPage() {
           </button>
         </div>
         {editingHotel.roomTypes.length === 0 && (
-          <p className="text-white/30 text-sm italic">
+          <p className="text-white/50 text-sm italic">
             {t("admin.form.noRoomTypes")}
           </p>
         )}
@@ -590,7 +590,7 @@ export default function AdminHotelsPage() {
               </div>
               <div className="grid grid-cols-2 md:grid-cols-5 gap-2">
                 <div>
-                  <label className="block text-white/40 text-xs mb-1">
+                  <label className="block text-white/60 text-xs mb-1">
                     {t("admin.form.name")}
                   </label>
                   <input
@@ -608,7 +608,7 @@ export default function AdminHotelsPage() {
                   />
                 </div>
                 <div>
-                  <label className="block text-white/40 text-xs mb-1">
+                  <label className="block text-white/60 text-xs mb-1">
                     Price MMK
                   </label>
                   <input
@@ -625,7 +625,7 @@ export default function AdminHotelsPage() {
                   />
                 </div>
                 <div>
-                  <label className="block text-white/40 text-xs mb-1">
+                  <label className="block text-white/60 text-xs mb-1">
                     Price USD
                   </label>
                   <input
@@ -642,7 +642,7 @@ export default function AdminHotelsPage() {
                   />
                 </div>
                 <div>
-                  <label className="block text-white/40 text-xs mb-1">
+                  <label className="block text-white/60 text-xs mb-1">
                     {t("admin.form.capacity")}
                   </label>
                   <input
@@ -659,7 +659,7 @@ export default function AdminHotelsPage() {
                   />
                 </div>
                 <div>
-                  <label className="block text-white/40 text-xs mb-1">
+                  <label className="block text-white/60 text-xs mb-1">
                     Available
                   </label>
                   <input
@@ -736,7 +736,7 @@ export default function AdminHotelsPage() {
           >
             {t("admin.hotels.title")}
           </h1>
-          <p className="text-white/40 text-sm mt-1">
+          <p className="text-white/60 text-sm mt-1">
             {t("admin.hotels.subtitle")}
           </p>
         </div>
@@ -754,25 +754,25 @@ export default function AdminHotelsPage() {
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-white/10 bg-white/[0.02]">
-                <th className="text-left p-4 text-white/40 font-semibold uppercase tracking-wider text-[11px]">
+                <th className="text-left p-4 text-white/60 font-semibold uppercase tracking-wider text-[11px]">
                   {t("admin.hotels.thHotel")}
                 </th>
-                <th className="text-left p-4 text-white/40 font-semibold uppercase tracking-wider text-[11px]">
+                <th className="text-left p-4 text-white/60 font-semibold uppercase tracking-wider text-[11px]">
                   {t("admin.hotels.thLocation")}
                 </th>
-                <th className="text-left p-4 text-white/40 font-semibold uppercase tracking-wider text-[11px]">
+                <th className="text-left p-4 text-white/60 font-semibold uppercase tracking-wider text-[11px]">
                   {t("admin.tours.thRating")}
                 </th>
-                <th className="text-left p-4 text-white/40 font-semibold uppercase tracking-wider text-[11px]">
+                <th className="text-left p-4 text-white/60 font-semibold uppercase tracking-wider text-[11px]">
                   {t("admin.hotels.thPrice")}
                 </th>
-                <th className="text-left p-4 text-white/40 font-semibold uppercase tracking-wider text-[11px]">
+                <th className="text-left p-4 text-white/60 font-semibold uppercase tracking-wider text-[11px]">
                   Rooms
                 </th>
-                <th className="text-left p-4 text-white/40 font-semibold uppercase tracking-wider text-[11px]">
+                <th className="text-left p-4 text-white/60 font-semibold uppercase tracking-wider text-[11px]">
                   {t("admin.tours.thStatus")}
                 </th>
-                <th className="text-left p-4 text-white/40 font-semibold uppercase tracking-wider text-[11px]">
+                <th className="text-left p-4 text-white/60 font-semibold uppercase tracking-wider text-[11px]">
                   {t("admin.tours.thActions")}
                 </th>
               </tr>
@@ -782,7 +782,7 @@ export default function AdminHotelsPage() {
                 <tr>
                   <td
                     colSpan={7}
-                    className="p-10 text-center text-white/30"
+                    className="p-10 text-center text-white/50"
                   >
                     <span className="text-3xl block mb-2">🏨</span>
                     {t("admin.hotels.empty")}

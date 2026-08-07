@@ -110,7 +110,7 @@ function InsuranceCard({ plan, currency, onSelect, cardWidth, cardHeight }: { pl
         <p className="text-[11px] text-gray-500">{coverage} · {duration}</p>
         <div className="flex flex-wrap gap-1">
           {benefits.map((b, i) => (
-            <span key={i} className="text-[10px] bg-[#D4AF37]/10 text-[#B8960F] px-1.5 py-0.5 rounded-full">{b}</span>
+            <span key={i} className="text-[10px] bg-[#D4AF37]/10 text-[#7A5F08] px-1.5 py-0.5 rounded-full">{b}</span>
           ))}
         </div>
         <div className="mt-auto pt-1">

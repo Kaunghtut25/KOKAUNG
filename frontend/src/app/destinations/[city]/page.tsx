@@ -341,7 +341,7 @@ export default function DestinationPage() {
               <div className="hidden lg:block w-px h-10 bg-gray-200" />
               <div className="flex flex-wrap gap-2">
                 {tags.map((tag, idx) => (
-                  <span key={idx} className="px-3 py-1 rounded-full bg-[#D4AF37]/10 text-[#B8960F] text-xs font-medium border border-[#D4AF37]/20">
+                  <span key={idx} className="px-3 py-1 rounded-full bg-[#D4AF37]/10 text-[#7A5F08] text-xs font-medium border border-[#D4AF37]/20">
                     {tag}
                   </span>
                 ))}
@@ -397,7 +397,7 @@ export default function DestinationPage() {
                       key={i}
                       className="flex items-center gap-3 bg-gray-50 rounded-xl p-4 border border-gray-100 hover:border-[#D4AF37]/30 transition-colors"
                     >
-                      <span className="w-8 h-8 rounded-full bg-[#D4AF37]/10 text-[#D4AF37] flex items-center justify-center text-sm font-bold">
+                      <span className="w-8 h-8 rounded-full bg-[#D4AF37]/10 text-[#7A5F08] flex items-center justify-center text-sm font-bold">
                         {i + 1}
                       </span>
                       <span className="text-gray-800 font-medium">{h}</span>
@@ -527,7 +527,7 @@ export default function DestinationPage() {
                   <h3 className="text-sm font-bold text-[#0A1628] mb-3 uppercase tracking-wider">{t("dest.tripStyle")}</h3>
                   <div className="flex flex-wrap gap-2">
                     {tags.map((tag, idx) => (
-                      <span key={idx} className="px-3 py-1.5 rounded-full bg-[#D4AF37]/10 text-[#B8960F] text-sm font-medium border border-[#D4AF37]/20">
+                      <span key={idx} className="px-3 py-1.5 rounded-full bg-[#D4AF37]/10 text-[#7A5F08] text-sm font-medium border border-[#D4AF37]/20">
                         {tag}
                       </span>
                     ))}

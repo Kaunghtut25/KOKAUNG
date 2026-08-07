@@ -146,15 +146,15 @@ export default function AdminUsersPage() {
           </button>
         </div>
 
-        <p className="text-white/40 text-sm mb-6">{t("admin.users.subtitle")} <span className="text-[#D4AF37]">/auth/login</span>. Passwords are stored hashed — never in plaintext. Assign roles & authorities to control what each user can access.</p>
+        <p className="text-white/60 text-sm mb-6">{t("admin.users.subtitle")} <span className="text-[#D4AF37]">/auth/login</span>. Passwords are stored hashed — never in plaintext. Assign roles & authorities to control what each user can access.</p>
 
         {users.length === 0 ? (
-          <div className="text-white/40 text-center py-16 text-lg">{t("admin.users.empty")}</div>
+          <div className="text-white/60 text-center py-16 text-lg">{t("admin.users.empty")}</div>
         ) : (
           <div className="bg-[#0F1E35] border border-white/10 rounded-xl overflow-hidden">
             <table className="w-full text-left">
               <thead className="bg-[#0A1628]">
-                <tr className="text-white/40 text-xs uppercase tracking-wider">
+                <tr className="text-white/60 text-xs uppercase tracking-wider">
                   <th className="px-5 py-3">{t("admin.book.name")}</th>
                   <th className="px-5 py-3">{t("admin.book.email")}</th>
                   <th className="px-5 py-3">{t("admin.users.role")}</th>
@@ -184,12 +184,12 @@ export default function AdminUsersPage() {
                           <span key={a} className="text-[10px] bg-white/5 text-white/50 border border-white/10 rounded px-1.5 py-0.5">{a}</span>
                         ))}
                         {(u.authorities || []).length > 6 && (
-                          <span className="text-[10px] text-white/40">+{(u.authorities || []).length - 6}</span>
+                          <span className="text-[10px] text-white/60">+{(u.authorities || []).length - 6}</span>
                         )}
-                        {(!u.authorities || u.authorities.length === 0) && <span className="text-white/30 text-xs">{t("admin.users.allAuth")}</span>}
+                        {(!u.authorities || u.authorities.length === 0) && <span className="text-white/50 text-xs">{t("admin.users.allAuth")}</span>}
                       </div>
                     </td>
-                    <td className="px-5 py-3 text-white/40 text-xs">{u.createdAt ? new Date(u.createdAt).toLocaleString() : "—"}</td>
+                    <td className="px-5 py-3 text-white/60 text-xs">{u.createdAt ? new Date(u.createdAt).toLocaleString() : "—"}</td>
                     <td className="px-5 py-3 text-right whitespace-nowrap">
                       <button onClick={() => openEdit(u)}
                         className="text-[#D4AF37]/80 hover:text-[#D4AF37] text-sm px-3 py-1 border border-[#D4AF37]/20 rounded hover:border-[#D4AF37] transition mr-2">
@@ -234,13 +234,13 @@ export default function AdminUsersPage() {
                 <select className={inputCls} value={form.role} onChange={e => setForm({ ...form, role: e.target.value })}>
                   {ROLES.map((r) => <option key={r.value} value={r.value}>{t(r.labelKey)}</option>)}
                 </select>
-                <p className="text-white/30 text-xs mt-1">{t(ROLES.find(r => r.value === form.role)?.descKey || "")}</p>
+                <p className="text-white/50 text-xs mt-1">{t(ROLES.find(r => r.value === form.role)?.descKey || "")}</p>
               </div>
               <div>
                 <label className="text-white/60 text-xs block mb-1">{t("admin.users.sectionAccess")}</label>
                 <div className="grid grid-cols-3 gap-1.5">
                   {AUTHORITIES.map((a) => (
-                    <label key={a.key} className={`flex items-center gap-1.5 text-xs px-2 py-1.5 rounded border cursor-pointer transition ${auths.includes(a.key) ? "bg-[#D4AF37]/10 border-[#D4AF37]/40 text-white" : "bg-white/5 border-white/10 text-white/40 hover:bg-white/10"}`}>
+                    <label key={a.key} className={`flex items-center gap-1.5 text-xs px-2 py-1.5 rounded border cursor-pointer transition ${auths.includes(a.key) ? "bg-[#D4AF37]/10 border-[#D4AF37]/40 text-white" : "bg-white/5 border-white/10 text-white/60 hover:bg-white/10"}`}>
                       <input type="checkbox" checked={auths.includes(a.key)} onChange={() => toggleAuth(a.key)} className="accent-[#D4AF37]" />
                       {t(a.labelKey)}
                     </label>

@@ -93,18 +93,18 @@ export default function CarCard({ car, currency = 'MMK', cardWidth, cardHeight }
             {carType}
           </h3>
           <div className="flex items-center justify-between">
-            <span className="text-gray-400 text-[11px]">{displayDuration}</span>
+            <span className="text-gray-500 text-[11px]">{displayDuration}</span>
             <div className="text-right">
               <span className="text-[#0A1628] text-base font-bold">{currencySymbol} {displayPrice.toLocaleString()}</span>
-              {cheapestOption && <span className="text-gray-400 text-[11px] ml-0.5">/{displayDuration}</span>}
+              {cheapestOption && <span className="text-gray-500 text-[11px] ml-0.5">/{displayDuration}</span>}
             </div>
           </div>
           {features.length > 0 && (
             <div className="flex flex-wrap gap-1 pt-0.5">
               {visibleFeatures.map((feature, idx) => (
-                <span key={idx} className="px-2 py-0.5 rounded-full bg-[#D4AF37]/10 text-[#B8960F] text-[10px] font-medium border border-[#D4AF37]/20">{feature}</span>
+                <span key={idx} className="px-2 py-0.5 rounded-full bg-[#D4AF37]/10 text-[#7A5F08] text-[10px] font-medium border border-[#D4AF37]/20">{feature}</span>
               ))}
-              {extraCount > 0 && <span className="px-2 py-0.5 rounded-full bg-gray-100 text-gray-400 text-[10px]">+{extraCount} more</span>}
+              {extraCount > 0 && <span className="px-2 py-0.5 rounded-full bg-gray-100 text-gray-600 text-[10px]">+{extraCount} more</span>}
             </div>
           )}
         </div>

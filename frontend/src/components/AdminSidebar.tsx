@@ -103,7 +103,7 @@ export default function AdminSidebar() {
             >
               A9 Travel
             </h1>
-            <p className="text-white/30 text-[10px] tracking-wider">ADMIN PANEL</p>
+            <p className="text-white/50 text-[10px] tracking-wider">ADMIN PANEL</p>
           </div>
         </Link>
       </div>
@@ -142,7 +142,7 @@ export default function AdminSidebar() {
             </span>
             <div className={`${collapsed && !mobileOpen ? "hidden" : "block"} overflow-hidden`}>
               <p className="text-white/80 text-sm font-medium truncate">{adminUser}</p>
-              <p className="text-white/30 text-[10px]">Administrator</p>
+              <p className="text-white/50 text-[10px]">Administrator</p>
             </div>
           </div>
         )}

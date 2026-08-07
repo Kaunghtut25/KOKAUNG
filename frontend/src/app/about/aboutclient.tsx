@@ -218,7 +218,7 @@ export default function AboutClient({ siteConfig }: { siteConfig: any }) {
           <div>
             <h2 className="text-3xl sm:text-4xl font-bold mb-6 text-[#0A1628]" style={{ fontFamily: "'Playfair Display', serif" }}>{lang === "mm" ? "ကျွန်ုပ်တို့ ဘယ်သူတွေလဲ" : "Who We Are"}</h2>
             <div className="space-y-4 text-gray-600 leading-relaxed">
-              {whoWeAreText.map((p,i) => <p key={i} className={i===whoWeAreText.length-1?"text-[#B8960F] italic font-medium":""}>{p}</p>)}
+              {whoWeAreText.map((p,i) => <p key={i} className={i===whoWeAreText.length-1?"text-[#8A6C0B] italic font-medium":""}>{p}</p>)}
             </div>
           </div>
           <div className="relative">
@@ -259,7 +259,7 @@ export default function AboutClient({ siteConfig }: { siteConfig: any }) {
           <p className="text-gray-500">{lang === "mm" ? "ကျွန်ုပ်တို့ လုပ်ဆောင်သမျှကို လမ်းညွှန်ပေးသော အခြေခံမူများ" : "The principles that guide everything we do"}</p>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
-          {values.map((v,i)=><div key={i} className="bg-white rounded-2xl border border-gray-200 p-6 text-center hover:border-[#D4AF37]/40 hover:shadow-md transition-all duration-300 group"><div className="text-3xl mb-3">{v.icon}</div><h4 className="text-[#0A1628] font-semibold mb-2">{v.title}</h4><p className="text-gray-500 text-xs leading-relaxed">{v.desc}</p></div>)}
+          {values.map((v,i)=><div key={i} className="bg-white rounded-2xl border border-gray-200 p-6 text-center hover:border-[#D4AF37]/40 hover:shadow-md transition-all duration-300 group"><div className="text-3xl mb-3">{v.icon}</div><h3 className="text-[#0A1628] font-semibold mb-2">{v.title}</h4><p className="text-gray-500 text-xs leading-relaxed">{v.desc}</p></div>)}
         </div>
       </section>
 
@@ -286,7 +286,7 @@ export default function AboutClient({ siteConfig }: { siteConfig: any }) {
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
           {(config.certifications && config.certifications.length ? config.certifications : []).map((item,i)=>
-            <div key={i} className="bg-white rounded-2xl border border-gray-200 p-6 text-center hover:border-[#D4AF37]/40 hover:shadow-md transition-all"><div className="w-20 h-20 mx-auto mb-4 flex items-center justify-center"><img src={item.image} alt={item.title} className="w-full h-full object-contain"/></div><h4 className="text-[#0A1628] font-semibold mb-1">{item.title}</h4><p className="text-[#D4AF37] text-sm font-mono font-medium">{item.code}</p></div>
+            <div key={i} className="bg-white rounded-2xl border border-gray-200 p-6 text-center hover:border-[#D4AF37]/40 hover:shadow-md transition-all"><div className="w-20 h-20 mx-auto mb-4 flex items-center justify-center"><img src={item.image} alt={item.title} className="w-full h-full object-contain"/></div><h3 className="text-[#0A1628] font-semibold mb-1">{item.title}</h4><p className="text-[#8A6C0B] text-sm font-mono font-medium">{item.code}</p></div>
           )}
         </div>
       </section>

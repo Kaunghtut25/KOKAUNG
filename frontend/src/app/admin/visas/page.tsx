@@ -251,7 +251,7 @@ export default function AdminVisasPage() {
             onChange={handleFileInputChange}
             className="hidden"
           />
-          <p className="text-sm text-white/40 mb-2">
+          <p className="text-sm text-white/60 mb-2">
             {uploading ? "Uploading..." : "Drag &amp; drop image here or click to upload"}
           </p>
           {uploadError && <p className="text-red-400 text-xs mt-1">{uploadError}</p>}
@@ -390,7 +390,7 @@ export default function AdminVisasPage() {
           >
             {t("admin.visas.title")}
           </h1>
-          <p className="text-white/40 text-sm mt-1">
+          <p className="text-white/60 text-sm mt-1">
             {t("admin.visas.subtitle")}
           </p>
         </div>
@@ -407,18 +407,18 @@ export default function AdminVisasPage() {
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-white/10 bg-white/[0.02]">
-                <th className="text-left p-4 text-white/40 font-semibold uppercase tracking-wider text-[11px]">{t("admin.visas.thImage")}</th>
-                <th className="text-left p-4 text-white/40 font-semibold uppercase tracking-wider text-[11px]">{t("admin.visas.thCountry")}</th>
-                <th className="text-left p-4 text-white/40 font-semibold uppercase tracking-wider text-[11px]">{t("admin.visas.thProcessing")}</th>
-                <th className="text-left p-4 text-white/40 font-semibold uppercase tracking-wider text-[11px]">{t("admin.visas.thFee")}</th>
-                <th className="text-left p-4 text-white/40 font-semibold uppercase tracking-wider text-[11px]">{t("admin.tours.thStatus")}</th>
-                <th className="text-left p-4 text-white/40 font-semibold uppercase tracking-wider text-[11px]">{t("admin.tours.thActions")}</th>
+                <th className="text-left p-4 text-white/60 font-semibold uppercase tracking-wider text-[11px]">{t("admin.visas.thImage")}</th>
+                <th className="text-left p-4 text-white/60 font-semibold uppercase tracking-wider text-[11px]">{t("admin.visas.thCountry")}</th>
+                <th className="text-left p-4 text-white/60 font-semibold uppercase tracking-wider text-[11px]">{t("admin.visas.thProcessing")}</th>
+                <th className="text-left p-4 text-white/60 font-semibold uppercase tracking-wider text-[11px]">{t("admin.visas.thFee")}</th>
+                <th className="text-left p-4 text-white/60 font-semibold uppercase tracking-wider text-[11px]">{t("admin.tours.thStatus")}</th>
+                <th className="text-left p-4 text-white/60 font-semibold uppercase tracking-wider text-[11px]">{t("admin.tours.thActions")}</th>
               </tr>
             </thead>
             <tbody>
               {visas.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="p-8 text-center text-white/30">
+                  <td colSpan={6} className="p-8 text-center text-white/50">
                     {t("admin.visas.empty")}
                   </td>
                 </tr>
@@ -437,7 +437,7 @@ export default function AdminVisasPage() {
                     </td>
                     <td className="p-4 text-white font-medium">
                       {visa.countryCode && (
-                        <span className="text-white/40 mr-2">{visa.countryCode}</span>
+                        <span className="text-white/60 mr-2">{visa.countryCode}</span>
                       )}
                       {visa.country}
                     </td>

@@ -122,24 +122,24 @@ export default function TourCard({ tour, currency = 'MMK', preloadedImage, cardW
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-1">
               <div className="flex items-center gap-0.5">{renderStars(tour?.rating ?? 0)}</div>
-              <span className="text-gray-400 text-[11px]">({tour?.reviewCount})</span>
+              <span className="text-gray-500 text-[11px]">({tour?.reviewCount})</span>
             </div>
             <div className="text-right">
               <span className="text-[#0A1628] text-base font-bold">
                 {currencySymbol} {price?.toLocaleString() ?? '0'}
               </span>
-              <span className="text-gray-400 text-[11px] ml-0.5">/person</span>
+              <span className="text-gray-500 text-[11px] ml-0.5">/person</span>
             </div>
           </div>
           {tour?.amenities && tour?.amenities.length > 0 && (
             <div className="flex flex-wrap gap-1 pt-0.5">
               {tour?.amenities.slice(0, 3).map((amenity, idx) => (
-                <span key={idx} className="px-2 py-0.5 rounded-full bg-[#D4AF37]/10 text-[#B8960F] text-[10px] font-medium border border-[#D4AF37]/20">
+                <span key={idx} className="px-2 py-0.5 rounded-full bg-[#D4AF37]/10 text-[#7A5F08] text-[10px] font-medium border border-[#D4AF37]/20">
                   {amenity}
                 </span>
               ))}
               {tour?.amenities.length > 3 && (
-                <span className="px-2 py-0.5 rounded-full bg-gray-100 text-gray-400 text-[10px]">+{tour?.amenities.length - 3}</span>
+                <span className="px-2 py-0.5 rounded-full bg-gray-100 text-gray-600 text-[10px]">+{tour?.amenities.length - 3}</span>
               )}
             </div>
           )}

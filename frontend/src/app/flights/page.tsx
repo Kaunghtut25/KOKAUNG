@@ -245,7 +245,7 @@ export default function FlightsPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
             {/* From */}
             <div className="relative">
-              <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">{t("flights.from")}</label>
+              <label className="block text-xs font-semibold text-gray-600 uppercase tracking-wider mb-1">{t("flights.from")}</label>
               <input
                 type="text"
                 placeholder={t("flights.airportPh")}
@@ -272,7 +272,7 @@ export default function FlightsPage() {
 
             {/* To */}
             <div className="relative">
-              <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">{t("flights.to")}</label>
+              <label className="block text-xs font-semibold text-gray-600 uppercase tracking-wider mb-1">{t("flights.to")}</label>
               <input
                 type="text"
                 placeholder={t("flights.airportPh")}
@@ -299,9 +299,10 @@ export default function FlightsPage() {
 
             {/* Depart Date */}
             <div>
-              <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">{t("flights.depart")}</label>
+              <label className="block text-xs font-semibold text-gray-600 uppercase tracking-wider mb-1">{t("flights.depart")}</label>
               <input
                 type="date"
+                aria-label={t("flights.depart")}
                 value={departDate}
                 onChange={(e) => setDepartDate(e.target.value)}
                 className="w-full px-3 py-3 border border-gray-200 rounded-xl text-sm text-gray-900 font-medium focus:outline-none focus:border-[#D4AF37] focus:ring-2 focus:ring-[#D4AF37]/20 transition-all"
@@ -310,9 +311,10 @@ export default function FlightsPage() {
 
             {/* Return Date */}
             <div>
-              <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">{t("flights.return")}</label>
+              <label className="block text-xs font-semibold text-gray-600 uppercase tracking-wider mb-1">{t("flights.return")}</label>
               <input
                 type="date"
+                aria-label={t("flights.return")}
                 value={returnDate}
                 onChange={(e) => setReturnDate(e.target.value)}
                 className="w-full px-3 py-3 border border-gray-200 rounded-xl text-sm text-gray-900 font-medium focus:outline-none focus:border-[#D4AF37] focus:ring-2 focus:ring-[#D4AF37]/20 transition-all"
@@ -324,6 +326,8 @@ export default function FlightsPage() {
               <div className="flex gap-2">
                 <select
                   value={adults}
+                  aria-label={t("flights.passengers")}
+                  aria-label={t("flights.passengers")}
                   onChange={(e) => setAdults(Number(e.target.value))}
                   className="flex-1 px-2 py-3 border border-gray-200 rounded-xl text-xs text-gray-700 font-medium focus:outline-none focus:border-[#D4AF37] focus:ring-2 focus:ring-[#D4AF37]/20 transition-all"
                 >
@@ -333,6 +337,8 @@ export default function FlightsPage() {
                 </select>
                 <select
                   value={travelClass}
+                  aria-label={t("flights.travelClass")}
+                  aria-label={t("flights.travelClass")}
                   onChange={(e) => setTravelClass(e.target.value)}
                   className="flex-1 px-2 py-3 border border-gray-200 rounded-xl text-xs text-gray-700 font-medium focus:outline-none focus:border-[#D4AF37] focus:ring-2 focus:ring-[#D4AF37]/20 transition-all"
                 >
@@ -379,7 +385,7 @@ export default function FlightsPage() {
           <div className="text-center py-20">
             <HiGlobe className="w-16 h-16 mx-auto text-gray-500 mb-4" />
             <h3 className="text-2xl font-['Playfair_Display',serif] text-white mb-2">{t("flights.noFlights")}</h3>
-            <p className="text-gray-400 max-w-md mx-auto">
+            <p className="text-gray-500 max-w-md mx-auto">
               {t("flights.noFlightsDesc")}
             </p>
           </div>
@@ -390,7 +396,7 @@ export default function FlightsPage() {
             <h2 className="font-['Playfair_Display',serif] text-2xl font-bold text-white mb-2">
               {offers.length} {t(offers.length === 1 ? "flights.foundOne" : "flights.foundMany")}
             </h2>
-            <p className="text-gray-400 text-sm mb-8">
+            <p className="text-gray-500 text-sm mb-8">
               {originSelected?.code || origin} → {destSelected?.code || destination}
               {departDate && ` · ${formatDate(departDate)}`}
             </p>
@@ -418,7 +424,7 @@ export default function FlightsPage() {
                           </div>
                           <div>
                             <p className="text-white font-semibold text-sm">{airlineName}</p>
-                            <p className="text-gray-400 text-xs">
+                            <p className="text-gray-600 text-xs">
                               {firstSeg.carrierCode}{firstSeg.number} · {cabin === "ECONOMY" ? t("flights.cabinEconomy") : cabin === "PREMIUM_ECONOMY" ? t("flights.cabinPremium") : cabin === "BUSINESS" ? t("flights.cabinBusiness") : cabin === "FIRST" ? t("flights.cabinFirst") : cabin}
                             </p>
                           </div>
@@ -428,11 +434,11 @@ export default function FlightsPage() {
                         <div className="flex items-center gap-3 md:gap-6 flex-wrap">
                           <div className="text-center">
                             <p className="text-white text-xl md:text-2xl font-bold">{formatTime(firstSeg.departure.at)}</p>
-                            <p className="text-gray-400 text-xs">{firstSeg.departure.iataCode}</p>
+                            <p className="text-gray-600 text-xs">{firstSeg.departure.iataCode}</p>
                           </div>
 
                           <div className="flex-1 flex flex-col items-center min-w-[100px]">
-                            <p className="text-gray-500 text-xs mb-1">{formatDuration(itin.segments.reduce((acc: number, s: any) => {
+                            <p className="text-gray-600 text-xs mb-1">{formatDuration(itin.segments.reduce((acc: number, s: any) => {
                               const m = s.duration.match(/PT(?:(\d+)H)?(?:(\d+)M)?/);
                               const mins = (parseInt(m?.[1] || '0') * 60) + parseInt(m?.[2] || '0');
                               return acc + mins;
@@ -442,12 +448,12 @@ export default function FlightsPage() {
                               <HiArrowRight className="w-3 h-3 text-gray-500" />
                               <div className="flex-1 h-px bg-gray-600" />
                             </div>
-                            <p className="text-gray-500 text-xs mt-1">{t(itin.segments.length - 1 === 0 ? "flights.nonstop" : itin.segments.length - 1 === 1 ? "flights.oneStop" : "flights.stops", { count: itin.segments.length - 1 })}</p>
+                            <p className="text-gray-600 text-xs mt-1">{t(itin.segments.length - 1 === 0 ? "flights.nonstop" : itin.segments.length - 1 === 1 ? "flights.oneStop" : "flights.stops", { count: itin.segments.length - 1 })}</p>
                           </div>
 
                           <div className="text-center">
                             <p className="text-white text-xl md:text-2xl font-bold">{formatTime(lastSeg.arrival.at)}</p>
-                            <p className="text-gray-400 text-xs">{lastSeg.arrival.iataCode}</p>
+                            <p className="text-gray-600 text-xs">{lastSeg.arrival.iataCode}</p>
                           </div>
                         </div>
                       </div>
@@ -455,13 +461,13 @@ export default function FlightsPage() {
                       {/* Price + CTA */}
                       <div className="flex flex-row lg:flex-col items-center lg:items-end gap-4 lg:gap-3 lg:min-w-[180px]">
                         <div className="text-right">
-                          <p className="text-gray-400 text-xs">{offer.price.currency}</p>
+                          <p className="text-gray-600 text-xs">{offer.price.currency}</p>
                           <p className="text-[#D4AF37] text-2xl md:text-3xl font-bold font-['Playfair_Display',serif]">
                             {parseFloat(offer.price.grandTotal).toLocaleString("en-US", {
                               minimumFractionDigits: 2,
                             })}
                           </p>
-                          <p className="text-gray-500 text-xs">{t("flights.perAdult")}</p>
+                          <p className="text-gray-600 text-xs">{t("flights.perAdult")}</p>
                         </div>
                         <Link
                           href={`/book-now?type=flight&from=${originSelected?.code || origin}&to=${destSelected?.code || destination}&fromCity=${encodeURIComponent(originSelected?.city || origin)}&toCity=${encodeURIComponent(destSelected?.city || destination)}&depart=${departDate}${returnDate ? `&return=${returnDate}` : ""}&adults=${adults}&class=${travelClass}&airline=${encodeURIComponent(airlineName)}&airlineCode=${airlineCode}&flightNo=${firstSeg.carrierCode}${firstSeg.number}&price=${offer.price.total}&currency=${offer.price.currency}&departTime=${formatTime(firstSeg.departure.at)}&arriveTime=${formatTime(lastSeg.arrival.at)}&stops=${itin.segments.length - 1}&offerId=${offer.id}`}
@@ -479,7 +485,7 @@ export default function FlightsPage() {
                         </summary>
                         <div className="mt-3 space-y-2">
                           {itin.segments.map((seg: any, i: number) => (
-                            <div key={i} className="flex items-center gap-3 text-xs text-gray-400">
+                            <div key={i} className="flex items-center gap-3 text-xs text-gray-500">
                               <HiClock className="w-3 h-3 flex-shrink-0" />
                               <span className="font-semibold text-white">{seg.departure.iataCode}</span>
                               <span>{formatTime(seg.departure.at)}</span>
@@ -515,7 +521,7 @@ export default function FlightsPage() {
               <div key={i} className="bg-white/5 backdrop-blur-sm border border-[#D4AF37]/10 rounded-2xl p-6 text-center hover:border-[#D4AF37]/30 hover:bg-white/[0.07] transition-all group">
                 <div className="text-4xl mb-4">{item.icon}</div>
                 <h3 className="text-white font-semibold text-lg mb-2">{t(item.titleKey)}</h3>
-                <p className="text-gray-400 text-sm leading-relaxed">{t(item.descKey)}</p>
+                <p className="text-gray-500 text-sm leading-relaxed">{t(item.descKey)}</p>
               </div>
             ))}
           </div>
@@ -530,7 +536,7 @@ export default function FlightsPage() {
             <h2 className="font-['Playfair_Display',serif] text-3xl md:text-4xl font-bold text-white mt-2">
               {t("flights.popular")}
             </h2>
-            <p className="text-gray-400 mt-3 max-w-2xl mx-auto">
+            <p className="text-gray-500 mt-3 max-w-2xl mx-auto">
               {t("flights.popularDesc")}
             </p>
           </div>
@@ -551,7 +557,7 @@ export default function FlightsPage() {
                 )}
                 <div className="flex items-center gap-2 mb-3">
                   <HiLocationMarker className="w-4 h-4 text-[#D4AF37]" />
-                  <span className="text-gray-400 text-xs">{route.airline}</span>
+                  <span className="text-gray-600 text-xs">{route.airline}</span>
                 </div>
                 <div className="flex items-center gap-2 text-sm mb-3">
                   <span className="text-white font-bold">{route.fromCity}</span>
@@ -561,7 +567,7 @@ export default function FlightsPage() {
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-[#D4AF37] text-lg font-bold font-['Playfair_Display',serif]">{route.price}</p>
-                    <p className="text-gray-500 text-xs">{route.duration} · {route.stops}</p>
+                    <p className="text-gray-600 text-xs">{route.duration} · {route.stops}</p>
                   </div>
                   <Link
                     href={`/flights?from=${encodeURIComponent(route.from)}&to=${encodeURIComponent(route.to)}`}
@@ -584,7 +590,7 @@ export default function FlightsPage() {
             <h2 className="font-['Playfair_Display',serif] text-3xl md:text-4xl font-bold text-white mt-2">
               {t("flights.airlinePartners")}
             </h2>
-            <p className="text-gray-400 mt-3 max-w-2xl mx-auto">
+            <p className="text-gray-500 mt-3 max-w-2xl mx-auto">
               {t("flights.partnersDesc")}
             </p>
           </div>
@@ -607,7 +613,7 @@ export default function FlightsPage() {
 
           {/* Gold Tier */}
           <div className="mb-10">
-            <h3 className="text-gray-400 text-sm font-semibold uppercase tracking-wider text-center mb-6">
+            <h3 className="text-gray-600 text-sm font-semibold uppercase tracking-wider text-center mb-6">
               {t("flights.tierGold")}
             </h3>
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-3 gap-4">
@@ -615,7 +621,7 @@ export default function FlightsPage() {
                 <div key={i} className="bg-white/5 border border-[#D4AF37]/10 rounded-2xl p-5 text-center hover:border-[#D4AF37]/20 transition-all">
                   <div className="text-3xl mb-2">{airline.logo}</div>
                   <h4 className="text-white/80 text-sm font-medium">{airline.name}</h4>
-                  <p className="text-gray-500 text-xs mt-0.5">{airline.code}</p>
+                  <p className="text-gray-600 text-xs mt-0.5">{airline.code}</p>
                 </div>
               ))}
             </div>
@@ -623,7 +629,7 @@ export default function FlightsPage() {
 
           {/* Silver Tier */}
           <div>
-            <h3 className="text-gray-500 text-sm font-semibold uppercase tracking-wider text-center mb-6">
+            <h3 className="text-gray-600 text-sm font-semibold uppercase tracking-wider text-center mb-6">
               {t("flights.tierSilver")}
             </h3>
             <div className="flex flex-wrap justify-center gap-4">
@@ -645,7 +651,7 @@ export default function FlightsPage() {
             <h2 className="font-['Playfair_Display',serif] text-2xl md:text-3xl font-bold text-white mb-4">
               {t("flights.ctaTitle")}
             </h2>
-            <p className="text-gray-400 mb-8 max-w-xl mx-auto">
+            <p className="text-gray-500 mb-8 max-w-xl mx-auto">
               {t("flights.ctaDesc")}
             </p>
             <div className="flex flex-col sm:flex-row gap-3 justify-center">

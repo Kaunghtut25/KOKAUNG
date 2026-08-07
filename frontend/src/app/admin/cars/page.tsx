@@ -489,7 +489,7 @@ export default function AdminCarsPage() {
           </button>
         </div>
         {editingCar.pricing.length === 0 && (
-          <p className="text-white/30 text-sm italic">
+          <p className="text-white/50 text-sm italic">
             {t("admin.form.noPricing")}
           </p>
         )}
@@ -513,7 +513,7 @@ export default function AdminCarsPage() {
               </div>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
                 <div>
-                  <label className="block text-white/40 text-xs mb-1">
+                  <label className="block text-white/60 text-xs mb-1">
                     {t("admin.form.duration")}
                   </label>
                   <input
@@ -531,7 +531,7 @@ export default function AdminCarsPage() {
                   />
                 </div>
                 <div>
-                  <label className="block text-white/40 text-xs mb-1">
+                  <label className="block text-white/60 text-xs mb-1">
                     Price MMK
                   </label>
                   <input
@@ -548,7 +548,7 @@ export default function AdminCarsPage() {
                   />
                 </div>
                 <div>
-                  <label className="block text-white/40 text-xs mb-1">
+                  <label className="block text-white/60 text-xs mb-1">
                     Price USD
                   </label>
                   <input
@@ -607,7 +607,7 @@ export default function AdminCarsPage() {
           >
             {t("admin.cars.title")}
           </h1>
-          <p className="text-white/40 text-sm mt-1">
+          <p className="text-white/60 text-sm mt-1">
             {t("admin.cars.subtitle")}
           </p>
         </div>
@@ -625,22 +625,22 @@ export default function AdminCarsPage() {
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-white/10 bg-white/[0.02]">
-                <th className="text-left p-4 text-white/40 font-semibold uppercase tracking-wider text-[11px]">
+                <th className="text-left p-4 text-white/60 font-semibold uppercase tracking-wider text-[11px]">
                   {t("admin.cars.thVehicle")}
                 </th>
-                <th className="text-left p-4 text-white/40 font-semibold uppercase tracking-wider text-[11px]">
+                <th className="text-left p-4 text-white/60 font-semibold uppercase tracking-wider text-[11px]">
                   {t("admin.cars.thSeats")}
                 </th>
-                <th className="text-left p-4 text-white/40 font-semibold uppercase tracking-wider text-[11px]">
+                <th className="text-left p-4 text-white/60 font-semibold uppercase tracking-wider text-[11px]">
                   {t("admin.cars.thTransmission")}
                 </th>
-                <th className="text-left p-4 text-white/40 font-semibold uppercase tracking-wider text-[11px]">
+                <th className="text-left p-4 text-white/60 font-semibold uppercase tracking-wider text-[11px]">
                   Pricing
                 </th>
-                <th className="text-left p-4 text-white/40 font-semibold uppercase tracking-wider text-[11px]">
+                <th className="text-left p-4 text-white/60 font-semibold uppercase tracking-wider text-[11px]">
                   {t("admin.tours.thStatus")}
                 </th>
-                <th className="text-left p-4 text-white/40 font-semibold uppercase tracking-wider text-[11px]">
+                <th className="text-left p-4 text-white/60 font-semibold uppercase tracking-wider text-[11px]">
                   {t("admin.tours.thActions")}
                 </th>
               </tr>
@@ -650,7 +650,7 @@ export default function AdminCarsPage() {
                 <tr>
                   <td
                     colSpan={7}
-                    className="p-10 text-center text-white/30"
+                    className="p-10 text-center text-white/50"
                   >
                     <span className="text-3xl block mb-2">🚗</span>
                     {t("admin.cars.empty")}

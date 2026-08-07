@@ -583,7 +583,7 @@ export default function AdminToursPage() {
         ) : (
           <div className="rounded-lg border border-dashed border-white/10 bg-white/[0.02] p-6 text-center">
             <span className="text-white/20 text-2xl block mb-1">🖼️</span>
-            <p className="text-white/30 text-sm">{t("admin.form.noImages")}</p>
+            <p className="text-white/50 text-sm">{t("admin.form.noImages")}</p>
           </div>
         )}
       </div>
@@ -719,7 +719,7 @@ export default function AdminToursPage() {
           >
             {t("admin.tours.title")}
           </h1>
-          <p className="text-white/40 text-sm mt-1">
+          <p className="text-white/60 text-sm mt-1">
             {t("admin.tours.subtitle")}
           </p>
         </div>
@@ -751,7 +751,7 @@ export default function AdminToursPage() {
             <span className={`ml-1.5 text-xs px-2 py-0.5 rounded-full ${
               typeFilter === tab.key
                 ? 'bg-deepblue-dark/15 text-deepblue-dark'
-                : 'bg-white/10 text-white/40'
+                : 'bg-white/10 text-white/60'
             }`}>
               {tab.count}
             </span>
@@ -765,31 +765,31 @@ export default function AdminToursPage() {
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-white/10 bg-white/[0.02]">
-                <th className="text-left p-4 text-white/40 font-semibold uppercase tracking-wider text-[11px]">
+                <th className="text-left p-4 text-white/60 font-semibold uppercase tracking-wider text-[11px]">
                   {t("admin.tours.thTour")}
                 </th>
-                <th className="text-left p-4 text-white/40 font-semibold uppercase tracking-wider text-[11px]">
+                <th className="text-left p-4 text-white/60 font-semibold uppercase tracking-wider text-[11px]">
                   {t("admin.tours.thDestination")}
                 </th>
-                <th className="text-left p-4 text-white/40 font-semibold uppercase tracking-wider text-[11px]">
+                <th className="text-left p-4 text-white/60 font-semibold uppercase tracking-wider text-[11px]">
                   {t("admin.tours.thPriceMmk")}
                 </th>
-                <th className="text-left p-4 text-white/40 font-semibold uppercase tracking-wider text-[11px]">
+                <th className="text-left p-4 text-white/60 font-semibold uppercase tracking-wider text-[11px]">
                   {t("admin.tours.thPriceUsd")}
                 </th>
-                <th className="text-left p-4 text-white/40 font-semibold uppercase tracking-wider text-[11px]">
+                <th className="text-left p-4 text-white/60 font-semibold uppercase tracking-wider text-[11px]">
                   {t("admin.tours.thDuration")}
                 </th>
-                <th className="text-left p-4 text-white/40 font-semibold uppercase tracking-wider text-[11px]">
+                <th className="text-left p-4 text-white/60 font-semibold uppercase tracking-wider text-[11px]">
                   {t("admin.tours.thRating")}
                 </th>
-                <th className="text-left p-4 text-white/40 font-semibold uppercase tracking-wider text-[11px]">
+                <th className="text-left p-4 text-white/60 font-semibold uppercase tracking-wider text-[11px]">
                   {t("admin.tours.thStatus")}
                 </th>
-                <th className="text-left p-4 text-white/40 font-semibold uppercase tracking-wider text-[11px]">
+                <th className="text-left p-4 text-white/60 font-semibold uppercase tracking-wider text-[11px]">
                   {t("admin.tours.thType")}
                 </th>
-                <th className="text-left p-4 text-white/40 font-semibold uppercase tracking-wider text-[11px]">
+                <th className="text-left p-4 text-white/60 font-semibold uppercase tracking-wider text-[11px]">
                   {t("admin.tours.thActions")}
                 </th>
               </tr>
@@ -799,7 +799,7 @@ export default function AdminToursPage() {
                 <tr>
                   <td
                     colSpan={9}
-                    className="p-10 text-center text-white/30"
+                    className="p-10 text-center text-white/50"
                   >
                     <span className="text-3xl block mb-2">✈️</span>
                     {t("admin.tours.empty")}

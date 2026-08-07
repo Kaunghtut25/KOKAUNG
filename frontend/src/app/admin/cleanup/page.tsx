@@ -173,7 +173,7 @@ export default function CleanupPage() {
     <div className="min-h-screen bg-[#0A1628] p-8">
       <div className="max-w-3xl mx-auto">
         <h1 className="text-3xl font-light text-white mb-2">{t("admin.cleanup.title")}</h1>
-        <p className="text-white/40 text-sm mb-6">
+        <p className="text-white/60 text-sm mb-6">
           {t("admin.cleanup.desc1")}
           {t("admin.cleanup.desc2")}
         </p>

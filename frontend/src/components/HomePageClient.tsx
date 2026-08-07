@@ -130,7 +130,7 @@ function PassengerSelector({ passengers, onChange }: { passengers: PassengerCoun
       {isOpen && (
         <div className="absolute top-full left-0 right-0 z-50 bg-white border border-gray-200 rounded-lg shadow-xl mt-1 p-3">
           {(["adults","children","infants"] as const).map(k=><div key={k} className="flex items-center justify-between py-1.5"><span className="text-sm text-gray-700 capitalize">{k}</span><div className="flex items-center gap-2"><button type="button" onClick={()=>update(k,-1)} className={`w-7 h-7 rounded-full flex items-center justify-center text-sm font-bold transition-colors ${passengers[k] <= (k==="adults"?1:0) ? 'bg-gray-100 text-gray-300 cursor-not-allowed' : 'bg-gray-200 text-gray-600 hover:bg-gray-300'}`} disabled={passengers[k] <= (k==="adults"?1:0)}>−</button><span className="w-6 text-center text-gray-900 font-semibold text-sm">{passengers[k]}</span><button type="button" onClick={()=>update(k,1)} className="w-7 h-7 rounded-full bg-gray-200 text-gray-600 text-sm font-bold hover:bg-gray-300 flex items-center justify-center transition-colors">+</button></div></div>)}
-          <button type="button" onClick={() => setIsOpen(false)} className="w-full mt-2 py-1.5 rounded-lg bg-[#D4AF37] text-white text-xs font-semibold hover:bg-[#C5A028] transition-colors">Done</button>
+          <button type="button" onClick={() => setIsOpen(false)} className="w-full mt-2 py-1.5 rounded-lg bg-[#D4AF37] text-[#0A1628] text-xs font-semibold hover:bg-[#C5A028] transition-colors">Done</button>
         </div>
       )}
     </div>
@@ -223,7 +223,7 @@ function BusDatePicker({ value, onChange }: { value: string; onChange: (v: strin
                   onClick={() => { setSelectedDay(day); setShowCalendar(false); }}
                   className={"h-9 text-xs rounded-lg transition-all " +
                     (isSel ? "bg-[#D4AF37] text-white font-bold shadow-md" :
-                     isToday ? "bg-[#D4AF37]/10 text-[#D4AF37] font-semibold" :
+                     isToday ? "bg-[#D4AF37]/10 text-[#7A5F08] font-semibold" :
                      isPast ? "text-gray-300 cursor-not-allowed" :
                      "text-gray-700 hover:bg-[#D4AF37]/10 hover:text-[#D4AF37]")}>
                   {day}
