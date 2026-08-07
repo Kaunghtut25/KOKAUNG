@@ -137,7 +137,7 @@ export default function AdminUsersPage() {
 
   return (
     <div className="min-h-screen bg-[#0A1628] p-6">
-      <div className="max-w-7xl mx-auto">
+      <div className="w-full">
         <div className="flex flex-wrap items-center justify-between gap-3 mb-8">
           <h1 className="text-3xl font-light text-white">{t("admin.users.title")} ({users.length})</h1>
           <button onClick={openAdd}
@@ -151,7 +151,7 @@ export default function AdminUsersPage() {
         {users.length === 0 ? (
           <div className="text-white/60 text-center py-16 text-lg">{t("admin.users.empty")}</div>
         ) : (
-          <div className="bg-[#0F1E35] border border-white/10 rounded-xl overflow-x-auto">
+          <div className="bg-[#0F1E35] border border-white/10 rounded-xl overflow-x-auto max-w-5xl mx-auto">
             <table className="w-full text-left">
               <thead className="bg-[#0A1628]">
                 <tr className="text-white/60 text-xs uppercase tracking-wider">

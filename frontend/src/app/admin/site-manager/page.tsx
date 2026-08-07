@@ -326,7 +326,7 @@ const tabs: { key: Tab; label: string }[] = [
 
   return (
     <main className="min-h-screen bg-[#0A1628] text-white p-4 md:p-8">
-      <div className="max-w-5xl mx-auto">
+      <div className="w-full">
         {/* Header */}
         <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
           <div>
