@@ -345,5 +345,6 @@ function BookNowContent() {
 }
 
 export default function BookNowPage() {
+  const { t } = useI18n();
   return <Suspense fallback={<div style={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: "100vh" }}><p>{t("book.loading")}</p></div>}><BookNowContent /></Suspense>;
 }
