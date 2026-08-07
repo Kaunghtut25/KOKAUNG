@@ -245,10 +245,10 @@ export default function CarDetailPage() {
               {fuelType}
             </span>
           </div>
-          <h1 className="text-3xl md:text-5xl lg:text-6xl text-[#0A1628] font-bold mb-2" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
+          <h1 className="text-3xl md:text-5xl lg:text-6xl text-white font-bold mb-2 drop-shadow-lg" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
             {car.carType}
           </h1>
-          <p className="text-gray-600 text-base md:text-lg max-w-2xl">
+          <p className="text-white/85 text-base md:text-lg max-w-2xl drop-shadow">
             {car.description || 'Experience the comfort of our ' + car.carType + '. Professional driver service included.'}
           </p>
         </div>
