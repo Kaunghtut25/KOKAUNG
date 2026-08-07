@@ -275,3 +275,28 @@ html[data-narrow="1"] [class*="flex-wrap"] button {
 html[data-narrow="1"] table {
   min-width: 720px !important;
 }
+/* Visible scrollbars for admin content (overflowing tables at narrow/zoom) */
+main.md\:ml-64::-webkit-scrollbar,
+main.md\:ml-64 *::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+main.md\:ml-64::-webkit-scrollbar-track,
+main.md\:ml-64 *::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 8px;
+}
+main.md\:ml-64::-webkit-scrollbar-thumb,
+main.md\:ml-64 *::-webkit-scrollbar-thumb {
+  background: rgba(212, 175, 55, 0.45);
+  border-radius: 8px;
+}
+main.md\:ml-64::-webkit-scrollbar-thumb:hover,
+main.md\:ml-64 *::-webkit-scrollbar-thumb:hover {
+  background: rgba(212, 175, 55, 0.7);
+}
+main.md\:ml-64,
+main.md\:ml-64 * {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(212, 175, 55, 0.45) rgba(255, 255, 255, 0.06);
+}
