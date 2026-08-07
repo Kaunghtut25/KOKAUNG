@@ -82,7 +82,7 @@ export default function MingalarDetailPage({ params }: { params: { slug: string 
         <BackButton />
         <h1 className="text-4xl font-bold text-[#0A1628] mb-4">{t("mingalar.notFound")}</h1>
         <p className="text-gray-600 mb-8">{t("mingalar.notFoundDesc")}</p>
-        <Link href="/mingalar" className="text-[#D4AF37] font-semibold hover:underline">← {t("mingalar.backToMingalar")}</Link>
+        <Link href="/mingalar" className="text-[#8A6C0B] font-semibold hover:underline">← {t("mingalar.backToMingalar")}</Link>
       </main>
     );
   }
@@ -157,14 +157,14 @@ export default function MingalarDetailPage({ params }: { params: { slug: string 
                   <path strokeLinecap="round" strokeLinejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                   <path strokeLinecap="round" strokeLinejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                 </svg>
-                <p className="text-[#D4AF37] text-2xl font-bold">{t("mingalar.mingalar")}</p>
+                <p className="text-[#8A6C0B] text-2xl font-bold">{t("mingalar.mingalar")}</p>
                 <p className="text-gray-500 text-xs uppercase tracking-wider mt-1">{t("mingalar.location")}</p>
               </div>
               <div className="p-5 rounded-2xl bg-gray-50 border border-[#D4AF37]/10 text-center hover:border-[#D4AF37]/30 transition-colors">
                 <svg className="w-8 h-8 mx-auto text-[#D4AF37] mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
                 </svg>
-                <p className="text-[#D4AF37] text-2xl font-bold">{t("mingalar.skyLounge")}</p>
+                <p className="text-[#8A6C0B] text-2xl font-bold">{t("mingalar.skyLounge")}</p>
                 <p className="text-gray-500 text-xs uppercase tracking-wider mt-1">{t("mingalar.category")}</p>
               </div>
             </div>
@@ -293,7 +293,7 @@ export default function MingalarDetailPage({ params }: { params: { slug: string 
               {/* Back Link */}
               <Link
                 href="/mingalar"
-                className="block w-full py-3 rounded-xl text-center font-semibold text-sm border-2 border-[#D4AF37] text-[#D4AF37] hover:bg-[#D4AF37] hover:text-[#0A1628] transition-all duration-300"
+                className="block w-full py-3 rounded-xl text-center font-semibold text-sm border-2 border-[#D4AF37] text-[#8A6C0B] hover:bg-[#D4AF37] hover:text-[#0A1628] transition-all duration-300"
               >
                 ← {t("mingalar.backToAll")}
               </Link>

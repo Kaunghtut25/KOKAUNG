@@ -268,7 +268,7 @@ export default function CarDetailPage() {
                 <svg className="w-8 h-8 mx-auto text-[#D4AF37] mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
                 </svg>
-                <p className="text-[#D4AF37] text-2xl font-bold">{car.capacity}</p>
+                <p className="text-[#8A6C0B] text-2xl font-bold">{car.capacity}</p>
                 <p className="text-gray-500 text-xs uppercase tracking-wider">{t("car.capacity")}</p>
               </div>
               <div className="p-5 rounded-2xl bg-gray-50 border border-[#D4AF37]/10 text-center hover:border-[#D4AF37]/30 transition-colors">
@@ -276,21 +276,21 @@ export default function CarDetailPage() {
                   <path strokeLinecap="round" strokeLinejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
                   <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                 </svg>
-                <p className="text-[#D4AF37] text-2xl font-bold">{car.transmission}</p>
+                <p className="text-[#8A6C0B] text-2xl font-bold">{car.transmission}</p>
                 <p className="text-gray-500 text-xs uppercase tracking-wider">{t("car.transmission")}</p>
               </div>
               <div className="p-5 rounded-2xl bg-gray-50 border border-[#D4AF37]/10 text-center hover:border-[#D4AF37]/30 transition-colors">
                 <svg className="w-8 h-8 mx-auto text-[#D4AF37] mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
                 </svg>
-                <p className="text-[#D4AF37] text-2xl font-bold capitalize">{fuelType}</p>
+                <p className="text-[#8A6C0B] text-2xl font-bold capitalize">{fuelType}</p>
                 <p className="text-gray-500 text-xs uppercase tracking-wider">{t("car.fuel")}</p>
               </div>
               <div className="p-5 rounded-2xl bg-gray-50 border border-[#D4AF37]/10 text-center hover:border-[#D4AF37]/30 transition-colors">
                 <svg className="w-8 h-8 mx-auto text-[#D4AF37] mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
                 </svg>
-                <p className="text-[#D4AF37] text-2xl font-bold">{car.seats}</p>
+                <p className="text-[#8A6C0B] text-2xl font-bold">{car.seats}</p>
                 <p className="text-gray-500 text-xs uppercase tracking-wider">{t("car.seats")}</p>
               </div>
             </div>
@@ -340,7 +340,7 @@ export default function CarDetailPage() {
                     <div key={idx} className="p-4 rounded-2xl border border-[#D4AF37]/20 bg-gray-50 text-center hover:border-[#D4AF37]/40 transition-colors">
                       <p className="text-gray-500 text-xs uppercase tracking-wider mb-1">{tier.duration === 'Full Day' ? t('car.fullDay') : tier.duration === 'Half Day' ? t('car.halfDay') : tier.duration}</p>
                       <div className="space-y-0.5">
-                        <p className="text-[#D4AF37] text-xl font-bold">{tier.priceMMK.toLocaleString()} Ks</p>
+                        <p className="text-[#8A6C0B] text-xl font-bold">{tier.priceMMK.toLocaleString()} Ks</p>
                         <p className="text-gray-500 text-sm">${tier.priceUSD.toLocaleString()} USD</p>
                       </div>
                     </div>
@@ -403,7 +403,7 @@ export default function CarDetailPage() {
                 </div>
                 <div className="flex justify-between py-1 border-b border-gray-100">
                   <span className="text-gray-500">{t("car.driver")}</span>
-                  <span className="text-green-400 font-medium">Included ✓</span>
+                  <span className="text-green-700 font-medium">Included ✓</span>
                 </div>
                 {otherFeatures.length > 0 && (
                   <div className="flex justify-between py-1 border-b border-gray-100">
@@ -471,7 +471,7 @@ export default function CarDetailPage() {
               {/* Back to All Cars link */}
               <Link
                 href="/cars"
-                className="block w-full py-3 rounded-xl text-center font-semibold text-sm border-2 border-[#D4AF37] text-[#D4AF37] hover:bg-[#D4AF37] hover:text-[#0A1628] transition-all duration-300"
+                className="block w-full py-3 rounded-xl text-center font-semibold text-sm border-2 border-[#D4AF37] text-[#8A6C0B] hover:bg-[#D4AF37] hover:text-[#0A1628] transition-all duration-300"
               >
                 ← Back to All Cars
               </Link>

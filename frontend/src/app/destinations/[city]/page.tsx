@@ -212,7 +212,7 @@ export default function DestinationPage() {
         <div className="text-center">
           <h1 className="text-2xl font-bold text-[#0A1628] mb-2">{t("dest.notFound")}</h1>
           <p className="text-gray-500 mb-4">{t("dest.notFoundDesc")}</p>
-          <Link href="/destinations" className="text-[#D4AF37] hover:underline font-semibold">
+          <Link href="/destinations" className="text-[#8A6C0B] hover:underline font-semibold">
             {lang === "mm" ? "← ခရီးစဉ်များသို့ ပြန်သွားရန်" : "← Back to Destinations"}
           </Link>
         </div>
@@ -516,7 +516,7 @@ export default function DestinationPage() {
               {/* Back link */}
               <Link
                 href="/destinations"
-                className="block w-full py-3 rounded-xl text-center font-semibold text-sm border-2 border-[#D4AF37] text-[#D4AF37] hover:bg-[#D4AF37] hover:text-[#0A1628] transition-all duration-300"
+                className="block w-full py-3 rounded-xl text-center font-semibold text-sm border-2 border-[#D4AF37] text-[#8A6C0B] hover:bg-[#D4AF37] hover:text-[#0A1628] transition-all duration-300"
               >
                 {lang === "mm" ? "← ခရီးစဉ်များအားလုံးသို့ ပြန်သွားရန်" : "← Back to All Destinations"}
               </Link>

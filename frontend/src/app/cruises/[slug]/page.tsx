@@ -156,7 +156,7 @@ function CruiseDetailClient({ cruise, slug }: CruiseDetailPageProps) {
                 <svg className="w-8 h-8 mx-auto text-[#D4AF37] mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
-                <p className="text-[#D4AF37] text-2xl font-bold">{currencySymbol} {price.toLocaleString()}</p>
+                <p className="text-[#8A6C0B] text-2xl font-bold">{currencySymbol} {price.toLocaleString()}</p>
                 <p className="text-gray-500 text-xs uppercase tracking-wider mt-1">{t("cruise.price")}</p>
               </div>
               {duration && (
@@ -164,7 +164,7 @@ function CruiseDetailClient({ cruise, slug }: CruiseDetailPageProps) {
                   <svg className="w-8 h-8 mx-auto text-[#D4AF37] mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
-                  <p className="text-[#D4AF37] text-2xl font-bold">{duration}</p>
+                  <p className="text-[#8A6C0B] text-2xl font-bold">{duration}</p>
                   <p className="text-gray-500 text-xs uppercase tracking-wider mt-1">{t("cruise.duration")}</p>
                 </div>
               )}
@@ -173,7 +173,7 @@ function CruiseDetailClient({ cruise, slug }: CruiseDetailPageProps) {
                   <path strokeLinecap="round" strokeLinejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                   <path strokeLinecap="round" strokeLinejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                 </svg>
-                <p className="text-[#D4AF37] text-2xl font-bold">{dest}</p>
+                <p className="text-[#8A6C0B] text-2xl font-bold">{dest}</p>
                 <p className="text-gray-500 text-xs uppercase tracking-wider mt-1">{t("cruise.destination")}</p>
               </div>
             </div>
@@ -342,7 +342,7 @@ function CruiseDetailClient({ cruise, slug }: CruiseDetailPageProps) {
               {/* Back Link */}
               <Link
                 href="/cruises"
-                className="block w-full py-3 rounded-xl text-center font-semibold text-sm border-2 border-[#D4AF37] text-[#D4AF37] hover:bg-[#D4AF37] hover:text-[#0A1628] transition-all duration-300"
+                className="block w-full py-3 rounded-xl text-center font-semibold text-sm border-2 border-[#D4AF37] text-[#8A6C0B] hover:bg-[#D4AF37] hover:text-[#0A1628] transition-all duration-300"
               >
                 ← Back to All Cruises
               </Link>
@@ -400,7 +400,7 @@ export default function CruiseDetailPage({ params }: { params: { slug: string } 
         <BackButton />
         <h1 className="text-4xl font-bold text-[#0A1628] mb-4">{t("cruise.notFound")}</h1>
         <p className="text-gray-600 mb-8">{t("cruise.notFoundDesc")}</p>
-        <Link href="/cruises" className="text-[#D4AF37] font-semibold hover:underline">← Back to Cruises</Link>
+        <Link href="/cruises" className="text-[#8A6C0B] font-semibold hover:underline">← Back to Cruises</Link>
       </main>
     );
   }

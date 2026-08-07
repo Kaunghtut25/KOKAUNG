@@ -203,7 +203,7 @@ export default function CruisesClient({ initialCruises, siteConfig }: { initialC
                   <div className="flex items-center justify-between mb-3">
                     <div>
                       <span className="text-[#8A6C0B] font-bold text-xl">{displayPrice}</span>
-                      <span className="text-gray-400 text-xs ml-1">/ person</span>
+                      <span className="text-gray-500 text-xs ml-1">/ person</span>
                     </div>
                   </div>
                   {/* Action Buttons */}

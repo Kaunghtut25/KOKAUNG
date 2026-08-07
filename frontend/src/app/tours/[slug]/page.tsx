@@ -736,19 +736,19 @@ export default function TourDetailPage() {
 
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                   <div className="p-4 rounded-xl bg-gray-50 border border-gray-200 text-center">
-                    <p className="text-[#D4AF37] text-2xl font-bold">{tour.duration}</p>
+                    <p className="text-[#8A6C0B] text-2xl font-bold">{tour.duration}</p>
                     <p className="text-gray-600 text-sm">{tour.durationUnit}</p>
                   </div>
                   <div className="p-4 rounded-xl bg-gray-50 border border-gray-200 text-center">
-                    <p className="text-[#D4AF37] text-2xl font-bold">{tour.groupSize}</p>
+                    <p className="text-[#8A6C0B] text-2xl font-bold">{tour.groupSize}</p>
                     <p className="text-gray-600 text-sm">{t("tour.maxGroupSize")}</p>
                   </div>
                   <div className="p-4 rounded-xl bg-gray-50 border border-gray-200 text-center">
-                    <p className="text-[#D4AF37] text-2xl font-bold">★ {tour.rating}</p>
+                    <p className="text-[#8A6C0B] text-2xl font-bold">★ {tour.rating}</p>
                     <p className="text-gray-600 text-sm">{t("tour.rating")}</p>
                   </div>
                   <div className="p-4 rounded-xl bg-gray-50 border border-gray-200 text-center">
-                    <p className="text-[#D4AF37] text-2xl font-bold">{tour.reviewCount}</p>
+                    <p className="text-[#8A6C0B] text-2xl font-bold">{tour.reviewCount}</p>
                     <p className="text-gray-600 text-sm">{t("tour.reviews")}</p>
                   </div>
                 </div>
@@ -1019,7 +1019,7 @@ export default function TourDetailPage() {
             </div>
             <Link
               href="/tours"
-              className="block w-full py-3 rounded-xl text-center font-semibold text-sm border-2 border-[#D4AF37] text-[#D4AF37] hover:bg-[#D4AF37] hover:text-[#0A1628] transition-all duration-300"
+              className="block w-full py-3 rounded-xl text-center font-semibold text-sm border-2 border-[#D4AF37] text-[#8A6C0B] hover:bg-[#D4AF37] hover:text-[#0A1628] transition-all duration-300"
             >
               ← Back to All Tours
             </Link>

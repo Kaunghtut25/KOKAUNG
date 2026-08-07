@@ -189,7 +189,7 @@ export default function BusesClient({ initialRoutes, siteConfig }: BusesClientPr
           <div className="text-center py-20">
             <HiSearch className="w-16 h-16 mx-auto text-gray-300 mb-4" />
             <h3 className="text-xl font-semibold text-gray-500" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>{t("buses.noRoutes")}</h3>
-            <p className="text-gray-400 mt-2">{t("buses.tryAdjusting")}</p>
+            <p className="text-gray-500 mt-2">{t("buses.tryAdjusting")}</p>
           </div>
         )}
       </section>
@@ -197,7 +197,7 @@ export default function BusesClient({ initialRoutes, siteConfig }: BusesClientPr
       {/* ── Why Book Buses With Us ── */}
       <section className="py-16 border-t border-gray-200 bg-white">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 text-center">
-          <span className="text-[#D4AF37] text-sm font-semibold uppercase tracking-widest">{t("buses.whyTitle")}</span>
+          <span className="text-[#8A6C0B] text-sm font-semibold uppercase tracking-widest">{t("buses.whyTitle")}</span>
           <h2 className="font-bold text-3xl mt-2 mb-10" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
             {t("buses.whyHeading")}
           </h2>

@@ -126,7 +126,7 @@ export default function BlogDetailPage() {
 
         <h1 className="text-4xl font-bold text-[#0A1628] mb-4">{t("blog.notFound")}</h1>
         <p className="text-gray-600 mb-8">{t("blog.notFoundDesc")}</p>
-        <Link href="/blog" className="text-[#D4AF37] font-semibold hover:underline">← {t("blog.back")}</Link>
+        <Link href="/blog" className="text-[#8A6C0B] font-semibold hover:underline">← {t("blog.back")}</Link>
       </main>
     );
   }
@@ -189,14 +189,14 @@ export default function BlogDetailPage() {
           <h2 className="text-xl font-bold text-[#0A1628] mb-2">{t("blog.inspired")}</h2>
           <p className="text-gray-600 mb-6">{t("blog.ctaDesc")}</p>
           <div className="flex gap-4 justify-center flex-wrap">
-            <Link href={"/book-now?type=blog&title=" + encodeURIComponent(post.title) + "&destination=" + encodeURIComponent(post.tags?.join(", ") || "") + "&requests=" + encodeURIComponent("Blog: " + post.title)} className="px-6 py-3 bg-[#D4AF37] text-white font-semibold rounded-full hover:bg-[#C19B2F] transition-colors">{t("blog.bookNow")}</Link>
-            <Link href="/contact" className="px-6 py-3 border border-[#D4AF37] text-[#D4AF37] font-semibold rounded-full hover:bg-[#D4AF37]/10 transition-colors">{t("blog.contactUs")}</Link>
+            <Link href={"/book-now?type=blog&title=" + encodeURIComponent(post.title) + "&destination=" + encodeURIComponent(post.tags?.join(", ") || "") + "&requests=" + encodeURIComponent("Blog: " + post.title)} className="px-6 py-3 bg-[#D4AF37] text-[#0A1628] font-semibold rounded-full hover:bg-[#C19B2F] transition-colors">{t("blog.bookNow")}</Link>
+            <Link href="/contact" className="px-6 py-3 border border-[#D4AF37] text-[#8A6C0B] font-semibold rounded-full hover:bg-[#D4AF37]/10 transition-colors">{t("blog.contactUs")}</Link>
           </div>
         </div>
 
         {/* Back */}
         <div className="mt-8 text-center">
-          <Link href="/blog" className="text-[#D4AF37] font-semibold hover:underline">← {t("blog.back")}</Link>
+          <Link href="/blog" className="text-[#8A6C0B] font-semibold hover:underline">← {t("blog.back")}</Link>
         </div>
       </article>
     </main>

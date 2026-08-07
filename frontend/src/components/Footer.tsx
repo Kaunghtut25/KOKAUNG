@@ -132,9 +132,9 @@ export default function Footer() {
 
           {/* Column 2: Quick Links */}
           <div>
-            <h4 className="font-display text-lg font-semibold text-[#D4AF37] mb-6 pb-2 border-b border-[#D4AF37]/20">
+            <h3 className="font-display text-lg font-semibold text-[#D4AF37] mb-6 pb-2 border-b border-[#D4AF37]/20">
               {t("footer.explore")}
-            </h4>
+            </h3>
             <ul className="space-y-3">
               {quickLinksFiltered.map((link) => (
                 <li key={link.href}>
@@ -152,9 +152,9 @@ export default function Footer() {
 
           {/* Column 3: Support Links */}
           <div>
-            <h4 className="font-display text-lg font-semibold text-[#D4AF37] mb-6 pb-2 border-b border-[#D4AF37]/20">
+            <h3 className="font-display text-lg font-semibold text-[#D4AF37] mb-6 pb-2 border-b border-[#D4AF37]/20">
               {t("footer.services")}
-            </h4>
+            </h3>
             <ul className="space-y-3">
               {supportLinksFiltered.map((link) => (
                 <li key={link.href}>
@@ -172,9 +172,9 @@ export default function Footer() {
 
           {/* Column 4: Contact Info */}
           <div>
-            <h4 className="font-display text-lg font-semibold text-[#D4AF37] mb-6 pb-2 border-b border-[#D4AF37]/20">
+            <h3 className="font-display text-lg font-semibold text-[#D4AF37] mb-6 pb-2 border-b border-[#D4AF37]/20">
               {t("footer.contact")}
-            </h4>
+            </h3>
             <div className="space-y-4">
               <div className="flex items-start space-x-3">
                 <FaMapMarkerAlt className="text-[#D4AF37] mt-1 flex-shrink-0 text-sm" />
