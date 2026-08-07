@@ -1,8 +1,12 @@
 
-@font-face { font-family: 'Playfair Display'; font-style: normal; font-weight: 400; font-display: swap; src: url('/fonts/playfair-400.woff2') format('woff2'); }
-@font-face { font-family: 'Playfair Display'; font-style: normal; font-weight: 500; font-display: swap; src: url('/fonts/playfair-500.woff2') format('woff2'); }
-@font-face { font-family: 'Playfair Display'; font-style: normal; font-weight: 600; font-display: swap; src: url('/fonts/playfair-600.woff2') format('woff2'); }
-@font-face { font-family: 'Playfair Display'; font-style: normal; font-weight: 700; font-display: swap; src: url('/fonts/playfair-700.woff2') format('woff2'); }
+
+
+
+
+@font-face { font-family: 'Playfair Display'; font-style: normal; font-weight: 400; font-display: swap; src: url('/fonts/playfair-normal-400.woff2') format('woff2'); }
+@font-face { font-family: 'Playfair Display'; font-style: normal; font-weight: 500; font-display: swap; src: url('/fonts/playfair-normal-500.woff2') format('woff2'); }
+@font-face { font-family: 'Playfair Display'; font-style: normal; font-weight: 600; font-display: swap; src: url('/fonts/playfair-normal-600.woff2') format('woff2'); }
+@font-face { font-family: 'Playfair Display'; font-style: normal; font-weight: 700; font-display: swap; src: url('/fonts/playfair-normal-700.woff2') format('woff2'); }
 @font-face { font-family: 'Playfair Display'; font-style: italic; font-weight: 400; font-display: swap; src: url('/fonts/playfair-italic-400.woff2') format('woff2'); }
 @font-face { font-family: 'Playfair Display'; font-style: italic; font-weight: 500; font-display: swap; src: url('/fonts/playfair-italic-500.woff2') format('woff2'); }
 @font-face { font-family: 'Playfair Display'; font-style: italic; font-weight: 600; font-display: swap; src: url('/fonts/playfair-italic-600.woff2') format('woff2'); }
@@ -14,11 +18,7 @@
 
 /* ── Base Styles ─────────────────────────────── */
 @layer base {
-  * {
-    @apply transition-colors duration-200;
-  }
-
-  html {
+html {
     scroll-behavior: smooth;
   }
 
