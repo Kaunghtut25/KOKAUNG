@@ -107,7 +107,7 @@ export default function AdminLayout({
       <div className="min-h-screen bg-deepblue">
         <NarrowView />
         <AdminSidebar />
-        <main className="xl:ml-64 transition-all duration-300 min-h-screen p-6 md:p-8">
+        <main className="md:ml-64 transition-all duration-300 min-h-screen p-6 md:p-8">
           <div className="flex justify-end mb-4">
             <LanguageSwitcher dark={false} />
           </div>

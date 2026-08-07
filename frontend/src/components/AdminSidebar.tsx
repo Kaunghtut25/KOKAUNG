@@ -64,7 +64,7 @@ export default function AdminSidebar() {
 
   useEffect(() => {
     const handleResize = () => {
-      if (window.innerWidth < 1280) {
+      if (window.innerWidth < 768) {
         setCollapsed(true);
       }
     };
@@ -173,7 +173,7 @@ export default function AdminSidebar() {
       {/* Mobile overlay */}
       {mobileOpen && (
         <div
-          className="fixed inset-0 bg-black/60 z-40 xl:hidden"
+          className="fixed inset-0 bg-black/60 z-40 md:hidden"
           onClick={() => setMobileOpen(false)}
         />
       )}
@@ -181,14 +181,14 @@ export default function AdminSidebar() {
       {/* Mobile toggle button */}
       <button
         onClick={() => setMobileOpen(!mobileOpen)}
-        className="fixed top-4 left-4 z-50 xl:hidden bg-deepblue-dark border border-gold/30 rounded-lg p-2 text-gold"
+        className="fixed top-4 left-4 z-50 md:hidden bg-deepblue-dark border border-gold/30 rounded-lg p-2 text-gold"
       >
         <span className="text-xl">{mobileOpen ? "✕" : "☰"}</span>
       </button>
 
       {/* Sidebar - desktop */}
       <aside
-        className={`hidden xl:flex flex-col fixed top-0 left-0 h-full bg-deepblue-dark border-r border-gold/30 z-30 transition-all duration-300 ${
+        className={`hidden md:flex flex-col fixed top-0 left-0 h-full bg-deepblue-dark border-r border-gold/30 z-30 transition-all duration-300 ${
           collapsed ? "w-16" : "w-64"
         }`}
       >
@@ -204,7 +204,7 @@ export default function AdminSidebar() {
 
       {/* Sidebar - mobile */}
       <aside
-        className={`xl:hidden fixed top-0 left-0 h-full w-64 bg-deepblue-dark border-r border-gold/30 z-50 transition-transform duration-300 ${
+        className={`md:hidden fixed top-0 left-0 h-full w-64 bg-deepblue-dark border-r border-gold/30 z-50 transition-transform duration-300 ${
           mobileOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >

@@ -240,14 +240,14 @@ input:-webkit-autofill:active {
    <html data-narrow="1"> + --vvw when the visible width can't fit the
    layout content; these rules then reflow the admin UI to the visible
    width so everything stays reachable and readable. */
-@media (min-width: 1280px) {
-  html[data-narrow="1"] main.xl\:ml-64 {
+@media (min-width: 768px) {
+  html[data-narrow="1"] main.md\:ml-64 {
     width: min(100%, calc(var(--vvw, 100vw) * 1px - 288px));
     overflow-x: auto;
   }
 }
-@media (max-width: 1279.98px) {
-  html[data-narrow="1"] main.xl\:ml-64 {
+@media (max-width: 767.98px) {
+  html[data-narrow="1"] main.md\:ml-64 {
     width: min(100%, calc(var(--vvw, 100vw) * 1px - 64px));
     overflow-x: auto;
   }
@@ -286,27 +286,27 @@ html[data-narrow="1"] main td {
   padding-right: 0.5rem !important;
 }
 /* Visible scrollbars for admin content (overflowing tables at narrow/zoom) */
-main.xl\:ml-64::-webkit-scrollbar,
-main.xl\:ml-64 *::-webkit-scrollbar {
+main.md\:ml-64::-webkit-scrollbar,
+main.md\:ml-64 *::-webkit-scrollbar {
   width: 10px;
   height: 10px;
 }
-main.xl\:ml-64::-webkit-scrollbar-track,
-main.xl\:ml-64 *::-webkit-scrollbar-track {
+main.md\:ml-64::-webkit-scrollbar-track,
+main.md\:ml-64 *::-webkit-scrollbar-track {
   background: rgba(255, 255, 255, 0.10);
   border-radius: 8px;
 }
-main.xl\:ml-64::-webkit-scrollbar-thumb,
-main.xl\:ml-64 *::-webkit-scrollbar-thumb {
+main.md\:ml-64::-webkit-scrollbar-thumb,
+main.md\:ml-64 *::-webkit-scrollbar-thumb {
   background: rgba(212, 175, 55, 0.8);
   border-radius: 8px;
 }
-main.xl\:ml-64::-webkit-scrollbar-thumb:hover,
-main.xl\:ml-64 *::-webkit-scrollbar-thumb:hover {
+main.md\:ml-64::-webkit-scrollbar-thumb:hover,
+main.md\:ml-64 *::-webkit-scrollbar-thumb:hover {
   background: rgba(212, 175, 55, 0.7);
 }
-main.xl\:ml-64,
-main.xl\:ml-64 * {
+main.md\:ml-64,
+main.md\:ml-64 * {
   scrollbar-width: thin;
   scrollbar-color: rgba(212, 175, 55, 0.45) rgba(255, 255, 255, 0.06);
 }
