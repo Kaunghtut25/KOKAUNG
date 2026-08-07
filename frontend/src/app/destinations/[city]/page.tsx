@@ -370,7 +370,7 @@ export default function DestinationPage() {
             {dest.description && (
               <section>
                 <h2 className="text-2xl font-bold text-[#0A1628] mb-4">
-                  About {dest.city}
+                  {lang === "mm" ? "အကြောင်း" : "About"} {dest.city}
                 </h2>
                 <p className="text-gray-700 leading-relaxed text-lg">
                   {dest.description}
@@ -389,7 +389,7 @@ export default function DestinationPage() {
             {highlights.length > 0 && (
               <section>
                 <h2 className="text-2xl font-bold text-[#0A1628] mb-6">
-                  Top Highlights
+                  {lang === "mm" ? "ထူးခြားချက်များ" : "Top Highlights"}
                 </h2>
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                   {highlights.map((h, i) => (
@@ -414,10 +414,7 @@ export default function DestinationPage() {
                 </h2>
                 <p className="text-gray-700 text-lg">{dest.bestTime}</p>
                 <p className="text-gray-600 leading-relaxed mt-3 text-lg">
-                  During this window the weather is at its most pleasant for sightseeing, with
-                  comfortable temperatures and clearer skies. Popular periods can get busy, so
-                  we recommend booking your flights and hotel early to lock in the best rates
-                  and availability for your trip to {dest.city}.
+                  {lang === "mm" ? `ဤအချိန်ကာလသည် လည်ပတ်ကြည့်ရှုရန် အဆင်ပြေဆုံးဖြစ်ပြီး ရာသီဥတု ကောင်းမွန်သည်။ လူကြိုက်များသောကာလများတွင် စည်ကားနိုင်သောကြောင့် အကောင်းဆုံးဈေးနှုန်း ရရှိရန် ${dest.city} ခရီးစဉ်အတွက် လေယာဉ်လက်မှတ်နှင့် ဟိုတယ်များကို စောစီးစွာ ကြိုတင်မှာယူရန် အကြံပြုပါသည်။` : `During this window the weather is at its most pleasant for sightseeing, with comfortable temperatures and clearer skies. Popular periods can get busy, so we recommend booking your flights and hotel early to lock in the best rates and availability for your trip to ${dest.city}.`}
                 </p>
               </section>
             )}
