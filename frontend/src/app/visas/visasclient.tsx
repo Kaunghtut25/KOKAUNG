@@ -90,6 +90,7 @@ const FALLBACK_VISAS: VisaService[] = [
 
 function VisaGridCard({ visa }: { visa: VisaService }) {
   const router = useRouter();
+  const { t } = useI18n();
   const flag = COUNTRY_FLAGS[visa.country] || '🌏';
   const imageUrl = visa.image || COUNTRY_IMAGES[visa.country];
 
@@ -131,13 +132,13 @@ function VisaGridCard({ visa }: { visa: VisaService }) {
             onClick={(e) => { e.stopPropagation(); router.push('/book-now?type=visa&country=' + encodeURIComponent(visa.country||'') + '&id=' + encodeURIComponent(visa._id||visa.id||'') + '&feeMMK=' + (visa.visaFeeMMK||0) + '&feeUSD=' + (visa.visaFeeUSD||0) + '&processingTime=' + encodeURIComponent(visa.processingTime||'')); }}
             className="w-full py-2.5 rounded-xl text-center font-semibold text-sm transition-all duration-300 bg-gradient-to-r from-[#D4AF37] to-[#F5A623] text-[#0A1628] hover:shadow-lg cursor-pointer"
           >
-            Book Now
+            {t("common.bookNow")}
           </button>
           <div
             onClick={(e) => { e.stopPropagation(); router.push("/visas/" + (visa.slug||visa._id||visa.id)); }}
             className="w-full py-2.5 rounded-xl text-center font-semibold text-sm transition-all duration-300 bg-white text-[#0A1628] border border-gray-200 hover:bg-[#0A1628] hover:text-[#D4AF37] hover:border-[#D4AF37] hover:shadow-lg cursor-pointer"
           >
-            View Details →
+            {t("common.viewDetails")} →
           </div>
         </div>
       </div>

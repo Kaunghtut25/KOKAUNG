@@ -211,20 +211,20 @@ export default function CruisesClient({ initialCruises, siteConfig }: { initialC
                       href={'/cruises/' + (cruise.id || cruise._id || cruise.slug)}
                       className="flex-1 px-3 py-2 border border-[#D4AF37] text-[#D4AF37] text-sm font-semibold rounded-full text-center hover:bg-[#D4AF37] hover:text-white transition-colors"
                     >
-                      View Details
+                      {t("common.viewDetails")}
                     </Link>
                     <button
                       onClick={() => router.push('/book-now?type=cruise&name=' + encodeURIComponent(cruise.title||cruise.name||'') + '&destination=' + encodeURIComponent(cruise.destination) + '&id=' + (cruise.id || cruise._id || ''))}
                       className="flex-1 px-3 py-2 bg-[#D4AF37] text-white text-sm font-semibold rounded-full hover:bg-[#C19B2F] transition-colors"
                     >
-                      Book Now
+                      {t("common.bookNow")}
                     </button>
                   </div>
                   <button
                     onClick={() => router.push('/contact?subject=' + encodeURIComponent('Cruise Inquiry') + '&item=' + encodeURIComponent(cruise.title || cruise.name || ''))}
                     className="w-full mt-2 py-2 text-sm text-gray-600 hover:text-[#D4AF37] transition-colors"
                   >
-                    Contact Us
+                    {t("common.contactUs")}
                   </button>
                 </div>
               </div>

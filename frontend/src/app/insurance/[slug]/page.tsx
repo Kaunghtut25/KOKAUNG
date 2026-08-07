@@ -394,7 +394,7 @@ export default function InsuranceDetailPage() {
                 disabled={!plan}
                 className="w-full py-3.5 rounded-xl bg-gradient-to-r from-[#D4AF37] to-[#C5A028] hover:from-[#E5C048] hover:to-[#D4AF37] text-gray-900 font-bold text-lg shadow-lg shadow-[#D4AF37]/20 hover:shadow-[#D4AF37]/40 transition-all duration-300 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:from-[#D4AF37] disabled:hover:to-[#C5A028]"
               >
-                Book Now
+                {t("common.bookNow")}
               </button>
 
               <p className="text-center text-gray-500 text-xs">{t("ins.noPayment")}</p>

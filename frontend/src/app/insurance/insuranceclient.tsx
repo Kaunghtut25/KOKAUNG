@@ -121,7 +121,7 @@ function InsuranceCard({ plan, currency, onSelect, cardWidth, cardHeight }: { pl
           onClick={(e: any) => { e.stopPropagation(); router.push("/insurance/" + (plan.slug||plan._id || plan.id)); }}
           className="w-full mt-1 py-2 rounded-xl text-center font-semibold text-xs transition-all duration-300 bg-white text-[#0A1628] border border-gray-200 hover:bg-[#0A1628] hover:text-[#D4AF37] hover:border-[#D4AF37] hover:shadow-lg"
         >
-          View Details &rarr;
+          {t("common.viewDetails")} &rarr;
         </button>
         {coverage && <p className="text-[10px] text-gray-500 mt-1 leading-tight">{coverage}</p>}
       </div>

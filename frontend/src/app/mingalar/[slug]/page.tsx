@@ -285,7 +285,7 @@ export default function MingalarDetailPage({ params }: { params: { slug: string 
                   onClick={handleBookNow}
                   className="block w-full py-3.5 rounded-xl text-center font-bold text-lg bg-gradient-to-r from-[#D4AF37] to-[#F5A623] text-[#0A1628] shadow-lg shadow-[#D4AF37]/30 hover:shadow-xl hover:shadow-[#D4AF37]/40 hover:scale-[1.02] transition-all duration-300 active:scale-[0.98]"
                 >
-                  Book Now
+                  {t("common.bookNow")}
                 </button>
                 <p className="text-center text-gray-400 text-xs">{t("mingalar.noPayment")}</p>
               </div>
