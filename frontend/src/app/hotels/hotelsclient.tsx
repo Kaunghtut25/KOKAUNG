@@ -1,6 +1,7 @@
 ﻿'use client';
 
 import React, { useState } from 'react';
+import { useI18n } from "@/lib/i18n";
 import { Hotel } from '@/lib/api';
 import HotelCard from '@/components/HotelCard';
 import CurrencyToggle from "@/components/CurrencyToggle";
@@ -32,6 +33,7 @@ interface HotelsClientProps {
 }
 
 export default function HotelsClient({ initialHotels, siteConfig }: HotelsClientProps & { siteConfig?: any }) {
+  const { t } = useI18n();
   const heroImage = siteConfig?.heroImages?.hotels || "/images_v2/hero-hotels-v2.jpg";
   const ht = siteConfig?.heroText?.hotels || {};
   const hTitle = ht.title || "";
@@ -103,12 +105,12 @@ export default function HotelsClient({ initialHotels, siteConfig }: HotelsClient
                 <path strokeLinecap="round" strokeLinejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
               </svg>
               <input type="text" value={location} onChange={(e) => handleFilterChange(setLocation, e.target.value)}
-                placeholder="Search location..." className="w-full pl-9 pr-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-gray-900 placeholder-gray-400 text-sm focus:outline-none focus:border-[#D4AF37] transition-colors" />
+                placeholder={t("list.searchLocation")} className="w-full pl-9 pr-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-gray-900 placeholder-gray-400 text-sm focus:outline-none focus:border-[#D4AF37] transition-colors" />
             </div>
             <div className="relative">
               <select value={rating} onChange={(e) => handleFilterChange(setRating, e.target.value)}
                 className="px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-gray-900 text-sm focus:outline-none focus:border-[#D4AF37] transition-colors appearance-none cursor-pointer pr-8">
-                <option value="">Any Rating</option>
+                <option value="">{t("list.anyRating")}</option>
                 <option value="3">3+ Stars</option>
                 <option value="4">4+ Stars</option>
                 <option value="5">5 Stars</option>
@@ -116,18 +118,18 @@ export default function HotelsClient({ initialHotels, siteConfig }: HotelsClient
             </div>
             <div className="flex gap-2 items-center">
               <input type="number" value={minPrice} onChange={(e) => handleFilterChange(setMinPrice, e.target.value)}
-                placeholder="Min MMK" className="w-[100px] px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-gray-900 placeholder-gray-400 text-sm focus:outline-none focus:border-[#D4AF37] transition-colors [appearance:textfield]" />
+                placeholder={t("list.minMMK")} className="w-[100px] px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-gray-900 placeholder-gray-400 text-sm focus:outline-none focus:border-[#D4AF37] transition-colors [appearance:textfield]" />
               <span className="text-gray-400">–</span>
               <input type="number" value={maxPrice} onChange={(e) => handleFilterChange(setMaxPrice, e.target.value)}
-                placeholder="Max MMK" className="w-[100px] px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-gray-900 placeholder-gray-400 text-sm focus:outline-none focus:border-[#D4AF37] transition-colors [appearance:textfield]" />
+                placeholder={t("list.maxMMK")} className="w-[100px] px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-gray-900 placeholder-gray-400 text-sm focus:outline-none focus:border-[#D4AF37] transition-colors [appearance:textfield]" />
             </div>
             <div className="relative">
               <select value={sort} onChange={(e) => handleFilterChange(setSort, e.target.value)}
                 className="px-4 py-2 rounded-xl border border-[#D4AF37]/30 bg-white text-[#0A1628] text-sm font-medium">
-                <option value="">Sort by</option>
-                <option value="rating">Rating: High to Low</option>
-                <option value="price_asc">Price: Low to High</option>
-                <option value="price_desc">Price: High to Low</option>
+                <option value="">{t("list.sortByColon")}</option>
+                <option value="rating">{t("list.ratingColon")}</option>
+                <option value="price_asc">{t("list.priceColonLH")}</option>
+                <option value="price_desc">{t("list.priceColonHL")}</option>
               </select>
             </div>
             <div className="ml-auto"><CurrencyToggle activeCurrency={currency} onToggle={setCurrency} /></div>

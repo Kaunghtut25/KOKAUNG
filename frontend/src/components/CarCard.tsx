@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useI18n } from "@/lib/i18n";
 import { Car } from '@/lib/api';
 import { getImageFallback } from '@/lib/imageFallback';
 
@@ -14,6 +15,7 @@ interface CarCardProps {
 
 export default function CarCard({ car, currency = 'MMK', cardWidth, cardHeight }: CarCardProps) {
   const router = useRouter();
+  const { t } = useI18n();
   const [imgError, setImgError] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
 
@@ -114,7 +116,7 @@ export default function CarCard({ car, currency = 'MMK', cardWidth, cardHeight }
             className={`w-full py-2.5 rounded-xl text-center font-bold text-sm transition-all duration-400 cursor-pointer ${
             isHovered ? 'bg-gradient-to-r from-[#D4AF37] to-[#F5A623] text-[#0A1628] shadow-lg shadow-[#D4AF37]/40 scale-[1.02]' : 'bg-gradient-to-r from-[#D4AF37] to-[#C5A028] text-[#0A1628] shadow-md shadow-[#D4AF37]/20'
           }`}>
-            Book Now
+            {t("common.bookNow")}
           </div>
 
           {/* View Details */}
@@ -122,7 +124,7 @@ export default function CarCard({ car, currency = 'MMK', cardWidth, cardHeight }
             onClick={(e) => { e.stopPropagation(); router.push("/cars/" + (car.slug || car._id || car._id)); }}
             className="w-full py-2.5 rounded-xl text-center font-semibold text-sm transition-all duration-300 bg-white text-[#0A1628] border border-gray-200 hover:bg-[#0A1628] hover:text-[#D4AF37] hover:border-[#D4AF37] hover:shadow-lg cursor-pointer"
           >
-            View Details →
+            {t("common.viewDetails")} →
           </div>
         </div>
       </div>

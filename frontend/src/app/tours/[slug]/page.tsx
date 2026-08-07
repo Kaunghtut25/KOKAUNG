@@ -932,7 +932,7 @@ export default function TourDetailPage() {
                   <span className="text-3xl font-bold text-[#D4AF37]">
                     {currencySymbol} {price.toLocaleString()}
                   </span>
-                  <span className="text-gray-500 text-sm ml-1">/ person</span>
+                  <span className="text-gray-500 text-sm ml-1">{t("common.perPerson")}</span>
                 </div>
                 <CurrencyToggle activeCurrency={currency} onToggle={setCurrency} />
               </div>

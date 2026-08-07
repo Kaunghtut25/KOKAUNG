@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { useI18n } from "@/lib/i18n";
 import { api } from '@/lib/api';
 import BookingModal from '@/components/BookingModal';
 import { getImageFallback } from '@/lib/imageFallback';
@@ -84,6 +85,7 @@ function normalizePlan(raw: any): InsurancePlan {
 
 function InsuranceCard({ plan, currency, onSelect, cardWidth, cardHeight }: { plan: InsurancePlan; currency: 'MMK' | 'USD'; onSelect: () => void; cardWidth?: number; cardHeight?: number }) {
   const router = useRouter();
+  const { t } = useI18n();
   const name = plan.planName || plan.title || '';
   const coverage = plan.coverage || '';
   const duration = plan.duration || 'Per Trip';
@@ -112,7 +114,7 @@ function InsuranceCard({ plan, currency, onSelect, cardWidth, cardHeight }: { pl
         <div className="mt-auto pt-1">
           <span className="text-gold font-bold text-sm">{symbol} {price.toLocaleString()}</span>
         </div>
-        <button onClick={() => router.push('/book-now?type=insurance&plan=' + encodeURIComponent(plan.planName||name||'') + '&id=' + encodeURIComponent(plan._id||plan.id||'') + '&priceMMK=' + ((plan.priceMMK||plan.premiumPriceMMK||0)) + '&priceUSD=' + ((plan.priceUSD||plan.premiumPriceUSD||0)) + '&coverage=' + encodeURIComponent(plan.coverage||''))} className="w-full mt-1 py-2 bg-gradient-to-r from-[#D4AF37] to-[#F5A623] text-[#0A1628] font-bold rounded-xl text-xs hover:shadow-lg hover:shadow-[#D4AF37]/30 transition-all">Book Now</button>
+        <button onClick={() => router.push('/book-now?type=insurance&plan=' + encodeURIComponent(plan.planName||name||'') + '&id=' + encodeURIComponent(plan._id||plan.id||'') + '&priceMMK=' + ((plan.priceMMK||plan.premiumPriceMMK||0)) + '&priceUSD=' + ((plan.priceUSD||plan.premiumPriceUSD||0)) + '&coverage=' + encodeURIComponent(plan.coverage||''))} className="w-full mt-1 py-2 bg-gradient-to-r from-[#D4AF37] to-[#F5A623] text-[#0A1628] font-bold rounded-xl text-xs hover:shadow-lg hover:shadow-[#D4AF37]/30 transition-all">{t("common.bookNow")}</button>
         <button
           onClick={(e: any) => { e.stopPropagation(); router.push("/insurance/" + (plan.slug||plan._id || plan.id)); }}
           className="w-full mt-1 py-2 rounded-xl text-center font-semibold text-xs transition-all duration-300 bg-white text-[#0A1628] border border-gray-200 hover:bg-[#0A1628] hover:text-[#D4AF37] hover:border-[#D4AF37] hover:shadow-lg"

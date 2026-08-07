@@ -126,7 +126,7 @@ export default function BlogDetailPage() {
 
         <h1 className="text-4xl font-bold text-[#0A1628] mb-4">{t("blog.notFound")}</h1>
         <p className="text-gray-600 mb-8">{t("blog.notFoundDesc")}</p>
-        <Link href="/blog" className="text-[#D4AF37] font-semibold hover:underline">← Back to Blog</Link>
+        <Link href="/blog" className="text-[#D4AF37] font-semibold hover:underline">← {t("blog.back")}</Link>
       </main>
     );
   }
@@ -196,7 +196,7 @@ export default function BlogDetailPage() {
 
         {/* Back */}
         <div className="mt-8 text-center">
-          <Link href="/blog" className="text-[#D4AF37] font-semibold hover:underline">← Back to Blog</Link>
+          <Link href="/blog" className="text-[#D4AF37] font-semibold hover:underline">← {t("blog.back")}</Link>
         </div>
       </article>
     </main>

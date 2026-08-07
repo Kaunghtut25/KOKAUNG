@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { useI18n } from "@/lib/i18n";
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import DealsBanner from '@/components/DealsBanner';
@@ -27,6 +28,7 @@ function toSlug(text: string): string {
 }
 
 export default function DestinationsClient({ initialDestinations, siteConfig }: Props) {
+  const { t } = useI18n();
   const router = useRouter();
   const [selectedDest, setSelectedDest] = useState<Destination | null>(null);
 
@@ -169,7 +171,7 @@ export default function DestinationsClient({ initialDestinations, siteConfig }: 
               )}
               {selectedDest.highlights && selectedDest.highlights.length > 0 && (
                 <div>
-                  <h4 className="font-semibold text-gray-800 mb-2">Highlights</h4>
+                  <h4 className="font-semibold text-gray-800 mb-2">{t("list.highlights")}</h4>
                   <div className="flex flex-wrap gap-2">
                     {selectedDest.highlights.map((h, i) => (
                       <span key={i} className="px-3 py-1 bg-[#D4AF37]/10 text-[#B8960F] text-xs rounded-full">{h}</span>
@@ -178,8 +180,8 @@ export default function DestinationsClient({ initialDestinations, siteConfig }: 
                 </div>
               )}
               <div className="flex gap-3 pt-2">
-                <Link href={"/destinations/" + toSlug(selectedDest.city)} className="flex-1 px-4 py-2.5 border border-[#D4AF37] text-[#D4AF37] text-sm font-semibold rounded-full text-center hover:bg-[#D4AF37] hover:text-white transition-colors">Full Details</Link>
-                <Link href={"/book-now?type=tour&destination=" + encodeURIComponent(selectedDest.city)} className="flex-1 px-4 py-2.5 bg-[#D4AF37] text-white text-sm font-semibold rounded-full text-center hover:bg-[#C19B2F] transition-colors">Book Trip</Link>
+                <Link href={"/destinations/" + toSlug(selectedDest.city)} className="flex-1 px-4 py-2.5 border border-[#D4AF37] text-[#D4AF37] text-sm font-semibold rounded-full text-center hover:bg-[#D4AF37] hover:text-white transition-colors">{t("list.fullDetails")}</Link>
+                <Link href={"/book-now?type=tour&destination=" + encodeURIComponent(selectedDest.city)} className="flex-1 px-4 py-2.5 bg-[#D4AF37] text-white text-sm font-semibold rounded-full text-center hover:bg-[#C19B2F] transition-colors">{t("list.bookTrip")}</Link>
               </div>
             </div>
           </div>

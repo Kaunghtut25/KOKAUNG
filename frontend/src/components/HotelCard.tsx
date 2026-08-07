@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useI18n } from "@/lib/i18n";
 import { Hotel } from "@/lib/api";
 import { getImageFallback } from "@/lib/imageFallback";
 
@@ -16,6 +17,7 @@ interface HotelCardProps {
 
 export default function HotelCard({ hotel, currency = "MMK", cardWidth, cardHeight }: HotelCardProps) {
   const router = useRouter();
+  const { t } = useI18n();
   const [imgError, setImgError] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
 
@@ -127,7 +129,7 @@ export default function HotelCard({ hotel, currency = "MMK", cardWidth, cardHeig
             className={`w-full py-2.5 rounded-xl text-center font-bold text-sm transition-all duration-400 ${
               isHovered ? "bg-gradient-to-r from-[#D4AF37] to-[#F5A623] text-[#0A1628] shadow-lg shadow-[#D4AF37]/40 scale-[1.02]" : "bg-gradient-to-r from-[#D4AF37] to-[#C5A028] text-[#0A1628] shadow-md shadow-[#D4AF37]/20"
             }`}>
-            Book Now
+            {t("common.bookNow")}
           </div>
           {/* View Details button */}
           <div
@@ -135,7 +137,7 @@ export default function HotelCard({ hotel, currency = "MMK", cardWidth, cardHeig
             className={`w-full py-2.5 rounded-xl text-center font-semibold text-sm transition-all duration-400 border ${
               isHovered ? "bg-[#0A1628] text-[#D4AF37] border-[#D4AF37] shadow-lg shadow-[#0A1628]/20 scale-[1.02]" : "bg-white text-[#0A1628] border-[#D4AF37]/50"
             }`}>
-            View Details →
+            {t("common.viewDetails")} →
           </div>
         </div>
       </div>

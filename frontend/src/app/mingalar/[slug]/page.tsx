@@ -82,7 +82,7 @@ export default function MingalarDetailPage({ params }: { params: { slug: string 
         <BackButton />
         <h1 className="text-4xl font-bold text-[#0A1628] mb-4">{t("mingalar.notFound")}</h1>
         <p className="text-gray-600 mb-8">{t("mingalar.notFoundDesc")}</p>
-        <Link href="/mingalar" className="text-[#D4AF37] font-semibold hover:underline">← Back to Mingalar</Link>
+        <Link href="/mingalar" className="text-[#D4AF37] font-semibold hover:underline">← {t("mingalar.backToMingalar")}</Link>
       </main>
     );
   }
@@ -110,13 +110,13 @@ export default function MingalarDetailPage({ params }: { params: { slug: string 
         <div className="absolute inset-0 bg-gradient-to-t from-[#0A1628] via-[#0A1628]/40 to-transparent" />
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(212,175,55,0.06),transparent_70%)]" />
         <Link href="/mingalar" className="absolute top-6 left-4 md:top-8 md:left-8 z-20 flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur-md border border-white/20 rounded-full text-white hover:bg-white/20 transition-all text-sm">
-          ← Back to Mingalar
+          ← {t("mingalar.backToMingalar")}
         </Link>
         <div className="absolute bottom-0 left-0 right-0 p-6 md:p-10 z-10">
           <div className="max-w-7xl mx-auto">
             <div className="flex flex-wrap items-center gap-2 mb-2">
               <span className="px-3 py-1 rounded-full bg-[#D4AF37]/20 text-[#D4AF37] text-xs font-semibold border border-[#D4AF37]/30 backdrop-blur-sm">
-                {item.icon} Sky Lounge
+                {item.icon} {t("mingalar.skyLounge")}
               </span>
               <span className="px-3 py-1 rounded-full bg-[#D4AF37]/10 text-white/80 text-xs font-semibold border border-[#D4AF37]/30 backdrop-blur-sm">
                 Airport Lounge
@@ -229,9 +229,9 @@ export default function MingalarDetailPage({ params }: { params: { slug: string 
                 <div className="flex items-center justify-between">
                   <div>
                     <span className="text-xl font-bold text-[#D4AF37]" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
-                      Mingalar Sky Lounge
+                      {t("mingalar.mingalar")} {t("mingalar.skyLounge")}
                     </span>
-                    <span className="text-gray-500 text-sm ml-1">/ per person</span>
+                    <span className="text-gray-500 text-sm ml-1">{t("common.perPerson")}</span>
                   </div>
                 </div>
                 <hr className="border-[#D4AF37]/10" />
@@ -240,11 +240,11 @@ export default function MingalarDetailPage({ params }: { params: { slug: string 
                 <div className="space-y-2 text-sm">
                   <div className="flex justify-between py-1">
                     <span className="text-gray-500">{t("mingalar.category")}</span>
-                    <span className="text-[#0A1628] font-medium">Sky Lounge</span>
+                    <span className="text-[#0A1628] font-medium">{t("mingalar.skyLounge")}</span>
                   </div>
                   <div className="flex justify-between py-1">
                     <span className="text-gray-500">{t("mingalar.location")}</span>
-                    <span className="text-[#0A1628] font-medium">Mingalar</span>
+                    <span className="text-[#0A1628] font-medium">{t("mingalar.mingalar")}</span>
                   </div>
                   <div className="flex justify-between py-1">
                     <span className="text-gray-500">{t("mingalar.groupSize")}</span>
@@ -295,7 +295,7 @@ export default function MingalarDetailPage({ params }: { params: { slug: string 
                 href="/mingalar"
                 className="block w-full py-3 rounded-xl text-center font-semibold text-sm border-2 border-[#D4AF37] text-[#D4AF37] hover:bg-[#D4AF37] hover:text-[#0A1628] transition-all duration-300"
               >
-                ← Back to All Mingalar
+                ← {t("mingalar.backToAll")}
               </Link>
             </div>
           </div>

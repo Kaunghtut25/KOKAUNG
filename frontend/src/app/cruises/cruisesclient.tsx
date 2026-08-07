@@ -1,5 +1,6 @@
 'use client';
 import React, { useState } from 'react';
+import { useI18n } from "@/lib/i18n";
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import DealsBanner from '@/components/DealsBanner';
@@ -126,6 +127,7 @@ export default function CruisesClient({ initialCruises, siteConfig }: { initialC
   const crTitleSize = crt.titleSize || "3rem";
   const crSubtitleSize = crt.subtitleSize || "1.2rem";
   const router = useRouter();
+  const { t } = useI18n();
   const cruises = initialCruises.length > 0 ? initialCruises : FALLBACK_CRUISES;
   const [currency, setCurrency] = useState<'MMK' | 'USD'>('MMK');
 
@@ -155,7 +157,7 @@ export default function CruisesClient({ initialCruises, siteConfig }: { initialC
           <button
             onClick={() => setCurrency('MMK')}
             className={`px-4 py-2 text-sm font-medium transition-colors ${currency === 'MMK' ? 'bg-[#D4AF37] text-white' : 'bg-white text-gray-600'}`}
-          >Ks (MMK)</button>
+          >{t("list.ksMMK")}</button>
           <button
             onClick={() => setCurrency('USD')}
             className={`px-4 py-2 text-sm font-medium transition-colors ${currency === 'USD' ? 'bg-[#D4AF37] text-white' : 'bg-white text-gray-600'}`}

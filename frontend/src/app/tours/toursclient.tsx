@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { useI18n } from "@/lib/i18n";
 import TourCard from '@/components/TourCard';
 import CurrencyToggle from '@/components/CurrencyToggle';
 import DealsBanner from '@/components/DealsBanner';
@@ -28,6 +29,7 @@ export function detectTourType(tour: { destination?: string; tourType?: string }
 }
 
 export default function ToursClient(props: any) {
+  const { t } = useI18n();
   const heroImage = props.siteConfig?.heroImages?.tours || "/images_v2/hero-tours-v2.jpg";
   const toursText = props.siteConfig?.heroText?.tours || {};
   const toursTitle = toursText.title || "";
@@ -196,22 +198,22 @@ export default function ToursClient(props: any) {
 
         {/* Filters */}
         <div className="flex flex-wrap gap-3 items-center justify-center">
-          <input value={destination} onChange={(e) => setDestination(e.target.value)} placeholder="Destination" className="px-4 py-2 rounded-xl border border-gray-200 text-sm" />
-          <input value={minPrice} onChange={(e) => setMinPrice(e.target.value)} placeholder="Min Price" type="number" className="px-4 py-2 rounded-xl border border-gray-200 text-sm w-28" />
-          <input value={maxPrice} onChange={(e) => setMaxPrice(e.target.value)} placeholder="Max Price" type="number" className="px-4 py-2 rounded-xl border border-gray-200 text-sm w-28" />
+          <input value={destination} onChange={(e) => setDestination(e.target.value)} placeholder={t("list.destination")} className="px-4 py-2 rounded-xl border border-gray-200 text-sm" />
+          <input value={minPrice} onChange={(e) => setMinPrice(e.target.value)} placeholder={t("list.minPrice")} type="number" className="px-4 py-2 rounded-xl border border-gray-200 text-sm w-28" />
+          <input value={maxPrice} onChange={(e) => setMaxPrice(e.target.value)} placeholder={t("list.maxPrice")} type="number" className="px-4 py-2 rounded-xl border border-gray-200 text-sm w-28" />
           <select value={durationFilter} onChange={(e) => setDurationFilter(e.target.value)} className="px-4 py-2 rounded-xl border border-gray-200 text-sm">
-            <option value="">Any Duration</option>
+            <option value="">{t("list.anyDuration")}</option>
             <option value="1-3">1-3 Days</option>
             <option value="4-7">4-7 Days</option>
             <option value="8-14">8-14 Days</option>
             <option value="15+">15+ Days</option>
           </select>
           <select value={sort} onChange={(e) => setSort(e.target.value)} className="px-4 py-2 rounded-xl border border-gray-200 text-sm">
-            <option value="">Sort By</option>
-            <option value="rating">Rating (High to Low)</option>
-            <option value="price_asc">Price (Low to High)</option>
-            <option value="price_desc">Price (High to Low)</option>
-            <option value="duration">Duration (Short to Long)</option>
+            <option value="">{t("list.sortBy")}</option>
+            <option value="rating">{t("list.ratingHighLow")}</option>
+            <option value="price_asc">{t("list.priceLowHigh")}</option>
+            <option value="price_desc">{t("list.priceHighLow")}</option>
+            <option value="duration">{t("list.durationShortLong")}</option>
           </select>
           <CurrencyToggle currency={currency} setCurrency={setCurrency} />
         </div>
@@ -221,7 +223,7 @@ export default function ToursClient(props: any) {
       <section className="max-w-7xl mx-auto px-4 pb-16">
         {sortedTours.length === 0 ? (
           <div className="text-center py-16">
-            <p className="text-gray-500 text-lg">No tours found matching your filters.</p>
+            <p className="text-gray-500 text-lg">{t("list.noToursFound")}</p>
           </div>
         ) : (
           <div className="space-y-8">

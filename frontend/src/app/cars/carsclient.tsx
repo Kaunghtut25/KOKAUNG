@@ -1,6 +1,7 @@
 ﻿'use client';
 
 import React, { useState } from 'react';
+import { useI18n } from "@/lib/i18n";
 import { Car } from '@/lib/api';
 import CarCard from '@/components/CarCard';
 import CurrencyToggle from '@/components/CurrencyToggle';
@@ -32,6 +33,7 @@ interface CarsClientProps {
 }
 
 export default function CarsClient({ initialCars, siteConfig }: CarsClientProps & { siteConfig?: any }) {
+  const { t } = useI18n();
   const heroImage = siteConfig?.heroImages?.cars || "/images_v2/hero-cars-v2.jpg";
   const ct = siteConfig?.heroText?.cars || {};
   const cTitle = ct.title || "";
@@ -93,9 +95,9 @@ export default function CarsClient({ initialCars, siteConfig }: CarsClientProps 
             </div>
             <select value={sort} onChange={(e) => setSort(e.target.value)}
               className="px-4 py-2 rounded-xl border border-[#D4AF37]/30 bg-white text-[#0A1628] text-sm font-medium">
-              <option value="">Sort by</option>
-              <option value="price_asc">Price: Low to High</option>
-              <option value="price_desc">Price: High to Low</option>
+              <option value="">{t("list.sortByColon")}</option>
+              <option value="price_asc">{t("list.priceColonLH")}</option>
+              <option value="price_desc">{t("list.priceColonHL")}</option>
             </select>
             <div className="ml-auto"><CurrencyToggle activeCurrency={currency} onToggle={setCurrency} /></div>
           </div>

@@ -338,7 +338,7 @@ export default function CarDetailPage() {
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
                   {car.pricing.map((tier, idx) => (
                     <div key={idx} className="p-4 rounded-2xl border border-[#D4AF37]/20 bg-gray-50 text-center hover:border-[#D4AF37]/40 transition-colors">
-                      <p className="text-gray-400 text-xs uppercase tracking-wider mb-1">{tier.duration}</p>
+                      <p className="text-gray-400 text-xs uppercase tracking-wider mb-1">{tier.duration === 'Full Day' ? t('car.fullDay') : tier.duration === 'Half Day' ? t('car.halfDay') : tier.duration}</p>
                       <div className="space-y-0.5">
                         <p className="text-[#D4AF37] text-xl font-bold">{tier.priceMMK.toLocaleString()} Ks</p>
                         <p className="text-gray-500 text-sm">${tier.priceUSD.toLocaleString()} USD</p>
