@@ -116,15 +116,15 @@ function DestinationCard({ dest, destText = {} }: { dest: { city: string; countr
                 </svg>
               ))}
             </div>
-            <span className="text-gray-400 text-[10px]">({(dest.reviews || 1500).toLocaleString()})</span>
+            <span className="text-gray-500 text-[10px]">({(dest.reviews || 1500).toLocaleString()})</span>
             <span className="text-gray-300 text-[10px] mx-1">·</span>
-            <span className="text-gray-400 text-[10px]">{d.duration || "5 Days"}</span>
+            <span className="text-gray-500 text-[10px]">{d.duration || "5 Days"}</span>
           </div>
           <div className="flex items-center justify-between">
-            <span className="text-gray-400 text-xs">{d.country}</span>
+            <span className="text-gray-500 text-xs">{d.country}</span>
             <div className="text-right">
               <span className="text-[#0A1628] text-base font-bold">{d.minPrice}</span>
-              <span className="text-gray-400 text-[11px] ml-0.5">/person</span>
+              <span className="text-gray-500 text-[11px] ml-0.5">/person</span>
             </div>
           </div>
           {d.description ? (
