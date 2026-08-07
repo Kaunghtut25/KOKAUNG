@@ -100,7 +100,7 @@ const defaultAbout: AboutConfig = {
 
 // FIX: 2026-08-07 Burmese content override for About page (MM mode)
 const ABOUT_MM = {
-  heroTitle: "A9 Global Travel & Tours မှ ကြိုဆိုပါသည်",
+  heroTitle: "ကြိုဆိုပါသည်",
   heroSubtitle: "မြန်မာနိုင်ငံအခြေစိုက် ကျွမ်းကျင်သော ခရီးသွားစီမံခန့်ခွဲမှုကုမ္ပဏီတစ်ခုဖြစ်ပြီး တစ်ဦးချင်း၊ စီးပွားရေးလုပ်ငန်းများနှင့် အဏ္ဏဝါဆိုင်ရာ အဖွဲ့အစည်းများအတွက် ပြည့်စုံသော ခရီးသွားဖြေရှင်းချက်များကို ဆောင်ရွက်ပေးပါသည်။",
   whoWeAreText: [
     "ခရီးသွားလုပ်ငန်းတွင် နှစ်ပေါင်းများစွာ အတွေ့အကြုံရှိသော ကျွန်ုပ်တို့သည် ဖောက်သည်များ၏ လိုအပ်ချက်များနှင့် အံဝင်ခွင်ကျဖြစ်သော ယုံကြည်စိတ်ချရပြီး ထိရောက်၍ ကုန်ကျစရိတ်သက်သာသော ခရီးသွားဝန်ဆောင်မှုများကို ပေးအပ်ရာတွင် အထူးပြုပါသည်။ လေယာဉ်လက်မှတ်ကြိုတင်မှာယူခြင်း၊ ဟိုတယ်ကြိုတင်မှာယူခြင်းမှ ဗီဇာအကူအညီနှင့် စီးပွားရေးခရီးသွားစီမံခန့်ခွဲမှုအထိ ခရီးတိုင်း ချောမွေ့ပြီး အဆင်ပြေစေရန် ကတိပြုပါသည်။",
@@ -255,7 +255,7 @@ export default function AboutClient({ siteConfig }: { siteConfig: any }) {
       {/* VALUES */}
       <section className="px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto pb-16 sm:pb-20">
         <div className="text-center mb-10">
-          <h2 className="text-3xl sm:text-4xl font-bold mb-3 text-[#0A1628]" style={{fontFamily:"'Playfair Display',serif"}}>Our <span className="bg-gradient-to-r from-[#D4AF37] to-[#F5A623] bg-clip-text text-transparent">Values</span></h2>
+          <h2 className="text-3xl sm:text-4xl font-bold mb-3 text-[#0A1628]" style={{fontFamily:"'Playfair Display',serif"}}>{lang === "mm" ? "ကျွန်ုပ်တို့၏ တန်ဖိုးများ" : (<>Our <span className="bg-gradient-to-r from-[#D4AF37] to-[#F5A623] bg-clip-text text-transparent">Values</span></>)}</h2>
           <p className="text-gray-500">{lang === "mm" ? "ကျွန်ုပ်တို့ လုပ်ဆောင်သမျှကို လမ်းညွှန်ပေးသော အခြေခံမူများ" : "The principles that guide everything we do"}</p>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
@@ -266,14 +266,14 @@ export default function AboutClient({ siteConfig }: { siteConfig: any }) {
       {/* SERVICES */}
       {services.length>0 && <section className="px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto pb-16 sm:pb-20">
         <div className="bg-white rounded-2xl border border-gray-200 p-8 sm:p-12 shadow-sm">
-          <div className="text-center mb-8"><h2 className="text-3xl sm:text-4xl font-bold text-[#0A1628]" style={{fontFamily:"'Playfair Display',serif"}}>Our <span className="bg-gradient-to-r from-[#D4AF37] to-[#F5A623] bg-clip-text text-transparent">Services</span></h2></div>
+          <div className="text-center mb-8"><h2 className="text-3xl sm:text-4xl font-bold text-[#0A1628]" style={{fontFamily:"'Playfair Display',serif"}}>{lang === "mm" ? "ကျွန်ုပ်တို့၏ ဝန်ဆောင်မှုများ" : (<>Our <span className="bg-gradient-to-r from-[#D4AF37] to-[#F5A623] bg-clip-text text-transparent">Services</span></>)}</h2></div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">{services.map((s,i)=><div key={i} className="flex items-center gap-3 px-4 py-3 rounded-xl bg-gray-50 border border-gray-200 hover:border-[#D4AF37]/40 hover:bg-[#D4AF37]/5 transition-all duration-200"><div className="w-2 h-2 rounded-full bg-[#D4AF37] flex-shrink-0"/><span className="text-[#0A1628] text-sm font-medium">{s}</span></div>)}</div>
         </div>
       </section>}
 
       {/* WHY CHOOSE US */}
       {whyChooseUs.length>0 && <section className="px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto pb-16 sm:pb-20">
-        <div className="text-center mb-10"><h2 className="text-3xl sm:text-4xl font-bold text-[#0A1628]" style={{fontFamily:"'Playfair Display',serif"}}>Why Choose <span className="bg-gradient-to-r from-[#D4AF37] to-[#F5A623] bg-clip-text text-transparent">A9 Global?</span></h2></div>
+        <div className="text-center mb-10"><h2 className="text-3xl sm:text-4xl font-bold text-[#0A1628]" style={{fontFamily:"'Playfair Display',serif"}}>{lang === "mm" ? "ဘာကြောင့် A9 Global ကို ရွေးချယ်သင့်သလဲ?" : (<>Why Choose <span className="bg-gradient-to-r from-[#D4AF37] to-[#F5A623] bg-clip-text text-transparent">A9 Global?</span></>)}</h2></div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-3xl mx-auto">{whyChooseUs.map((item,i)=><div key={i} className="flex items-start gap-3 p-4 rounded-xl bg-white border border-gray-200 hover:border-[#D4AF37]/30 hover:shadow-sm transition-all"><svg className="w-5 h-5 text-[#D4AF37] flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><span className="text-gray-700 text-sm">{item}</span></div>)}</div>
       </section>}
 
