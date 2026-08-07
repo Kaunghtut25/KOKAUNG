@@ -222,21 +222,21 @@ export default function VisaDetailPage() {
                   <path strokeLinecap="round" strokeLinejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
                 <p className="text-[#D4AF37] text-2xl font-bold">{currencySymbol} {price.toLocaleString()}</p>
-                <p className="text-gray-400 text-xs uppercase tracking-wider mt-1">{t("visa.fee")}</p>
+                <p className="text-gray-500 text-xs uppercase tracking-wider mt-1">{t("visa.fee")}</p>
               </div>
               <div className="p-5 rounded-2xl bg-gray-50 border border-[#D4AF37]/10 text-center hover:border-[#D4AF37]/30 transition-colors">
                 <svg className="w-8 h-8 mx-auto text-[#D4AF37] mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
                 <p className="text-[#D4AF37] text-2xl font-bold">{processing}</p>
-                <p className="text-gray-400 text-xs uppercase tracking-wider mt-1">{t("visa.processing")}</p>
+                <p className="text-gray-500 text-xs uppercase tracking-wider mt-1">{t("visa.processing")}</p>
               </div>
               <div className="p-5 rounded-2xl bg-gray-50 border border-[#D4AF37]/10 text-center hover:border-[#D4AF37]/30 transition-colors">
                 <svg className="w-8 h-8 mx-auto text-[#D4AF37] mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
                 <p className="text-[#D4AF37] text-2xl font-bold">{country}</p>
-                <p className="text-gray-400 text-xs uppercase tracking-wider mt-1">{t("visa.country")}</p>
+                <p className="text-gray-500 text-xs uppercase tracking-wider mt-1">{t("visa.country")}</p>
               </div>
             </div>
 
@@ -292,8 +292,8 @@ export default function VisaDetailPage() {
                 {/* Price Header */}
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-gray-400 text-xs uppercase tracking-wider mb-1">{t("visa.fee")}</p>
-                    <p className="text-3xl font-bold text-[#D4AF37]" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
+                    <p className="text-gray-500 text-xs uppercase tracking-wider mb-1">{t("visa.fee")}</p>
+                    <p className="text-3xl font-bold text-[#8A6C0B]" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
                       {currencySymbol} {price.toLocaleString()}
                     </p>
                     <p className="text-gray-500 text-xs mt-0.5">{t("visa.perPerson")}</p>
@@ -304,15 +304,15 @@ export default function VisaDetailPage() {
                 {/* Info Rows */}
                 <div className="space-y-2.5 text-sm">
                   <div className="flex justify-between py-1 border-b border-gray-100">
-                    <span className="text-gray-400">{t("visa.country")}</span>
+                    <span className="text-gray-500">{t("visa.country")}</span>
                     <span className="text-[#0A1628] font-medium">{country}</span>
                   </div>
                   <div className="flex justify-between py-1 border-b border-gray-100">
-                    <span className="text-gray-400">{t("visa.processingTime")}</span>
+                    <span className="text-gray-500">{t("visa.processingTime")}</span>
                     <span className="text-[#0A1628] font-medium">{processing}</span>
                   </div>
                   <div className="flex justify-between py-1 border-b border-gray-100">
-                    <span className="text-gray-400">{t("visa.requirements")}</span>
+                    <span className="text-gray-500">{t("visa.requirements")}</span>
                     <span className="text-[#0A1628] font-medium">{t("visa.documents", { n: requirements.length })}</span>
                   </div>
                 </div>
@@ -350,7 +350,7 @@ export default function VisaDetailPage() {
                 {/* Total */}
                 <div className="flex justify-between items-center py-3 border-t border-[#D4AF37]/10">
                   <span className="text-gray-700 font-medium">{t("visa.total")}</span>
-                  <span className="text-2xl font-bold text-[#D4AF37]">
+                  <span className="text-2xl font-bold text-[#8A6C0B]">
                     {currencySymbol} {totalPrice.toLocaleString()}
                   </span>
                 </div>
@@ -362,7 +362,7 @@ export default function VisaDetailPage() {
                 >
                   {t("common.bookNow")}
                 </button>
-                <p className="text-center text-gray-400 text-xs">{t("visa.noPayment")}</p>
+                <p className="text-center text-gray-500 text-xs">{t("visa.noPayment")}</p>
               </div>
 
               <Link

@@ -53,7 +53,7 @@ export default function BusesClient({ initialRoutes, siteConfig }: BusesClientPr
     <div className="min-h-screen bg-gray-50">
       {/* Back Link */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 pt-24 pb-2">
-        <Link href="/#services" className="inline-flex items-center gap-2 text-sm text-[#D4AF37] hover:text-[#C5A028] transition-colors font-medium">
+        <Link href="/#services" className="inline-flex items-center gap-2 text-sm text-[#8A6C0B] hover:text-[#7A5F08] transition-colors font-medium">
           <HiHome className="w-4 h-4" />
           {t("buses.backToServices")}
         </Link>
@@ -106,7 +106,7 @@ export default function BusesClient({ initialRoutes, siteConfig }: BusesClientPr
               <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">{t("home.date")}</label>
               <input
                 type="date"
-                value={date}
+                aria-label={t("home.date")} value={date}
                 onChange={(e) => setDate(e.target.value)}
                 className="w-full px-3 py-2.5 border border-gray-200 rounded-xl text-sm text-gray-900 font-medium focus:outline-none focus:border-[#D4AF37] focus:ring-2 focus:ring-[#D4AF37]/20 transition-all"
               />
@@ -114,7 +114,7 @@ export default function BusesClient({ initialRoutes, siteConfig }: BusesClientPr
             <div>
               <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">{t("buses.passengers")}</label>
               <select
-                value={passengers}
+                aria-label={t("buses.passengers")} value={passengers}
                 onChange={(e) => setPassengers(Number(e.target.value))}
                 className="w-full px-3 py-2.5 border border-gray-200 rounded-xl text-sm text-gray-900 font-medium focus:outline-none focus:border-[#D4AF37] focus:ring-2 focus:ring-[#D4AF37]/20 transition-all"
               >
@@ -124,7 +124,7 @@ export default function BusesClient({ initialRoutes, siteConfig }: BusesClientPr
               </select>
             </div>
           </div>
-          <div className="text-center text-xs text-gray-400 mt-1">
+          <div className="text-center text-xs text-gray-500 mt-1">
             {t("buses.showing", { count: filteredRoutes.length, total: routes.length })}
             {(fromCity || toCity) && t("buses.filtered")}
           </div>
@@ -133,6 +133,7 @@ export default function BusesClient({ initialRoutes, siteConfig }: BusesClientPr
 
       {/* ── Results Grid ── */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 py-10">
+        <h2 className="sr-only">{t("buses.routesHeading")}</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
           {filteredRoutes.map((route) => (
             <div
@@ -166,8 +167,8 @@ export default function BusesClient({ initialRoutes, siteConfig }: BusesClientPr
 
                 {/* Price */}
                 <div className="border-t border-gray-100 pt-3 mb-4">
-                  <p className="text-xs text-gray-400 mb-1">{t("car.startingFrom")}</p>
-                  <p className="text-2xl font-bold text-[#D4AF37]" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
+                  <p className="text-xs text-gray-500 mb-1">{t("car.startingFrom")}</p>
+                  <p className="text-2xl font-bold text-[#8A6C0B]" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
                     Ks {route.priceMMK.toLocaleString()}
                   </p>
                 </div>
@@ -220,7 +221,7 @@ export default function BusesClient({ initialRoutes, siteConfig }: BusesClientPr
       {/* ── Operator Partners ── */}
       <section className="py-16 border-t border-gray-200">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 text-center">
-          <span className="text-[#D4AF37] text-sm font-semibold uppercase tracking-widest">{t("buses.trusted")}</span>
+          <span className="text-[#8A6C0B] text-sm font-semibold uppercase tracking-widest">{t("buses.trusted")}</span>
           <h2 className="font-bold text-3xl mt-2 mb-10" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
             {t("buses.operatorHeading")}
           </h2>
@@ -240,11 +241,11 @@ export default function BusesClient({ initialRoutes, siteConfig }: BusesClientPr
                 }`}
               >
                 <div className="text-xl mb-2">🚌</div>
-                <h4 className={`font-semibold ${operator.tier === "premier" ? "text-[#0A1628]" : "text-gray-700"}`}>
+                <h3 className={`font-semibold ${operator.tier === "premier" ? "text-[#0A1628]" : "text-gray-700"}`}>
                   {operator.name}
-                </h4>
+                </h3>
                 {operator.tier === "premier" && (
-                  <span className="inline-block bg-[#D4AF37] text-white text-[10px] font-bold uppercase px-2 py-0.5 rounded-full mt-1">
+                  <span className="inline-block bg-[#D4AF37] text-[#0A1628] text-[10px] font-bold uppercase px-2 py-0.5 rounded-full mt-1">
                     {t("buses.premier")}
                   </span>
                 )}

@@ -157,7 +157,7 @@ function CruiseDetailClient({ cruise, slug }: CruiseDetailPageProps) {
                   <path strokeLinecap="round" strokeLinejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
                 <p className="text-[#D4AF37] text-2xl font-bold">{currencySymbol} {price.toLocaleString()}</p>
-                <p className="text-gray-400 text-xs uppercase tracking-wider mt-1">{t("cruise.price")}</p>
+                <p className="text-gray-500 text-xs uppercase tracking-wider mt-1">{t("cruise.price")}</p>
               </div>
               {duration && (
                 <div className="p-5 rounded-2xl bg-gray-50 border border-[#D4AF37]/10 text-center hover:border-[#D4AF37]/30 transition-colors">
@@ -165,7 +165,7 @@ function CruiseDetailClient({ cruise, slug }: CruiseDetailPageProps) {
                     <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
                   <p className="text-[#D4AF37] text-2xl font-bold">{duration}</p>
-                  <p className="text-gray-400 text-xs uppercase tracking-wider mt-1">{t("cruise.duration")}</p>
+                  <p className="text-gray-500 text-xs uppercase tracking-wider mt-1">{t("cruise.duration")}</p>
                 </div>
               )}
               <div className="p-5 rounded-2xl bg-gray-50 border border-[#D4AF37]/10 text-center hover:border-[#D4AF37]/30 transition-colors">
@@ -174,7 +174,7 @@ function CruiseDetailClient({ cruise, slug }: CruiseDetailPageProps) {
                   <path strokeLinecap="round" strokeLinejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                 </svg>
                 <p className="text-[#D4AF37] text-2xl font-bold">{dest}</p>
-                <p className="text-gray-400 text-xs uppercase tracking-wider mt-1">{t("cruise.destination")}</p>
+                <p className="text-gray-500 text-xs uppercase tracking-wider mt-1">{t("cruise.destination")}</p>
               </div>
             </div>
 
@@ -256,7 +256,7 @@ function CruiseDetailClient({ cruise, slug }: CruiseDetailPageProps) {
                 {/* Price Header */}
                 <div className="flex items-center justify-between">
                   <div>
-                    <span className="text-3xl font-bold text-[#D4AF37]" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
+                    <span className="text-3xl font-bold text-[#8A6C0B]" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
                       {currencySymbol} {price.toLocaleString()}
                     </span>
                     <span className="text-gray-500 text-sm ml-1">{t("common.perPerson")}</span>
@@ -324,7 +324,7 @@ function CruiseDetailClient({ cruise, slug }: CruiseDetailPageProps) {
                 {/* Total */}
                 <div className="flex justify-between items-center py-3 border-t border-[#D4AF37]/10">
                   <span className="text-gray-700 font-medium">Total ({travelers} {travelers === 1 ? 'traveler' : 'travelers'})</span>
-                  <span className="text-2xl font-bold text-[#D4AF37]" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
+                  <span className="text-2xl font-bold text-[#8A6C0B]" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
                     {currencySymbol} {totalPrice.toLocaleString()}
                   </span>
                 </div>
@@ -336,7 +336,7 @@ function CruiseDetailClient({ cruise, slug }: CruiseDetailPageProps) {
                 >
                   {t("common.bookNow")}
                 </button>
-                <p className="text-center text-gray-400 text-xs">{t("cruise.noPayment")}</p>
+                <p className="text-center text-gray-500 text-xs">{t("cruise.noPayment")}</p>
               </div>
 
               {/* Back Link */}

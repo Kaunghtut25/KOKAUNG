@@ -331,7 +331,7 @@ export default function HotelDetailPage() {
               {/* Price + Currency Toggle */}
               <div className="flex items-center justify-between">
                 <div>
-                  <span className="text-3xl font-bold text-[#D4AF37]">
+                  <span className="text-3xl font-bold text-[#8A6C0B]">
                     {currencySymbol} {price.toLocaleString()}
                   </span>
                   <span className="text-gray-500 text-sm ml-1">{t("common.perNight")}</span>
@@ -393,7 +393,7 @@ export default function HotelDetailPage() {
               {/* Total */}
               <div className="flex justify-between items-center py-3 border-t border-[#D4AF37]/10">
                 <span className="text-gray-700 font-medium">Total ({rooms} room{rooms > 1 ? 's' : ''})</span>
-                <span className="text-2xl font-bold text-[#D4AF37]">
+                <span className="text-2xl font-bold text-[#8A6C0B]">
                   {currencySymbol} {totalPrice.toLocaleString()}
                 </span>
               </div>
@@ -412,7 +412,7 @@ export default function HotelDetailPage() {
 
             <Link
               href="/hotels"
-              className="block w-full py-3 rounded-xl text-center font-semibold text-sm border-2 border-[#D4AF37] text-[#D4AF37] hover:bg-[#D4AF37] hover:text-[#0A1628] transition-all duration-300 mt-4"
+              className="block w-full py-3 rounded-xl text-center font-semibold text-sm border-2 border-[#D4AF37] text-[#8A6C0B] hover:bg-[#D4AF37] hover:text-[#0A1628] transition-all duration-300 mt-4"
             >
               ← Back to All Hotels
             </Link>

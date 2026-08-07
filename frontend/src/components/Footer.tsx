@@ -85,9 +85,9 @@ export default function Footer() {
           {/* Column 1: Brand & About */}
           <div className="space-y-4">
             <Link href="/" className="inline-block">
-              <h3 className="font-display text-2xl font-bold text-[#D4AF37] tracking-wider">
+              <h2 className="font-display text-2xl font-bold text-[#D4AF37] tracking-wider">
                 A9 GLOBAL
-              </h3>
+              </h2>
               <p className="text-xs text-[#D4AF37]/70 tracking-[0.3em] mt-0.5">
                 TRAVELS & TOURS
               </p>

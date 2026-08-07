@@ -124,7 +124,7 @@ export default function Calendar({
         onClick={() => setIsOpen(!isOpen)}
         className="w-full px-3.5 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-left text-sm flex items-center justify-between hover:border-[#D4AF37]/50 transition-colors focus:outline-none focus:border-[#D4AF37]"
       >
-        <span className={value ? "text-gray-900" : "text-gray-400"}>
+        <span className={value ? "text-gray-900" : "text-gray-500"}>
           {value ? formatDisplay(value) : placeholderText}
         </span>
         <svg className="w-4 h-4 text-gray-400 flex-shrink-0 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -158,7 +158,7 @@ export default function Calendar({
 
             <div className="grid grid-cols-7 text-center py-2 px-3">
               {DAY_NAMES.map((d) => (
-                <span key={d} className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider">{d}</span>
+                <span key={d} className="text-[10px] font-semibold text-gray-500 uppercase tracking-wider">{d}</span>
               ))}
             </div>
 

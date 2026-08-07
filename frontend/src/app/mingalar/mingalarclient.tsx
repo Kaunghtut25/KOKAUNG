@@ -59,13 +59,13 @@ export default function MingalarClient({ initialCards, siteConfig }: MingalarCli
           <div className="flex gap-2">
             <Link
               href={'/mingalar/' + slug}
-              className="flex-1 px-3 py-2 border border-[#D4AF37] text-[#D4AF37] text-sm font-semibold rounded-full text-center hover:bg-[#D4AF37] hover:text-white transition-colors"
+              className="flex-1 px-3 py-2 border border-[#D4AF37] text-[#8A6C0B] text-sm font-semibold rounded-full text-center hover:bg-[#D4AF37] hover:text-[#0A1628] transition-colors"
             >
               {t("common.viewDetails")}
             </Link>
             <Link
               href={'/book-now?type=lounge&name=' + encodeURIComponent(item.title) + '&id=' + slug}
-              className="flex-1 px-3 py-2 bg-[#D4AF37] text-white text-sm font-semibold rounded-full text-center hover:bg-[#C19B2F] transition-colors"
+              className="flex-1 px-3 py-2 bg-[#D4AF37] text-[#0A1628] text-sm font-semibold rounded-full text-center hover:bg-[#C19B2F] transition-colors"
             >
               {t("common.bookNow")}
             </Link>
@@ -96,6 +96,7 @@ export default function MingalarClient({ initialCards, siteConfig }: MingalarCli
       {/* ── Lounge Services ── */}
       <section className="max-w-6xl mx-auto px-4 py-12">
         {/* Row 1 */}
+        <h2 className="sr-only">{t("mingalar.gridTitle")}</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
           {displayCards.slice(0, 3).map((item, i) => renderCard(item, i))}
         </div>

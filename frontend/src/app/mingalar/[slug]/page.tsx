@@ -150,7 +150,7 @@ export default function MingalarDetailPage({ params }: { params: { slug: string 
             <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
               <div className="p-5 rounded-2xl bg-gray-50 border border-[#D4AF37]/10 text-center hover:border-[#D4AF37]/30 transition-colors">
                 <span className="text-3xl">{item.icon}</span>
-                <p className="text-gray-400 text-xs uppercase tracking-wider mt-1">{t("mingalar.experience")}</p>
+                <p className="text-gray-500 text-xs uppercase tracking-wider mt-1">{t("mingalar.experience")}</p>
               </div>
               <div className="p-5 rounded-2xl bg-gray-50 border border-[#D4AF37]/10 text-center hover:border-[#D4AF37]/30 transition-colors">
                 <svg className="w-8 h-8 mx-auto text-[#D4AF37] mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
@@ -158,14 +158,14 @@ export default function MingalarDetailPage({ params }: { params: { slug: string 
                   <path strokeLinecap="round" strokeLinejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                 </svg>
                 <p className="text-[#D4AF37] text-2xl font-bold">{t("mingalar.mingalar")}</p>
-                <p className="text-gray-400 text-xs uppercase tracking-wider mt-1">{t("mingalar.location")}</p>
+                <p className="text-gray-500 text-xs uppercase tracking-wider mt-1">{t("mingalar.location")}</p>
               </div>
               <div className="p-5 rounded-2xl bg-gray-50 border border-[#D4AF37]/10 text-center hover:border-[#D4AF37]/30 transition-colors">
                 <svg className="w-8 h-8 mx-auto text-[#D4AF37] mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
                 </svg>
                 <p className="text-[#D4AF37] text-2xl font-bold">{t("mingalar.skyLounge")}</p>
-                <p className="text-gray-400 text-xs uppercase tracking-wider mt-1">{t("mingalar.category")}</p>
+                <p className="text-gray-500 text-xs uppercase tracking-wider mt-1">{t("mingalar.category")}</p>
               </div>
             </div>
 
@@ -228,7 +228,7 @@ export default function MingalarDetailPage({ params }: { params: { slug: string 
                 {/* Header */}
                 <div className="flex items-center justify-between">
                   <div>
-                    <span className="text-xl font-bold text-[#D4AF37]" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
+                    <span className="text-xl font-bold text-[#8A6C0B]" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
                       {t("mingalar.mingalar")} {t("mingalar.skyLounge")}
                     </span>
                     <span className="text-gray-500 text-sm ml-1">{t("common.perPerson")}</span>
@@ -287,7 +287,7 @@ export default function MingalarDetailPage({ params }: { params: { slug: string 
                 >
                   {t("common.bookNow")}
                 </button>
-                <p className="text-center text-gray-400 text-xs">{t("mingalar.noPayment")}</p>
+                <p className="text-center text-gray-500 text-xs">{t("mingalar.noPayment")}</p>
               </div>
 
               {/* Back Link */}

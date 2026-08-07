@@ -1139,6 +1139,10 @@ const en: Record<string, string> = {
 
   // Buses page
   "buses.backToServices": "Back to All Services",
+  "buses.routesHeading": "Popular Routes",
+  "cruises.gridTitle": "Explore Cruise Experiences",
+  "dests.gridTitle": "Browse All Destinations",
+  "mingalar.gridTitle": "Lounge Experiences",
   "buses.heroAlt": "Express Bus Services",
   "buses.heroTitle": "Express Bus Tickets",
   "buses.heroSubtitle": "Book premium express bus tickets across Myanmar at the best prices",
@@ -2425,6 +2429,10 @@ const mm: Record<string, string> = {
 
   // Buses page
   "buses.backToServices": "ဝန်ဆောင်မှုများသို့ ပြန်သွားရန်",
+  "buses.routesHeading": "လူကြိုက်များသော လမ်းကြောင်းများ",
+  "cruises.gridTitle": "ခရီးစဉ်အားလုံးကို ရှာဖွေရန်",
+  "dests.gridTitle": "နေရာအားလုံးကို ကြည့်ရှုရန်",
+  "mingalar.gridTitle": "လောင်ဂျ် အတွေ့အကြုံများ",
   "buses.heroAlt": "အမြန်ဘတ်စ်ကား ဝန်ဆောင်မှုများ",
   "buses.heroTitle": "အမြန်ဘတ်စ်ကား လက်မှတ်များ",
   "buses.heroSubtitle": "မြန်မာတစ်ပြည်လုံးအတွက် အမြန်ဘတ်စ်ကားလက်မှတ်များကို အကောင်းဆုံးစျေးနှုန်းဖြင့် ကြိုတင်မှာယူနိုင်ပါသည်",

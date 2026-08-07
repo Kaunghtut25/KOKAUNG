@@ -161,17 +161,18 @@ export default function CruisesClient({ initialCruises, siteConfig }: { initialC
         <div className="flex rounded-lg overflow-hidden border border-gray-200">
           <button
             onClick={() => setCurrency('MMK')}
-            className={`px-4 py-2 text-sm font-medium transition-colors ${currency === 'MMK' ? 'bg-[#D4AF37] text-white' : 'bg-white text-gray-600'}`}
+            className={`px-4 py-2 text-sm font-medium transition-colors ${currency === 'MMK' ? 'bg-[#D4AF37] text-[#0A1628]' : 'bg-white text-gray-600'}`}
           >{t("list.ksMMK")}</button>
           <button
             onClick={() => setCurrency('USD')}
-            className={`px-4 py-2 text-sm font-medium transition-colors ${currency === 'USD' ? 'bg-[#D4AF37] text-white' : 'bg-white text-gray-600'}`}
+            className={`px-4 py-2 text-sm font-medium transition-colors ${currency === 'USD' ? 'bg-[#D4AF37] text-[#0A1628]' : 'bg-white text-gray-600'}`}
           >$ (USD)</button>
         </div>
       </div>
 
       {/* Cruise Cards */}
       <section className="max-w-6xl mx-auto px-4 py-12">
+        <h2 className="sr-only">{t("cruises.gridTitle")}</h2>
         <div className={`grid grid-cols-${layout.mobile} md:grid-cols-${layout.tablet} lg:grid-cols-${layout.desktop} gap-6`}>
           {cruises.map((cruise) => {
             const displayPrice = currency === 'USD'
@@ -186,7 +187,7 @@ export default function CruisesClient({ initialCruises, siteConfig }: { initialC
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                     onError={(e) => { (e.target as HTMLImageElement).src = '/images_v2/hero-cruises-v2.jpg'; }}
                   />
-                  <div className="absolute top-3 right-3 bg-[#D4AF37] text-white text-xs font-bold px-3 py-1 rounded-full">
+                  <div className="absolute top-3 right-3 bg-[#D4AF37] text-[#0A1628] text-xs font-bold px-3 py-1 rounded-full">
                     {cruise.duration}
                   </div>
                 </div>
@@ -201,7 +202,7 @@ export default function CruisesClient({ initialCruises, siteConfig }: { initialC
                   </div>
                   <div className="flex items-center justify-between mb-3">
                     <div>
-                      <span className="text-[#D4AF37] font-bold text-xl">{displayPrice}</span>
+                      <span className="text-[#8A6C0B] font-bold text-xl">{displayPrice}</span>
                       <span className="text-gray-400 text-xs ml-1">/ person</span>
                     </div>
                   </div>
@@ -209,13 +210,13 @@ export default function CruisesClient({ initialCruises, siteConfig }: { initialC
                   <div className="flex gap-2">
                     <Link
                       href={'/cruises/' + (cruise.id || cruise._id || cruise.slug)}
-                      className="flex-1 px-3 py-2 border border-[#D4AF37] text-[#D4AF37] text-sm font-semibold rounded-full text-center hover:bg-[#D4AF37] hover:text-white transition-colors"
+                      className="flex-1 px-3 py-2 border border-[#D4AF37] text-[#8A6C0B] text-sm font-semibold rounded-full text-center hover:bg-[#D4AF37] hover:text-[#0A1628] transition-colors"
                     >
                       {t("common.viewDetails")}
                     </Link>
                     <button
                       onClick={() => router.push('/book-now?type=cruise&name=' + encodeURIComponent(cruise.title||cruise.name||'') + '&destination=' + encodeURIComponent(cruise.destination) + '&id=' + (cruise.id || cruise._id || ''))}
-                      className="flex-1 px-3 py-2 bg-[#D4AF37] text-white text-sm font-semibold rounded-full hover:bg-[#C19B2F] transition-colors"
+                      className="flex-1 px-3 py-2 bg-[#D4AF37] text-[#0A1628] text-sm font-semibold rounded-full hover:bg-[#C19B2F] transition-colors"
                     >
                       {t("common.bookNow")}
                     </button>

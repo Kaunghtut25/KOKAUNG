@@ -117,7 +117,7 @@ export default function RelatedItems({ section, excludeSlug, destination, countr
             {mergedSame.map((item, i) => (
               <a key={i} href={`/${section}/${item.slug || slugify(item.name || item.title || item.planName) || item._id || item.id}`} className="flex-shrink-0 snap-start" style={{ width: RELATED_CARD_WIDTH, textDecoration: 'none' }}>
                 <div style={{ borderRadius: 12, overflow: 'hidden', border: '1px solid #eee' }}>
-                  <img src={item.image || item.displayImage || (Array.isArray(item.images) ? item.images[0] : (typeof item.images === "string" ? item.images : "")) || `/images_v2/hero-${section}-v2.jpg`} alt={item.name || item.title} style={{ width: '100%', height: 120, objectFit: 'cover' }} />
+                  <img src={item.image || item.displayImage || (Array.isArray(item.images) ? item.images[0] : (typeof item.images === "string" ? item.images : "")) || `/images_v2/hero-${section}-v2.jpg`} alt={item.name || item.title || item.planName || ''} style={{ width: '100%', height: 120, objectFit: 'cover' }} />
                   <div style={{ padding: 10 }}>
                     <div style={{ fontSize: 13, fontWeight: 600, color: '#0A1628', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{item.name || item.title || item.planName || item.carType || item.country}</div>
                     <div style={{ fontSize: 12, color: '#8A6C0B', fontWeight: 600, marginTop: 4 }}>{item.priceMMK ? 'Ks ' + item.priceMMK.toLocaleString() : item.priceUSD ? '$' + item.priceUSD : item.pricePerNightMMK ? 'Ks ' + item.pricePerNightMMK.toLocaleString() + '/night' : item.pricePerNightUSD ? '$' + item.pricePerNightUSD + '/night' : item.visaFeeMMK ? 'Ks ' + item.visaFeeMMK.toLocaleString() : ''}</div>

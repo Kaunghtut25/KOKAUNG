@@ -57,6 +57,7 @@ export default function SocialShare({ url, title }: { url: string; title: string
           href={l.href}
           target="_blank"
           rel="noopener noreferrer"
+          aria-label={`Share on ${l.label}`}
           style={{
             display: 'flex',
             alignItems: 'center',

@@ -123,8 +123,8 @@ function VisaGridCard({ visa }: { visa: VisaService }) {
         </div>
         {(visa.visaFeeMMK > 0 || visa.visaFeeUSD > 0) && (
           <div className="pt-2 flex gap-3 text-xs">
-            {visa.visaFeeMMK > 0 && <span className="text-gold font-bold">Ks {visa.visaFeeMMK.toLocaleString()}</span>}
-            {visa.visaFeeUSD > 0 && <span className="text-gold font-bold">${visa.visaFeeUSD}</span>}
+            {visa.visaFeeMMK > 0 && <span className="text-[#8A6C0B] font-bold">Ks {visa.visaFeeMMK.toLocaleString()}</span>}
+            {visa.visaFeeUSD > 0 && <span className="text-[#8A6C0B] font-bold">${visa.visaFeeUSD}</span>}
           </div>
         )}
         <div className="mt-auto pt-3 flex flex-col gap-2">
@@ -204,8 +204,8 @@ export default function VisasClient({ initialVisas, siteConfig }: VisasClientPro
         </div>
       </section>
       <div className="flex justify-center gap-2 pt-8 pb-2">
-        <button onClick={() => setCurrency('MMK')} className={`px-3 py-1 rounded-full text-[11px] font-semibold transition-all ${currency==='MMK'?'bg-gold text-white':'bg-white/20 text-gray-600 border border-gray-200'}`}>🇲🇲 MMK</button>
-        <button onClick={() => setCurrency('USD')} className={`px-3 py-1 rounded-full text-[11px] font-semibold transition-all ${currency==='USD'?'bg-gold text-white':'bg-white/20 text-gray-600 border border-gray-200'}`}>💵 USD</button>
+        <button onClick={() => setCurrency('MMK')} className={`px-3 py-1 rounded-full text-[11px] font-semibold transition-all ${currency==='MMK'?'bg-gold text-[#0A1628]':'bg-white/20 text-gray-600 border border-gray-200'}`}>🇲🇲 MMK</button>
+        <button onClick={() => setCurrency('USD')} className={`px-3 py-1 rounded-full text-[11px] font-semibold transition-all ${currency==='USD'?'bg-gold text-[#0A1628]':'bg-white/20 text-gray-600 border border-gray-200'}`}>💵 USD</button>
       </div>
 <section className="max-w-7xl mx-auto px-4 sm:px-6 pt-4 pb-20">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">

@@ -305,7 +305,7 @@ export default function DestinationPage() {
             </div>
             <div>
               <p className="text-[#0A1628] font-bold text-lg">{rating}</p>
-              <p className="text-gray-400 text-xs">({reviews.toLocaleString()} {lang === "mm" ? "သုံးသပ်ချက်" : "reviews"})</p>
+              <p className="text-gray-500 text-xs">({reviews.toLocaleString()} {lang === "mm" ? "သုံးသပ်ချက်" : "reviews"})</p>
             </div>
           </div>
 
@@ -318,7 +318,7 @@ export default function DestinationPage() {
             </svg>
             <div>
               <p className="text-[#0A1628] font-bold text-lg">{duration}</p>
-              <p className="text-gray-400 text-xs">{t("dest.duration")}</p>
+              <p className="text-gray-500 text-xs">{t("dest.duration")}</p>
             </div>
           </div>
 
@@ -330,8 +330,8 @@ export default function DestinationPage() {
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
             <div>
-              <p className="text-[#D4AF37] font-bold text-lg">{dest.minPrice}</p>
-              <p className="text-gray-400 text-xs">{t("dest.perPerson")}</p>
+              <p className="text-[#8A6C0B] font-bold text-lg">{dest.minPrice}</p>
+              <p className="text-gray-500 text-xs">{t("dest.perPerson")}</p>
             </div>
           </div>
 
@@ -429,10 +429,10 @@ export default function DestinationPage() {
                   <p className="text-gray-500 text-xs uppercase tracking-wider mb-1">{t("dest.startingFrom")}</p>
                   <div className="flex items-center justify-between">
                     <div>
-                      <span className="text-3xl font-bold text-[#D4AF37]" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
+                      <span className="text-3xl font-bold text-[#8A6C0B]" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
                         {currencySymbol} {price.toLocaleString()}
                       </span>
-                      <span className="text-gray-400 text-sm ml-1">{t("dest.perPersonShort")}</span>
+                      <span className="text-gray-500 text-sm ml-1">{t("dest.perPersonShort")}</span>
                     </div>
                     <CurrencyToggle activeCurrency={currency} onToggle={setCurrency} />
                   </div>
@@ -497,7 +497,7 @@ export default function DestinationPage() {
                 {/* Total */}
                 <div className="flex justify-between items-center py-3 border-t border-gray-100">
                   <span className="text-gray-700 font-medium">{t("dest.total")}</span>
-                  <span className="text-2xl font-bold text-[#D4AF37]" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
+                  <span className="text-2xl font-bold text-[#8A6C0B]" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
                     {currencySymbol} {totalPrice.toLocaleString()}
                   </span>
                 </div>
@@ -510,7 +510,7 @@ export default function DestinationPage() {
                   {t("common.bookNow")}
                 </button>
 
-                <p className="text-center text-gray-400 text-xs">{t("dest.noPayment")}</p>
+                <p className="text-center text-gray-500 text-xs">{t("dest.noPayment")}</p>
               </div>
 
               {/* Back link */}

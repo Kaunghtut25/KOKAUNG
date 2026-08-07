@@ -730,7 +730,7 @@ export default function TourDetailPage() {
             {activeTab === 'overview' && (
               <div className="space-y-8">
                 <div>
-                  <h3 className="text-xl text-[#0A1628] font-semibold mb-4">{t("tour.about")}</h3>
+                  <h2 className="text-xl text-[#0A1628] font-semibold mb-4">{t("tour.about")}</h2>
                   <p className="text-gray-700 leading-relaxed">{tour.description}</p>
                 </div>
 
@@ -755,7 +755,7 @@ export default function TourDetailPage() {
 
                 {tour.amenities && tour.amenities.length > 0 && (
                   <div>
-                    <h3 className="text-xl text-[#0A1628] font-semibold mb-4">{t("tour.amenities")}</h3>
+                    <h2 className="text-xl text-[#0A1628] font-semibold mb-4">{t("tour.amenities")}</h2>
                     <div className="flex flex-wrap gap-2">
                       {tour.amenities.map((amenity, idx) => (
                         <span
@@ -772,12 +772,12 @@ export default function TourDetailPage() {
                 {/* Tour Itinerary */}
                 {generatedItinerary.length > 0 && (
                   <div>
-                    <h3
+                    <h2
                       className="text-xl text-[#0A1628] font-semibold mb-6"
                       style={{ fontFamily: "'Playfair Display', Georgia, serif" }}
                     >
                       Tour Itinerary
-                    </h3>
+                    </h2>
                     <div className="space-y-4">
                       {generatedItinerary.map((day) => (
                         <div
@@ -795,10 +795,10 @@ export default function TourDetailPage() {
 
                             {/* Day content */}
                             <div className="flex-1 min-w-0">
-                              <h4 className="text-white font-semibold text-base mb-1.5">
+                              <h3 className="text-white font-semibold text-base mb-1.5">
                                 {day.title}
-                              </h4>
-                              <p className="text-gray-400 text-sm leading-relaxed">
+                              </h3>
+                              <p className="text-gray-500 text-sm leading-relaxed">
                                 {day.description}
                               </p>
                               {day.meals.length > 0 && (
@@ -840,7 +840,7 @@ export default function TourDetailPage() {
 
                     {/* Content */}
                     <div className="flex-1 pt-1">
-                      <h4 className="text-[#0A1628] font-semibold text-lg mb-1">{day.title}</h4>
+                      <h3 className="text-[#0A1628] font-semibold text-lg mb-1">{day.title}</h3>
                       <p className="text-gray-600 text-sm leading-relaxed">{day.description}</p>
                       {day.meals && day.meals.length > 0 && (
                         <div className="flex gap-2 mt-2">
@@ -929,7 +929,7 @@ export default function TourDetailPage() {
               {/* Price */}
               <div className="flex items-center justify-between">
                 <div>
-                  <span className="text-3xl font-bold text-[#D4AF37]">
+                  <span className="text-3xl font-bold text-[#8A6C0B]">
                     {currencySymbol} {price.toLocaleString()}
                   </span>
                   <span className="text-gray-500 text-sm ml-1">{t("common.perPerson")}</span>
@@ -1001,7 +1001,7 @@ export default function TourDetailPage() {
               {/* Total */}
               <div className="flex justify-between items-center py-3 border-t border-gold/10">
                 <span className="text-gray-700 font-medium">{t("tour.total")}</span>
-                <span className="text-2xl font-bold text-[#D4AF37]">
+                <span className="text-2xl font-bold text-[#8A6C0B]">
                   {currencySymbol} {totalPrice.toLocaleString()}
                 </span>
               </div>
@@ -1100,7 +1100,7 @@ export default function TourDetailPage() {
 
                   <div className="p-3 rounded-xl bg-[#D4AF37]/10 border border-[#D4AF37]/20 flex justify-between items-center">
                     <span className="text-gray-700">Total ({bookingForm.travelers} travelers)</span>
-                    <span className="text-xl font-bold text-[#D4AF37]">
+                    <span className="text-xl font-bold text-[#8A6C0B]">
                       {currencySymbol} {totalPrice.toLocaleString()}
                     </span>
                   </div>

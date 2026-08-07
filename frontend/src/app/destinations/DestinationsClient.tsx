@@ -75,6 +75,7 @@ export default function DestinationsClient({ initialDestinations, siteConfig }: 
 
       {/* Destinations Grid */}
       <section className="max-w-7xl mx-auto px-4 py-12">
+        <h2 className="sr-only">{t("dests.gridTitle")}</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {initialDestinations.map((dest, i) => {
             const slug = toSlug(dest.city);
@@ -117,18 +118,18 @@ export default function DestinationsClient({ initialDestinations, siteConfig }: 
                     <p className="text-gray-500 text-sm mb-3 line-clamp-2">{shortDesc}</p>
                   )}
                   {dest.minPrice && (
-                    <p className="text-[#D4AF37] text-sm font-semibold mb-4">{dest.minPrice}</p>
+                    <p className="text-[#8A6C0B] text-sm font-semibold mb-4">{dest.minPrice}</p>
                   )}
                   <div className="flex gap-2">
                     <Link
                       href={"/destinations/" + slug}
-                      className="flex-1 px-3 py-2 border border-[#D4AF37] text-[#D4AF37] text-sm font-semibold rounded-full text-center hover:bg-[#D4AF37] hover:text-white transition-colors"
+                      className="flex-1 px-3 py-2 border border-[#D4AF37] text-[#8A6C0B] text-sm font-semibold rounded-full text-center hover:bg-[#D4AF37] hover:text-[#0A1628] transition-colors"
                     >
                       {t("common.viewDetails")}
                     </Link>
                     <Link
                       href={"/book-now?type=tour&destination=" + encodeURIComponent(dest.city)}
-                      className="flex-1 px-3 py-2 bg-[#D4AF37] text-white text-sm font-semibold rounded-full text-center hover:bg-[#C19B2F] transition-colors"
+                      className="flex-1 px-3 py-2 bg-[#D4AF37] text-[#0A1628] text-sm font-semibold rounded-full text-center hover:bg-[#C19B2F] transition-colors"
                     >
                       Book Trip
                     </Link>
@@ -161,12 +162,12 @@ export default function DestinationsClient({ initialDestinations, siteConfig }: 
               <p className="text-gray-700 leading-relaxed">{selectedDest.description || "A fascinating destination waiting to be explored. Rich in culture, history, and unforgettable experiences."}</p>
               {selectedDest.bestTime && (
                 <div className="flex items-center gap-2 text-sm text-gray-600">
-                  <span className="text-[#D4AF37]">☀️</span> Best time: <span className="font-medium">{selectedDest.bestTime}</span>
+                  <span className="text-[#8A6C0B]">☀️</span> Best time: <span className="font-medium">{selectedDest.bestTime}</span>
                 </div>
               )}
               {selectedDest.minPrice && (
                 <div className="flex items-center gap-2 text-sm text-gray-600">
-                  <span className="text-[#D4AF37]">💰</span> Starting from: <span className="font-medium text-[#D4AF37]">{selectedDest.minPrice}</span>
+                  <span className="text-[#8A6C0B]">💰</span> Starting from: <span className="font-medium text-[#8A6C0B]">{selectedDest.minPrice}</span>
                 </div>
               )}
               {selectedDest.highlights && selectedDest.highlights.length > 0 && (
@@ -180,8 +181,8 @@ export default function DestinationsClient({ initialDestinations, siteConfig }: 
                 </div>
               )}
               <div className="flex gap-3 pt-2">
-                <Link href={"/destinations/" + toSlug(selectedDest.city)} className="flex-1 px-4 py-2.5 border border-[#D4AF37] text-[#D4AF37] text-sm font-semibold rounded-full text-center hover:bg-[#D4AF37] hover:text-white transition-colors">{t("list.fullDetails")}</Link>
-                <Link href={"/book-now?type=tour&destination=" + encodeURIComponent(selectedDest.city)} className="flex-1 px-4 py-2.5 bg-[#D4AF37] text-white text-sm font-semibold rounded-full text-center hover:bg-[#C19B2F] transition-colors">{t("list.bookTrip")}</Link>
+                <Link href={"/destinations/" + toSlug(selectedDest.city)} className="flex-1 px-4 py-2.5 border border-[#D4AF37] text-[#8A6C0B] text-sm font-semibold rounded-full text-center hover:bg-[#D4AF37] hover:text-white transition-colors">{t("list.fullDetails")}</Link>
+                <Link href={"/book-now?type=tour&destination=" + encodeURIComponent(selectedDest.city)} className="flex-1 px-4 py-2.5 bg-[#D4AF37] text-[#0A1628] text-sm font-semibold rounded-full text-center hover:bg-[#C19B2F] transition-colors">{t("list.bookTrip")}</Link>
               </div>
             </div>
           </div>

@@ -114,7 +114,7 @@ function InsuranceCard({ plan, currency, onSelect, cardWidth, cardHeight }: { pl
           ))}
         </div>
         <div className="mt-auto pt-1">
-          <span className="text-gold font-bold text-sm">{symbol} {price.toLocaleString()}</span>
+          <span className="text-[#8A6C0B] font-bold text-sm">{symbol} {price.toLocaleString()}</span>
         </div>
         <button onClick={() => router.push('/book-now?type=insurance&plan=' + encodeURIComponent(plan.planName||name||'') + '&id=' + encodeURIComponent(plan._id||plan.id||'') + '&priceMMK=' + ((plan.priceMMK||plan.premiumPriceMMK||0)) + '&priceUSD=' + ((plan.priceUSD||plan.premiumPriceUSD||0)) + '&coverage=' + encodeURIComponent(plan.coverage||''))} className="w-full mt-1 py-2 bg-gradient-to-r from-[#D4AF37] to-[#F5A623] text-[#0A1628] font-bold rounded-xl text-xs hover:shadow-lg hover:shadow-[#D4AF37]/30 transition-all">{t("common.bookNow")}</button>
         <button
@@ -184,8 +184,8 @@ export default function InsuranceClient({ initialPlans, siteConfig }: InsuranceC
         </div>
       </section>
       <div className="flex justify-center gap-2 pt-8 pb-2">
-        <button onClick={() => setCurrency('MMK')} className={`px-3 py-1 rounded-full text-[11px] font-semibold transition-all ${currency==='MMK'?'bg-gold text-white':'bg-white/20 text-gray-600 border border-gray-200'}`}>🇲🇲 MMK</button>
-        <button onClick={() => setCurrency('USD')} className={`px-3 py-1 rounded-full text-[11px] font-semibold transition-all ${currency==='USD'?'bg-gold text-white':'bg-white/20 text-gray-600 border border-gray-200'}`}>💵 USD</button>
+        <button onClick={() => setCurrency('MMK')} className={`px-3 py-1 rounded-full text-[11px] font-semibold transition-all ${currency==='MMK'?'bg-gold text-[#0A1628]':'bg-white/20 text-gray-600 border border-gray-200'}`}>🇲🇲 MMK</button>
+        <button onClick={() => setCurrency('USD')} className={`px-3 py-1 rounded-full text-[11px] font-semibold transition-all ${currency==='USD'?'bg-gold text-[#0A1628]':'bg-white/20 text-gray-600 border border-gray-200'}`}>💵 USD</button>
       </div>
 <section className="max-w-7xl mx-auto px-4 sm:px-6 pt-4 pb-12">
         {loading ? (

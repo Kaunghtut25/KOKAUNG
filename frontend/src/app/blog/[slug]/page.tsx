@@ -186,7 +186,7 @@ export default function BlogDetailPage() {
 
         {/* CTA */}
         <div className="mt-12 p-8 bg-gradient-to-r from-[#D4AF37]/10 to-[#D4AF37]/5 rounded-2xl border border-[#D4AF37]/20 text-center">
-          <h3 className="text-xl font-bold text-[#0A1628] mb-2">{t("blog.inspired")}</h3>
+          <h2 className="text-xl font-bold text-[#0A1628] mb-2">{t("blog.inspired")}</h2>
           <p className="text-gray-600 mb-6">{t("blog.ctaDesc")}</p>
           <div className="flex gap-4 justify-center flex-wrap">
             <Link href={"/book-now?type=blog&title=" + encodeURIComponent(post.title) + "&destination=" + encodeURIComponent(post.tags?.join(", ") || "") + "&requests=" + encodeURIComponent("Blog: " + post.title)} className="px-6 py-3 bg-[#D4AF37] text-white font-semibold rounded-full hover:bg-[#C19B2F] transition-colors">{t("blog.bookNow")}</Link>
