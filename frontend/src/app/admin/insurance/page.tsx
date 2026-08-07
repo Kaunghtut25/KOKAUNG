@@ -455,25 +455,25 @@ export default function AdminInsurancePage() {
                     </td>
                     <td className="p-4">
                       <span style={getStatusBadge(insurance.status)} className="px-2 py-0.5 rounded-full text-xs font-medium border">
-                        {(insurance.status || "active").charAt(0).toUpperCase() + (insurance.status || "active").slice(1)}
+                        {insurance.status === "inactive" ? t("admin.form.inactive") : t("admin.form.active")}
                       </span>
                     </td>
                     <td className="p-4">
                       <div className="flex items-center gap-2">
                         <Link href={`/insurance/${insurance.id}`} target="_blank" rel="noopener noreferrer" className="px-3 py-1 rounded bg-blue-500/10 text-blue-400 text-xs hover:bg-blue-500/20 transition-colors">
-                          View
+                          {t("admin.common.view")}
                         </Link>
                         <button
                           onClick={() => openEditModal(insurance)}
                           className="px-3 py-1 rounded bg-gold/10 text-gold text-xs hover:bg-gold/20 transition-colors"
                         >
-                          Edit
+                          {t("admin.common.edit")}
                         </button>
                         <button
                           onClick={() => setDeleteConfirm(insurance.id)}
                           className="px-3 py-1 rounded bg-red-500/10 text-red-400 text-xs hover:bg-red-500/20 transition-colors"
                         >
-                          Delete
+                          {t("admin.common.delete")}
                         </button>
                       </div>
                     </td>
