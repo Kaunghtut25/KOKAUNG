@@ -6,6 +6,7 @@ import { decodeTokenPayload } from "@/lib/auth";
 import AdminSidebar from "@/components/AdminSidebar";
 import { LanguageProvider } from "@/lib/i18n";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
+import NarrowView from "@/components/NarrowView";
 import { useI18n } from "@/lib/i18n";
 
 function AdminErrorFallback() {
@@ -104,6 +105,7 @@ export default function AdminLayout({
   return (
     <LanguageProvider>
       <div className="min-h-screen bg-deepblue">
+        <NarrowView />
         <AdminSidebar />
         <main className="md:ml-64 transition-all duration-300 min-h-screen p-6 md:p-8">
           <div className="flex justify-end mb-4">

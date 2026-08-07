@@ -232,3 +232,46 @@ input:-webkit-autofill:active {
 .animate-delay-300 { animation-delay: 300ms; }
 .animate-delay-400 { animation-delay: 400ms; }
 .animate-delay-500 { animation-delay: 500ms; }
+
+/* ── Admin pinch-zoom resilience (visual viewport) ────────────────────
+   Browser pinch/touchpad zoom scales WITHOUT shrinking the layout
+   viewport, so Tailwind breakpoints never fire and desktop-width admin
+   content gets clipped with no scrollbar. NarrowView.tsx sets
+   <html data-narrow="1"> + --vvw when the visible width can't fit the
+   layout content; these rules then reflow the admin UI to the visible
+   width so everything stays reachable and readable. */
+html[data-narrow="1"] main.md\:ml-64 {
+  width: min(100%, calc(var(--vvw, 100vw) * 1px - 288px));
+  overflow-x: auto;
+}
+html[data-narrow="1"] .grid-cols-2,
+html[data-narrow="1"] .sm\:grid-cols-2,
+html[data-narrow="1"] .md\:grid-cols-2,
+html[data-narrow="1"] .lg\:grid-cols-2 {
+  grid-template-columns: repeat(1, minmax(0, 1fr)) !important;
+}
+html[data-narrow="1"] .grid-cols-3,
+html[data-narrow="1"] .sm\:grid-cols-3,
+html[data-narrow="1"] .md\:grid-cols-3,
+html[data-narrow="1"] .lg\:grid-cols-3,
+html[data-narrow="1"] .grid-cols-4,
+html[data-narrow="1"] .sm\:grid-cols-4,
+html[data-narrow="1"] .md\:grid-cols-4,
+html[data-narrow="1"] .lg\:grid-cols-4,
+html[data-narrow="1"] .md\:grid-cols-5,
+html[data-narrow="1"] .lg\:grid-cols-5,
+html[data-narrow="1"] .xl\:grid-cols-5,
+html[data-narrow="1"] .md\:grid-cols-6 {
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+}
+html[data-narrow="1"] .md\:flex-row,
+html[data-narrow="1"] .lg\:flex-row {
+  flex-direction: column !important;
+  align-items: stretch !important;
+}
+html[data-narrow="1"] [class*="flex-wrap"] button {
+  flex: 1 1 45% !important;
+}
+html[data-narrow="1"] table {
+  min-width: 720px !important;
+}
