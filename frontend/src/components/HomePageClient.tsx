@@ -526,7 +526,7 @@ export default function HomePageClient({ siteConfig: ssrConfig }: { siteConfig?:
 )}
 
       <section className="py-24 bg-[#0A1628] relative overflow-hidden">
-        <div className="absolute inset-0 opacity-10 bg-cover bg-center" style={{ backgroundImage: `url(${ctaBgImage})` }} />
+        {ctaBgImage && <Image src={ctaBgImage} alt="" fill sizes="100vw" className="object-cover opacity-10" aria-hidden />}
         <div className="relative z-10 max-w-3xl mx-auto text-center px-4">
           <h2 className="text-3xl md:text-5xl font-bold text-white font-['Playfair_Display',serif] mb-6">{siteConfig?.ctaTitle || t("home.ctaTitle")}</h2>
           <p className="text-white/70 text-lg mb-10 max-w-xl mx-auto">{siteConfig?.ctaDescription || t("home.ctaDesc")}</p>
