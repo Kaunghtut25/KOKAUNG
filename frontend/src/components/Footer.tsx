@@ -238,19 +238,19 @@ export default function Footer() {
               &copy; {currentYear} A9 Global Travels &amp; Tours. {t("footer.rights")}
             </p>
             <div className="flex items-center gap-4">
-              <Link href="/privacy" className="text-xs text-white/40 hover:text-[#D4AF37] transition-colors">
+              <Link href="/privacy" className="text-xs text-white/60 hover:text-[#D4AF37] transition-colors">
                 {t("footer.privacy")}
               </Link>
-              <Link href="/terms" className="text-xs text-white/40 hover:text-[#D4AF37] transition-colors">
+              <Link href="/terms" className="text-xs text-white/60 hover:text-[#D4AF37] transition-colors">
                 {t("footer.terms")}
               </Link>
-              <Link href="/faq" className="text-xs text-white/40 hover:text-[#D4AF37] transition-colors">
+              <Link href="/faq" className="text-xs text-white/60 hover:text-[#D4AF37] transition-colors">
                 {t("nav.faq")}
               </Link>
               <LanguageSwitcher />
             </div>
           </div>
-          <p className="text-center text-[10px] text-white/30 mt-3 tracking-wide">
+          <p className="text-center text-[10px] text-white/50 mt-3 tracking-wide">
             Company Reg: 126395248 &nbsp;|&nbsp; IATA: 05301026 &nbsp;|&nbsp;
             T/I(YGN)-2889 &nbsp;|&nbsp; T/O(YGN)-0946
           </p>
