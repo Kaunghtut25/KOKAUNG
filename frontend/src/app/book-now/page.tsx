@@ -3,6 +3,7 @@
 import { useState, useEffect, Suspense, useRef } from "react";
 import { useSearchParams } from "next/navigation";
 import { FaPaperPlane, FaCheckCircle, FaUser, FaEnvelope, FaPhone, FaExclamationTriangle } from "react-icons/fa";
+import { useI18n } from "@/lib/i18n";
 
 interface FormData {
   fullName: string; email: string; phone: string; travelType: string;
@@ -20,6 +21,7 @@ interface SearchSummary {
 function BookNowContent() {
   const searchParams = useSearchParams();
   const messageBoxRef = useRef<HTMLDivElement>(null);
+  const { t } = useI18n();
 
   const [formData, setFormData] = useState<FormData>({
     fullName: "", email: "", phone: "", travelType: "flight",
@@ -102,7 +104,7 @@ function BookNowContent() {
     const infants = searchParams.get("infants") || "0";
     const travelClass = searchParams.get("class") || "Economy";
     const totalPax = parseInt(adults) + parseInt(children) + parseInt(infants);
-    const paxLabel = totalPax + " Passenger" + (totalPax > 1 ? "s" : "");
+    const paxLabel = totalPax + " " + (totalPax > 1 ? t("book.passengers") : t("book.passenger"));
     const clientType = searchParams.get("clientType") || "local";
     const tripType = searchParams.get("tripType") || "oneway";
     const legsJson = searchParams.get("legs") || "";
@@ -198,9 +200,9 @@ function BookNowContent() {
 
   const validate = (): boolean => {
     const errs: string[] = [];
-    if (!formData.fullName.trim()) errs.push("Full name is required");
-    if (!formData.email.trim() || !/\S+@\S+\.\S+/.test(formData.email)) errs.push("Valid email is required");
-    if (!formData.phone.trim()) errs.push("Phone number is required");
+    if (!formData.fullName.trim()) errs.push(t("book.errName"));
+    if (!formData.email.trim() || !/\S+@\S+\.\S+/.test(formData.email)) errs.push(t("book.errEmail"));
+    if (!formData.phone.trim()) errs.push(t("book.errPhone"));
     setErrors(errs);
     return errs.length === 0;
   };
@@ -230,7 +232,7 @@ function BookNowContent() {
       const json = await res.json();
 
       if (!res.ok || !json.success) {
-        const msg = json.message || "Failed to submit booking";
+        const msg = json.message || t("book.errSubmit");
         const errs = json.errors || [msg];
         setErrors(errs);
         setApiError(msg);
@@ -244,8 +246,8 @@ function BookNowContent() {
       setSuccessModal(true);
     } catch (err: any) {
       console.error("Booking submission error:", err);
-      setApiError("Network error. Please check your connection and try again.");
-      setErrors(["Network error. Please try again."]);
+      setApiError(t("book.errNetwork1"));
+      setErrors([t("book.errNetwork2")]);
     } finally {
       setLoading(false);
     }
@@ -254,11 +256,11 @@ function BookNowContent() {
   return (
     <main style={{ minHeight: "100vh", background: "#f8f9fa" }}>
       <section style={{ position: "relative", height: 300, overflow: "hidden" }}>
-        <img src="/images_v2/hero-book-now-v2.jpg" alt="Book Now" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+        <img src="/images_v2/hero-book-now-v2.jpg" alt={t("book.title")} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
         <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(10,22,40,0.9), rgba(10,22,40,0.3))" }} />
         <div style={{ position: "absolute", bottom: 40, left: 0, right: 0, textAlign: "center", padding: "0 20px" }}>
-          <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: 42, color: "white", marginBottom: 8 }}>Book Now</h1>
-          <p style={{ color: "#D4AF37", fontSize: 18 }}>Complete your reservation</p>
+          <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: 42, color: "white", marginBottom: 8 }}>{t("book.title")}</h1>
+          <p style={{ color: "#D4AF37", fontSize: 18 }}>{t("book.subtitle")}</p>
         </div>
       </section>
 
@@ -289,13 +291,13 @@ function BookNowContent() {
 
         <form onSubmit={handleSubmit} style={{ background: "white", borderRadius: 16, padding: 24, boxShadow: "0 2px 8px rgba(0,0,0,0.1)" }}>
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
-            <div><label style={{ fontSize: 14, color: "#555", marginBottom: 4, display: "block" }}>Full Name</label><div style={{ display: "flex", alignItems: "center", border: "1px solid #ddd", borderRadius: 10, padding: "8px 12px" }}><FaUser style={{ color: "#999", marginRight: 8 }} /><input name="fullName" value={formData.fullName} onChange={handleChange} placeholder="Your full name" style={{ border: "none", outline: "none", width: "100%", fontSize: 14 }} /></div></div>
-            <div><label style={{ fontSize: 14, color: "#555", marginBottom: 4, display: "block" }}>Email</label><div style={{ display: "flex", alignItems: "center", border: "1px solid #ddd", borderRadius: 10, padding: "8px 12px" }}><FaEnvelope style={{ color: "#999", marginRight: 8 }} /><input name="email" value={formData.email} onChange={handleChange} placeholder="your@email.com" type="email" style={{ border: "none", outline: "none", width: "100%", fontSize: 14 }} /></div></div>
-            <div><label style={{ fontSize: 14, color: "#555", marginBottom: 4, display: "block" }}>Phone</label><div style={{ display: "flex", alignItems: "center", border: "1px solid #ddd", borderRadius: 10, padding: "8px 12px" }}><FaPhone style={{ color: "#999", marginRight: 8 }} /><input name="phone" value={formData.phone} onChange={handleChange} placeholder="+95 9xxxxxxxxx" type="tel" style={{ border: "none", outline: "none", width: "100%", fontSize: 14 }} /></div></div>
+            <div><label style={{ fontSize: 14, color: "#555", marginBottom: 4, display: "block" }}>{t("auth.register.fullName")}</label><div style={{ display: "flex", alignItems: "center", border: "1px solid #ddd", borderRadius: 10, padding: "8px 12px" }}><FaUser style={{ color: "#999", marginRight: 8 }} /><input name="fullName" value={formData.fullName} onChange={handleChange} placeholder={t("contact.namePh")} style={{ border: "none", outline: "none", width: "100%", fontSize: 14 }} /></div></div>
+            <div><label style={{ fontSize: 14, color: "#555", marginBottom: 4, display: "block" }}>{t("auth.login.email")}</label><div style={{ display: "flex", alignItems: "center", border: "1px solid #ddd", borderRadius: 10, padding: "8px 12px" }}><FaEnvelope style={{ color: "#999", marginRight: 8 }} /><input name="email" value={formData.email} onChange={handleChange} placeholder="your@email.com" type="email" style={{ border: "none", outline: "none", width: "100%", fontSize: 14 }} /></div></div>
+            <div><label style={{ fontSize: 14, color: "#555", marginBottom: 4, display: "block" }}>{t("contact.phone")}</label><div style={{ display: "flex", alignItems: "center", border: "1px solid #ddd", borderRadius: 10, padding: "8px 12px" }}><FaPhone style={{ color: "#999", marginRight: 8 }} /><input name="phone" value={formData.phone} onChange={handleChange} placeholder="+95 9xxxxxxxxx" type="tel" style={{ border: "none", outline: "none", width: "100%", fontSize: 14 }} /></div></div>
           </div>
           <div style={{ marginTop: 16 }}>
-            <label style={{ fontSize: 14, color: "#555", marginBottom: 4, display: "block" }}>Special Requests</label>
-            <textarea name="specialRequests" value={formData.specialRequests} onChange={handleChange} rows={3} placeholder="Any special requirements..." style={{ width: "100%", border: "1px solid #ddd", borderRadius: 10, padding: "8px 12px", fontSize: 14, resize: "vertical" }} />
+            <label style={{ fontSize: 14, color: "#555", marginBottom: 4, display: "block" }}>{t("book.specialRequests")}</label>
+            <textarea name="specialRequests" value={formData.specialRequests} onChange={handleChange} rows={3} placeholder={t("book.requestsPh")} style={{ width: "100%", border: "1px solid #ddd", borderRadius: 10, padding: "8px 12px", fontSize: 14, resize: "vertical" }} />
           </div>
 
           {/* API Error Banner */}
@@ -313,9 +315,9 @@ function BookNowContent() {
 
           <button type="submit" disabled={loading} style={{ marginTop: 20, width: "100%", padding: "14px", borderRadius: 12, background: loading ? "#999" : "linear-gradient(to right, #D4AF37, #F5A623)", color: "#0A1628", fontWeight: "bold", fontSize: 16, border: "none", cursor: loading ? "not-allowed" : "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
             {loading ? (
-              <>⏳ Submitting...</>
+              <>{t("book.submitting")}</>
             ) : (
-              <><FaPaperPlane /> Submit Booking</>
+              <><FaPaperPlane /> {t("book.submit")}</>
             )}
           </button>
         </form>
@@ -326,15 +328,15 @@ function BookNowContent() {
         <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.5)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 100 }}>
           <div style={{ background: "white", borderRadius: 20, padding: 40, textAlign: "center", maxWidth: 420, margin: "0 20px", boxShadow: "0 20px 60px rgba(0,0,0,0.3)" }}>
             <FaCheckCircle style={{ color: "#4CAF50", fontSize: 64, marginBottom: 16 }} />
-            <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 24, color: "#0A1628" }}>Booking Submitted!</h2>
-            <p style={{ color: "#666", marginTop: 8 }}>Thank you, {submittedName}!</p>
-            <p style={{ color: "#888", fontSize: 13, marginTop: 4 }}>A confirmation email has been sent to your inbox.</p>
+            <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 24, color: "#0A1628" }}>{t("book.submitted")}</h2>
+            <p style={{ color: "#666", marginTop: 8 }}>{t("book.thankYou", { name: submittedName })}</p>
+            <p style={{ color: "#888", fontSize: 13, marginTop: 4 }}>{t("book.confirmEmail")}</p>
             <div style={{ background: "#f0f0f0", padding: "12px 16px", borderRadius: 10, marginTop: 16, border: "1px dashed #D4AF37" }}>
-              <span style={{ fontSize: 11, color: "#888", display: "block", marginBottom: 4 }}>REFERENCE NUMBER</span>
+              <span style={{ fontSize: 11, color: "#888", display: "block", marginBottom: 4 }}>{t("book.refNumber")}</span>
               <span style={{ fontSize: 18, fontFamily: "monospace", fontWeight: "bold", color: "#D4AF37", letterSpacing: 1 }}>{referenceNumber}</span>
             </div>
-            <p style={{ color: "#aaa", fontSize: 12, marginTop: 12 }}>We'll contact you within 24 hours</p>
-            <button onClick={() => setSuccessModal(false)} style={{ marginTop: 20, padding: "12px 36px", borderRadius: 10, background: "#0A1628", color: "#D4AF37", border: "none", fontWeight: "bold", fontSize: 15, cursor: "pointer" }}>Close</button>
+            <p style={{ color: "#aaa", fontSize: 12, marginTop: 12 }}>{t("book.contact24h")}</p>
+            <button onClick={() => setSuccessModal(false)} style={{ marginTop: 20, padding: "12px 36px", borderRadius: 10, background: "#0A1628", color: "#D4AF37", border: "none", fontWeight: "bold", fontSize: 15, cursor: "pointer" }}>{t("book.close")}</button>
           </div>
         </div>
       )}
@@ -343,5 +345,5 @@ function BookNowContent() {
 }
 
 export default function BookNowPage() {
-  return <Suspense fallback={<div style={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: "100vh" }}><p>Loading...</p></div>}><BookNowContent /></Suspense>;
+  return <Suspense fallback={<div style={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: "100vh" }}><p>{t("book.loading")}</p></div>}><BookNowContent /></Suspense>;
 }

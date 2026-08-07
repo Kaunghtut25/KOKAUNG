@@ -1202,6 +1202,30 @@ const en: Record<string, string> = {
   "contact.subjectVisa": "Visa Service",
   "contact.subjectInsurance": "Insurance",
 
+
+  // Book Now page
+  "book.title": "Book Now",
+  "book.subtitle": "Complete your reservation",
+  "book.specialRequests": "Special Requests",
+  "book.requestsPh": "Any special requirements...",
+  "book.submitting": "⏳ Submitting...",
+  "book.submit": "Submit Booking",
+  "book.submitted": "Booking Submitted!",
+  "book.thankYou": "Thank you, {name}!",
+  "book.confirmEmail": "A confirmation email has been sent to your inbox.",
+  "book.refNumber": "REFERENCE NUMBER",
+  "book.contact24h": "We'll contact you within 24 hours",
+  "book.close": "Close",
+  "book.loading": "Loading...",
+  "book.errName": "Full name is required",
+  "book.errEmail": "Valid email is required",
+  "book.errPhone": "Phone number is required",
+  "book.errSubmit": "Failed to submit booking",
+  "book.errNetwork1": "Network error. Please check your connection and try again.",
+  "book.errNetwork2": "Network error. Please try again.",
+  "book.passenger": "Passenger",
+  "book.passengers": "Passengers",
+
 };
 
 const mm: Record<string, string> = {
@@ -2400,6 +2424,30 @@ const mm: Record<string, string> = {
   "contact.subjectCar": "ကားငှားရမ်းခြင်း",
   "contact.subjectVisa": "ဗီဇာ ဝန်ဆောင်မှု",
   "contact.subjectInsurance": "အာမခံ",
+
+
+  // Book Now page
+  "book.title": "ယခုကြိုတင်မှာယူမည်",
+  "book.subtitle": "သင့်ကြိုတင်မှာယူမှုကို ပြီးမြောက်ပါ",
+  "book.specialRequests": "အထူးတောင်းဆိုချက်များ",
+  "book.requestsPh": "အထူးလိုအပ်ချက်များ ရှိပါက ရေးသားပါ...",
+  "book.submitting": "⏳ ပို့နေသည်...",
+  "book.submit": "စာရင်းသွင်းမည်",
+  "book.submitted": "စာရင်းသွင်းပြီးပါပြီ!",
+  "book.thankYou": "ကျေးဇူးတင်ပါသည်၊ {name}!",
+  "book.confirmEmail": "အတည်ပြုအီးမေးလ်ကို သင့်ဝင်စာပုံးထံ ပို့ထားပါပြီ။",
+  "book.refNumber": "အကိုးအကား နံပါတ်",
+  "book.contact24h": "နာရီ ၂၄ အတွင်း သင့်ထံ ပြန်လည် ဆက်သွယ်ပါမည်",
+  "book.close": "ပိတ်မည်",
+  "book.loading": "ဖတ်နေသည်...",
+  "book.errName": "အမည် အပြည့်အစုံ ထည့်သွင်းရန် လိုအပ်သည်",
+  "book.errEmail": "တရားဝင်သော အီးမေးလ် လိုအပ်သည်",
+  "book.errPhone": "ဖုန်းနံပါတ် ထည့်သွင်းရန် လိုအပ်သည်",
+  "book.errSubmit": "စာရင်းသွင်းမှု မအောင်မြင်ပါ",
+  "book.errNetwork1": "ကွန်ရက် အမှားရှိနေသည်။ သင့်ချိတ်ဆက်မှုကို စစ်ဆေးပြီး ထပ်မံကြိုးစားပါ။",
+  "book.errNetwork2": "ကွန်ရက် အမှားရှိနေသည်။ ထပ်မံ ကြိုးစားကြည့်ပါ။",
+  "book.passenger": "ခရီးသည်",
+  "book.passengers": "ခရီးသည်များ",
 
 };
 
