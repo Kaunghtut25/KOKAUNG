@@ -3,6 +3,7 @@
 import React, { useEffect, useState, useCallback } from "react";
 import Link from "next/link";
 import AdminFormModal from "@/components/AdminFormModal";
+import { useI18n } from "@/lib/i18n";
 
 interface Insurance {
   id: string;
@@ -41,6 +42,7 @@ const emptyInsurance: Insurance = {
 };
 
 export default function AdminInsurancePage() {
+  const { t } = useI18n();
   const [insurances, setInsurances] = useState<Insurance[]>([]);
   const [loading, setLoading] = useState(true);
   const [modalOpen, setModalOpen] = useState(false);
@@ -129,7 +131,7 @@ export default function AdminInsurancePage() {
         setUploadError(data.error || "Upload failed. Please try again.");
       }
     } catch {
-      setUploadError("Upload failed. Check your connection and try again.");
+      setUploadError(t("admin.common.uploadFailed"));
     } finally {
       setUploading(false);
     }
@@ -164,11 +166,11 @@ export default function AdminInsurancePage() {
         fetchInsurances();
       } else {
         const err = await res.json();
-        alert(err.message || "Failed to save insurance plan");
+        alert(err.message || t("admin.common.saveFailed"));
       }
     } catch (err) {
       console.error("Save failed:", err);
-      alert("Failed to save insurance plan");
+      alert(t("admin.common.saveFailed"));
     } finally {
       setSaving(false);
     }
@@ -184,11 +186,11 @@ export default function AdminInsurancePage() {
         setDeleteConfirm(null);
         fetchInsurances();
       } else {
-        alert("Failed to delete insurance plan");
+        alert(t("admin.common.deleteFailed"));
       }
     } catch (err) {
       console.error("Delete failed:", err);
-      alert("Failed to delete insurance plan");
+      alert(t("admin.common.deleteFailed"));
     }
   };
 
@@ -213,19 +215,19 @@ export default function AdminInsurancePage() {
     const renderFormFields = () => (
     <div className="space-y-4">
       <div>
-        <label className="block text-white/70 text-sm mb-1">Plan Name</label>
+        <label className="block text-white/70 text-sm mb-1">{t("admin.form.planName")}</label>
         <input
           type="text"
           value={editingInsurance.planName}
           onChange={(e) => handleFieldChange("planName", e.target.value)}
-          placeholder="e.g. Basic Travel Insurance"
+          placeholder={t("admin.insurance.phName")}
           className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-gold/50 transition-colors"
           required
         />
       </div>
 
       <div>
-        <label className="block text-white/70 text-sm mb-1">Image (upload file or enter URL)</label>
+        <label className="block text-white/70 text-sm mb-1">{t("admin.form.imageEnter")}</label>
         <div
           className="border-2 border-dashed border-white/10 rounded-lg p-6 text-center cursor-pointer hover:border-gold/50 transition-colors"
           onDrop={(e) => { e.preventDefault(); const file = e.dataTransfer.files[0]; if (file) uploadFile(file); }}
@@ -255,12 +257,12 @@ export default function AdminInsurancePage() {
         {editingInsurance.image && (
           <img src={editingInsurance.image} alt="Preview" className="w-20 h-20 object-cover rounded-lg mt-2" />
         )}
-        <p className="text-xs text-gray-400 mt-1">Recommended: 800x600px (JPEG, max 1MB)</p>
+        <p className="text-xs text-gray-400 mt-1">{t("admin.form.recommended1mb")}</p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
-          <label className="block text-white/70 text-sm mb-1">Coverage Amount MMK</label>
+          <label className="block text-white/70 text-sm mb-1">{t("admin.form.coverageMmk")}</label>
           <input
             type="number"
             value={editingInsurance.coverageAmountMMK}
@@ -269,7 +271,7 @@ export default function AdminInsurancePage() {
           />
         </div>
         <div>
-          <label className="block text-white/70 text-sm mb-1">Coverage Amount USD</label>
+          <label className="block text-white/70 text-sm mb-1">{t("admin.form.coverageUsd")}</label>
           <input
             type="number"
             value={editingInsurance.coverageAmountUSD}
@@ -281,7 +283,7 @@ export default function AdminInsurancePage() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
-          <label className="block text-white/70 text-sm mb-1">Premium Price MMK</label>
+          <label className="block text-white/70 text-sm mb-1">{t("admin.form.premiumMmk")}</label>
           <input
             type="number"
             value={editingInsurance.premiumPriceMMK}
@@ -290,7 +292,7 @@ export default function AdminInsurancePage() {
           />
         </div>
         <div>
-          <label className="block text-white/70 text-sm mb-1">Premium Price USD</label>
+          <label className="block text-white/70 text-sm mb-1">{t("admin.form.premiumUsd")}</label>
           <input
             type="number"
             value={editingInsurance.premiumPriceUSD}
@@ -301,41 +303,41 @@ export default function AdminInsurancePage() {
       </div>
 
       <div>
-        <label className="block text-white/70 text-sm mb-1">Duration</label>
+        <label className="block text-white/70 text-sm mb-1">{t("admin.form.duration")}</label>
         <input
           type="text"
           value={editingInsurance.duration}
           onChange={(e) => handleFieldChange("duration", e.target.value)}
-          placeholder="e.g. 7 Days, 30 Days"
+          placeholder={t("admin.insurance.phDur")}
           className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-gold/50 transition-colors"
         />
       </div>
 
       <div>
-        <label className="block text-white/70 text-sm mb-1">Benefits (comma-separated)</label>
+        <label className="block text-white/70 text-sm mb-1">{t("admin.form.benefits")}</label>
         <textarea
           value={editingInsurance.benefits}
           onChange={(e) => handleFieldChange("benefits", e.target.value)}
           rows={3}
-          placeholder="Medical expenses, Trip cancellation, Baggage loss"
+          placeholder={t("admin.insurance.phBen")}
           className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-gold/50 transition-colors resize-none"
         />
       </div>
 
       <div>
-        <label className="block text-white/70 text-sm mb-1">Exclusions (comma-separated)</label>
+        <label className="block text-white/70 text-sm mb-1">{t("admin.form.exclusions")}</label>
         <textarea
           value={editingInsurance.exclusions}
           onChange={(e) => handleFieldChange("exclusions", e.target.value)}
           rows={3}
-          placeholder="Pre-existing conditions, Extreme sports"
+          placeholder={t("admin.insurance.phExc")}
           className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-gold/50 transition-colors resize-none"
         />
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
-          <label className="block text-white/70 text-sm mb-1">Phone</label>
+          <label className="block text-white/70 text-sm mb-1">{t("admin.form.phone")}</label>
           <input
             type="text"
             value={editingInsurance.phone}
@@ -345,7 +347,7 @@ export default function AdminInsurancePage() {
           />
         </div>
         <div>
-          <label className="block text-white/70 text-sm mb-1">Email</label>
+          <label className="block text-white/70 text-sm mb-1">{t("admin.form.email")}</label>
           <input
             type="email"
             value={editingInsurance.email}
@@ -357,25 +359,25 @@ export default function AdminInsurancePage() {
       </div>
 
       <div>
-        <label className="block text-white/70 text-sm mb-1">Office Address</label>
+        <label className="block text-white/70 text-sm mb-1">{t("admin.form.officeAddress")}</label>
         <input
           type="text"
           value={editingInsurance.officeAddress}
           onChange={(e) => handleFieldChange("officeAddress", e.target.value)}
-          placeholder="e.g. No. 123, Main Street, Yangon"
+          placeholder={t("admin.insurance.phAddr")}
           className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-gold/50 transition-colors"
         />
       </div>
 
       <div>
-        <label className="block text-white/70 text-sm mb-1">Status</label>
+        <label className="block text-white/70 text-sm mb-1">{t("admin.form.status")}</label>
         <select
           value={editingInsurance.status}
           onChange={(e) => handleFieldChange("status", e.target.value)}
           className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-gold/50 transition-colors"
         >
-          <option value="active">Active</option>
-          <option value="inactive">Inactive</option>
+          <option value="active">{t("admin.form.active")}</option>
+          <option value="inactive">{t("admin.form.inactive")}</option>
         </select>
       </div>
     </div>
@@ -384,7 +386,7 @@ export default function AdminInsurancePage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-96">
-        <div className="text-gold/70 animate-pulse text-lg">Loading insurance plans...</div>
+        <div className="text-gold/70 animate-pulse text-lg">{t("admin.insurance.loading")}</div>
       </div>
     );
   }
@@ -397,17 +399,17 @@ export default function AdminInsurancePage() {
             className="text-3xl md:text-4xl font-bold text-[#D4AF37]"
             style={{ fontFamily: "'Playfair Display', Georgia, serif" }}
           >
-            Manage Insurance
+            {t("admin.insurance.title")}
           </h1>
           <p className="text-white/40 text-sm mt-1">
-            Manage travel insurance plans
+            {t("admin.insurance.subtitle")}
           </p>
         </div>
         <button
           onClick={openCreateModal}
           className="px-5 py-2.5 rounded-lg bg-gold text-deepblue-dark font-semibold text-sm hover:bg-gold/90 transition-all flex items-center gap-2"
         >
-          <span>🛡️</span> Add New Plan
+          <span>🛡️</span> {t("admin.insurance.addNew")}
         </button>
       </div>
 
@@ -416,19 +418,19 @@ export default function AdminInsurancePage() {
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-white/10 bg-white/[0.02]">
-                <th className="text-left p-4 text-white/40 font-semibold uppercase tracking-wider text-[11px]">Image</th>
-                <th className="text-left p-4 text-white/40 font-semibold uppercase tracking-wider text-[11px]">Plan Name</th>
-                <th className="text-left p-4 text-white/40 font-semibold uppercase tracking-wider text-[11px]">Coverage</th>
-                <th className="text-left p-4 text-white/40 font-semibold uppercase tracking-wider text-[11px]">Premium</th>
-                <th className="text-left p-4 text-white/40 font-semibold uppercase tracking-wider text-[11px]">Status</th>
-                <th className="text-left p-4 text-white/40 font-semibold uppercase tracking-wider text-[11px]">Actions</th>
+                <th className="text-left p-4 text-white/40 font-semibold uppercase tracking-wider text-[11px]">{t("admin.visas.thImage")}</th>
+                <th className="text-left p-4 text-white/40 font-semibold uppercase tracking-wider text-[11px]">{t("admin.insurance.thPlan")}</th>
+                <th className="text-left p-4 text-white/40 font-semibold uppercase tracking-wider text-[11px]">{t("admin.insurance.thCoverage")}</th>
+                <th className="text-left p-4 text-white/40 font-semibold uppercase tracking-wider text-[11px]">{t("admin.insurance.thPremium")}</th>
+                <th className="text-left p-4 text-white/40 font-semibold uppercase tracking-wider text-[11px]">{t("admin.tours.thStatus")}</th>
+                <th className="text-left p-4 text-white/40 font-semibold uppercase tracking-wider text-[11px]">{t("admin.tours.thActions")}</th>
               </tr>
             </thead>
             <tbody>
               {insurances.length === 0 ? (
                 <tr>
                   <td colSpan={6} className="p-8 text-center text-white/30">
-                    No insurance plans found. Click &quot;Add New Plan&quot; to create one.
+                    {t("admin.insurance.empty")}
                   </td>
                 </tr>
               ) : (
@@ -486,9 +488,9 @@ export default function AdminInsurancePage() {
       <AdminFormModal
         isOpen={modalOpen}
         onClose={() => setModalOpen(false)}
-        title={isNew ? "Add New Insurance Plan" : "Edit Insurance Plan"}
+        title={isNew ? t("admin.insurance.addNewModal") : t("admin.insurance.editTitle")}
         onSubmit={handleSubmit}
-        submitLabel={isNew ? "Create Plan" : "Update Plan"}
+        submitLabel={isNew ? t("admin.insurance.create") : t("admin.insurance.update")}
         isLoading={saving}
       >
         {renderFormFields()}
@@ -498,22 +500,22 @@ export default function AdminInsurancePage() {
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
           <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={() => setDeleteConfirm(null)} />
           <div className="relative bg-deepblue-dark border border-white/10 rounded-xl p-6 max-w-sm w-full z-10">
-            <h3 className="text-lg font-bold text-white mb-2">Confirm Delete</h3>
+            <h3 className="text-lg font-bold text-white mb-2">{t("admin.common.confirmDelete")}</h3>
             <p className="text-white/60 text-sm mb-6">
-              Are you sure you want to delete this insurance plan? This action cannot be undone.
+              {t("admin.insurance.deleteMsg")}
             </p>
             <div className="flex gap-3 justify-end">
               <button
                 onClick={() => setDeleteConfirm(null)}
                 className="px-4 py-2 rounded-lg border border-white/20 text-white/70 hover:text-white transition-colors text-sm"
               >
-                Cancel
+                {t("common.cancel")}
               </button>
               <button
                 onClick={() => handleDelete(deleteConfirm)}
                 className="px-4 py-2 rounded-lg bg-red-600 text-white font-medium text-sm hover:bg-red-700 transition-colors"
               >
-                Delete
+                {t("common.delete")}
               </button>
             </div>
           </div>
