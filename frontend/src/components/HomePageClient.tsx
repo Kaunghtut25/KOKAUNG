@@ -185,7 +185,7 @@ function BusDatePicker({ value, onChange }: { value: string; onChange: (v: strin
     <div ref={ref} className="relative">
       <button type="button" onClick={() => setShowCalendar(!showCalendar)}
         className="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 text-sm text-left outline-none focus:border-[#D4AF37] transition-all cursor-pointer flex items-center justify-between group">
-        <span className={selectedDay ? "text-gray-900" : "text-gray-400"}>
+        <span className={selectedDay ? "text-gray-900" : "text-gray-500"}>
           {selectedDay ? formatDisplay(selectedDay) : t("home.selectTravelDate")}
         </span>
         <svg className="w-4 h-4 text-[#D4AF37] flex-shrink-0 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -207,7 +207,7 @@ function BusDatePicker({ value, onChange }: { value: string; onChange: (v: strin
           </div>
           {/* Day headers */}
           <div className="grid grid-cols-7 mb-1">
-            {["Su","Mo","Tu","We","Th","Fr","Sa"].map(d => <div key={d} className="text-center text-[10px] font-medium text-gray-400 py-1">{d}</div>)}
+            {["Su","Mo","Tu","We","Th","Fr","Sa"].map(d => <div key={d} className="text-center text-[10px] font-medium text-gray-500 py-1">{d}</div>)}
           </div>
           {/* Day grid */}
           <div className="grid grid-cols-7 gap-0.5">
@@ -265,13 +265,13 @@ function CityDropdown({ cities, value, onChange, placeholder }: { cities: Array<
                 {c.popular ? "★ " : ""}{c.city} ({c.cityMY}) — {c.region}
               </div>
             ))}
-            {filtered.length === 0 && <div className="px-4 py-2 text-sm text-gray-400">{t("home.noCities")}</div>}
+            {filtered.length === 0 && <div className="px-4 py-2 text-sm text-gray-500">{t("home.noCities")}</div>}
           </div>
         </div>
       ) : (
         <button type="button" onClick={() => setOpen(true)}
           className="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 text-sm text-left outline-none focus:border-[#D4AF37] transition-all cursor-pointer">
-          {selected ? <>{selected.popular ? "★ " : ""}{selected.city} ({selected.cityMY}) — {selected.region}</> : <span className="text-gray-400">{placeholder}</span>}
+          {selected ? <>{selected.popular ? "★ " : ""}{selected.city} ({selected.cityMY}) — {selected.region}</> : <span className="text-gray-500">{placeholder}</span>}
         </button>
       )}
     </div>
@@ -409,10 +409,10 @@ export default function HomePageClient({ siteConfig: ssrConfig }: { siteConfig?:
           ))}
         </div>
 
-        <button onClick={prevSlideHandler} className="absolute left-4 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center text-white hover:bg-white/20 transition-all cursor-pointer">
+        <button onClick={prevSlideHandler} aria-label="Previous slide" className="absolute left-4 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center text-white hover:bg-white/20 transition-all cursor-pointer">
           <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg>
         </button>
-        <button onClick={nextSlide} className="absolute right-4 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center text-white hover:bg-white/20 transition-all cursor-pointer">
+        <button onClick={nextSlide} aria-label="Next slide" className="absolute right-4 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center text-white hover:bg-white/20 transition-all cursor-pointer">
           <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
         </button>
         <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-30 flex gap-3">
@@ -430,7 +430,7 @@ export default function HomePageClient({ siteConfig: ssrConfig }: { siteConfig?:
             {/* FLIGHTS FORM */}
             {searchMode==='flights' && (<>
               <div className="flex gap-1 mb-5 bg-gray-100 rounded-lg p-1 w-fit">
-                {(["oneway","roundtrip","multicity"] as TabType[]).map((tab)=><button key={tab} onClick={()=>{setActiveTab(tab);if(tab!=="roundtrip")setReturnDate("");if(tab==="multicity")setMultiCityLegs([{from:"",to:"",date:""},{from:"",to:"",date:""}]);}} className={"px-4 py-2 rounded-md text-sm font-medium transition-all duration-300 cursor-pointer "+(activeTab===tab?"bg-[#D4AF37] text-white shadow-md":"text-gray-500 hover:text-gray-900 hover:bg-gray-200")}>{tab==="oneway"?"✈ "+t("home.oneWay"):tab==="roundtrip"?"🔄 "+t("home.roundTrip"):"🌐 "+t("home.multiCity")}</button>)}
+                {(["oneway","roundtrip","multicity"] as TabType[]).map((tab)=><button key={tab} onClick={()=>{setActiveTab(tab);if(tab!=="roundtrip")setReturnDate("");if(tab==="multicity")setMultiCityLegs([{from:"",to:"",date:""},{from:"",to:"",date:""}]);}} className={"px-4 py-2 rounded-md text-sm font-medium transition-all duration-300 cursor-pointer "+(activeTab===tab?"bg-[#D4AF37] text-[#0A1628] shadow-md":"text-gray-500 hover:text-gray-900 hover:bg-gray-200")}>{tab==="oneway"?"✈ "+t("home.oneWay"):tab==="roundtrip"?"🔄 "+t("home.roundTrip"):"🌐 "+t("home.multiCity")}</button>)}
               </div>
               <form onSubmit={handleSearch} className="space-y-3">
                 {activeTab==="multicity" ? (<>
@@ -445,23 +445,23 @@ export default function HomePageClient({ siteConfig: ssrConfig }: { siteConfig?:
                   {multiCityLegs.length<6&&<div className="flex items-start gap-2"><div className="w-10 flex-shrink-0"/><div className="flex-1"><button type="button" onClick={handleAddLeg} className="flex items-center gap-2 text-[#D4AF37] hover:text-[#C5A028] text-sm font-medium transition-colors cursor-pointer py-1"><svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4"/></svg>{t("home.addAnotherFlight")}</button></div></div>}
                   <div className="flex flex-col md:flex-row gap-3 items-end flex-wrap">
                     <PassengerSelector passengers={passengers} onChange={setPassengers} />
-                    <div className="w-full md:w-[180px]"><label className="block text-gray-500 text-xs uppercase tracking-wider mb-1"><span className="text-[#D4AF37]">💺</span> {t("home.class")}</label><select value={travelClass} onChange={e=>setTravelClass(e.target.value)} className="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-3 text-gray-900 outline-none focus:border-[#D4AF37] transition-all cursor-pointer"><option value="Economy">Economy</option><option value="Premium Economy">Premium Economy</option><option value="Business">Business</option><option value="First">First Class</option></select></div>
-                    <div className="w-full md:w-[180px]"><label className="block text-gray-500 text-xs uppercase tracking-wider mb-1"><span className="text-[#D4AF37]">🛂</span> {t("home.client")}</label><div className="flex bg-gray-50 border border-gray-200 rounded-lg p-1"><button type="button" onClick={()=>setClientType('local')} className={`flex-1 py-1.5 text-xs font-medium rounded-md transition-all ${clientType==='local'?'bg-[#D4AF37] text-white shadow-sm':'text-gray-500 hover:text-gray-900'}`}>🇲🇲 {t("home.local")}</button><button type="button" onClick={()=>setClientType('foreigner')} className={`flex-1 py-1.5 text-xs font-medium rounded-md transition-all ${clientType==='foreigner'?'bg-[#D4AF37] text-white shadow-sm':'text-gray-500 hover:text-gray-900'}`}>🌏 {t("home.foreigner")}</button></div></div>
-                    <button type="submit" className="w-full md:w-auto bg-gradient-to-r from-[#D4AF37] to-[#F5A623] text-white font-bold px-8 py-3 rounded-lg hover:shadow-xl hover:shadow-[#D4AF37]/40 hover:scale-105 active:scale-95 transition-all duration-300 cursor-pointer">🔍 {t("home.searchFlights")}</button>
+                    <div className="w-full md:w-[180px]"><label className="block text-gray-500 text-xs uppercase tracking-wider mb-1"><span className="text-[#D4AF37]">💺</span> {t("home.class")}</label><select value={travelClass} onChange={e=>setTravelClass(e.target.value)} aria-label={t("home.class")} className="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-3 text-gray-900 outline-none focus:border-[#D4AF37] transition-all cursor-pointer"><option value="Economy">Economy</option><option value="Premium Economy">Premium Economy</option><option value="Business">Business</option><option value="First">First Class</option></select></div>
+                    <div className="w-full md:w-[180px]"><label className="block text-gray-500 text-xs uppercase tracking-wider mb-1"><span className="text-[#D4AF37]">🛂</span> {t("home.client")}</label><div className="flex bg-gray-50 border border-gray-200 rounded-lg p-1"><button type="button" onClick={()=>setClientType('local')} className={`flex-1 py-1.5 text-xs font-medium rounded-md transition-all ${clientType==='local'?'bg-[#D4AF37] text-[#0A1628] shadow-sm':'text-gray-500 hover:text-gray-900'}`}>🇲🇲 {t("home.local")}</button><button type="button" onClick={()=>setClientType('foreigner')} className={`flex-1 py-1.5 text-xs font-medium rounded-md transition-all ${clientType==='foreigner'?'bg-[#D4AF37] text-[#0A1628] shadow-sm':'text-gray-500 hover:text-gray-900'}`}>🌏 {t("home.foreigner")}</button></div></div>
+                    <button type="submit" className="w-full md:w-auto bg-gradient-to-r from-[#D4AF37] to-[#F5A623] text-[#0A1628] font-bold px-8 py-3 rounded-lg hover:shadow-xl hover:shadow-[#D4AF37]/40 hover:scale-105 active:scale-95 transition-all duration-300 cursor-pointer">🔍 {t("home.searchFlights")}</button>
                   </div>
                 </>) : (<>
                   <div className="grid grid-cols-1 md:flex md:flex-row gap-3">
                     <AirportInput label={t("home.from")} value={from} onChange={setFrom} placeholder={t("home.departureCity")} icon={<svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>} />
-                    <button type="button" onClick={swapAirports} className="hidden md:flex items-center justify-center w-10 h-10 mt-6 rounded-full bg-gray-100 border border-gray-200 text-gray-400 hover:text-gray-600 hover:border-[#D4AF37]/50 transition-all cursor-pointer flex-shrink-0" title={t("home.swapAirports")}>⇄</button>
+                    <button type="button" onClick={swapAirports} className="hidden md:flex items-center justify-center w-10 h-10 mt-6 rounded-full bg-gray-100 border border-gray-200 text-gray-600 hover:text-gray-600 hover:border-[#D4AF37]/50 transition-all cursor-pointer flex-shrink-0" title={t("home.swapAirports")}>⇄</button>
                     <AirportInput label={t("home.to")} value={to} onChange={setTo} placeholder={t("home.arrivalCity")} icon={<svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>} />
                     <div className="flex-1 min-w-[140px] w-full sm:flex-1"><label className="block text-gray-500 text-xs uppercase tracking-wider mb-1 flex items-center gap-1"><span className="text-[#D4AF37]">📅</span>{t("home.depart")}</label><BusDatePicker value={departDate} onChange={setDepartDate} /></div>
                     {activeTab==="roundtrip"&&<div className="flex-1 min-w-[140px] w-full sm:flex-1"><label className="block text-gray-500 text-xs uppercase tracking-wider mb-1 flex items-center gap-1"><span className="text-[#D4AF37]">📅</span>{t("home.return")}</label><BusDatePicker value={returnDate} onChange={setReturnDate} /></div>}
                   </div>
                   <div className="flex flex-col md:flex-row gap-3 items-end flex-wrap">
                     <PassengerSelector passengers={passengers} onChange={setPassengers} />
-                    <div className="w-full md:w-[180px]"><label className="block text-gray-500 text-xs uppercase tracking-wider mb-1"><span className="text-[#D4AF37]">💺</span> {t("home.class")}</label><select value={travelClass} onChange={e=>setTravelClass(e.target.value)} className="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-3 text-gray-900 outline-none focus:border-[#D4AF37] transition-all cursor-pointer"><option value="Economy">Economy</option><option value="Premium Economy">Premium Economy</option><option value="Business">Business</option><option value="First">First Class</option></select></div>
-                    <div className="w-full md:w-[180px]"><label className="block text-gray-500 text-xs uppercase tracking-wider mb-1"><span className="text-[#D4AF37]">🛂</span> {t("home.client")}</label><div className="flex bg-gray-50 border border-gray-200 rounded-lg p-1"><button type="button" onClick={()=>setClientType('local')} className={`flex-1 py-1.5 text-xs font-medium rounded-md transition-all ${clientType==='local'?'bg-[#D4AF37] text-white shadow-sm':'text-gray-500 hover:text-gray-900'}`}>🇲🇲 {t("home.local")}</button><button type="button" onClick={()=>setClientType('foreigner')} className={`flex-1 py-1.5 text-xs font-medium rounded-md transition-all ${clientType==='foreigner'?'bg-[#D4AF37] text-white shadow-sm':'text-gray-500 hover:text-gray-900'}`}>🌏 {t("home.foreigner")}</button></div></div>
-                    <button type="submit" className="w-full md:w-auto bg-gradient-to-r from-[#D4AF37] to-[#F5A623] text-white font-bold px-8 py-3 rounded-lg hover:shadow-xl hover:shadow-[#D4AF37]/40 hover:scale-105 active:scale-95 transition-all duration-300 cursor-pointer">🔍 {t("home.searchFlights")}</button>
+                    <div className="w-full md:w-[180px]"><label className="block text-gray-500 text-xs uppercase tracking-wider mb-1"><span className="text-[#D4AF37]">💺</span> {t("home.class")}</label><select value={travelClass} onChange={e=>setTravelClass(e.target.value)} aria-label={t("home.class")} className="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-3 text-gray-900 outline-none focus:border-[#D4AF37] transition-all cursor-pointer"><option value="Economy">Economy</option><option value="Premium Economy">Premium Economy</option><option value="Business">Business</option><option value="First">First Class</option></select></div>
+                    <div className="w-full md:w-[180px]"><label className="block text-gray-500 text-xs uppercase tracking-wider mb-1"><span className="text-[#D4AF37]">🛂</span> {t("home.client")}</label><div className="flex bg-gray-50 border border-gray-200 rounded-lg p-1"><button type="button" onClick={()=>setClientType('local')} className={`flex-1 py-1.5 text-xs font-medium rounded-md transition-all ${clientType==='local'?'bg-[#D4AF37] text-[#0A1628] shadow-sm':'text-gray-500 hover:text-gray-900'}`}>🇲🇲 {t("home.local")}</button><button type="button" onClick={()=>setClientType('foreigner')} className={`flex-1 py-1.5 text-xs font-medium rounded-md transition-all ${clientType==='foreigner'?'bg-[#D4AF37] text-[#0A1628] shadow-sm':'text-gray-500 hover:text-gray-900'}`}>🌏 {t("home.foreigner")}</button></div></div>
+                    <button type="submit" className="w-full md:w-auto bg-gradient-to-r from-[#D4AF37] to-[#F5A623] text-[#0A1628] font-bold px-8 py-3 rounded-lg hover:shadow-xl hover:shadow-[#D4AF37]/40 hover:scale-105 active:scale-95 transition-all duration-300 cursor-pointer">🔍 {t("home.searchFlights")}</button>
                   </div>
                 </>)}
               </form>
@@ -506,7 +506,7 @@ export default function HomePageClient({ siteConfig: ssrConfig }: { siteConfig?:
                       <button type="button" onClick={()=>setBusClientType('foreigner')} className={busClientType==='foreigner'?'flex-1 py-1.5 text-xs font-medium rounded-md bg-[#D4AF37] text-white shadow-sm transition-all':'flex-1 py-1.5 text-xs font-medium rounded-md text-gray-500 hover:text-gray-900 transition-all'}>🌏 {t("home.foreigner")}</button>
                     </div>
                   </div>
-                  <button type="submit" className="w-full md:w-auto bg-gradient-to-r from-[#D4AF37] to-[#F5A623] text-white font-bold px-8 py-3 rounded-lg hover:shadow-xl hover:shadow-[#D4AF37]/40 hover:scale-105 active:scale-95 transition-all duration-300 cursor-pointer">🔍 {t("home.searchBuses")}</button>
+                  <button type="submit" className="w-full md:w-auto bg-gradient-to-r from-[#D4AF37] to-[#F5A623] text-[#0A1628] font-bold px-8 py-3 rounded-lg hover:shadow-xl hover:shadow-[#D4AF37]/40 hover:scale-105 active:scale-95 transition-all duration-300 cursor-pointer">🔍 {t("home.searchBuses")}</button>
                 </div>
               </form>
             );})()}

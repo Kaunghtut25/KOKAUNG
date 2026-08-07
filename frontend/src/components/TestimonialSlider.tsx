@@ -67,7 +67,7 @@ export default function TestimonialSlider() {
         </div>
         <div style={{ display: 'flex', justifyContent: 'center', gap: 8, marginTop: 16 }}>
           {reviews.map((_, i) => (
-            <button key={i} onClick={() => setIdx(i)} style={{ width: 8, height: 8, borderRadius: '50%', border: 'none', cursor: 'pointer', background: i===idx ? '#D4AF37' : 'rgba(255,255,255,0.2)', transition: 'all 0.3s' }} />
+            <button key={i} onClick={() => setIdx(i)} aria-label={"Go to review " + (i + 1)} style={{ width: 14, height: 14, margin: '0 4px', borderRadius: '50%', border: 'none', cursor: 'pointer', background: i===idx ? '#D4AF37' : 'rgba(255,255,255,0.2)', transition: 'all 0.3s' }} />
           ))}
         </div>
       </div>
