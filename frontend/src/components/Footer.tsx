@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { FaFacebookF, FaInstagram, FaTelegramPlane, FaMapMarkerAlt, FaPhoneAlt, FaEnvelope, FaClock } from "react-icons/fa";
+import Image from 'next/image';
 import { useI18n } from "@/lib/i18n";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 
@@ -256,10 +257,10 @@ export default function Footer() {
           </p>
           <div className="flex items-center justify-center gap-6 mt-4">
             <div className="bg-white rounded-lg p-3">
-              <img src="/images_v2/iata-logo-real.png" alt="IATA Accredited" className="h-12 w-auto" />
+              <Image src="/images_v2/iata-logo-real.png" alt="IATA Accredited" width={1280} height={1280} className="h-12 w-auto" />
             </div>
             <div className="bg-white rounded-lg p-3">
-              <img src="/images_v2/umta-logo-real.png" alt="UMTA Member" className="h-12 w-auto" />
+              <Image src="/images_v2/umta-logo-real.png" alt="UMTA Member" width={447} height={447} className="h-12 w-auto" />
             </div>
           </div>
         </div>

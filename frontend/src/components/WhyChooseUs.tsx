@@ -1,5 +1,6 @@
 'use client';
 import { useState, useEffect } from 'react';
+import Image from 'next/image';
 import { useI18n } from "@/lib/i18n";
 
 // FIX: 2026-08-07 Burmese override (MM mode)
@@ -70,7 +71,7 @@ export default function WhyChooseUs() {
             onMouseLeave={(e: any)=>{e.currentTarget.style.borderColor='#eee';e.currentTarget.style.transform='none';e.currentTarget.style.boxShadow='none';}}>
             {f.image ? (
               <div style={{ width: 72, height: 72, margin: '0 auto 12px', borderRadius: '50%', overflow: 'hidden', background: '#FFFDF5', border: '1px solid #eee', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <img src={f.image} alt={f.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} loading="lazy" />
+                <Image src={f.image} alt={f.title} width={144} height={144} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
               </div>
             ) : (
               <div style={{ fontSize: 32, marginBottom: 12 }}>{f.icon}</div>
