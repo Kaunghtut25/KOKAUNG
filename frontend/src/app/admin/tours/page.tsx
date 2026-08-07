@@ -3,6 +3,7 @@
 import React, { useEffect, useState, useCallback } from "react";
 import Link from "next/link";
 import AdminFormModal from "@/components/AdminFormModal";
+import { useI18n } from "@/lib/i18n";
 
 interface Tour {
   id: string;
@@ -71,6 +72,7 @@ function detectTourType(tour: any): 'inbound' | 'outbound' {
 }
 
 export default function AdminToursPage() {
+  const { t } = useI18n();
   const [tours, setTours] = useState<Tour[]>([]);
   const [typeFilter, setTypeFilter] = useState<"all" | "inbound" | "outbound">("all");
   const countInbound = (tours || []).filter((t: any) => detectTourType(t) === 'inbound').length;
@@ -286,11 +288,11 @@ export default function AdminToursPage() {
         fetchTours();
       } else {
         const err = await res.json();
-        alert(err.message || "Failed to save tour");
+        alert(err.message || t("admin.common.saveFailed"));
       }
     } catch (err) {
       console.error("Save failed:", err);
-      alert("Failed to save tour");
+      alert(t("admin.common.saveFailed"));
     } finally {
       setSaving(false);
     }
@@ -306,11 +308,11 @@ export default function AdminToursPage() {
         setDeleteConfirm(null);
         fetchTours();
       } else {
-        alert("Failed to delete tour");
+        alert(t("admin.common.deleteFailed"));
       }
     } catch (err) {
       console.error("Delete failed:", err);
-      alert("Failed to delete tour");
+      alert(t("admin.common.deleteFailed"));
     }
   };
 
@@ -332,7 +334,7 @@ export default function AdminToursPage() {
     <div className="space-y-4">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
-          <label className="block text-white/70 text-sm mb-1">Title</label>
+          <label className="block text-white/70 text-sm mb-1">{t("admin.form.title")}</label>
           <input
             type="text"
             value={editingTour.title}
@@ -342,7 +344,7 @@ export default function AdminToursPage() {
           />
         </div>
         <div>
-          <label className="block text-white/70 text-sm mb-1">Destination</label>
+          <label className="block text-white/70 text-sm mb-1">{t("admin.form.destination")}</label>
           <input
             type="text"
             value={editingTour.destination}
@@ -357,7 +359,7 @@ export default function AdminToursPage() {
 
       <div>
         <label className="block text-white/70 text-sm mb-1">
-          Description
+          {t("admin.form.description")}
         </label>
         <textarea
           value={editingTour.description}
@@ -372,7 +374,7 @@ export default function AdminToursPage() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
           <label className="block text-white/70 text-sm mb-1">
-            Price MMK
+            {t("admin.form.priceMmk")}
           </label>
           <input
             type="number"
@@ -385,7 +387,7 @@ export default function AdminToursPage() {
         </div>
         <div>
           <label className="block text-white/70 text-sm mb-1">
-            Price USD
+            {t("admin.form.priceUsd")}
           </label>
           <input
             type="number"
@@ -401,7 +403,7 @@ export default function AdminToursPage() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
           <label className="block text-white/70 text-sm mb-1">
-            Duration
+            {t("admin.form.duration")}
           </label>
           <input
             type="text"
@@ -409,13 +411,13 @@ export default function AdminToursPage() {
             onChange={(e) =>
               handleFieldChange("duration", e.target.value)
             }
-            placeholder="e.g. 3 Days / 2 Nights"
+            placeholder={t("admin.form.durationPh")}
             className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-gold/50 transition-colors"
           />
         </div>
         <div>
           <label className="block text-white/70 text-sm mb-1">
-            Max Group Size
+            {t("admin.form.maxGroupSize")}
           </label>
           <input
             type="number"
@@ -432,7 +434,7 @@ export default function AdminToursPage() {
       {/* ─── Contact Information ─── */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div>
-          <label className="block text-white/70 text-sm mb-1">Phone</label>
+          <label className="block text-white/70 text-sm mb-1">{t("admin.form.phone")}</label>
           <input
             type="tel"
             name="phone"
@@ -443,7 +445,7 @@ export default function AdminToursPage() {
           />
         </div>
         <div>
-          <label className="block text-white/70 text-sm mb-1">Email</label>
+          <label className="block text-white/70 text-sm mb-1">{t("admin.form.email")}</label>
           <input
             type="email"
             name="email"
@@ -454,11 +456,11 @@ export default function AdminToursPage() {
           />
         </div>
         <div>
-          <label className="block text-white/70 text-sm mb-1">Meeting Point / Address</label>
+          <label className="block text-white/70 text-sm mb-1">{t("admin.form.address")}</label>
           <input
             type="text"
             name="address"
-            placeholder="Meeting point or address"
+            placeholder={t("admin.form.addressPh")}
             className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-gold/50 transition-colors"
             value={editingTour.address}
             onChange={(e) => handleFieldChange("address", e.target.value)}
@@ -468,7 +470,7 @@ export default function AdminToursPage() {
 {/* ─── Multi-Image Management ─── */}
       <div>
         <label className="block text-white/70 text-sm mb-1">
-          Images (upload file or type URL)
+          {t("admin.form.images")}
         </label>
         <div
           className="flex gap-2 mb-3 flex-wrap"
@@ -489,8 +491,8 @@ export default function AdminToursPage() {
             disabled={uploading}
             className="px-4 py-2 rounded-lg bg-gold/10 text-gold text-sm font-medium hover:bg-gold/20 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
           >
-            {uploading ? "Uploading..." : "📁 Upload Image"}
-          <p className="text-xs text-gray-400 mt-1">Recommended: 1200x630px (JPEG, max 2MB)</p>
+            {uploading ? t("admin.form.uploading") : t("admin.form.uploadImage")}
+          <p className="text-xs text-gray-400 mt-1">{t("admin.form.recommended")}</p>
           </button>
           <input
             type="text"
@@ -498,7 +500,7 @@ export default function AdminToursPage() {
             onChange={(e) => {
               handleImageUrlChange(e.target.value);
             }}
-            placeholder="Or type image URL..."
+            placeholder={t("admin.form.imageUrl")}
             className="flex-1 min-w-[200px] bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-gold/50 transition-colors"
             onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); addImage(); } }}
           />
@@ -520,7 +522,7 @@ export default function AdminToursPage() {
           <input
             type="text"
             name="imageUrl"
-            placeholder="Or paste image URL"
+            placeholder={t("admin.form.pasteUrl")}
             className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-gold/50 transition-colors"
             value={imageUrlInput}
             onChange={(e) => {
@@ -581,14 +583,14 @@ export default function AdminToursPage() {
         ) : (
           <div className="rounded-lg border border-dashed border-white/10 bg-white/[0.02] p-6 text-center">
             <span className="text-white/20 text-2xl block mb-1">🖼️</span>
-            <p className="text-white/30 text-sm">No images added yet</p>
+            <p className="text-white/30 text-sm">{t("admin.form.noImages")}</p>
           </div>
         )}
       </div>
 
       <div>
         <label className="block text-white/70 text-sm mb-1">
-          Amenities (comma-separated)
+          {t("admin.form.amenities")}
         </label>
         <input
           type="text"
@@ -596,14 +598,14 @@ export default function AdminToursPage() {
           onChange={(e) =>
             handleFieldChange("amenities", e.target.value)
           }
-          placeholder="WiFi, Breakfast, Transport"
+          placeholder={t("admin.form.amenitiesPh")}
           className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-gold/50 transition-colors"
         />
       </div>
 
       <div>
         <label className="block text-white/70 text-sm mb-1">
-          Included (comma-separated)
+          {t("admin.form.included")}
         </label>
         <input
           type="text"
@@ -611,14 +613,14 @@ export default function AdminToursPage() {
           onChange={(e) =>
             handleFieldChange("included", e.target.value)
           }
-          placeholder="Hotel, Meals, Guide"
+          placeholder={t("admin.form.includedPh")}
           className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-gold/50 transition-colors"
         />
       </div>
 
       <div>
         <label className="block text-white/70 text-sm mb-1">
-          Excluded (comma-separated)
+          {t("admin.form.excluded")}
         </label>
         <input
           type="text"
@@ -626,14 +628,14 @@ export default function AdminToursPage() {
           onChange={(e) =>
             handleFieldChange("excluded", e.target.value)
           }
-          placeholder="Flights, Visa Fees"
+          placeholder={t("admin.form.excludedPh")}
           className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-gold/50 transition-colors"
         />
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
-          <label className="block text-white/70 text-sm mb-1">Status</label>
+          <label className="block text-white/70 text-sm mb-1">{t("admin.form.status")}</label>
           <select
             value={editingTour.status}
             onChange={(e) =>
@@ -641,21 +643,21 @@ export default function AdminToursPage() {
             }
             className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-gold/50 transition-colors"
           >
-            <option value="active">Active</option>
-            <option value="inactive">Inactive</option>
-            <option value="featured">Featured</option>
+            <option value="active">{t("admin.form.active")}</option>
+            <option value="inactive">{t("admin.form.inactive")}</option>
+            <option value="featured">{t("admin.form.featured")}</option>
           </select>
         </div>
         <div>
-          <label className="block text-white/70 text-sm mb-1">Tour Type</label>
+          <label className="block text-white/70 text-sm mb-1">{t("admin.form.tourType")}</label>
           <select
             value={editingTour.tourType || ""}
             onChange={(e) => handleFieldChange("tourType", e.target.value)}
             className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-gold/50 transition-colors"
           >
-            <option value="">Auto-detect (by destination)</option>
-            <option value="inbound">🏔 Inbound (Myanmar)</option>
-            <option value="outbound">🌏 Outbound (International)</option>
+            <option value="">{t("admin.form.autoDetect")}</option>
+            <option value="inbound">{t("admin.form.inbound")}</option>
+            <option value="outbound">{t("admin.form.outbound")}</option>
           </select>
         </div>
       </div>
@@ -671,7 +673,7 @@ export default function AdminToursPage() {
               className="w-5 h-5 rounded border-white/20 bg-white/5 checked:bg-gold checked:border-gold focus:ring-gold/30 cursor-pointer"
             />
             <span className="text-white/70 text-sm">
-              ⭐ Featured — Show on homepage
+              {t("admin.form.featuredHome")}
             </span>
           </label>
         </div>
@@ -679,17 +681,17 @@ export default function AdminToursPage() {
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div>
-          <label className="block text-white/70 text-sm mb-1">Rating (1-5)</label>
+          <label className="block text-white/70 text-sm mb-1">{t("admin.form.rating")}</label>
           <input type="number" min={1} max={5} step={0.1} value={editingTour.rating} onChange={(e) => handleFieldChange("rating", Number(e.target.value))} className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-gold/50 transition-colors" />
         </div>
         <div>
-          <label className="block text-white/70 text-sm mb-1">Review Count</label>
+          <label className="block text-white/70 text-sm mb-1">{t("admin.form.reviewCount")}</label>
           <input type="number" min={0} value={editingTour.reviewCount} onChange={(e) => handleFieldChange("reviewCount", Number(e.target.value))} className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-gold/50 transition-colors" />
         </div>
         <div>
-          <label className="block text-white/70 text-sm mb-1">Row</label>
+          <label className="block text-white/70 text-sm mb-1">{t("admin.form.row")}</label>
           <select value={editingTour.row} onChange={(e) => handleFieldChange("row", Number(e.target.value))} className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-gold/50 transition-colors">
-            {[1,2,3,4,5,6,7].map((r) => (<option key={r} value={r}>Row {r}</option>))}
+            {[1,2,3,4,5,6,7].map((r) => (<option key={r} value={r}>{t("admin.form.row")} {r}</option>))}
           </select>
         </div>
       </div>
@@ -700,7 +702,7 @@ export default function AdminToursPage() {
     return (
       <div className="flex items-center justify-center h-96">
         <div className="text-gold/70 animate-pulse text-lg">
-          Loading tours...
+          {t("admin.tours.loading")}
         </div>
       </div>
     );
@@ -715,26 +717,26 @@ export default function AdminToursPage() {
             className="text-3xl md:text-4xl font-bold text-[#D4AF37]"
             style={{ fontFamily: "'Playfair Display', Georgia, serif" }}
           >
-            Manage Tour Packages
+            {t("admin.tours.title")}
           </h1>
           <p className="text-white/40 text-sm mt-1">
-            Create and manage your tour offerings
+            {t("admin.tours.subtitle")}
           </p>
         </div>
         <button
           onClick={openCreateModal}
           className="px-5 py-2.5 rounded-lg bg-gold text-deepblue-dark font-semibold text-sm hover:bg-gold/90 transition-all flex items-center gap-2"
         >
-          <span>✈️</span> Add New Tour
+          <span>✈️</span> {t("admin.tours.addNew")}
         </button>
       </div>
 
       {/* ─── Inbound / Outbound / All Tabs ─── */}
       <div className="flex flex-wrap items-center gap-2 mt-6">
         {[
-          { key: 'all', label: 'All Tours', count: (tours || []).length },
-          { key: 'inbound', label: '🏔️ Inbound', count: countInbound },
-          { key: 'outbound', label: '🌏 Outbound', count: countOutbound },
+          { key: 'all', label: t('admin.tours.tabAll'), count: (tours || []).length },
+          { key: 'inbound', label: t('admin.tours.tabInbound'), count: countInbound },
+          { key: 'outbound', label: t('admin.tours.tabOutbound'), count: countOutbound },
         ].map((tab) => (
           <button
             key={tab.key}
@@ -764,31 +766,31 @@ export default function AdminToursPage() {
             <thead>
               <tr className="border-b border-white/10 bg-white/[0.02]">
                 <th className="text-left p-4 text-white/40 font-semibold uppercase tracking-wider text-[11px]">
-                  Tour
+                  {t("admin.tours.thTour")}
                 </th>
                 <th className="text-left p-4 text-white/40 font-semibold uppercase tracking-wider text-[11px]">
-                  Destination
+                  {t("admin.tours.thDestination")}
                 </th>
                 <th className="text-left p-4 text-white/40 font-semibold uppercase tracking-wider text-[11px]">
-                  Price (MMK)
+                  {t("admin.tours.thPriceMmk")}
                 </th>
                 <th className="text-left p-4 text-white/40 font-semibold uppercase tracking-wider text-[11px]">
-                  Price (USD)
+                  {t("admin.tours.thPriceUsd")}
                 </th>
                 <th className="text-left p-4 text-white/40 font-semibold uppercase tracking-wider text-[11px]">
-                  Duration
+                  {t("admin.tours.thDuration")}
                 </th>
                 <th className="text-left p-4 text-white/40 font-semibold uppercase tracking-wider text-[11px]">
-                  Rating
+                  {t("admin.tours.thRating")}
                 </th>
                 <th className="text-left p-4 text-white/40 font-semibold uppercase tracking-wider text-[11px]">
-                  Status
+                  {t("admin.tours.thStatus")}
                 </th>
                 <th className="text-left p-4 text-white/40 font-semibold uppercase tracking-wider text-[11px]">
-                  Type
+                  {t("admin.tours.thType")}
                 </th>
                 <th className="text-left p-4 text-white/40 font-semibold uppercase tracking-wider text-[11px]">
-                  Actions
+                  {t("admin.tours.thActions")}
                 </th>
               </tr>
             </thead>
@@ -800,7 +802,7 @@ export default function AdminToursPage() {
                     className="p-10 text-center text-white/30"
                   >
                     <span className="text-3xl block mb-2">✈️</span>
-                    No tours found. Click &quot;Add New Tour&quot; to create
+                    {t("admin.tours.empty")}
                     one.
                   </td>
                 </tr>
@@ -853,34 +855,34 @@ export default function AdminToursPage() {
                       <td className="p-4">
                         <div className="flex items-center gap-1.5">
                           <span className={getStatusBadge(tour.status)}>
-                            {(tour.status || "active").charAt(0).toUpperCase() + (tour.status || "active").slice(1)}
+                            {tour.status === "featured" ? t("admin.form.featured") : tour.status === "inactive" ? t("admin.form.inactive") : t("admin.form.active")}
                           </span>
                           {tour.featured && (
-                            <span className="text-xs" title="Featured">⭐</span>
+                            <span className="text-xs" title={t("admin.form.featured")}>⭐</span>
                           )}
                         </div>
                       </td>
                       <td className="p-4">
                         <span className={`text-[10px] px-2 py-1 rounded-full font-medium ${detectTourType(tour) === 'inbound' ? 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/30' : 'bg-sky-500/15 text-sky-400 border border-sky-500/30'}`}>
-                          {detectTourType(tour) === 'inbound' ? '🏔 Inbound' : '🌏 Outbound'}
+                          {detectTourType(tour) === 'inbound' ? t('admin.form.inboundShort') : t('admin.form.outboundShort')}
                         </span>
                       </td>
                       <td className="p-4">
                         <div className="flex items-center gap-2">
                           <Link href={`/tours/${tour.id}`} target="_blank" rel="noopener noreferrer" className="px-3 py-1.5 rounded-lg bg-blue-500/10 text-blue-400 text-xs font-medium hover:bg-blue-500/20 transition-colors">
-                            View
+                            {t("admin.tours.view")}
                           </Link>
                           <button
                             onClick={() => openEditModal(tour)}
                             className="px-3 py-1.5 rounded-lg bg-gold/10 text-gold text-xs font-medium hover:bg-gold/20 transition-colors"
                           >
-                            Edit
+                            {t("admin.tours.edit")}
                           </button>
                           <button
                             onClick={() => setDeleteConfirm(tour.id)}
                             className="px-3 py-1.5 rounded-lg bg-red-500/10 text-red-400 text-xs font-medium hover:bg-red-500/20 transition-colors"
                           >
-                            Delete
+                            {t("admin.tours.delete")}
                           </button>
                         </div>
                       </td>
@@ -897,9 +899,9 @@ export default function AdminToursPage() {
       <AdminFormModal
         isOpen={modalOpen}
         onClose={() => setModalOpen(false)}
-        title={isNew ? "Add New Tour" : "Edit Tour"}
+        title={isNew ? t("admin.tours.addNewModal") : t("admin.tours.editTitle")}
         onSubmit={handleSubmit}
-        submitLabel={isNew ? "Create Tour" : "Update Tour"}
+        submitLabel={isNew ? t("admin.tours.create") : t("admin.tours.update")}
         isLoading={saving}
       >
         {renderFormFields()}
@@ -914,24 +916,23 @@ export default function AdminToursPage() {
           />
           <div className="relative bg-deepblue-dark border border-white/10 rounded-xl p-6 max-w-sm w-full z-10">
             <h3 className="text-lg font-bold text-white mb-2">
-              Confirm Delete
+              {t("admin.tours.confirmDelete")}
             </h3>
             <p className="text-white/60 text-sm mb-6">
-              Are you sure you want to delete this tour? This action cannot be
-              undone.
+              {t("admin.tours.deleteMsg")}
             </p>
             <div className="flex gap-3 justify-end">
               <button
                 onClick={() => setDeleteConfirm(null)}
                 className="px-4 py-2 rounded-lg border border-white/20 text-white/70 hover:text-white transition-colors text-sm"
               >
-                Cancel
+                {t("common.cancel")}
               </button>
               <button
                 onClick={() => handleDelete(deleteConfirm)}
                 className="px-4 py-2 rounded-lg bg-red-600 text-white font-medium text-sm hover:bg-red-700 transition-colors"
               >
-                Delete
+                {t("common.delete")}
               </button>
             </div>
           </div>
