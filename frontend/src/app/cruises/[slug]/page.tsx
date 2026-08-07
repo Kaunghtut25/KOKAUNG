@@ -33,6 +33,7 @@ interface CruiseDetailPageProps {
 }
 
 function CruiseDetailClient({ cruise, slug }: CruiseDetailPageProps) {
+  const { t } = useI18n();
   const [currency, setCurrency] = useState<'MMK' | 'USD'>('MMK');
   const [travelers, setTravelers] = useState(1);
   const [travelDate, setTravelDate] = useState('');
