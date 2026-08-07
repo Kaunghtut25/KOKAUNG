@@ -280,23 +280,25 @@ html[data-narrow="1"] .lg\:flex-row {
 html[data-narrow="1"] [class*="flex-wrap"] button {
   flex: 1 1 45% !important;
 }
-html[data-narrow="1"] table {
-  min-width: 720px !important;
+html[data-narrow="1"] main th,
+html[data-narrow="1"] main td {
+  padding-left: 0.5rem !important;
+  padding-right: 0.5rem !important;
 }
 /* Visible scrollbars for admin content (overflowing tables at narrow/zoom) */
 main.xl\:ml-64::-webkit-scrollbar,
 main.xl\:ml-64 *::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 10px;
+  height: 10px;
 }
 main.xl\:ml-64::-webkit-scrollbar-track,
 main.xl\:ml-64 *::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.06);
+  background: rgba(255, 255, 255, 0.10);
   border-radius: 8px;
 }
 main.xl\:ml-64::-webkit-scrollbar-thumb,
 main.xl\:ml-64 *::-webkit-scrollbar-thumb {
-  background: rgba(212, 175, 55, 0.45);
+  background: rgba(212, 175, 55, 0.8);
   border-radius: 8px;
 }
 main.xl\:ml-64::-webkit-scrollbar-thumb:hover,
