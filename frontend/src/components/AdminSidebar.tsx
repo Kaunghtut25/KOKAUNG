@@ -24,6 +24,7 @@ const navItems: NavItem[] = [
   { labelKey: "admin.manageInsurance", icon: "🛡️", path: "/admin/insurance" },
   { labelKey: "admin.manageCruises", icon: "🚢", path: "/admin/cruises" },
   { labelKey: "admin.manageBlog", icon: "📝", path: "/admin/blog" },
+    { labelKey: "admin.knowledge", icon: "🧠", path: "/admin/knowledge" },
   { labelKey: "admin.manageUsers", icon: "👥", path: "/admin/users" },
   { labelKey: "admin.skyLounge", icon: "✨", path: "/admin/sky-lounge" },
   { labelKey: "admin.siteSettings", icon: "⚙️", path: "/admin/settings" },

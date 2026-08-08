@@ -110,6 +110,37 @@ async function fetchCatalog(): Promise<string> {
   return out.length ? out.join('\n') : '';
 }
 
+// ── trained knowledge base (admin-managed, long-term memory) ──────────────
+async function fetchKnowledge(): Promise<any[]> {
+  try {
+    const mod = await import('@/lib/persistentStore');
+    const items = (await mod.getAll('knowledge')) || [];
+    return items.filter((it: any) => it.status !== 'inactive').map((it: any) => ({
+      t: it.topic || '',
+      q: it.question || '',
+      a: it.answer || '',
+      k: it.keywords || '',
+    }));
+  } catch { return []; }
+}
+
+function matchKnowledge(text: string, kb: any[]): string {
+  if (!kb.length || !text) return '';
+  const tl = text.toLowerCase();
+  const scored = kb.map((e: any) => {
+    let score = 0;
+    const kws = String(e.k || '').split(',').map((x: string) => x.trim().toLowerCase()).filter(Boolean);
+    for (const kw of kws) if (kw && tl.includes(kw)) score += 2;
+    const q = (e.q || '').toLowerCase();
+    const t = (e.t || '').toLowerCase();
+    if (q && tl.includes(q)) score += 3;
+    if (t && tl.includes(t)) score += 2;
+    return { e, score };
+  }).filter((s: any) => s.score > 0).sort((a: any, b: any) => b.score - a.score).slice(0, 5);
+  if (!scored.length) return '';
+  return scored.map((s: any) => `- Topic: ${s.e.t || '(topic)'}\n  Q: ${s.e.q || '-'}\n  A: ${s.e.a || ''}`).join('\n');
+}
+
 // ── research hook (current/evergreen facts) ─────────────────────────────────
 function wantsResearch(text: string): boolean {
   const t = text.toLowerCase();
@@ -164,7 +195,7 @@ const BUSINESS_INFO = {
   telegram: 'https://t.me/a9globaltravel',
 };
 
-function buildSystemPrompt(phone: string, email: string, catalog: string, researchText: string): string {
+function buildSystemPrompt(phone: string, email: string, catalog: string, researchText: string, knowledgeText: string = ''): string {
   return `You are "Master A9", the AI live chat assistant for A9 Global Travels & Tours, an IATA-accredited travel agency in Myanmar (YGN) operating since 2015.
 
 YOUR IDENTITY:
@@ -198,6 +229,7 @@ TRAVEL KNOWLEDGE GUIDELINES (use this expertise when relevant):
 OUR LIVE CATALOG (answer from this when relevant):
 ${catalog || '(catalog unavailable)'}
 
+${knowledgeText ? `YOUR TRAINED KNOWLEDGE BASE (authoritative — provided by the A9 team. When the visitor's question matches one of these topics, answer FROM the given A value — it overrides generic advice):\n${knowledgeText}\n` : ''}
 ${researchText ? `RECENT WEB RESEARCH (current info — use when relevant, note it may change):\n${researchText}` : ''}
 
 BUSINESS INFO (AUTHORITATIVE — the ONLY contact facts you may state; NEVER invent phone numbers, emails, addresses, hours or off days):
@@ -280,11 +312,13 @@ export async function POST(req: NextRequest) {
 
   if (apiKey || anthropicKey || ollamaBase) {
     try {
-      const [catalog, researchText] = await Promise.all([
+      const [catalog, researchText, kb] = await Promise.all([
         fetchCatalog(),
         wantsResearch(lastUserText) ? research(lastUserText) : Promise.resolve(''),
+        fetchKnowledge(),
       ]);
-      const system = buildSystemPrompt(phone, email, catalog, researchText);
+      const knowledgeText = matchKnowledge(lastUserText, kb);
+      const system = buildSystemPrompt(phone, email, catalog, researchText, knowledgeText);
 
       if (anthropicKey && !apiKey) {
         const res = await fetch('https://api.anthropic.com/v1/messages', {
