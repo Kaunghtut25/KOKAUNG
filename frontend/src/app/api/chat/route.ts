@@ -291,7 +291,7 @@ export async function POST(req: NextRequest) {
           headers: { 'content-type': 'application/json', 'x-api-key': anthropicKey, 'anthropic-version': '2023-06-01' },
           body: JSON.stringify({
             model: process.env.ANTHROPIC_MODEL || 'claude-3-5-sonnet-latest',
-            max_tokens: 500,
+            max_tokens: 1200,
             system,
             messages: merged.slice(-10).map((m: any) => ({ role: m.sender === 'user' ? 'user' : 'assistant', content: m.text })),
           }),
@@ -311,7 +311,7 @@ export async function POST(req: NextRequest) {
                 ...merged.slice(-10).map((m: any) => ({ role: m.sender === 'user' ? 'user' : 'assistant', content: m.text })),
               ],
               temperature: 0.6,
-              max_tokens: 500,
+              max_tokens: 1200,
             }),
           });
           if (!res.ok) {
@@ -335,7 +335,7 @@ export async function POST(req: NextRequest) {
               ...merged.slice(-10).map((m: any) => ({ role: m.sender === 'user' ? 'user' : 'assistant', content: m.text })),
             ],
             temperature: 0.6,
-            max_tokens: 500,
+            max_tokens: 1200,
           }),
         });
         if (!res.ok) {
