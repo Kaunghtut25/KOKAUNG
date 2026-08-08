@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { Tour } from '@/lib/api';
 import { getImageFallback } from '@/lib/imageFallback';
@@ -72,13 +73,14 @@ export default function TourCard({ tour, currency = 'MMK', preloadedImage, cardW
         {/* Image Section — same pattern as cruises page that works */}
         <div className="relative w-full overflow-hidden bg-gray-200" style={{ height: cardHeight || 280 }}>
           {!imgError ? (
-            <img
+            <Image
               src={displayImage}
               alt={tour?.title || ''}
-              className="w-full h-full object-cover transition-transform duration-700 ease-out"
-              style={{ position: 'absolute', inset: 0, transform: isHovered ? 'scale(1.08)' : 'scale(1)' }}
+              fill
+              sizes="(max-width: 768px) 100vw, 50vw"
+              className="object-cover transition-transform duration-700 ease-out"
+              style={{ transform: isHovered ? 'scale(1.08)' : 'scale(1)' }}
               onError={() => setImgError(true)}
-              loading="eager"
             />
           ) : (
             <div className="absolute inset-0 bg-gradient-to-br from-[#0A1628] to-[#1a2744] flex items-center justify-center">

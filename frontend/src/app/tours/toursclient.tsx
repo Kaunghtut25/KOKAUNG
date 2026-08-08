@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import Image from 'next/image';
 import { useI18n } from "@/lib/i18n";
 import TourCard from '@/components/TourCard';
 import CurrencyToggle from '@/components/CurrencyToggle';
@@ -31,6 +32,7 @@ export function detectTourType(tour: { destination?: string; tourType?: string }
 export default function ToursClient(props: any) {
   const { t } = useI18n();
   const heroImage = props.siteConfig?.heroImages?.tours || "/images_v2/hero-tours-v2.jpg";
+  const [heroImgOk, setHeroImgOk] = useState(true);
   const toursText = props.siteConfig?.heroText?.tours || {};
   const toursTitle = toursText.title || "";
   const toursSubtitle = toursText.subtitle || "";
@@ -110,7 +112,11 @@ export default function ToursClient(props: any) {
       {/* ── Hero (same for all tabs) ── */}
       <section className="relative pt-24 pb-12 px-4 overflow-hidden" style={{ height: (props.siteConfig?.heroDimensions?.["tours"]?.desktop || 480) + "px" }}>
         <div className="absolute inset-0">
-          <img src={heroImage} alt="A9 Global Tours" className="w-full h-full object-cover" onError={(e) => { (e.target as HTMLImageElement).src = "/images_v2/hero-tours-v2.jpg"; }} />
+          {heroImgOk ? (
+            <Image src={heroImage} alt="A9 Global Tours" fill sizes="100vw" className="object-cover" onError={() => setHeroImgOk(false)} />
+          ) : (
+            <Image src="/images_v2/hero-tours-v2.jpg" alt="A9 Global Tours" fill sizes="100vw" className="object-cover" />
+          )}
           <div className="absolute inset-0 bg-gradient-to-b from-[#0A1628]/80 via-[#0A1628]/40 to-[#0A1628]/60" />
         </div>
         <div className="relative z-10 max-w-4xl mx-auto text-center">
