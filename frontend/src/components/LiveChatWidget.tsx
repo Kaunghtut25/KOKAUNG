@@ -1,6 +1,65 @@
 'use client';
-import { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useI18n } from "@/lib/i18n";
+
+function Inline({ text }: { text: string }) {
+  const parts: React.ReactNode[] = [];
+  const re = /(\*\*[^*]+\*\*|\*[^*]+\*|\[[^\]]+\]\([^)]+\))/g;
+  let last = 0, m, k = 0;
+  while ((m = re.exec(text)) !== null) {
+    if (m.index > last) parts.push(text.slice(last, m.index));
+    const tok = m[0];
+    if (tok.startsWith('**')) parts.push(<strong key={k++}>{tok.slice(2, -2)}</strong>);
+    else if (tok.startsWith('[')) {
+      const lm = tok.match(/^\[([^\]]+)\]\(([^)]+)\)$/);
+      parts.push(lm ? <a key={k++} href={lm[2]} target="_blank" rel="noopener noreferrer" style={{ color: '#D4AF37', textDecoration: 'underline' }}>{lm[1]}</a> : tok);
+    } else parts.push(<em key={k++}>{tok.slice(1, -1)}</em>);
+    last = m.index + tok.length;
+  }
+  if (last < text.length) parts.push(text.slice(last));
+  return <>{parts}</>;
+}
+
+function ChatText({ text }: { text: string }) {
+  const lines = text.split('\n');
+  const blocks: React.ReactNode[] = [];
+  let i = 0, key = 0;
+  while (i < lines.length) {
+    const line = lines[i];
+    const heading = line.match(/^\s*(#{1,4})\s+(.*)$/);
+    const bullet = line.match(/^\s*[-\u2022*]\s+(.*)$/);
+    const numbered = line.match(/^\s*\d+[.)]\s+(.*)$/);
+    if (heading) {
+      blocks.push(<div key={key++} style={{ fontWeight: 700, color: '#0A1628', margin: '8px 0 4px', fontSize: 13.5 }}><Inline text={heading[2]} /></div>);
+      i++;
+    } else if (bullet) {
+      const items: React.ReactNode[] = [];
+      while (i < lines.length) {
+        const b = lines[i].match(/^\s*[-\u2022*]\s+(.*)$/);
+        if (!b) break;
+        items.push(<li key={items.length} style={{ marginBottom: 3 }}><Inline text={b[1]} /></li>);
+        i++;
+      }
+      blocks.push(<ul key={key++} style={{ margin: '6px 0', paddingLeft: 18, listStyle: 'disc' }}>{items}</ul>);
+    } else if (numbered) {
+      const items: React.ReactNode[] = [];
+      while (i < lines.length) {
+        const n = lines[i].match(/^\s*\d+[.)]\s+(.*)$/);
+        if (!n) break;
+        items.push(<li key={items.length} style={{ marginBottom: 3 }}><Inline text={n[1]} /></li>);
+        i++;
+      }
+      blocks.push(<ol key={key++} style={{ margin: '6px 0', paddingLeft: 18 }}>{items}</ol>);
+    } else if (line.trim() === '') {
+      blocks.push(<div key={key++} style={{ height: 6 }} />);
+      i++;
+    } else {
+      blocks.push(<div key={key++} style={{ marginBottom: 4 }}><Inline text={line} /></div>);
+      i++;
+    }
+  }
+  return <>{blocks}</>;
+}
 
 interface Message {
   id: number;
@@ -233,10 +292,11 @@ export default function LiveChatWidget() {
                     borderRadius: msg.sender === 'user' ? '14px 14px 4px 14px' : '14px 14px 14px 4px',
                     fontSize: 13,
                     lineHeight: 1.4,
+                    whiteSpace: 'pre-wrap',
                     boxShadow: '0 1px 2px rgba(0,0,0,0.06)',
                   }}
                 >
-                  {msg.text}
+                  {msg.sender === 'user' ? msg.text : <ChatText text={msg.text} />}
                 </div>
                 {msg.time && (
                   <div style={{ fontSize: 10, color: '#999', marginTop: 2, textAlign: msg.sender === 'user' ? 'right' : 'left' }}>
