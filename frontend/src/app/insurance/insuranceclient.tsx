@@ -11,6 +11,7 @@ import { getImageFallback } from '@/lib/imageFallback';
 import DealsBanner from '@/components/DealsBanner';
 import FAQAccordion from '@/components/FAQAccordion';
 import TestimonialSlider from '@/components/TestimonialSlider';
+import Image from "next/image";
 interface InsurancePlan {
   slug?: string;
   id?: string;
@@ -99,8 +100,7 @@ function InsuranceCard({ plan, currency, onSelect, cardWidth, cardHeight }: { pl
   return (
     <div onClick={() => router.push("/insurance/" + (plan.slug||plan._id || plan.id))} className="rounded-2xl overflow-hidden group cursor-pointer border border-gray-100 hover:border-gold/40 transition-all duration-300 bg-white shadow-sm hover:shadow-xl hover:-translate-y-1 flex flex-col" style={{ width: cardWidth || undefined, height: cardHeight || undefined }}>
       <div className="relative h-40 overflow-hidden">
-        <img src={imageUrl} alt={name} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" loading="lazy"
-          onError={(e) => { (e.target as HTMLImageElement).src = '/images_v2/ins1-v3.jpg'; }} />
+        <Image alt={name} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" onError={(e) => { (e.target as HTMLImageElement).src = '/images_v2/ins1-v3.jpg'; }} src={imageUrl} width={1600} height={900} sizes="100vw" />
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
         <div className="absolute bottom-2 left-3 right-3">
           <h3 className="text-white font-semibold text-sm drop-shadow-md" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>{name}</h3>
@@ -176,7 +176,7 @@ export default function InsuranceClient({ initialPlans, siteConfig }: InsuranceC
   return (
     <div className="min-h-screen bg-gray-50">
 <section className="relative w-full h-64 sm:h-80 overflow-hidden" style={{ height: (siteConfig?.heroDimensions?.["insurance"]?.desktop || 380) + "px" }}>
-        <img src={heroImage} alt="Insurance" className="w-full h-full object-cover" onError={(e) => { (e.target as HTMLImageElement).src = "/images_v2/ins1-v3.jpg"; }} />
+        <Image alt="Insurance" className="w-full h-full object-cover" onError={(e) => { (e.target as HTMLImageElement).src = "/images_v2/ins1-v3.jpg"; }} src={heroImage} width={1600} height={900} sizes="100vw" />
         <div className="absolute inset-0 bg-gradient-to-b from-[#0A1628]/70 to-[#0A1628]/40" />
         <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4">
           {iTitle ? (<h1 className="font-bold text-white mb-2" style={{ fontFamily: iTitleFont, fontSize: iTitleSize }}>{iTitle}</h1>) : null}

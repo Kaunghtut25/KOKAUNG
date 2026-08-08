@@ -4,6 +4,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { api } from '@/lib/api';
 import Link from 'next/link';
 import { useI18n } from '@/lib/i18n';
+import Image from "next/image";
 
 interface BlogPost {
   _id: string;
@@ -198,7 +199,7 @@ export default function AdminBlogPage() {
           />
           {imagePreview && (
             <div className="mt-2">
-              <img src={imagePreview} alt={t("admin.form.imagePreview")} className="w-full h-32 object-cover rounded-lg border border-gray-200" />
+              <Image alt={t("admin.form.imagePreview")} className="w-full h-32 object-cover rounded-lg border border-gray-200" src={imagePreview} width={1600} height={900} sizes="100vw" />
             </div>
           )}
         </div>
@@ -229,7 +230,7 @@ export default function AdminBlogPage() {
         {loading ? <p className="text-gray-500">{t("common.loading")}</p> :
           posts.map((post: BlogPost) => (
             <div key={post._id} className="bg-white/5 backdrop-blur rounded-xl p-5 border border-white/10 flex flex-col md:flex-row md:items-start gap-4 hover:border-[#D4AF37]/30 transition-all">
-              <img src={post.image} alt="" className="w-16 h-16 rounded-lg object-cover flex-shrink-0" />
+              <Image alt="" className="w-16 h-16 rounded-lg object-cover flex-shrink-0" src={post.image} width={1600} height={900} sizes="100vw" />
               <div className="flex-1 min-w-0">
                 <h3 className="font-semibold text-white line-clamp-2">{post.title}</h3>
                 <p className="text-sm text-gray-400 line-clamp-2 mt-1">{post.content}</p>

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Image from "next/image";
 
 const defaultFaqs = [
   { q: "How do I book a tour?", a: "Simply browse our Tours page, select your preferred tour, click 'Book Now', fill in your details and submit. Our team will contact you within 24 hours to confirm your booking." },
@@ -32,7 +33,7 @@ export default function FaqClient({ siteConfig }: { siteConfig: any }) {
   return (
     <main style={{ minHeight: '100vh', background: '#f8f9fa' }}>
       <section className="relative w-full overflow-hidden" style={{ height: (siteConfig?.heroDimensions?.faq?.desktop || 320) + "px" }}>
-        <img src={siteConfig?.heroImages?.faq || "/images_v2/hero-bagan-v2.jpg"} alt="FAQ" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+        <Image alt="FAQ" style={{ width: '100%', height: '100%', objectFit: 'cover' }} src={siteConfig?.heroImages?.faq || "/images_v2/hero-bagan-v2.jpg"} width={1600} height={900} sizes="100vw" />
         <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(10,22,40,0.9), rgba(10,22,40,0.3))' }} />
         <div style={{ position: 'absolute', bottom: 40, left: 0, right: 0, textAlign: 'center', padding: '0 20px' }}>
           <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: 42, color: 'white', marginBottom: 8 }}>Frequently Asked Questions</h1>

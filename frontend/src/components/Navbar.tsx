@@ -137,7 +137,7 @@ export default function Navbar() {
             </div>
 
             <button onClick={() => setMobileOpen(!mobileOpen)}
-              className="lg:hidden p-2 text-white hover:text-[#D4AF37] transition-colors" aria-label="Toggle menu">
+              className="lg:hidden p-2 min-w-[48px] min-h-[48px] flex items-center justify-center text-white hover:text-[#D4AF37] transition-colors" aria-label="Toggle menu">
               {mobileOpen ? <HiX className="w-7 h-7" /> : <HiMenuAlt3 className="w-7 h-7" />}
             </button>
           </div>
@@ -153,7 +153,7 @@ export default function Navbar() {
         <div className="flex flex-col h-full pt-6">
           <div className="px-6 pb-6 border-b border-[#D4AF37]/20">
             <button onClick={() => setMobileOpen(false)}
-              className="ml-auto block p-2 text-[#D4AF37] hover:text-[#F5A623] transition-colors" aria-label="Close menu">
+              className="ml-auto block p-2 min-w-[48px] min-h-[48px] flex items-center justify-center text-[#D4AF37] hover:text-[#F5A623] transition-colors" aria-label="Close menu">
               <HiX className="w-6 h-6" />
             </button>
             <Link href="/" onClick={() => setMobileOpen(false)} className="flex items-center gap-3">

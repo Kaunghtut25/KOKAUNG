@@ -9,6 +9,7 @@ import DealsBanner from '@/components/DealsBanner';
 import FAQAccordion from '@/components/FAQAccordion';
 import TestimonialSlider from '@/components/TestimonialSlider';
 import ScrollingRow from '@/components/ScrollingRow';
+import Image from "next/image";
 
 const CAR_TYPES = ['All', 'SUV', 'Sedan', 'MPV', 'Hatchback', 'Pickup', 'Luxury'];
 
@@ -68,7 +69,7 @@ export default function CarsClient({ initialCars, siteConfig }: CarsClientProps 
     <main className="min-h-screen bg-white">
 <section className="relative pt-24 pb-12 px-4 overflow-hidden" style={{ height: (siteConfig?.heroDimensions?.["cars"]?.desktop || 380) + "px" }}>
         <div className="absolute inset-0">
-          <img src={heroImage} alt="A9 Global Car Rentals" className="w-full h-full object-cover" onError={(e) => { (e.target as HTMLImageElement).src = "/images_v2/hero-cars-v2.jpg"; }} />
+          <Image alt="A9 Global Car Rentals" className="w-full h-full object-cover" onError={(e) => { (e.target as HTMLImageElement).src = "/images_v2/hero-cars-v2.jpg"; }} src={heroImage} width={1600} height={900} sizes="100vw" />
           <div className="absolute inset-0 bg-gradient-to-b from-black/40 to-transparent" />
         </div>
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(212,175,55,0.08),transparent_70%)]" />

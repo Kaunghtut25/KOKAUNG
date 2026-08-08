@@ -318,3 +318,8 @@ main.md\:ml-64 * {
   scrollbar-width: thin;
   scrollbar-color: rgba(212, 175, 55, 0.45) rgba(255, 255, 255, 0.06);
 }
+/* FIX: 2026-08-08 mobile UX audit - 16px inputs prevent iOS auto-zoom; touch-action removes tap delay */
+@media (max-width: 768px) {
+  input, select, textarea { font-size: 16px !important; }
+}
+button, a, input, select, textarea { touch-action: manipulation; }

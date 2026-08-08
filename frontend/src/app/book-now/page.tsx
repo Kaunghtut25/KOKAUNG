@@ -4,6 +4,7 @@ import { useState, useEffect, Suspense, useRef } from "react";
 import { useSearchParams } from "next/navigation";
 import { FaPaperPlane, FaCheckCircle, FaUser, FaEnvelope, FaPhone, FaExclamationTriangle } from "react-icons/fa";
 import { useI18n } from "@/lib/i18n";
+import Image from "next/image";
 
 interface FormData {
   fullName: string; email: string; phone: string; travelType: string;
@@ -256,7 +257,7 @@ function BookNowContent() {
   return (
     <main style={{ minHeight: "100vh", background: "#f8f9fa" }}>
       <section style={{ position: "relative", height: 300, overflow: "hidden" }}>
-        <img src="/images_v2/hero-book-now-v2.jpg" alt={t("book.title")} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+        <Image alt={t("book.title")} style={{ width: "100%", height: "100%", objectFit: "cover" }} src="/images_v2/hero-book-now-v2.jpg" width={100} height={100} />
         <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(10,22,40,0.9), rgba(10,22,40,0.3))" }} />
         <div style={{ position: "absolute", bottom: 40, left: 0, right: 0, textAlign: "center", padding: "0 20px" }}>
           <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: 42, color: "white", marginBottom: 8 }}>{t("book.title")}</h1>

@@ -7,6 +7,7 @@ import Link from 'next/link';
 import DealsBanner from '@/components/DealsBanner';
 import FAQAccordion from '@/components/FAQAccordion';
 import TestimonialSlider from '@/components/TestimonialSlider';
+import Image from "next/image";
 
 interface Destination {
   city: string;
@@ -150,7 +151,7 @@ export default function DestinationsClient({ initialDestinations, siteConfig }: 
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm" onClick={() => setSelectedDest(null)}>
           <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
             <div className="relative h-56">
-              <img src={selectedDest.image} alt={selectedDest.city} className="w-full h-full object-cover" onError={(e) => { (e.target as HTMLImageElement).src = "https://vydupdjfr38dxlzx.public.blob.vercel-storage.com/uploads/img_1784609663178_ta1biy-bangkok-x7Q8kUMuXRvj6qMJAZxBbawKS4zkjI.jpg"; }} />
+              <Image alt={selectedDest.city} className="w-full h-full object-cover" onError={(e) => { (e.target as HTMLImageElement).src = "https://vydupdjfr38dxlzx.public.blob.vercel-storage.com/uploads/img_1784609663178_ta1biy-bangkok-x7Q8kUMuXRvj6qMJAZxBbawKS4zkjI.jpg"; }} src={selectedDest.image} width={1600} height={900} sizes="100vw" />
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
               <button onClick={() => setSelectedDest(null)} className="absolute top-3 right-3 w-8 h-8 bg-white/20 backdrop-blur rounded-full flex items-center justify-center text-white hover:bg-white/40 transition-all">✕</button>
               <div className="absolute bottom-4 left-6">

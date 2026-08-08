@@ -9,6 +9,7 @@ import WhyChooseUs from '@/components/WhyChooseUs';
 import CompanyTimeline from '@/components/CompanyTimeline';
 import PartnerLogos from '@/components/PartnerLogos';
 import Newsletter from '@/components/Newsletter';
+import Image from "next/image";
 const FALLBACK_IMG = "/images_v2/about-hero-v2.jpg";
 
 interface AboutConfig {
@@ -198,7 +199,7 @@ export default function AboutClient({ siteConfig }: { siteConfig: any }) {
       {/* HERO */}
       <section className="relative pt-28 pb-20 sm:pb-24 px-4 overflow-hidden" style={{ height: (siteConfig?.heroDimensions?.["about"]?.desktop || 450) + "px" }}>
         <div className="absolute inset-0">
-          <img src={heroImage || FALLBACK_IMG} alt="A9 Global" className="w-full h-full object-cover" onError={e => { (e.target as HTMLImageElement).src = FALLBACK_IMG; }} />
+          <Image alt="A9 Global" className="w-full h-full object-cover" onError={e => { (e.target as HTMLImageElement).src = FALLBACK_IMG; }} src={heroImage || FALLBACK_IMG} width={1600} height={900} sizes="100vw" />
           <div className="absolute inset-0 bg-gradient-to-b from-[#0A1628]/85 via-[#0A1628]/70 to-[#0A1628]/85" />
         </div>
         <div className="relative z-10 max-w-3xl mx-auto text-center">
@@ -223,7 +224,7 @@ export default function AboutClient({ siteConfig }: { siteConfig: any }) {
           </div>
           <div className="relative">
             <div className="w-full h-80 sm:h-96 rounded-2xl border-2 border-[#D4AF37]/30 overflow-hidden shadow-lg">
-              <img src={heroImage || FALLBACK_IMG} alt="A9 Global" className="w-full h-full object-cover" />
+              <Image alt="A9 Global" className="w-full h-full object-cover" src={heroImage || FALLBACK_IMG} width={1600} height={900} sizes="100vw" />
               <div className="absolute inset-0 bg-gradient-to-t from-[#0A1628]/60 to-transparent" />
               <div className="absolute bottom-6 left-6"><p className="text-[#D4AF37] font-semibold text-lg">A9 Global</p><p className="text-white/80 text-sm">{lang === "mm" ? "မြန်မာနိုင်ငံကို ကမ္ဘာနှင့် ချိတ်ဆက်ပေးခြင်း" : "Connecting Myanmar to the World"}</p></div>
             </div>
@@ -286,7 +287,7 @@ export default function AboutClient({ siteConfig }: { siteConfig: any }) {
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
           {(config.certifications && config.certifications.length ? config.certifications : []).map((item,i)=>
-            <div key={i} className="bg-white rounded-2xl border border-gray-200 p-6 text-center hover:border-[#D4AF37]/40 hover:shadow-md transition-all"><div className="w-20 h-20 mx-auto mb-4 flex items-center justify-center"><img src={item.image} alt={item.title} className="w-full h-full object-contain"/></div><h3 className="text-[#0A1628] font-semibold mb-1">{item.title}</h3><p className="text-[#8A6C0B] text-sm font-mono font-medium">{item.code}</p></div>
+            <div key={i} className="bg-white rounded-2xl border border-gray-200 p-6 text-center hover:border-[#D4AF37]/40 hover:shadow-md transition-all"><div className="w-20 h-20 mx-auto mb-4 flex items-center justify-center"><Image alt={item.title} className="w-full h-full object-contain" src={item.image} width={1600} height={900} sizes="100vw" /></div><h3 className="text-[#0A1628] font-semibold mb-1">{item.title}</h3><p className="text-[#8A6C0B] text-sm font-mono font-medium">{item.code}</p></div>
           )}
         </div>
       </section>

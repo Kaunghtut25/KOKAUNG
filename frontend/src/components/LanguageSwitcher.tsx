@@ -13,7 +13,7 @@ export default function LanguageSwitcher({ dark = true }: { dark?: boolean }) {
     <div className="flex items-center gap-1">
       <button
         onClick={() => setLang("en")}
-        className={`flex items-center justify-center py-1.5 px-3 rounded-lg border transition-all duration-200 cursor-pointer ${lang === "en" ? active : base}`}
+        className={`flex items-center justify-center py-1.5 px-3 min-w-[48px] min-h-[48px] rounded-lg border transition-all duration-200 cursor-pointer ${lang === "en" ? active : base}`}
         aria-label="English (USA)"
         title="English"
       >
@@ -21,7 +21,7 @@ export default function LanguageSwitcher({ dark = true }: { dark?: boolean }) {
       </button>
       <button
         onClick={() => setLang("mm")}
-        className={`flex items-center justify-center py-1.5 px-3 rounded-lg border transition-all duration-200 cursor-pointer ${lang === "mm" ? active : base}`}
+        className={`flex items-center justify-center py-1.5 px-3 min-w-[48px] min-h-[48px] rounded-lg border transition-all duration-200 cursor-pointer ${lang === "mm" ? active : base}`}
         aria-label="Myanmar (Burmese)"
         title="မြန်မာ"
       >

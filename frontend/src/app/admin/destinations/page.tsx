@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useI18n } from "@/lib/i18n";
+import Image from "next/image";
 
 interface Destination {
   _id?: string; id?: string;
@@ -82,7 +83,7 @@ export default function AdminDestinationsPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {items.map((d: any) => (
               <div key={d.id || d._id} className="bg-[#0F1E35] border border-white/10 rounded-xl p-5 hover:border-[#D4AF37]/40 transition group">
-                {d.image && <img src={typeof d.images === "string" ? JSON.parse(d.images)[0] || d.image : (d.image || "")} alt={d.city} className="w-full h-40 object-cover rounded-lg mb-4" />}
+                {d.image && <Image alt={d.city} className="w-full h-40 object-cover rounded-lg mb-4" src={typeof d.images === "string" ? JSON.parse(d.images)[0] || d.image : (d.image || "")} width={1600} height={900} sizes="100vw" />}
                 <h3 className="text-white font-semibold text-lg">{d.city}, {d.country}</h3>
                 <p className="text-[#D4AF37] text-sm mt-1">{d.minPrice}</p>
                 <p className="text-white/50 text-xs mt-1">{d.bestTime}</p>

@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useI18n } from "@/lib/i18n";
 import { Car } from '@/lib/api';
 import { getImageFallback } from '@/lib/imageFallback';
+import Image from "next/image";
 
 interface CarCardProps {
   car: Car;
@@ -67,7 +68,7 @@ export default function CarCard({ car, currency = 'MMK', cardWidth, cardHeight }
 
         {/* Image Section */}
         <div className="relative w-full overflow-hidden bg-gray-200" style={{ height: cardHeight || 280 }}>
-          <img src={displayImage} alt={carType} className="w-full h-full object-cover transition-transform duration-700 ease-out" style={{ position: 'absolute', inset: 0, transform: isHovered ? 'scale(1.08)' : 'scale(1)' }} onError={() => setImgError(true)} loading="eager" />
+          <Image alt={carType} className="w-full h-full object-cover transition-transform duration-700 ease-out" style={{ position: 'absolute', inset: 0, transform: isHovered ? 'scale(1.08)' : 'scale(1)' }} onError={() => setImgError(true)} src={displayImage} width={1600} height={900} sizes="100vw" />
           <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/15 to-transparent" />
           {/* Car type badge */}
           <div className="absolute top-7 left-3 z-20">

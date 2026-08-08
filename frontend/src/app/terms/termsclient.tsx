@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Image from "next/image";
 
 const defaultTerms = [
   { id: "t1", title: "1. Bookings and Reservations", content: "All bookings are subject to availability and confirmation by A9 Global Travel and Tours. A booking is only confirmed once full payment or deposit is received." },
@@ -28,7 +29,7 @@ export default function TermsClient({ siteConfig }: { siteConfig: any }) {
   return (
     <main style={{ minHeight: '100vh', background: '#f8f9fa' }}>
       <section className="relative w-full overflow-hidden" style={{ height: (siteConfig?.heroDimensions?.terms?.desktop || 320) + "px" }}>
-        <img src={siteConfig?.heroImages?.terms || "/images_v2/hero-bagan-v2.jpg"} alt="Terms" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+        <Image alt="Terms" style={{ width: '100%', height: '100%', objectFit: 'cover' }} src={siteConfig?.heroImages?.terms || "/images_v2/hero-bagan-v2.jpg"} width={1600} height={900} sizes="100vw" />
         <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(10,22,40,0.9), rgba(10,22,40,0.3))' }} />
         <div style={{ position: 'absolute', bottom: 30, left: 0, right: 0, textAlign: 'center' }}>
           <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: 36, color: 'white' }}>Terms and Conditions</h1>

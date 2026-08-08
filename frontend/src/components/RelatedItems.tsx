@@ -4,6 +4,7 @@ import { getAll } from '@/lib/persistentStore';
 import ScrollingRow from './ScrollingRow';
 import { useI18n } from "@/lib/i18n";
 import { mmTours, mmHotels, mmCars, mmCruises, mmVisas, mmInsurance, mmMingalar, mmDestinations, mmLookup } from "@/lib/mm-content";
+import Image from "next/image";
 
 interface RelatedSection {
   key: string;
@@ -117,7 +118,7 @@ export default function RelatedItems({ section, excludeSlug, destination, countr
             {mergedSame.map((item, i) => (
               <a key={i} href={`/${section}/${item.slug || slugify(item.name || item.title || item.planName) || item._id || item.id}`} className="flex-shrink-0 snap-start" style={{ width: RELATED_CARD_WIDTH, textDecoration: 'none' }}>
                 <div style={{ borderRadius: 12, overflow: 'hidden', border: '1px solid #eee' }}>
-                  <img src={item.image || item.displayImage || (Array.isArray(item.images) ? item.images[0] : (typeof item.images === "string" ? item.images : "")) || `/images_v2/hero-${section}-v2.jpg`} alt={item.name || item.title || item.planName || ''} style={{ width: '100%', height: 120, objectFit: 'cover' }} />
+                  <Image alt={item.name || item.title || item.planName || ''} style={{ width: '100%', height: 120, objectFit: 'cover' }} src={item.image || item.displayImage || (Array.isArray(item.images) ? item.images[0] : (typeof item.images === "string" ? item.images : "")) || `/images_v2/hero-${section}-v2.jpg`} width={1600} height={900} sizes="100vw" />
                   <div style={{ padding: 10 }}>
                     <div style={{ fontSize: 13, fontWeight: 600, color: '#0A1628', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{item.name || item.title || item.planName || item.carType || item.country}</div>
                     <div style={{ fontSize: 12, color: '#8A6C0B', fontWeight: 600, marginTop: 4 }}>{item.priceMMK ? 'Ks ' + item.priceMMK.toLocaleString() : item.priceUSD ? '$' + item.priceUSD : item.pricePerNightMMK ? 'Ks ' + item.pricePerNightMMK.toLocaleString() + '/night' : item.pricePerNightUSD ? '$' + item.pricePerNightUSD + '/night' : item.visaFeeMMK ? 'Ks ' + item.visaFeeMMK.toLocaleString() : ''}</div>
@@ -139,7 +140,7 @@ export default function RelatedItems({ section, excludeSlug, destination, countr
             {sItems.map((item, i) => (
               <a key={i} href={`${s.linkPrefix}/${item.slug || slugify(item[s.nameField] || item.name || item.title || item.planName) || item._id || item.id}`} className="flex-shrink-0 snap-start" style={{ width: 180, textDecoration: 'none' }}>
                 <div style={{ borderRadius: 12, overflow: 'hidden', border: '1px solid #eee', background: 'white' }}>
-                  <img src={item[s.imageField] || item.image || item.displayImage || (Array.isArray(item.images) ? item.images[0] : (typeof item.images === "string" ? item.images : "")) || `/images_v2/hero-${s.key}-v2.jpg`} alt={item[s.nameField] || ''} style={{ width: '100%', height: 110, objectFit: 'cover' }} />
+                  <Image alt={item[s.nameField] || ''} style={{ width: '100%', height: 110, objectFit: 'cover' }} src={item[s.imageField] || item.image || item.displayImage || (Array.isArray(item.images) ? item.images[0] : (typeof item.images === "string" ? item.images : "")) || `/images_v2/hero-${s.key}-v2.jpg`} width={1600} height={900} sizes="100vw" />
                   <div style={{ padding: 8 }}>
                     <div style={{ fontSize: 12, fontWeight: 600, color: '#0A1628', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{item[s.nameField] || item.name || item.title || item.planName || item.carType || ''}</div>
                     <div style={{ fontSize: 11, color: '#8A6C0B', fontWeight: 600, marginTop: 4 }}>{item[s.priceField] ? (s.key === 'hotels' ? 'Ks ' + (item[s.priceField] || 0).toLocaleString() + '/night' : 'Ks ' + (item[s.priceField] || 0).toLocaleString()) : ''}</div>

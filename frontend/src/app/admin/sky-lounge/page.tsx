@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { useI18n } from "@/lib/i18n";
 import toast from "react-hot-toast";
+import Image from "next/image";
 
 interface LoungeItem {
   _id?: string;
@@ -269,7 +270,7 @@ export default function AdminMingalarPage() {
             </div>
             {imagePreview && (
               <div className="mt-2">
-                <img src={imagePreview} alt={t("admin.form.imagePreview")} className="w-full h-32 object-cover rounded-lg border border-gray-600" />
+                <Image alt={t("admin.form.imagePreview")} className="w-full h-32 object-cover rounded-lg border border-gray-600" src={imagePreview} width={1600} height={900} sizes="100vw" />
               </div>
             )}
           </div>
@@ -316,7 +317,7 @@ export default function AdminMingalarPage() {
           {items.map((item) => (
             <div key={item._id || item.id} className="bg-[#1a2744] rounded-xl overflow-hidden border border-gray-700">
               <div className="flex items-center gap-3 p-4 pb-0">
-                <img src={item.img} alt={item.title} className="w-10 h-10 rounded object-cover flex-shrink-0" />
+                <Image alt={item.title} className="w-10 h-10 rounded object-cover flex-shrink-0" src={item.img} width={1600} height={900} sizes="100vw" />
                 <h3 className="text-white font-semibold flex items-center gap-2">
                   <span>{item.icon}</span> {item.title}
                 </h3>

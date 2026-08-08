@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState, useCallback, useRef } from "react";
 import { useI18n } from "@/lib/i18n";
+import Image from "next/image";
 interface HeroImages {
   flights: string;
   cruises: string;
@@ -318,7 +319,7 @@ export default function AdminSettingsPage() {
         <div className="flex items-start gap-6">
           <div className="w-[180px] h-[80px] rounded-lg border border-white/20 bg-white/5 flex items-center justify-center overflow-hidden flex-shrink-0" onDragOver={handleDragOver} onDrop={handleLogoDrop}>
             {settings.logo ? (
-              <img src={settings.logo} alt="Logo" className="max-w-full max-h-full object-contain p-2" />
+              <Image alt="Logo" className="max-w-full max-h-full object-contain p-2" src={settings.logo} width={1600} height={900} sizes="100vw" />
             ) : (
               <div className="text-white/20 text-center">
                 <span className="text-3xl block">🏷️</span>
@@ -680,7 +681,7 @@ export default function AdminSettingsPage() {
                 </div>
                 {cert.image && (
                   <div className="mt-2 w-12 h-12 rounded-lg bg-white/5 border border-white/10 overflow-hidden">
-                    <img src={cert.image} alt={cert.title} className="w-full h-full object-contain" />
+                    <Image alt={cert.title} className="w-full h-full object-contain" src={cert.image} width={1600} height={900} sizes="100vw" />
                   </div>
                 )}
               </div>

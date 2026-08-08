@@ -10,6 +10,7 @@ import BookingModal from '@/components/BookingModal';
 import DealsBanner from '@/components/DealsBanner';
 import FAQAccordion from '@/components/FAQAccordion';
 import TestimonialSlider from '@/components/TestimonialSlider';
+import Image from "next/image";
 
 interface VisaService {
   slug?: string;
@@ -102,7 +103,7 @@ function VisaGridCard({ visa }: { visa: VisaService }) {
     >
       {imageUrl ? (
         <div className="relative overflow-hidden" style={{ height: 176 }}>
-          <img src={imageUrl} alt={visa.country} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" loading="lazy" />
+          <Image alt={visa.country} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" src={imageUrl} width={1600} height={900} sizes="100vw" />
           <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
           <div className="absolute bottom-1.5 left-2 flex items-center gap-1.5">
             <span className="text-xl">{flag}</span>
@@ -196,7 +197,7 @@ export default function VisasClient({ initialVisas, siteConfig }: VisasClientPro
     return (
     <div className="min-h-screen bg-gray-50">
 <section className="relative w-full h-64 sm:h-80 overflow-hidden" style={{ height: (siteConfig?.heroDimensions?.["visas"]?.desktop || 380) + "px" }}>
-        <img src={heroImage} alt="Visa Services" className="w-full h-full object-cover" onError={(e) => { (e.target as HTMLImageElement).src = "/images_v2/visa1-v3.jpg"; }} />
+        <Image alt="Visa Services" className="w-full h-full object-cover" onError={(e) => { (e.target as HTMLImageElement).src = "/images_v2/visa1-v3.jpg"; }} src={heroImage} width={1600} height={900} sizes="100vw" />
         <div className="absolute inset-0 bg-gradient-to-b from-[#0A1628]/70 to-[#0A1628]/40" />
         <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4 mb-8">
           {vTitle ? (<h1 className="font-bold text-white mb-2" style={{ fontFamily: vTitleFont, fontSize: vTitleSize }}>{vTitle}</h1>) : null}

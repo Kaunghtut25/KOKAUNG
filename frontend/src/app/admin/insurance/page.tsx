@@ -4,6 +4,7 @@ import React, { useEffect, useState, useCallback } from "react";
 import Link from "next/link";
 import AdminFormModal from "@/components/AdminFormModal";
 import { useI18n } from "@/lib/i18n";
+import Image from "next/image";
 
 interface Insurance {
   id: string;
@@ -255,7 +256,7 @@ export default function AdminInsurancePage() {
           className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm mt-2 focus:outline-none focus:border-gold/50 transition-colors"
         />
         {editingInsurance.image && (
-          <img src={editingInsurance.image} alt="Preview" className="w-20 h-20 object-cover rounded-lg mt-2" />
+          <Image alt="Preview" className="w-20 h-20 object-cover rounded-lg mt-2" src={editingInsurance.image} width={1600} height={900} sizes="100vw" />
         )}
         <p className="text-xs text-gray-400 mt-1">{t("admin.form.recommended1mb")}</p>
       </div>
@@ -441,7 +442,7 @@ export default function AdminInsurancePage() {
                   >
                     <td className="p-4">
                       {insurance.image ? (
-                        <img src={insurance.image} alt={insurance.planName} className="w-10 h-10 object-cover rounded" />
+                        <Image alt={insurance.planName} className="w-10 h-10 object-cover rounded" src={insurance.image} width={1600} height={900} sizes="100vw" />
                       ) : (
                         <div className="w-10 h-10 rounded bg-white/5 flex items-center justify-center text-white/20 text-xs">N/A</div>
                       )}

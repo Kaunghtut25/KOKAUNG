@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState, useCallback } from "react";
 import { useI18n } from "@/lib/i18n";
+import Image from "next/image";
 
 /* ─────────────────────────────────────────────────────────────
    Manage About Us — full text/image control for /about page
@@ -308,7 +309,7 @@ export default function AdminAboutPage() {
             <label className={labelCls}>{t("admin.about.heroImage")}</label>
             <div className="relative rounded-xl overflow-hidden border border-white/10 h-48 bg-white/5">
               {about.heroImage ? (
-                <img src={about.heroImage} alt="Hero" className="w-full h-full object-cover" onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }} />
+                <Image alt="Hero" className="w-full h-full object-cover" onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }} src={about.heroImage} width={1600} height={900} sizes="100vw" />
               ) : (
                 <div className="flex items-center justify-center h-full text-white/50 text-sm">{t("admin.about.noImage")}</div>
               )}
@@ -452,7 +453,7 @@ export default function AdminAboutPage() {
             <div key={i} className="flex flex-col sm:flex-row items-stretch sm:items-start gap-3 bg-white/[0.03] border border-white/10 rounded-xl p-3">
               <div className="w-14 h-14 rounded-lg overflow-hidden border border-white/10 bg-white/5 flex-shrink-0 flex items-center justify-center">
                 {c.image ? (
-                  <img src={c.image} alt={c.title} className="w-full h-full object-contain" onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }} />
+                  <Image alt={c.title} className="w-full h-full object-contain" onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }} src={c.image} width={1600} height={900} sizes="100vw" />
                 ) : (
                   <span className="text-white/20 text-lg">🏅</span>
                 )}

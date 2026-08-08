@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useI18n } from "@/lib/i18n";
 import { Hotel } from "@/lib/api";
 import { getImageFallback } from "@/lib/imageFallback";
+import Image from "next/image";
 
 
 
@@ -74,7 +75,7 @@ export default function HotelCard({ hotel, currency = "MMK", cardWidth, cardHeig
 
         {/* Image Section */}
         <div className="relative w-full overflow-hidden bg-gray-200" style={{ height: cardHeight || 280 }}>
-          <img src={displayImage} alt={hotel.name} className="w-full h-full object-cover" />
+          <Image alt={hotel.name} className="w-full h-full object-cover" src={displayImage} width={1600} height={900} sizes="100vw" />
           <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/15 to-transparent" />
           {/* Location badge */}
           <div className="absolute top-7 left-3 z-20">

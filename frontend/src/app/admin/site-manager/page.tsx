@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState, useRef } from "react";
 import { useI18n } from "@/lib/i18n";
+import Image from "next/image";
 
 interface HeroSlide { image: string; label: string; title: string; subtitle: string; titleFont?: string; titleSize?: string; subtitleSize?: string; labelFont?: string; labelSize?: string; }
 interface ServiceIcon { label: string; icon: string; href: string; enabled: boolean; }
@@ -253,7 +254,7 @@ export default function SiteManagerPage() {
             onChange={(e) => handleFileChange(e, field, index, valueField)}
           />
           {currentVal ? (
-            <img src={currentVal} alt={t("admin.sm.preview")} className="mx-auto mt-2 w-full h-28 object-cover rounded" />
+            <Image alt={t("admin.sm.preview")} className="mx-auto mt-2 w-full h-28 object-cover rounded" src={currentVal} width={1600} height={900} sizes="100vw" />
           ) : (
             <p className="text-sm text-white/60">{t("admin.sm.dragDrop")}</p>
           )}
@@ -525,7 +526,7 @@ const tabs: { key: Tab; label: string }[] = [
                           }}
                         />
                         {(cfg.heroImages && cfg.heroImages[key]) ? (
-                          <img src={cfg.heroImages[key]} alt={t("admin.sm.preview")} className="mx-auto mt-2 w-full h-28 object-cover rounded" />
+                          <Image alt={t("admin.sm.preview")} className="mx-auto mt-2 w-full h-28 object-cover rounded" src={cfg.heroImages[key]} width={1600} height={900} sizes="100vw" />
                         ) : (
                           <p className="text-sm text-white/60">{t("admin.sm.clickUpload")}</p>
                         )}
@@ -856,7 +857,7 @@ const tabs: { key: Tab; label: string }[] = [
                             onChange={e => { const f = e.target.files?.[0]; if (f) uploadSocialPhoto(f, i); }}
                           />
                           {photo ? (
-                            <img src={photo} alt={t("admin.sm.photo") + " " + (i + 1)} className="w-full h-20 object-cover rounded" />
+                            <Image alt={t("admin.sm.photo") + " " + (i + 1)} className="w-full h-20 object-cover rounded" src={photo} width={1600} height={900} sizes="100vw" />
                           ) : (
                             <div className="flex flex-col items-center justify-center h-20 text-white/50 text-xs">
                               <span className="text-xl mb-1">📷</span>

@@ -7,6 +7,7 @@ import Navbar from "@/components/Navbar";
 import ServiceIcons from "@/components/ServiceIcons";
 import Footer from "@/components/Footer";
 import LiveChatWidget from "@/components/LiveChatWidget";
+import MobileStickyCTA from "@/components/MobileStickyCTA";
 import { Toaster } from "react-hot-toast";
 import { LanguageProvider } from "@/lib/i18n";
 
@@ -47,6 +48,8 @@ export default function RootClient({ children }: { children: React.ReactNode }) 
       <ServiceIcons />
       <main>{children}</main>
       <Footer />
+      <div className="h-16 lg:hidden" aria-hidden="true" />
+      <MobileStickyCTA />
       <LiveChatWidget />
       <Toaster
         position="top-center"
