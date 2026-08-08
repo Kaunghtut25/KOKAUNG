@@ -429,8 +429,10 @@ export default function HomePageClient({ siteConfig: ssrConfig }: { siteConfig?:
         <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-30 flex gap-3">
           {slides.map((_:any, index:number) => (
             <button key={index} onClick={() => goToSlide(index)}
-              className={"w-3 h-3 rounded-full transition-all duration-300 cursor-pointer " + (index === currentSlide ? "bg-[#D4AF37] scale-125 shadow-lg shadow-[#D4AF37]/50" : "bg-white/40 hover:bg-white/70")}
-              aria-label={"Go to slide " + (index + 1)} />
+              className="min-w-[44px] min-h-[44px] flex items-center justify-center rounded-full transition-all duration-300 cursor-pointer group"
+              aria-label={"Go to slide " + (index + 1)}>
+              <span className={"block w-3 h-3 rounded-full transition-all duration-300 " + (index === currentSlide ? "bg-[#D4AF37] scale-125 shadow-lg shadow-[#D4AF37]/50" : "bg-white/40 group-hover:bg-white/70")} />
+            </button>
           ))}
         </div>
 
@@ -513,8 +515,8 @@ export default function HomePageClient({ siteConfig: ssrConfig }: { siteConfig?:
                   <div className="w-full md:w-[180px]">
                     <label className="block text-gray-500 text-xs uppercase tracking-wider mb-1"><span className="text-[#D4AF37]">🛂</span> {t("home.client")}</label>
                     <div className="flex bg-gray-50 border border-gray-200 rounded-lg p-1">
-                      <button type="button" onClick={()=>setBusClientType('local')} className={busClientType==='local'?'flex-1 py-1.5 text-xs font-medium rounded-md bg-[#D4AF37] text-white shadow-sm transition-all':'flex-1 py-1.5 text-xs font-medium rounded-md text-gray-500 hover:text-gray-900 transition-all'}>🇲🇲 {t("home.local")}</button>
-                      <button type="button" onClick={()=>setBusClientType('foreigner')} className={busClientType==='foreigner'?'flex-1 py-1.5 text-xs font-medium rounded-md bg-[#D4AF37] text-white shadow-sm transition-all':'flex-1 py-1.5 text-xs font-medium rounded-md text-gray-500 hover:text-gray-900 transition-all'}>🌏 {t("home.foreigner")}</button>
+                      <button type="button" onClick={()=>setBusClientType('local')} className={busClientType==='local'?'flex-1 py-1.5 text-xs font-medium min-h-[44px] flex items-center justify-center rounded-md bg-[#D4AF37] text-white shadow-sm transition-all':'flex-1 py-1.5 text-xs font-medium min-h-[44px] flex items-center justify-center rounded-md text-gray-500 hover:text-gray-900 transition-all'}>🇲🇲 {t("home.local")}</button>
+                      <button type="button" onClick={()=>setBusClientType('foreigner')} className={busClientType==='foreigner'?'flex-1 py-1.5 text-xs font-medium min-h-[44px] flex items-center justify-center rounded-md bg-[#D4AF37] text-white shadow-sm transition-all':'flex-1 py-1.5 text-xs font-medium min-h-[44px] flex items-center justify-center rounded-md text-gray-500 hover:text-gray-900 transition-all'}>🌏 {t("home.foreigner")}</button>
                     </div>
                   </div>
                   <button type="submit" className="w-full md:w-auto bg-gradient-to-r from-[#D4AF37] to-[#F5A623] text-[#0A1628] font-bold px-8 py-3 rounded-lg hover:shadow-xl hover:shadow-[#D4AF37]/40 hover:scale-105 active:scale-95 transition-all duration-300 cursor-pointer">🔍 {t("home.searchBuses")}</button>

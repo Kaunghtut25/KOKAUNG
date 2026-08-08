@@ -122,7 +122,7 @@ export default function Navbar() {
                 </div>
               </div>
               <div className="relative group">
-                <button className={`font-bold rounded-full px-5 py-2.5 text-sm transition-all whitespace-nowrap ${
+                <button className={`font-bold rounded-full px-5 py-2.5 min-h-[44px] text-sm transition-all whitespace-nowrap ${
                   isActive("/book-now") || isActive("/contact") ? "bg-[#C5A028] text-[#0A1628] shadow-md"
                   : "bg-[#D4AF37] text-[#0A1628] hover:bg-[#C5A028] hover:shadow-lg"
                 }`}>
