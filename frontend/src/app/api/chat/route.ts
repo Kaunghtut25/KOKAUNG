@@ -15,8 +15,8 @@ export const maxDuration = 60;
 //              into the system prompt so the bot answers from real data.
 // ─────────────────────────────────────────────────────────────────────────────
 
-const MEMORY_TTL_SECONDS = 60 * 60 * 24 * 30; // 30 days per session
-const MAX_HISTORY = 30; // messages kept in memory
+const MEMORY_TTL_SECONDS = 60 * 60 * 24 * 365 * 10; // LIFETIME memory: 10 years per session (2026-08-08 user request)
+const MAX_HISTORY = 500; // LIFETIME memory: keep long conversation log (LLM still sees only last 10 via slice(-10))
 
 let _redis: any = null;
 function getRedis(): any {
