@@ -19,6 +19,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: base + '/faq', lastModified: now, priority: 0.5 },
     { url: base + '/terms', lastModified: now, priority: 0.3 },
     { url: base + '/privacy', lastModified: now, priority: 0.3 },
+    { url: base + '/accessibility', lastModified: now, priority: 0.3 },
   ];
 
   // Tour detail pages (real slugs, de-duplicated)

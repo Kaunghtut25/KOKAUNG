@@ -97,12 +97,12 @@ export default function AdminSidebar() {
             className="w-10 h-10 rounded-lg object-cover border border-gold/30 flex-shrink-0"
           />
           <div className={`${collapsed && !mobileOpen ? "hidden" : "block"}`}>
-            <h1
+            <div
               className="text-xl font-bold text-gold tracking-wider leading-tight"
               style={{ fontFamily: "'Playfair Display', serif" }}
             >
               A9 Travel
-            </h1>
+            </div>
             <p className="text-white/50 text-[10px] tracking-wider">ADMIN PANEL</p>
           </div>
         </Link>

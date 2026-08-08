@@ -245,6 +245,9 @@ export default function Footer() {
               <Link href="/terms" className="text-xs text-white/60 hover:text-[#D4AF37] transition-colors">
                 {t("footer.terms")}
               </Link>
+              <Link href="/accessibility" className="text-xs text-white/60 hover:text-[#D4AF37] transition-colors">
+                {t("footer.accessibility")}
+              </Link>
               <Link href="/faq" className="text-xs text-white/60 hover:text-[#D4AF37] transition-colors">
                 {t("nav.faq")}
               </Link>

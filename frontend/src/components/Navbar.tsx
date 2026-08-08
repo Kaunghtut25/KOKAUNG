@@ -93,9 +93,9 @@ export default function Navbar() {
                 <Image src={logoUrl} alt={siteName} width={48} height={48} className="w-full h-full object-cover" />
               </div>
               <div>
-                <h1 className="font-display text-lg md:text-xl font-bold text-white tracking-wide leading-tight">
+                <div className="font-display text-lg md:text-xl font-bold text-white tracking-wide leading-tight">
                   {siteName}
-                </h1>
+                </div>
                 <p className="text-[10px] md:text-xs italic text-[#D4AF37] tracking-wide group-hover:text-[#F5A623] transition-colors">
                   {t(DEFAULT_TAGLINE_KEY)}
                 </p>

@@ -12,11 +12,11 @@ const inter = Inter({
 export const metadata: Metadata = {
   metadataBase: new URL("https://a9travel.com"),
   title: {
-    default: "𝐀𝟗 𝐆𝐥𝐨𝐛𝐚𝐥 𝐓𝐫𝐚𝐯𝐞𝐥𝐬 & 𝐓𝐨𝐮𝐫𝐬 | Luxury Travel Myanmar",
+    default: "A9 Global Travels & Tours | Luxury Travel Myanmar",
     template: "%s | A9 Global Travel",
   },
   description:
-    "Your premier IATA-accredited luxury travel partner in Myanmar. Premium tours, hotels, cars, visas, insurance. Since 2015.",
+    "Your premier IATA-accredited luxury travel partner in Myanmar since 2015. Premium tours, hotels, cars, visas & insurance. Book your journey today.",
   keywords: [
     "Myanmar Tours", "Yangon Travel Agency", "IATA Travel Myanmar",
     "Hotel Booking Yangon", "Visa Services Myanmar", "Car Rental Myanmar",
@@ -27,16 +27,16 @@ export const metadata: Metadata = {
   },
   openGraph: {
     type: "website",
-    siteName: "𝐀𝟗 𝐆𝐥𝐨𝐛𝐚𝐥 𝐓𝐫𝐚𝐯𝐞𝐥𝐬 & 𝐓𝐨𝐮𝐫𝐬",
-    title: "𝐀𝟗 𝐆𝐥𝐨𝐛𝐚𝐥 𝐓𝐫𝐚𝐯𝐞𝐥𝐬 & 𝐓𝐨𝐮𝐫𝐬 | Luxury Travel Myanmar",
-    description: "Premium travel experiences in Myanmar.",
+    siteName: "A9 Global Travels & Tours",
+    title: "A9 Global Travels & Tours | Luxury Travel Myanmar",
+    description: "A9 Global Travels & Tours: your premier IATA-accredited luxury travel partner in Myanmar. Premium tours, hotels, cars, visas & insurance since 2015.",
     url: "https://a9travel.com",
-    images: [{ url: "/og-image.jpg", width: 1200, height: 630 }],
+    images: [{ url: "/og-image.jpg", width: 1200, height: 630, alt: "A9 Global Travels Myanmar luxury travel preview" }],
   },
   twitter: {
     card: "summary_large_image",
-    title: "𝐀𝟗 𝐆𝐥𝐨𝐛𝐚𝐥 𝐓𝐫𝐚𝐯𝐞𝐥𝐬 & 𝐓𝐨𝐮𝐫𝐬",
-    description: "Premium travel experiences in Myanmar.",
+    title: "A9 Global Travels & Tours",
+    description: "A9 Global Travels & Tours: your premier IATA-accredited luxury travel partner in Myanmar. Premium tours, hotels, cars, visas & insurance since 2015.",
     images: ["/og-image.jpg"],
   },
   robots: {
@@ -61,7 +61,7 @@ export const metadata: Metadata = {
 const jsonLd = {
   "@context": "https://schema.org",
   "@type": "TravelAgency",
-  "name": "𝐀𝟗 𝐆𝐥𝐨𝐛𝐚𝐥 𝐓𝐫𝐚𝐯𝐞𝐥𝐬 & 𝐓𝐨𝐮𝐫𝐬",
+  "name": "A9 Global Travels & Tours",
   "url": "https://a9travel.com",
   "logo": "https://a9travel.com/favicon-192x192.png",
   "description": "Your premier IATA-accredited luxury travel partner in Myanmar. Premium tours, hotels, cars, visas, insurance.",
