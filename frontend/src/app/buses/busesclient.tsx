@@ -36,7 +36,7 @@ interface BusesClientProps {
 
 export default function BusesClient({ initialRoutes, siteConfig }: BusesClientProps) {
   const { t } = useI18n();
-  const heroImage = siteConfig?.heroImages?.buses || "/images_v2/bus-hero.jpg";
+  const heroImage = siteConfig?.heroImages?.buses || "/images_v2/hero-bagan-v2.jpg";
   const [routes] = useState<BusRoute[]>(initialRoutes.length > 0 ? initialRoutes : FALLBACK_BUS_ROUTES);
 
   const [fromCity, setFromCity] = useState("");
