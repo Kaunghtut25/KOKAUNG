@@ -457,19 +457,14 @@ export default function AdminSettingsPage() {
             <div className="flex items-start gap-4">
               <div className="w-[200px] h-[100px] rounded-lg border border-white/10 bg-white/5 overflow-hidden flex-shrink-0 flex items-center justify-center" onDragOver={handleDragOver} onDrop={(e) => handleHeroDrop(page, e)}>
                 {settings.heroImages[page] ? (
-                  <img
-                    src={settings.heroImages[page]}
-                    alt={`${heroPageLabels[page]} hero`}
-                    className="w-full h-full object-cover"
-                    onError={(e) => {
+                  <Image alt={`${heroPageLabels[page]} hero`} className="w-full h-full object-cover" onError={(e) => {
                       (e.target as HTMLImageElement).style.display = "none";
                       const parent = (e.target as HTMLImageElement).parentElement;
                       if (parent) {
                         const fb = parent.querySelector(".hero-fallback");
                         if (fb) (fb as HTMLElement).style.display = "flex";
                       }
-                    }}
-                  />
+                    }} src={settings.heroImages[page]} width={1600} height={900} sizes="100vw" />
                 ) : null}
                 <div className={`hero-fallback text-white/20 text-xs ${settings.heroImages[page] ? "hidden" : "flex"} items-center justify-center w-full h-full flex-col`}>
                   <span className="text-2xl">🖼️</span>

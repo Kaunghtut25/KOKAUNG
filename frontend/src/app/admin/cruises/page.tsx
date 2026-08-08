@@ -4,6 +4,7 @@ import React, { useEffect, useState, useCallback } from "react";
 import Link from "next/link";
 import AdminFormModal from "@/components/AdminFormModal";
 import { useI18n } from "@/lib/i18n";
+import Image from "next/image";
 
 interface cruise {
   id: string;
@@ -467,14 +468,9 @@ export default function AdminCruisesPage() {
             {imageList.map((url, index) => (
               <div key={`${url}-${index}`} className="relative group">
                 <div className="w-full aspect-[4/3] rounded-lg border border-white/10 bg-white/5 overflow-hidden">
-                  <img
-                    src={url}
-                    alt={`Image ${index + 1}`}
-                    className="w-full h-full object-cover"
-                    onError={(e) => {
+                  <Image alt={`Image ${index + 1}`} className="w-full h-full object-cover" onError={(e) => {
                       (e.target as HTMLImageElement).src = "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='75'><rect fill='%231a1a2e' width='100' height='75'/><text x='50' y='42' text-anchor='middle' fill='%23555' font-size='12'>Invalid</text></svg>";
-                    }}
-                  />
+                    }} src={url} width={1600} height={900} sizes="100vw" />
                 </div>
                 <div className="absolute inset-0 bg-black/60 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-1">
                   <button
@@ -682,15 +678,10 @@ export default function AdminCruisesPage() {
                         <div className="flex items-center gap-3">
                           <div className="w-10 h-10 rounded-lg border border-white/10 bg-white/5 overflow-hidden flex-shrink-0 flex items-center justify-center">
                             {thumb ? (
-                              <img
-                                src={thumb}
-                                alt={cruise.title}
-                                className="w-full h-full object-cover"
-                                onError={(e) => {
+                              <Image alt={cruise.title} className="w-full h-full object-cover" onError={(e) => {
                                   (e.target as HTMLImageElement).style.display =
                                     "none";
-                                }}
-                              />
+                                }} src={thumb} width={1600} height={900} sizes="100vw" />
                             ) : null}
                             {!thumb && (
                               <span className="text-white/20 text-lg">🚢</span>

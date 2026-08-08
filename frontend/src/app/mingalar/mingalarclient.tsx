@@ -44,13 +44,7 @@ export default function MingalarClient({ initialCards, siteConfig }: MingalarCli
     return (
       <div key={i} onClick={() => router.push("/mingalar/" + (item.slug || item.id || ("m" + (i + 1))))} className="bg-white rounded-xl border border-gray-200 overflow-hidden hover:shadow-lg hover:border-[#D4AF37]/40 transition-all group cursor-pointer" style={{ width: (siteConfig?.cardDimensions?.mingalar?.width) || undefined, height: (siteConfig?.cardDimensions?.mingalar?.height) || undefined }}>
         <div className="relative w-full overflow-hidden" style={{ height: (siteConfig?.cardDimensions?.mingalar?.height) ? Math.round(siteConfig.cardDimensions.mingalar.height * 0.5) : 192 }}>
-          <img
-            src={item.img}
-            alt={item.title}
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-            loading="lazy"
-            onError={(e) => { (e.target as HTMLImageElement).src = '/images_v2/sky1-v3.jpg'; }}
-          />
+          <Image alt={item.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" onError={(e) => { (e.target as HTMLImageElement).src = '/images_v2/sky1-v3.jpg'; }} src={item.img} width={1600} height={900} sizes="100vw" />
           <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
           <div className="absolute bottom-3 left-4 text-3xl drop-shadow-lg">{item.icon}</div>
         </div>

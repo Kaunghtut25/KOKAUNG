@@ -548,14 +548,9 @@ const tabs: { key: Tab; label: string }[] = [
                       }}
                     />
                     {(cfg.heroImages && cfg.heroImages[key]) && (
-                      <img
-                        src={cfg.heroImages[key]}
-                        alt={`${label} preview`}
-                        className="w-full h-32 object-cover rounded-lg"
-                        onError={(e) => {
+                      <Image alt={`${label} preview`} className="w-full h-32 object-cover rounded-lg" onError={(e) => {
                           (e.target as HTMLImageElement).style.display = "none";
-                        }}
-                      />
+                        }} src={cfg.heroImages[key]} width={1600} height={900} sizes="100vw" />
                     )}
                   </div>
                 ))}

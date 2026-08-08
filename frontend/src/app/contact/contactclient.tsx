@@ -5,6 +5,7 @@ import toast from "react-hot-toast";
 import api from "@/lib/api";
 import Newsletter from '@/components/Newsletter';
 import { useI18n } from '@/lib/i18n';
+import Image from "next/image";
 const subjectOptions = [
   { value: "General Inquiry", labelKey: "contact.subjectGeneral" },
   { value: "Tour Booking", labelKey: "contact.subjectTour" },
@@ -410,11 +411,7 @@ export default function ContactClient({ siteConfig }: { siteConfig: any }) {
             {/* Map */}
             <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-5">
               <div className="w-full h-56 rounded-xl overflow-hidden">
-                <img
-                  src="/images_v2/contact-info-v2.jpg"
-                  alt={t("contact.mapAlt")}
-                  className="w-full h-full object-cover"
-                />
+                <Image alt={t("contact.mapAlt")} className="w-full h-full object-cover" src="/images_v2/contact-info-v2.jpg" width={1600} height={900} sizes="100vw" />
               </div>
               <div className="text-center mt-3">
                 <p className="text-[#0A1628] font-semibold">{t("contact.office")}</p>

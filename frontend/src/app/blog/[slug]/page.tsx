@@ -5,6 +5,7 @@ import BackButton from '@/components/BackButton';
 import Link from 'next/link';
 import { useI18n } from "@/lib/i18n";
 import { mmLookup, mmBlogs } from "@/lib/mm-content";
+import Image from "next/image";
 
 interface BlogPost {
   _id: string; slug: string; title: string; content: string; image: string;
@@ -156,12 +157,7 @@ export default function BlogDetailPage() {
       <BackButton />
       {/* Hero */}
       <div className="relative h-64 md:h-96 overflow-hidden">
-        <img
-          src={post.image || '/images_v2/hero-blog-v2.jpg'}
-          alt={post.title}
-          className="w-full h-full object-cover"
-          onError={(e) => { (e.target as HTMLImageElement).src = '/images_v2/hero-blog-v2.jpg'; }}
-        />
+        <Image alt={post.title} className="w-full h-full object-cover" onError={(e) => { (e.target as HTMLImageElement).src = '/images_v2/hero-blog-v2.jpg'; }} src={post.image || '/images_v2/hero-blog-v2.jpg'} width={1600} height={900} sizes="100vw" />
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-black/10" />
         <div className="absolute bottom-0 left-0 right-0 p-6 md:p-10 text-white">
           <div className="flex flex-wrap gap-2 mb-3">

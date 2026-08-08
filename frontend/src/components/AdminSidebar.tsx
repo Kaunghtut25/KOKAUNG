@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
 import { useI18n } from "@/lib/i18n";
+import Image from "next/image";
 
 interface NavItem {
   labelKey: string;
@@ -91,11 +92,7 @@ export default function AdminSidebar() {
       {/* Logo */}
       <div className="px-6 py-6 border-b border-gold/20">
         <Link href="/admin/dashboard" className="flex items-center gap-3">
-          <img
-            src="/logo.jpeg"
-            alt="A9 Travel"
-            className="w-10 h-10 rounded-lg object-cover border border-gold/30 flex-shrink-0"
-          />
+          <Image alt="A9 Travel" className="w-10 h-10 rounded-lg object-cover border border-gold/30 flex-shrink-0" src="/logo.jpeg" width={1600} height={900} sizes="100vw" />
           <div className={`${collapsed && !mobileOpen ? "hidden" : "block"}`}>
             <div
               className="text-xl font-bold text-gold tracking-wider leading-tight"

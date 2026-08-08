@@ -9,6 +9,7 @@ import DealsBanner from '@/components/DealsBanner';
 import FAQAccordion from '@/components/FAQAccordion';
 import TestimonialSlider from '@/components/TestimonialSlider';
 import RoutesMap from '@/components/RoutesMap';
+import Image from "next/image";
 interface Cruise {
   _id?: string;
   id?: string;
@@ -140,11 +141,7 @@ export default function CruisesClient({ initialCruises, siteConfig }: { initialC
     <main className="min-h-screen bg-white">
       {/* Hero */}
       <section className="relative h-[400px] md:h-[500px] w-full overflow-hidden" style={{ height: (siteConfig?.heroDimensions?.["cruises"]?.desktop || 500) + "px" }}>
-        <img
-          src={heroImage}
-          alt="Luxury Cruises" onError={(e) => { (e.target as HTMLImageElement).src = "/images_v2/hero-cruises-v2.jpg"; }}
-          className="w-full h-full object-cover"
-        />
+        <Image alt="Luxury Cruises" onError={(e) => { (e.target as HTMLImageElement).src = "/images_v2/hero-cruises-v2.jpg"; }} className="w-full h-full object-cover" src={heroImage} width={1600} height={900} sizes="100vw" />
         <div className="absolute inset-0 bg-gradient-to-t from-[#0A1628]/90 via-[#0A1628]/40 to-[#0A1628]/30" />
         <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4">
           <h1 className="font-bold text-white mb-4" style={{ fontFamily: crTitleFont, fontSize: crTitleSize }}>
@@ -181,12 +178,7 @@ export default function CruisesClient({ initialCruises, siteConfig }: { initialC
             return (
               <div key={cruise.id} onClick={() => router.push("/cruises/" + (cruise.id || cruise._id || cruise.slug))} className="bg-white rounded-2xl border border-gray-200 overflow-hidden hover:shadow-xl hover:border-[#D4AF37]/40 transition-all group cursor-pointer">
                 <div className="relative overflow-hidden" style={{ height: (siteConfig?.cardDimensions?.cruises?.height) || 192 }}>
-                  <img
-                    src={cruise.images?.[0] || '/images_v2/hero-cruises-v2.jpg'}
-                    alt={cruise.title}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                    onError={(e) => { (e.target as HTMLImageElement).src = '/images_v2/hero-cruises-v2.jpg'; }}
-                  />
+                  <Image alt={cruise.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" onError={(e) => { (e.target as HTMLImageElement).src = '/images_v2/hero-cruises-v2.jpg'; }} src={cruise.images?.[0] || '/images_v2/hero-cruises-v2.jpg'} width={1600} height={900} sizes="100vw" />
                   <div className="absolute top-3 right-3 bg-[#D4AF37] text-[#0A1628] text-xs font-bold px-3 py-1 rounded-full">
                     {cruise.duration}
                   </div>

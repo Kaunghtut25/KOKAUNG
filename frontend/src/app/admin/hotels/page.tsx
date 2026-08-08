@@ -4,6 +4,7 @@ import React, { useEffect, useState, useCallback } from "react";
 import Link from "next/link";
 import AdminFormModal from "@/components/AdminFormModal";
 import { useI18n } from "@/lib/i18n";
+import Image from "next/image";
 
 interface RoomType {
   name: string;
@@ -523,11 +524,7 @@ export default function AdminHotelsPage() {
         />
         <div className="w-[200px] h-[150px] rounded-lg border border-white/10 bg-white/5 flex-shrink-0 overflow-hidden flex items-center justify-center">
           {imagePreviewUrl ? (
-            <img
-              src={imagePreviewUrl}
-              alt="Preview"
-              className="w-full h-full object-cover"
-              onError={(e) => {
+            <Image alt="Preview" className="w-full h-full object-cover" onError={(e) => {
                 (e.target as HTMLImageElement).style.display = "none";
                 const parent = (e.target as HTMLImageElement)
                   .parentElement;
@@ -537,8 +534,7 @@ export default function AdminHotelsPage() {
                   if (fallback)
                     (fallback as HTMLElement).style.display = "flex";
                 }
-              }}
-            />
+              }} src={imagePreviewUrl} width={1600} height={900} sizes="100vw" />
           ) : null}
           <span
             className={`img-fallback text-white/20 text-xs text-center px-2 ${
@@ -800,16 +796,11 @@ export default function AdminHotelsPage() {
                         <div className="flex items-center gap-3">
                           <div className="w-10 h-10 rounded-lg border border-white/10 bg-white/5 overflow-hidden flex-shrink-0 flex items-center justify-center">
                             {thumb ? (
-                              <img
-                                src={thumb}
-                                alt={hotel.name}
-                                className="w-full h-full object-cover"
-                                onError={(e) => {
+                              <Image alt={hotel.name} className="w-full h-full object-cover" onError={(e) => {
                                   (
                                     e.target as HTMLImageElement
                                   ).style.display = "none";
-                                }}
-                              />
+                                }} src={thumb} width={1600} height={900} sizes="100vw" />
                             ) : null}
                             {!thumb && (
                               <span className="text-white/20 text-lg">

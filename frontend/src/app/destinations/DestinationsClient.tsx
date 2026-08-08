@@ -49,12 +49,7 @@ export default function DestinationsClient({ initialDestinations, siteConfig }: 
         style={{ height: (siteConfig?.heroDimensions?.destinations?.desktop || 400) + "px" }}
       >
         <div className="absolute inset-0">
-          <img
-            src={heroImage}
-            alt="Explore Destinations"
-            className="w-full h-full object-cover"
-            onError={(e) => { (e.target as HTMLImageElement).src = "/images_v2/hero-destinations-v2.jpg"; }}
-          />
+          <Image alt="Explore Destinations" className="w-full h-full object-cover" onError={(e) => { (e.target as HTMLImageElement).src = "/images_v2/hero-destinations-v2.jpg"; }} src={heroImage} width={1600} height={900} sizes="100vw" />
           <div className="absolute inset-0 bg-gradient-to-b from-black/50 to-transparent" />
         </div>
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(212,175,55,0.08),transparent_70%)]" />
@@ -92,15 +87,9 @@ export default function DestinationsClient({ initialDestinations, siteConfig }: 
               >
                 {/* Card Image */}
                 <div className="relative w-full h-48 overflow-hidden">
-                  <img
-                    src={dest.image}
-                    alt={dest.city}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                    loading="lazy"
-                    onError={(e) => {
+                  <Image alt={dest.city} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" onError={(e) => {
                       (e.target as HTMLImageElement).src = "https://vydupdjfr38dxlzx.public.blob.vercel-storage.com/uploads/img_1784609663178_ta1biy-bangkok-x7Q8kUMuXRvj6qMJAZxBbawKS4zkjI.jpg";
-                    }}
-                  />
+                    }} src={dest.image} width={1600} height={900} sizes="100vw" />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
                   <div className="absolute top-3 right-3 px-3 py-1 rounded-full bg-[#D4AF37]/90 text-[#0A1628] text-xs font-bold">
                     {dest.country}

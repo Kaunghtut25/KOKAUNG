@@ -116,12 +116,7 @@ export default function BlogClient({ siteConfig }: { siteConfig: any }) {
               className="bg-white rounded-2xl border border-gray-200 overflow-hidden hover:shadow-xl hover:border-[#D4AF37]/40 transition-all cursor-pointer group"
             >
               <div className="relative h-48 overflow-hidden">
-                <img
-                  src={post.image}
-                  alt={post.title}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                  onError={(e) => { (e.target as HTMLImageElement).src = 'https://vydupdjfr38dxlzx.public.blob.vercel-storage.com/uploads/img_1784609663178_ta1biy-bangkok-x7Q8kUMuXRvj6qMJAZxBbawKS4zkjI.jpg'; }}
-                />
+                <Image alt={post.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" onError={(e) => { (e.target as HTMLImageElement).src = 'https://vydupdjfr38dxlzx.public.blob.vercel-storage.com/uploads/img_1784609663178_ta1biy-bangkok-x7Q8kUMuXRvj6qMJAZxBbawKS4zkjI.jpg'; }} src={post.image} width={1600} height={900} sizes="100vw" />
               </div>
               <div className="p-5">
                 <div className="flex flex-wrap gap-1 mb-3">
