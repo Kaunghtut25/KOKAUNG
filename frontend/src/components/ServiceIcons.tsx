@@ -45,7 +45,7 @@ function ToggleButton({ label, icon, active, onToggle }: { label: string; icon: 
       }
     >
       <span className="text-sm hover:scale-110 transition-transform">{icon}</span>
-      <span className={'text-xs font-semibold hidden sm:inline ' + (active ? 'text-white' : 'text-gray-700 group-hover:text-[#D4AF37]')}>
+      <span className={'text-xs font-semibold hidden sm:inline ' + (active ? 'text-[#0A1628]' : 'text-gray-700 group-hover:text-[#D4AF37]')}>
         {label}
       </span>
     </button>
@@ -63,7 +63,7 @@ function NavLink({ label, icon, href, active }: { label: string; icon: string; h
       }
     >
       <span className="text-sm group-hover:scale-110 transition-transform">{icon}</span>
-      <span className={'text-xs font-semibold transition-colors hidden sm:inline ' + (active ? 'text-white' : 'text-gray-700 group-hover:text-[#D4AF37]')}>
+      <span className={'text-xs font-semibold transition-colors hidden sm:inline ' + (active ? 'text-[#0A1628]' : 'text-gray-700 group-hover:text-[#D4AF37]')}>
         {label}
       </span>
     </Link>
