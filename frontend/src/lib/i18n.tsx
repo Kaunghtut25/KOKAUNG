@@ -81,7 +81,7 @@ const en: Record<string, string> = {
   "admin.knowledge.status": "Status",
   "admin.knowledge.add": "Add Knowledge",
   "admin.knowledge.edit": "Edit Knowledge",
-  "admin.knowledge.hint": "The chatbot answers clients from this knowledge. Enter keywords the visitor might use (English or Burmese) so Master A9 picks the right answer.",
+  "admin.knowledge.hint": "The chatbot answers clients from this knowledge. Enter keywords the visitor might use (English or Burmese) so Miya picks the right answer.",
   "admin.sm.title": "Site Manager",
   "admin.sm.subtitle": "Control every section of your website",
   "admin.sm.saveAll": "Save All Changes",

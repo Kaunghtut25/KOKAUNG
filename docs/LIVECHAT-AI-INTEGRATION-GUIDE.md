@@ -3,7 +3,7 @@
 > **Purpose**: This document explains the current Live Chat format and exactly how to plug in
 > real AI API keys (OpenAI / Anthropic / Gemini / DeepSeek / any OpenAI-compatible endpoint)
 > so the chat answers like a real travel assistant instead of the current keyword bot.
-> Last updated: 2026-08-02 (v82 baseline — Master A9 connected to local Ollama qwen2.5-coder:3b).
+> Last updated: 2026-08-02 (v82 baseline — Miya connected to local Ollama qwen2.5-coder:3b).
 >
 > **v81 UPDATE — the brain route is ALREADY DEPLOYED**: `frontend/src/app/api/chat/route.ts` is live
 > at `/api/chat` with session memory (Upstash Redis), keyword-bot fallback, live travel-catalog
@@ -305,9 +305,9 @@ The code is live — you only need to add a key to flip the switch.
 
 ---
 
-## 11. v82 — Master A9 connected to local Ollama (qwen2.5-coder:3b) — LIVE
+## 11. v82 — Miya connected to local Ollama (qwen2.5-coder:3b) — LIVE
 
-**Status: FULLY WORKING on www.a9travel.com.** The live chat is named **Master A9** and answers
+**Status: FULLY WORKING on www.a9travel.com.** The live chat is named **Miya** and answers
 visitors using your local qwen2.5-coder:3b model, through a token-gated public tunnel.
 
 ### Architecture (how the pieces connect)
@@ -339,16 +339,16 @@ Visitor browser
    - NOTE: quick-tunnel URL CHANGES every restart. If the PC restarts, run it again and update
      OLLAMA_BASE_URL on Vercel (or the chat falls back to the keyword bot — it never breaks).
 
-### Master A9 persona + travel knowledge guidelines
+### Miya persona + travel knowledge guidelines
 The system prompt (route.ts buildSystemPrompt) now:
-- Tells the model its name is **Master A9** and to say so when asked.
+- Tells the model its name is **Miya** and to say so when asked.
 - Adds **TRAVEL KNOWLEDGE GUIDELINES**: Myanmar destinations (Yangon/Shwedagon, Bagan, Mandalay,
   Inle Lake, Ngapali, Golden Rock), domestic travel options, best seasons (Nov-Feb cool/dry),
   Myanmar e-visa basics (advise checking embassy per nationality), and the rule to never invent
   visa fees/flight rules — use catalog/research or hand off.
 - Still matches language (Burmese in -> Burmese out), asks ONE clarifying question, hands off
   with phone/email for bookings, keeps answers ~120 words.
-- Keyword fallback is name-aware too: "your name" -> "I'm Master A9...".
+- Keyword fallback is name-aware too: "your name" -> "I'm Miya...".
 
 ### If you change Ollama host/proxy later
 - Local dev without tunnel: set OLLAMA_BASE_URL=http://localhost:11434/v1 (no tunnel needed).
@@ -383,7 +383,7 @@ The system prompt (route.ts buildSystemPrompt) now:
 
 ---
 
-## 14. v82f (2026-08-02) — Master A9 knows real business info (no more invented contact details)
+## 14. v82f (2026-08-02) — Miya knows real business info (no more invented contact details)
 
 - **Problem**: bot gave a fake phone (+95 1 123 4567) because stored `contact.phone` was empty → prompt said "(see contact page)" → model hallucinated.
 - **Fix**: `BUSINESS_INFO` const in `frontend/src/app/api/chat/route.ts` — department phones (ticket +959 781 617 111, visa +959 781 617 333, hotel +959 694 202 111, outbound +959 756 348 222, inbound +959 694 320 111), emails (a9ticketing@a9globaltravel.com.mm, info@a9globaltravel.com), address (No-18 Zayya Waddy St, Baho Rd, Sanchaung, Yangon), hours (Mon-Fri 9-5, Sat 9-12), off days (Sunday & public holidays), viber/messenger/telegram. Prompt ends with "BUSINESS INFO (AUTHORITATIVE...)" + rules: answer ONLY from it word-for-word, NEVER invent; unknown → refer to Contact page.
