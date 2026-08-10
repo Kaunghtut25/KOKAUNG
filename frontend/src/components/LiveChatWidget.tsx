@@ -129,6 +129,18 @@ export default function LiveChatWidget() {
     sessionId.current = getSessionId();
   }, []);
 
+  // FIX: 2026-08-11 auto-open chat once per visitor after 8s
+  useEffect(() => {
+    let seen = false;
+    try { seen = localStorage.getItem('a9_chat_autoopened') === '1'; } catch {}
+    if (seen) return;
+    const t = setTimeout(() => {
+      setOpen(true);
+      try { localStorage.setItem('a9_chat_autoopened', '1'); } catch {}
+    }, 8000);
+    return () => clearTimeout(t);
+  }, []);
+
   useEffect(() => {
     fetch("/api/admin/site-config")
       .then((res) => res.json())
@@ -164,6 +176,7 @@ export default function LiveChatWidget() {
     setMessages(history);
     setInput('');
     setTyping(true);
+    const startedAt = Date.now();
 
     try {
       const res = await fetch('/api/chat', {
@@ -181,7 +194,9 @@ export default function LiveChatWidget() {
     } catch {
       setMessages(prev => [...prev, { id: msgId.current++, text: 'Network error. Please try again.', sender: 'agent', time: currentTime() }]);
     } finally {
-      setTyping(false);
+      const elapsed = Date.now() - startedAt;
+      const remaining = 900 - elapsed;
+      setTimeout(() => setTyping(false), remaining > 0 ? remaining : 0);
     }
   };
 
@@ -320,10 +335,10 @@ export default function LiveChatWidget() {
             ))}
 
             {typing && (
-              <div style={{ alignSelf: 'flex-start', display: 'flex', gap: 4, padding: '10px 14px', background: 'white', borderRadius: '14px 14px 14px 4px', width: 'fit-content' }}>
-                <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#ccc', animation: 'bounce 1s infinite' }} />
-                <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#ccc', animation: 'bounce 1s infinite 0.2s' }} />
-                <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#ccc', animation: 'bounce 1s infinite 0.4s' }} />
+              <div style={{ alignSelf: 'flex-start', display: 'flex', gap: 5, padding: '13px 16px', background: 'white', borderRadius: '14px 14px 14px 4px', width: 'fit-content', boxShadow: '0 1px 2px rgba(0,0,0,0.06)' }}>
+                {[0, 1, 2].map((d) => (
+                  <span key={d} style={{ width: 7, height: 7, borderRadius: '50%', background: '#0A1628', opacity: 0.5, animation: 'bounce 1.1s infinite', animationDelay: d * 0.18 + 's' }} />
+                ))}
               </div>
             )}
 
