@@ -1,6 +1,7 @@
 'use client';
 import React, { useState, useRef, useEffect } from 'react';
 import { useI18n } from "@/lib/i18n";
+import { createPortal } from 'react-dom';
 
 function Inline({ text }: { text: string }) {
   const parts: React.ReactNode[] = [];
@@ -101,6 +102,16 @@ const quickReplies = [
 export default function LiveChatWidget() {
   const { t } = useI18n();
   const [open, setOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+  useEffect(() => {
+    setMounted(true);
+    const mq = window.matchMedia('(max-width: 1023.98px)');
+    const update = () => setIsMobile(mq.matches);
+    update();
+    mq.addEventListener('change', update);
+    return () => mq.removeEventListener('change', update);
+  }, []);
   const [messages, setMessages] = useState<Message[]>(initialMessages);
   const [input, setInput] = useState('');
   const [typing, setTyping] = useState(false);
@@ -174,14 +185,16 @@ export default function LiveChatWidget() {
     }
   };
 
-  return (
+  if (!mounted) return null;
+  return createPortal(
     <>
+      {/* FIX: 2026-08-11 chat widget zoom position - portal to body + mobile offset above sticky CTA */}
       {/* Chat Panel */}
       {open && (
         <div
           style={{
             position: 'fixed',
-            bottom: 80,
+            bottom: isMobile ? 148 : 80,
             right: 20,
             width: 380,
             maxWidth: 'calc(100vw - 40px)',
@@ -397,7 +410,7 @@ export default function LiveChatWidget() {
         onClick={() => { setOpen(!open); if (!open) setUnread(0); }}
         style={{
           position: 'fixed',
-          bottom: 20,
+          bottom: isMobile ? 84 : 20,
           right: 20,
           height: 44,
           borderRadius: 22,
@@ -456,6 +469,7 @@ export default function LiveChatWidget() {
           30% { transform: translateY(-5px); }
         }
       `}</style>
-    </>
+    </>,
+    document.body
   );
 }
