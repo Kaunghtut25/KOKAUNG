@@ -323,3 +323,20 @@ main.md\:ml-64 * {
   input, select, textarea { font-size: 16px !important; }
 }
 button, a, input, select, textarea { touch-action: manipulation; }
+
+/* FIX: 2026-08-12 — fixed modals/overlays must track the VISIBLE viewport too.
+   At pinch/browser zoom the layout viewport is wider than the visible one,
+   so a `fixed inset-0` flex-centered modal lands off-center / clipped.
+   NarrowView.tsx publishes --vvw AND --vvh; constrain overlays to them. */
+html[data-narrow="1"] .fixed.inset-0 {
+  left: 0 !important;
+  right: auto !important;
+  top: 0 !important;
+  bottom: auto !important;
+  width: min(100vw, calc(var(--vvw, 100vw) * 1px)) !important;
+  height: min(100vh, calc(var(--vvh, 100vh) * 1px)) !important;
+  overflow: auto;
+}
+html[data-narrow="1"] .fixed.inset-0 > div {
+  max-height: calc(var(--vvh, 100vh) * 1px - 2rem) !important;
+}
