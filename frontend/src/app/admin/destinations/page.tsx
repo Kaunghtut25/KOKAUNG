@@ -46,7 +46,10 @@ export default function AdminDestinationsPage() {
   };
 
   const openNew = () => { setEditing({ ...empty }); setModal(true); };
-  const openEdit = (d: Destination) => { setEditing({ ...d }); setModal(true); };
+  const openEdit = (d: Destination) => {
+    setEditing({ ...d, tags: Array.isArray(d.tags) ? d.tags.join(", ") : d.tags || "" });
+    setModal(true);
+  };
   const closeModal = () => { setModal(false); setEditing(null); };
 
   const save = async () => {
@@ -57,10 +60,14 @@ export default function AdminDestinationsPage() {
         ? `/api/admin/destinations?id=${editing._id || editing.id}`
         : "/api/admin/destinations";
       const method = editing._id || editing.id ? "PUT" : "POST";
+      const body = {
+        ...editing,
+        tags: (editing.tags || "").split(",").map((s: string) => s.trim()).filter(Boolean),
+      };
       const res = await fetch(url, {
         method,
         headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
-        body: JSON.stringify(editing),
+        body: JSON.stringify(body),
       });
       if (res.ok) {
         await load();
@@ -108,8 +115,10 @@ export default function AdminDestinationsPage() {
     return d.image || (Array.isArray(d.images) ? d.images[0] : "") || "";
   };
 
-  const parseTags = (tags?: string): string[] =>
-    (tags || "").split(",").map((s) => s.trim()).filter(Boolean).slice(0, 3);
+  const parseTags = (tags?: string | string[]): string[] => {
+    if (Array.isArray(tags)) return tags.slice(0, 3);
+    return (tags || "").split(",").map((s) => s.trim()).filter(Boolean).slice(0, 3);
+  };
 
   if (loading) return <div className="min-h-screen bg-[#0A1628] flex items-center justify-center"><div className="text-white/60 text-lg">{t("admin.dest.loading")}</div></div>;
 
