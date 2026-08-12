@@ -177,11 +177,35 @@ export default function PopularDestinations({ siteConfig }: { siteConfig?: any }
 
   const [loaded, setLoaded] = useState(false);
   useEffect(() => {
-    fetch("/api/admin/site-config").then(r => r.json()).then(d => {
-      if (d?.popularDestinations != null) {
-        const fixed = d.popularDestinations.map((dest: any) => ({ ...dest, city: CITY_FIX_MAP[dest.city] || dest.city })); setDests(fixed);
-      const dt = d.destinationsText;
+    // FIX 2026-08-12: prefer the destinations DB (editable via Admin → Destinations)
+    Promise.all([
+      fetch("/api/destinations").then(r => r.json()).catch(() => null),
+      fetch("/api/admin/site-config").then(r => r.json()).catch(() => null),
+    ]).then(([destsData, cfgData]) => {
+      const arr = Array.isArray(destsData) ? destsData : (destsData?.data || destsData?.items || []);
+      const dt = cfgData?.destinationsText || (Array.isArray(cfgData) ? cfgData[0]?.destinationsText : null) || {};
       setDestText(dt || {});
+      if (Array.isArray(arr) && arr.length > 0) {
+        const mapped = arr.map((d: any) => {
+          const img = typeof d.images === "string" ? (JSON.parse(d.images)[0] || d.image || "") : (Array.isArray(d.images) ? d.images[0] : (d.image || d.img || ""));
+          return {
+            city: CITY_FIX_MAP[d.city] || d.city || d.name || "",
+            country: d.country || "",
+            image: img || d.image || FALLBACK_IMG,
+            minPrice: d.minPrice || "",
+            rating: typeof d.rating === "number" ? d.rating : (d.rating ? parseFloat(d.rating) : undefined),
+            reviews: typeof d.reviews === "number" ? d.reviews : (d.reviews ? parseInt(d.reviews, 10) : undefined),
+            duration: d.duration || "",
+            tags: typeof d.tags === "string" ? d.tags.split(",").map((s: string) => s.trim()).filter(Boolean) : (Array.isArray(d.tags) ? d.tags : []),
+            description: d.description || "",
+          };
+        }).filter((d: any) => d.city);
+        if (mapped.length > 0) { setDests(mapped); return; }
+      }
+      // fallback: site-config popularDestinations, then FALLBACK_DESTS
+      if (cfgData?.popularDestinations != null) {
+        const fixed = cfgData.popularDestinations.map((dest: any) => ({ ...dest, city: CITY_FIX_MAP[dest.city] || dest.city }));
+        setDests(fixed.length ? fixed : FALLBACK_DESTS);
       } else {
         setDests(FALLBACK_DESTS);
       }
