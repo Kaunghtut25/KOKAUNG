@@ -151,6 +151,7 @@ export default function AdminToursPage() {
     setImageUrlInput("");
     setImagePreviewUrl("");
     setImageList([]);
+    setItineraryDays([]);
     setUploadError("");
     setIsNew(true);
     setModalOpen(true);
@@ -163,6 +164,7 @@ export default function AdminToursPage() {
     setImageUrlInput(imgs[0] || "");
     setImagePreviewUrl(imgs[0] || "");
     setUploadError("");
+    setItineraryDays(parseItinerary((tour as any).itinerary));
     setIsNew(false);
     setModalOpen(true);
   };
@@ -690,6 +692,76 @@ export default function AdminToursPage() {
             {[1,2,3,4,5,6,7].map((r) => (<option key={r} value={r}>{t("admin.form.row")} {r}</option>))}
           </select>
         </div>
+      </div>
+      {/* ─── Tour Itinerary Editor (FIX 2026-08-12 admin day-by-day editor) ─── */}
+      <div className="rounded-xl border border-white/10 bg-white/[0.02] p-4">
+        <div className="flex items-center justify-between mb-1">
+          <label className="block text-white/70 text-sm font-medium">
+            {t("admin.form.itinerary")}
+          </label>
+          <button
+            type="button"
+            onClick={addItineraryDay}
+            className="px-3 py-1.5 rounded-lg bg-gold/10 text-gold text-xs font-medium hover:bg-gold/20 transition-colors"
+          >
+            + {t("admin.form.itineraryAdd")}
+          </button>
+        </div>
+        <p className="text-xs text-gray-400 mb-3">{t("admin.form.itineraryHint")}</p>
+        {itineraryDays.length === 0 ? (
+          <div className="rounded-lg border border-dashed border-white/10 bg-white/[0.02] p-4 text-center">
+            <p className="text-white/40 text-sm">{t("admin.form.itineraryEmpty")}</p>
+          </div>
+        ) : (
+          <div className="space-y-3">
+            {itineraryDays.map((day, index) => (
+              <div key={index} className="rounded-lg border border-white/10 bg-white/[0.03] p-3 space-y-2">
+                <div className="flex items-center justify-between">
+                  <span className="text-gold text-xs font-bold uppercase tracking-wider">
+                    {t("tour.day")} {day.day}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => removeItineraryDay(index)}
+                    className="text-red-400 hover:text-red-300 text-xs font-medium"
+                  >
+                    ✕ {t("admin.form.itineraryRemove")}
+                  </button>
+                </div>
+                <input
+                  type="text"
+                  value={day.title}
+                  onChange={(e) => updateItineraryDay(index, "title", e.target.value)}
+                  placeholder={t("admin.form.itineraryTitlePh")}
+                  className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-gold/50 transition-colors"
+                />
+                <textarea
+                  value={day.description}
+                  onChange={(e) => updateItineraryDay(index, "description", e.target.value)}
+                  placeholder={t("admin.form.itineraryDescPh")}
+                  rows={2}
+                  className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-gold/50 transition-colors resize-none"
+                />
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                  <input
+                    type="text"
+                    value={day.meals}
+                    onChange={(e) => updateItineraryDay(index, "meals", e.target.value)}
+                    placeholder={t("admin.form.itineraryMeals")}
+                    className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-gold/50 transition-colors"
+                  />
+                  <input
+                    type="text"
+                    value={day.accommodation}
+                    onChange={(e) => updateItineraryDay(index, "accommodation", e.target.value)}
+                    placeholder={t("admin.form.itineraryAcc")}
+                    className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-gold/50 transition-colors"
+                  />
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

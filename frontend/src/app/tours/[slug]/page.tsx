@@ -574,6 +574,12 @@ export default function TourDetailPage() {
     [tour?.duration, tour?.destination, lang]
   );
 
+  // FIX 2026-08-12: prefer DB itinerary (editable via Admin) when present; fall back to auto-generated
+  const displayItinerary = useMemo(
+    () => (tour?.itinerary && tour.itinerary.length > 0 ? tour.itinerary : generatedItinerary),
+    [tour?.itinerary, generatedItinerary]
+  );
+
     // Dynamic tabs from site config — filter visible and respect ordering
   const [detailPageTabs, setDetailPageTabs] = useState<{ key: string; label: string; visible: boolean }[]>([]);
   useEffect(() => {
@@ -770,7 +776,7 @@ export default function TourDetailPage() {
                 )}
 
                 {/* Tour Itinerary */}
-                {generatedItinerary.length > 0 && (
+                {displayItinerary.length > 0 && (
                   <div>
                     <h2
                       className="text-xl text-[#0A1628] font-semibold mb-6"
@@ -779,7 +785,7 @@ export default function TourDetailPage() {
                       Tour Itinerary
                     </h2>
                     <div className="space-y-4">
-                      {generatedItinerary.map((day) => (
+                      {displayItinerary.map((day: any) => (
                         <div
                           key={day.day}
                           className="relative overflow-hidden rounded-2xl border border-[#D4AF37]/20 bg-gradient-to-br from-[#0A1628] to-[#0F2035] p-5 transition-all duration-300 hover:border-[#D4AF37]/40 hover:shadow-lg hover:shadow-[#D4AF37]/10"
@@ -826,10 +832,10 @@ export default function TourDetailPage() {
             {/* Tab: Itinerary */}
             {activeTab === 'itinerary' && (
               <div className="space-y-0">
-                {(generatedItinerary).map((day: GeneratedDay, idx: number) => (
+                {(displayItinerary as any[]).map((day: any, idx: number) => (
                   <div key={idx} className="relative flex gap-4 pb-8">
                     {/* Timeline accent line */}
-                    {idx < generatedItinerary.length - 1 && (
+                    {idx < displayItinerary.length - 1 && (
                       <div className="absolute left-[19px] top-10 bottom-0 w-0.5 bg-gradient-to-b from-[#D4AF37]/50 to-transparent" />
                     )}
 
