@@ -15,3 +15,8 @@ scripts/ollama-gate-secret.txt
 
 .openclaw-diag.env
 
+
+# SQLite DB files — never commit (data may be sensitive)
+*.db
+*.sqlite
+*.sqlite3
