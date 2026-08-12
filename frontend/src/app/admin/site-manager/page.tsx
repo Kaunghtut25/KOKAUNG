@@ -634,13 +634,12 @@ const tabs: { key: Tab; label: string }[] = [
           {tab === "destinations" && (
             <div className="space-y-4">
               <h2 className="text-lg font-bold text-white">{t("admin.sm.popularDest")}</h2>
-              {cfg.popularDestinations.map((d, i) => (
-                <div key={i} className="border border-white/10 bg-white/5 text-white rounded-lg p-4 space-y-3">
-                  <div className="flex justify-between"><h3 className="font-medium">{d.city || `${t("admin.sm.destNum")} ${i + 1}`}</h3><button onClick={() => set("popularDestinations", cfg.popularDestinations.filter((_, idx) => idx !== i))} className="text-red-400 text-sm">{t("admin.common.delete")}</button></div>
-                  <div className="grid grid-cols-1 lg:grid-cols-3 gap-3">
-                    <input className={`inputCls inputCls`} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} placeholder={t("admin.sm.city")} value={d.city} onChange={e => { const a = [...cfg.popularDestinations]; a[i] = { ...d, city: e.target.value }; set("popularDestinations", a); }} />
-                  </div>
-                  
+              {/* FIX 2026-08-12: destinations are managed in ONE place — Admin → Manage Destinations */}
+              <div className="border border-[#D4AF37]/30 bg-[#D4AF37]/10 text-white rounded-lg p-4 space-y-3">
+                <p className="text-sm text-white/80">{t("admin.sm.destManagedNotice")}</p>
+                <a href="/admin/destinations" className="inline-block px-4 py-2 bg-gradient-to-r from-[#D4AF37] to-[#C5A028] text-[#0A1628] font-bold rounded-lg text-sm">{t("admin.sm.openManageDest")} →</a>
+              </div>
+
               <div className="mt-4 border-t border-white/10 pt-4">
                 <h3 className="text-sm font-semibold text-[#D4AF37] mb-3">{t("admin.sm.sectionHeaderText")}</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3">
@@ -693,10 +692,6 @@ const tabs: { key: Tab; label: string }[] = [
                       onChange={e => setCfg(p => ({ ...p, destinationsText: { ...(p.destinationsText || {}), cardTitleColor: e.target.value } }))} /></div>
                 </div>
               </div>
-            <ImageZone field="popularDestinations" index={i} label={t("admin.sm.destImage")} />
-                </div>
-              ))}
-              <button onClick={() => set("popularDestinations", [...cfg.popularDestinations, { city: "", country: "", image: "", minPrice: "" }])} className="px-4 py-2 bg-white/10 rounded-lg text-sm">{t("admin.sm.addGeneric")}</button>
             </div>
           )}
 
