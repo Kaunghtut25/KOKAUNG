@@ -4,6 +4,7 @@ import React, { useEffect, useState, useCallback } from "react";
 import Link from "next/link";
 import AdminFormModal from "@/components/AdminFormModal";
 import { useI18n } from "@/lib/i18n";
+import { generateItinerary, parseDays } from "@/lib/tourItinerary";
 import Image from "next/image";
 
 interface Tour {
@@ -164,7 +165,12 @@ export default function AdminToursPage() {
     setImageUrlInput(imgs[0] || "");
     setImagePreviewUrl(imgs[0] || "");
     setUploadError("");
-    setItineraryDays(parseItinerary((tour as any).itinerary));
+    const existingItinerary = parseItinerary((tour as any).itinerary);
+    setItineraryDays(
+      existingItinerary.length > 0
+        ? existingItinerary
+        : generateItinerary(parseDays((tour as any).duration || ''), (tour as any).destination || '').map(d => ({ day: d.day, title: d.title, description: d.description, meals: d.meals.join(', '), accommodation: '' }))
+    );
     setIsNew(false);
     setModalOpen(true);
   };

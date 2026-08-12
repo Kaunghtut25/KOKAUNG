@@ -13,6 +13,7 @@ import Calendar from '@/components/Calendar';
 import ErrorBoundary from '@/components/ErrorBoundary';
 import { useI18n } from '@/lib/i18n';
 import { mmTours } from '@/lib/mm-content';
+import { generateItinerary, parseDays } from '@/lib/tourItinerary';
 type TabKey = 'overview' | 'itinerary' | 'included' | 'reviews';
 
 // ─── Fallback tours when API is unavailable ─────────────────
@@ -381,82 +382,6 @@ const PLACEHOLDER_IMG =
   'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIwMCIgaGVpZ2h0PSI2MDAiIHZpZXdCb3g9IjAgMCAxMjAwIDYwMCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTIwMCIgaGVpZ2h0PSI2MDAiIGZpbGw9IiMxQTFBMkUiLz48dGV4dCB4PSI2MDAiIHk9IjMwMCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iIzY2NiIgZm9udC1mYW1pbHk9Ikdlb3JnaWEiIGZvbnQtc2l6ZT0iMjQiPkE5IEdsb2JhbCAmIzE4MzsgVG91cnM8L3RleHQ+PC9zdmc+';
 
 // ─── Itinerary generator helpers ─────────────────────────
-function parseDays(durationStr: string | number): number {
-  const match = String(durationStr ?? '').match(/(\d+)/);
-  return match ? parseInt(match[1], 10) : 0;
-}
-
-interface GeneratedDay {
-  day: number;
-  title: string;
-  description: string;
-  meals: string[];
-}
-
-function generateItinerary(days: number, destination: string, t?: (key: string, params?: Record<string, string | number>) => string): GeneratedDay[] {
-  if (days <= 0) return [];
-
-  const middleTemplates: { title: string; description: string; meals: string[] }[] = [
-    {
-      title: t ? t("tour.itinerary.explorationTitle") : 'Exploration',
-      description: t ? t("tour.itinerary.explorationDesc", { destination }) : `Discover the highlights of ${destination} with a guided tour of the most iconic landmarks and attractions. Immerse yourself in the rich history and vibrant atmosphere of this incredible destination.`,
-      meals: ['Breakfast', 'Lunch'],
-    },
-    {
-      title: t ? t("tour.itinerary.culturalTitle") : 'Cultural Experience',
-      description: t ? t("tour.itinerary.culturalDesc", { destination }) : `Dive deep into the local culture with visits to traditional markets, artisan workshops, and historic sites. Interact with local communities and learn about their way of life in ${destination}.`,
-      meals: ['Breakfast'],
-    },
-    {
-      title: t ? t("tour.itinerary.leisureTitle") : 'Leisure & Relaxation',
-      description: t ? t("tour.itinerary.leisureDesc", { destination }) : `Enjoy a free day at your own pace. Explore the surroundings, relax at the hotel, or opt for optional excursions. This is your day to create your own adventure in ${destination}.`,
-      meals: ['Breakfast'],
-    },
-    {
-      title: t ? t("tour.itinerary.natureTitle") : 'Nature & Adventure',
-      description: t ? t("tour.itinerary.natureDesc", { destination }) : `Venture into the natural wonders surrounding ${destination}. Experience breathtaking landscapes, scenic trails, and outdoor activities that showcase the region's natural beauty.`,
-      meals: ['Breakfast', 'Lunch'],
-    },
-    {
-      title: t ? t("tour.itinerary.hiddenTitle") : 'Hidden Gems',
-      description: t ? t("tour.itinerary.hiddenDesc", { destination }) : `Go off the beaten path to discover ${destination}'s hidden treasures. Visit lesser-known spots, secret viewpoints, and local favorites that most tourists miss.`,
-      meals: ['Breakfast'],
-    },
-    {
-      title: t ? t("tour.itinerary.gastroTitle") : 'Gastronomic Journey',
-      description: t ? t("tour.itinerary.gastroDesc", { destination }) : `Embark on a culinary adventure through ${destination}. Visit local food markets, participate in a cooking class, and savor authentic dishes at handpicked restaurants.`,
-      meals: ['Breakfast', 'Lunch', 'Dinner'],
-    },
-  ];
-
-  const itinerary: GeneratedDay[] = [];
-
-  for (let d = 1; d <= days; d++) {
-    let dayPlan: { title: string; description: string; meals: string[] };
-
-    if (d === 1) {
-      dayPlan = {
-        title: t ? t("tour.itinerary.arrivalTitle") : 'Arrival',
-        description: t ? t("tour.itinerary.arrivalDesc", { destination }) : `Welcome to ${destination}! Upon arrival, you will be greeted by our representative and transferred to your hotel. Take the rest of the day to relax and settle in. In the evening, enjoy a welcome dinner featuring local cuisine.`,
-        meals: ['Dinner'],
-      };
-    } else if (d === days) {
-      dayPlan = {
-        title: t ? t("tour.itinerary.departureTitle") : 'Departure',
-        description: t ? t("tour.itinerary.departureDesc", { destination }) : `After breakfast, check out from the hotel. Our representative will transfer you to the airport for your onward journey. Take home unforgettable memories of ${destination}!`,
-        meals: ['Breakfast'],
-      };
-    } else {
-      const templateIndex = (d - 2) % middleTemplates.length;
-      dayPlan = middleTemplates[templateIndex];
-    }
-
-    itinerary.push({ day: d, ...dayPlan });
-  }
-
-  return itinerary;
-}
-
 interface BookingFormData {
   travelDate: string;
   travelers: number;
