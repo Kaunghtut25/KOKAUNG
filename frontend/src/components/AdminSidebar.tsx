@@ -18,6 +18,7 @@ const navItems: NavItem[] = [
   { labelKey: "admin.manageAbout", icon: "📄", path: "/admin/about" },
   { labelKey: "admin.manageFlights", icon: "✈️", path: "/admin/bookings" },
   { labelKey: "admin.manageTours", icon: "🏔️", path: "/admin/tours" },
+  { labelKey: "admin.manageDestinations", icon: "🌍", path: "/admin/destinations" },
   { labelKey: "admin.manageHotels", icon: "🏨", path: "/admin/hotels" },
   { labelKey: "admin.manageCars", icon: "🚗", path: "/admin/cars" },
   { labelKey: "admin.manageVisas", icon: "🛂", path: "/admin/visas" },
