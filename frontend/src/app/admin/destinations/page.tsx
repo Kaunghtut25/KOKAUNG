@@ -23,6 +23,8 @@ export default function AdminDestinationsPage() {
   const [modal, setModal] = useState(false);
   const [editing, setEditing] = useState<Destination | null>(null);
   const [saving, setSaving] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const [uploadMsg, setUploadMsg] = useState("");
 
   const empty: Destination = { city: "", country: "", image: "", minPrice: "", bestTime: "", description: "", highlights: "", rating: 4.5, reviews: 0, duration: "", tags: "", groupSize: 10 };
 
@@ -71,6 +73,29 @@ export default function AdminDestinationsPage() {
     } catch (e) { console.error(e); }
   };
 
+  const uploadImage = async (file: File) => {
+    if (!file.type.startsWith("image/")) { setUploadMsg(t("admin.common.imgOnly")); return; }
+    if (file.size > 5 * 1024 * 1024) { setUploadMsg(t("admin.dest.dropDims")); return; }
+    setUploading(true); setUploadMsg("");
+    try {
+      const fd = new FormData();
+      fd.append("file", file);
+      const res = await fetch("/api/upload", { method: "POST", headers: { Authorization: `Bearer ${token}` }, body: fd });
+      const data = await res.json();
+      const url = data?.uploads?.[0]?.url;
+      if (!url) { setUploadMsg(t("admin.common.uploadFailed")); return; }
+      setEditing({ ...editing, image: url });
+      setUploadMsg(t("admin.dest.dropDone"));
+    } catch (e) { console.error(e); setUploadMsg(t("admin.common.uploadFailed")); }
+    setUploading(false);
+  };
+
+  const onDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    const f = e.dataTransfer.files?.[0];
+    if (f) uploadImage(f);
+  };
+
   if (loading) return <div className="min-h-screen bg-[#0A1628] flex items-center justify-center"><div className="text-white/60 text-lg">{t("admin.dest.loading")}</div></div>;
 
   return (
@@ -110,8 +135,7 @@ export default function AdminDestinationsPage() {
               {[
                 { key: "city", label: t("admin.dest.fCity") },
                 { key: "country", label: t("admin.dest.fCountry") },
-                { key: "image", label: t("admin.dest.fImageUrl") },
-                { key: "minPrice", label: t("admin.dest.fMinPrice") },
+                                { key: "minPrice", label: t("admin.dest.fMinPrice") },
                 { key: "bestTime", label: t("admin.dest.fBestTime") },
   { key: "rating", label: t("admin.dest.fRating"), type: "number" },
   { key: "reviews", label: t("admin.dest.fReviews"), type: "number" },
@@ -124,6 +148,34 @@ export default function AdminDestinationsPage() {
                   <input type={f.type === "number" ? "number" : "text"} step={f.type === "number" ? "0.1" : undefined} className="w-full bg-[#0A1628] border border-white/10 rounded-lg px-3 py-2 text-white text-sm focus:border-[#D4AF37] outline-none" value={(editing[f.key as keyof Destination] ?? "") as any} onChange={e => setEditing({ ...editing, [f.key]: f.type === "number" ? Number(e.target.value) : e.target.value })} />
                 </div>
               ))}
+              <div>
+                <label className="text-white/60 text-xs block mb-1">{t("admin.dest.fImageUrl")}</label>
+                <div
+                  onDragOver={e => e.preventDefault()}
+                  onDrop={onDrop}
+                  className="border-2 border-dashed border-white/20 hover:border-[#D4AF37] rounded-lg p-4 text-center cursor-pointer transition group"
+                  onClick={() => document.getElementById("dest-img-input")?.click()}
+                >
+                  {editing.image ? (
+                    <div className="relative">
+                      <img src={editing.image} alt={editing.city || "destination"} className="w-full h-40 object-cover rounded-lg" />
+                      <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition flex items-center justify-center gap-2 rounded-lg">
+                        <span className="text-xs text-white bg-black/60 px-2 py-1 rounded">{t("admin.dest.dropReplace")}</span>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="py-6 text-center">
+                      <div className="text-3xl mb-2">📷</div>
+                      <div className="text-white/70 text-sm">{t("admin.dest.dropHint")}</div>
+                      <div className="text-white/40 text-xs mt-1">{t("admin.dest.dropDims")}</div>
+                    </div>
+                  )}
+                  {uploading && <div className="text-[#D4AF37] text-sm mt-2">{t("admin.dest.dropUploading")}</div>}
+                  {uploadMsg && <div className="text-[#D4AF37] text-xs mt-2">{uploadMsg}</div>}
+                </div>
+                <input id="dest-img-input" type="file" accept="image/jpeg,image/png,image/webp,image/gif,image/avif" className="hidden" onChange={e => { const f = e.target.files?.[0]; if (f) uploadImage(f); e.target.value = ""; }} />
+                <input type="text" className="w-full bg-[#0A1628] border border-white/10 rounded-lg px-3 py-2 text-white text-sm focus:border-[#D4AF37] outline-none mt-2" placeholder="https://…" value={editing.image} onChange={e => setEditing({ ...editing, image: e.target.value })} />
+              </div>
               <div>
                 <label className="text-white/60 text-xs block mb-1">{t("admin.form.description")}</label>
                 <textarea className="w-full bg-[#0A1628] border border-white/10 rounded-lg px-3 py-2 text-white text-sm focus:border-[#D4AF37] outline-none h-20 resize-none" value={editing.description} onChange={e => setEditing({ ...editing, description: e.target.value })} />
