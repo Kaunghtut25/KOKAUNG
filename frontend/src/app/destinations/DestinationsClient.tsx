@@ -33,7 +33,8 @@ function toSlug(text: string): string {
 }
 
 export default function DestinationsClient({ initialDestinations, siteConfig }: Props) {
-  const { t } = useI18n();
+  /* FIX: 2026-08-12 lang-reference-error — destructure lang (was undefined -> ReferenceError -> /destinations 500 + console 'Uncaught (in promise) Object') */
+  const { t, lang } = useI18n();
   const router = useRouter();
   const [selectedDest, setSelectedDest] = useState<Destination | null>(null);
 

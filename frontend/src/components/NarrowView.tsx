@@ -23,8 +23,8 @@ export default function NarrowView() {
       const vw = vv ? vv.width : window.innerWidth;
       const iw = window.innerWidth;
       const vh = vv ? vv.height : window.innerHeight;
-      document.documentElement.style.setProperty("--vvw", String(Math.round(vw)));
-      document.documentElement.style.setProperty("--vvh", String(Math.round(vh)));
+      document.documentElement.style.setProperty("--vvw", String(Math.round(vw)) + "px");
+      document.documentElement.style.setProperty("--vvh", String(Math.round(vh)) + "px");
       // Narrow when the visible viewport can't fit the layout content
       // (fixed 256px sidebar + breathing room), or it's <= 900px outright.
       // Narrow when zoomed (visual viewport differs from layout) or when

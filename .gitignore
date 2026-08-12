@@ -12,3 +12,6 @@
 
 # local Ollama gate secret (never commit)
 scripts/ollama-gate-secret.txt
+
+.openclaw-diag.env
+

@@ -250,13 +250,13 @@ input:-webkit-autofill:active {
    width so everything stays reachable and readable. */
 @media (min-width: 768px) {
   html[data-narrow="1"] main.md\:ml-64 {
-    width: min(100%, calc(var(--vvw, 100vw) * 1px - 288px));
+    width: min(100%, calc(var(--vvw, 100vw) - 288px));
     overflow-x: auto;
   }
 }
 @media (max-width: 767.98px) {
   html[data-narrow="1"] main.md\:ml-64 {
-    width: min(100%, calc(var(--vvw, 100vw) * 1px - 64px));
+    width: min(100%, calc(var(--vvw, 100vw) - 64px));
     overflow-x: auto;
   }
 }
@@ -334,12 +334,12 @@ button, a, input, select, textarea { touch-action: manipulation; }
   right: auto !important;
   top: 0 !important;
   bottom: auto !important;
-  width: min(100vw, calc(var(--vvw, 100vw) * 1px)) !important;
-  height: min(100vh, calc(var(--vvh, 100vh) * 1px)) !important;
+  width: min(100vw, var(--vvw, 100vw)) !important;
+  height: min(100vh, var(--vvh, 100vh)) !important;
   overflow: auto;
 }
 .fixed.inset-0 > div {
-  max-height: calc(var(--vvh, 100vh) * 1px - 2rem) !important;
+  max-height: calc(var(--vvh, 100vh) - 2rem) !important;
 }
 
 /* FIX: 2026-08-12 v2 — Manage Destinations cards must NEVER transform on zoom.
@@ -350,5 +350,5 @@ html[data-narrow="1"] .admin-dests-grid,
   width: 100% !important;
 }
 html[data-narrow="1"] main.md\:ml-64 {
-  width: min(100%, calc(var(--vvw, 100vw) * 1px - 288px)) !important;
+  width: min(100%, calc(var(--vvw, 100vw) - 288px)) !important;
 }
