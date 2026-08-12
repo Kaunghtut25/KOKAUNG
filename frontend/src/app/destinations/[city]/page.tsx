@@ -23,6 +23,7 @@ interface PopularDestination {
   tags?: string[];
   bestTime?: string;
   description?: string;
+  description2?: string;
   highlights?: string[];
 }
 
@@ -194,6 +195,7 @@ export default function DestinationPage() {
             groupSize: found.groupSize,
             bestTime: found.bestTime,
             description: found.description,
+            description2: found.description2,
             highlights: found.highlights,
           });
         }
@@ -376,13 +378,17 @@ export default function DestinationPage() {
                 <p className="text-gray-700 leading-relaxed text-lg">
                   {dest.description}
                 </p>
-                {highlights.length > 0 && (
-                  <p className="text-gray-600 leading-relaxed mt-3 text-lg">
-                    Must-see experiences include {highlights.slice(0, 5).join(", ")} — perfect for
-                    first-time visitors and returning travelers alike. Whether you prefer
-                    guided sightseeing, cultural tours, or free time to explore at your own
-                    pace, we can tailor the perfect itinerary for you.
-                  </p>
+                {dest.description2 ? (
+                  <p className="text-gray-600 leading-relaxed mt-3 text-lg">{dest.description2}</p>
+                ) : (
+                  highlights.length > 0 && (
+                    <p className="text-gray-600 leading-relaxed mt-3 text-lg">
+                      Must-see experiences include {highlights.slice(0, 5).join(", ")} — perfect for
+                      first-time visitors and returning travelers alike. Whether you prefer
+                      guided sightseeing, cultural tours, or free time to explore at your own
+                      pace, we can tailor the perfect itinerary for you.
+                    </p>
+                  )
                 )}
               </section>
             )}

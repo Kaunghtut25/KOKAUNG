@@ -10,6 +10,7 @@ interface Destination {
   city: string; country: string;
   image: string; minPrice: string;
   bestTime: string; description: string;
+  description2?: string;
   highlights: string;
   rating?: number; reviews?: number;
   duration?: string; tags?: string;
@@ -31,7 +32,7 @@ export default function AdminDestinationsPage() {
   const [uploading, setUploading] = useState(false);
   const [uploadMsg, setUploadMsg] = useState("");
 
-  const empty: Destination = { city: "", country: "", image: "", minPrice: "", bestTime: "", description: "", highlights: "", rating: 4.5, reviews: 0, duration: "", tags: "", groupSize: 10 };
+  const empty: Destination = { city: "", country: "", image: "", minPrice: "", bestTime: "", description: "", description2: "", highlights: "", rating: 4.5, reviews: 0, duration: "", tags: "", groupSize: 10 };
 
   useEffect(() => { load(); }, []);
 
@@ -268,6 +269,10 @@ export default function AdminDestinationsPage() {
               <div>
                 <label className="text-white/60 text-xs block mb-1">{t("admin.form.description")}</label>
                 <textarea className="w-full bg-[#0A1628] border border-white/10 rounded-lg px-3 py-2 text-white text-sm focus:border-[#D4AF37] outline-none h-20 resize-none" value={editing.description} onChange={e => setEditing({ ...editing, description: e.target.value })} />
+              </div>
+              <div>
+                <label className="text-white/60 text-xs block mb-1">{t("admin.dest.fDescription2")}</label>
+                <textarea className="w-full bg-[#0A1628] border border-white/10 rounded-lg px-3 py-2 text-white text-sm focus:border-[#D4AF37] outline-none h-20 resize-none" value={editing.description2 || ""} onChange={e => setEditing({ ...editing, description2: e.target.value })} />
               </div>
               <div>
                 <label className="text-white/60 text-xs block mb-1">{t("admin.dest.highlights")}</label>
