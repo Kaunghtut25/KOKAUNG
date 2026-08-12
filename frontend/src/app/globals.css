@@ -324,11 +324,12 @@ main.md\:ml-64 * {
 }
 button, a, input, select, textarea { touch-action: manipulation; }
 
-/* FIX: 2026-08-12 — fixed modals/overlays must track the VISIBLE viewport too.
-   At pinch/browser zoom the layout viewport is wider than the visible one,
-   so a `fixed inset-0` flex-centered modal lands off-center / clipped.
-   NarrowView.tsx publishes --vvw AND --vvh; constrain overlays to them. */
-html[data-narrow="1"] .fixed.inset-0 {
+/* FIX: 2026-08-12 v2 — fixed modals/overlays must track the VISIBLE viewport.
+   Applies unconditionally (not just under data-narrow): NarrowView.tsx always
+   publishes --vvw/--vvh, and at 100% zoom they equal the layout viewport, so
+   these rules are a no-op at normal zoom but constrain modals correctly when
+   the browser/touchpad zoom makes the visual viewport smaller. */
+.fixed.inset-0 {
   left: 0 !important;
   right: auto !important;
   top: 0 !important;
@@ -337,6 +338,6 @@ html[data-narrow="1"] .fixed.inset-0 {
   height: min(100vh, calc(var(--vvh, 100vh) * 1px)) !important;
   overflow: auto;
 }
-html[data-narrow="1"] .fixed.inset-0 > div {
+.fixed.inset-0 > div {
   max-height: calc(var(--vvh, 100vh) * 1px - 2rem) !important;
 }

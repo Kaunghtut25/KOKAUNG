@@ -27,7 +27,10 @@ export default function NarrowView() {
       document.documentElement.style.setProperty("--vvh", String(Math.round(vh)));
       // Narrow when the visible viewport can't fit the layout content
       // (fixed 256px sidebar + breathing room), or it's <= 900px outright.
-      const narrow = vw <= iw - 256 || vw <= 900;
+      // Narrow when zoomed (visual viewport differs from layout) or when
+      // the visible width can't fit the layout content, or it's <= 900px.
+      const zoomed = Math.abs(vw - iw) > 1;
+      const narrow = zoomed || vw <= iw - 256 || vw <= 900;
       if (narrow) {
         document.documentElement.setAttribute("data-narrow", "1");
       } else {
