@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useI18n } from "@/lib/i18n";
 import Image from "next/image";
+import Link from "next/link";
 
 interface Destination {
   _id?: string; id?: string;
@@ -13,6 +14,10 @@ interface Destination {
   rating?: number; reviews?: number;
   duration?: string; tags?: string;
   groupSize?: number;
+}
+
+function toSlug(text: string): string {
+  return (text || "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 }
 
 export default function AdminDestinationsPage() {
@@ -96,37 +101,112 @@ export default function AdminDestinationsPage() {
     if (f) uploadImage(f);
   };
 
+  const firstImg = (d: any): string => {
+    if (typeof d.images === "string") {
+      try { const arr = JSON.parse(d.images); if (Array.isArray(arr) && arr[0]) return arr[0]; } catch { /* ignore */ }
+    }
+    return d.image || (Array.isArray(d.images) ? d.images[0] : "") || "";
+  };
+
+  const parseTags = (tags?: string): string[] =>
+    (tags || "").split(",").map((s) => s.trim()).filter(Boolean).slice(0, 3);
+
   if (loading) return <div className="min-h-screen bg-[#0A1628] flex items-center justify-center"><div className="text-white/60 text-lg">{t("admin.dest.loading")}</div></div>;
 
   return (
     <div className="min-h-screen bg-[#0A1628] p-6">
-      <div className="max-w-7xl mx-auto">
-        <div className="flex items-center justify-between mb-8">
-          <h1 className="text-3xl font-light text-white">{t("admin.dest.title")} ({items.length})</h1>
-          <button onClick={openNew} className="bg-[#D4AF37] text-[#0A1628] px-5 py-2 rounded-lg font-medium hover:bg-[#C4A030] transition">{t("admin.dest.addNew")}</button>
+      {/* ─── Header (table design, same as admin hotels/tours) ─── */}
+      <div className="flex items-center justify-between flex-wrap gap-4 mb-8">
+        <div>
+          <h1 className="text-3xl md:text-4xl font-bold text-[#D4AF37]" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
+            {t("admin.dest.title")} ({items.length})
+          </h1>
         </div>
-
-        {items.length === 0 ? (
-          <div className="text-white/60 text-center py-16 text-lg">{t("admin.dest.empty")}</div>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 admin-dests-grid" style={{ gridTemplateColumns: "repeat(3, minmax(0, 1fr))" }}>
-            {items.map((d: any) => (
-              <div key={d.id || d._id} className="bg-[#0F1E35] border border-white/10 rounded-xl p-5 hover:border-[#D4AF37]/40 transition group">
-                {d.image && <Image alt={d.city} className="w-full h-40 object-cover rounded-lg mb-4" src={typeof d.images === "string" ? JSON.parse(d.images)[0] || d.image : (d.image || "")} width={1600} height={900} sizes="100vw" />}
-                <h3 className="text-white font-semibold text-lg">{d.city}, {d.country}</h3>
-                <p className="text-[#D4AF37] text-sm mt-1">{d.minPrice}</p>
-                <p className="text-white/50 text-xs mt-1">{d.bestTime}</p>
-                <p className="text-white/60 text-sm mt-2 line-clamp-2">{d.description}</p>
-                <div className="flex gap-2 mt-4">
-                  <button onClick={() => openEdit(d)} className="text-white/70 hover:text-[#D4AF37] text-sm px-3 py-1 border border-white/20 rounded hover:border-[#D4AF37] transition">Edit</button>
-                  <button onClick={() => del(d.id || d._id)} className="text-red-400/70 hover:text-red-400 text-sm px-3 py-1 border border-red-400/20 rounded hover:border-red-400 transition">Delete</button>
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
+        <button onClick={openNew} className="px-5 py-2.5 rounded-lg bg-gold text-deepblue-dark font-semibold text-sm hover:bg-gold/90 transition-all flex items-center gap-2">
+          <span>🌍</span> {t("admin.dest.addNew")}
+        </button>
       </div>
 
+      {/* ─── Destinations Table (zoom-safe: overflow-x-auto, no card grid) ─── */}
+      <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl overflow-hidden">
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="border-b border-white/10 bg-white/[0.02]">
+                <th className="text-left p-4 text-white/60 font-semibold uppercase tracking-wider text-[11px]">{t("admin.dest.thDest")}</th>
+                <th className="text-left p-4 text-white/60 font-semibold uppercase tracking-wider text-[11px]">{t("admin.dest.thPrice")}</th>
+                <th className="text-left p-4 text-white/60 font-semibold uppercase tracking-wider text-[11px]">{t("admin.dest.thBestTime")}</th>
+                <th className="text-left p-4 text-white/60 font-semibold uppercase tracking-wider text-[11px]">{t("admin.dest.thRating")}</th>
+                <th className="text-left p-4 text-white/60 font-semibold uppercase tracking-wider text-[11px]">{t("admin.dest.thDuration")}</th>
+                <th className="text-left p-4 text-white/60 font-semibold uppercase tracking-wider text-[11px]">{t("admin.dest.thTags")}</th>
+                <th className="text-left p-4 text-white/60 font-semibold uppercase tracking-wider text-[11px]">{t("admin.dest.thActions")}</th>
+              </tr>
+            </thead>
+            <tbody>
+              {items.length === 0 ? (
+                <tr>
+                  <td colSpan={7} className="p-10 text-center text-white/50">
+                    <span className="text-3xl block mb-2">🌍</span>
+                    {t("admin.dest.empty")}
+                  </td>
+                </tr>
+              ) : (
+                items.map((d: any) => {
+                  const thumb = firstImg(d);
+                  const tags = parseTags(d.tags);
+                  return (
+                    <tr key={d.id || d._id} className="border-b border-white/5 hover:bg-white/[0.04] transition-colors">
+                      <td className="p-4">
+                        <div className="flex items-center gap-3">
+                          <div className="w-10 h-10 rounded-lg border border-white/10 bg-white/5 overflow-hidden flex-shrink-0 flex items-center justify-center">
+                            {thumb ? (
+                              <Image alt={d.city} className="w-full h-full object-cover" onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }} src={thumb} width={1600} height={900} sizes="100vw" />
+                            ) : <span className="text-white/20 text-lg">🌍</span>}
+                          </div>
+                          <div>
+                            <span className="text-white font-medium">{d.city}</span>
+                            {d.country && <span className="text-white/50 text-xs block">{d.country}</span>}
+                          </div>
+                        </div>
+                      </td>
+                      <td className="p-4 text-white">{d.minPrice || "—"}</td>
+                      <td className="p-4 text-white/70 text-xs max-w-[220px]">{d.bestTime || "—"}</td>
+                      <td className="p-4 text-yellow-400 text-sm">
+                        {"⭐".repeat(Math.max(0, Math.min(5, Math.round(Number(d.rating) || 0))))} <span className="text-white/50">({Number(d.reviews) || 0})</span>
+                      </td>
+                      <td className="p-4 text-white/70">{d.duration || "—"}</td>
+                      <td className="p-4">
+                        {tags.length > 0 ? (
+                          <div className="flex flex-wrap gap-1">
+                            {tags.map((tag, ti) => (
+                              <span key={ti} className="px-2 py-0.5 rounded-full bg-[#D4AF37]/10 text-[#D4AF37] text-[11px] font-medium border border-[#D4AF37]/20">{tag}</span>
+                            ))}
+                          </div>
+                        ) : <span className="text-white/40">—</span>}
+                      </td>
+                      <td className="p-4">
+                        <div className="flex items-center gap-2">
+                          <Link href={`/destinations/${toSlug(d.city)}`} target="_blank" rel="noopener noreferrer" className="px-3 py-1.5 rounded-lg bg-blue-500/10 text-blue-400 text-xs font-medium hover:bg-blue-500/20 transition-colors">
+                            {t("admin.common.view")}
+                          </Link>
+                          <button onClick={() => openEdit(d)} className="px-3 py-1.5 rounded-lg bg-gold/10 text-gold text-xs font-medium hover:bg-gold/20 transition-colors">
+                            {t("admin.common.edit")}
+                          </button>
+                          <button onClick={() => del(d.id || d._id)} className="px-3 py-1.5 rounded-lg bg-red-500/10 text-red-400 text-xs font-medium hover:bg-red-500/20 transition-colors">
+                            {t("admin.common.delete")}
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })
+              )}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      {/* ─── Add/Edit Modal (dropzone + fields, unchanged) ─── */}
       {modal && editing && (
         <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
           <div className="bg-[#0F1E35] border border-white/20 rounded-2xl p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto">
@@ -135,13 +215,13 @@ export default function AdminDestinationsPage() {
               {[
                 { key: "city", label: t("admin.dest.fCity") },
                 { key: "country", label: t("admin.dest.fCountry") },
-                                { key: "minPrice", label: t("admin.dest.fMinPrice") },
+                { key: "minPrice", label: t("admin.dest.fMinPrice") },
                 { key: "bestTime", label: t("admin.dest.fBestTime") },
-  { key: "rating", label: t("admin.dest.fRating"), type: "number" },
-  { key: "reviews", label: t("admin.dest.fReviews"), type: "number" },
-  { key: "duration", label: t("admin.dest.fDuration") },
-  { key: "tags", label: t("admin.dest.fTags") },
-  { key: "groupSize", label: t("admin.dest.fGroupSize"), type: "number" },
+                { key: "rating", label: t("admin.dest.fRating"), type: "number" },
+                { key: "reviews", label: t("admin.dest.fReviews"), type: "number" },
+                { key: "duration", label: t("admin.dest.fDuration") },
+                { key: "tags", label: t("admin.dest.fTags") },
+                { key: "groupSize", label: t("admin.dest.fGroupSize"), type: "number" },
               ].map(f => (
                 <div key={f.key}>
                   <label className="text-white/60 text-xs block mb-1">{f.label}</label>
