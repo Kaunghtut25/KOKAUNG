@@ -248,18 +248,6 @@ input:-webkit-autofill:active {
    <html data-narrow="1"> + --vvw when the visible width can't fit the
    layout content; these rules then reflow the admin UI to the visible
    width so everything stays reachable and readable. */
-@media (min-width: 768px) {
-  html[data-narrow="1"] main.md\:ml-64 {
-    width: min(100%, calc(var(--vvw, 100vw) - 288px));
-    overflow-x: auto;
-  }
-}
-@media (max-width: 767.98px) {
-  html[data-narrow="1"] main.md\:ml-64 {
-    width: min(100%, calc(var(--vvw, 100vw) - 64px));
-    overflow-x: auto;
-  }
-}
 html[data-narrow="1"] .grid-cols-2,
 html[data-narrow="1"] .sm\:grid-cols-2,
 html[data-narrow="1"] .md\:grid-cols-2,
@@ -348,7 +336,4 @@ html[data-narrow="1"] .admin-dests-grid,
 .admin-dests-grid {
   grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
   width: 100% !important;
-}
-html[data-narrow="1"] main.md\:ml-64 {
-  width: min(100%, calc(var(--vvw, 100vw) - 288px)) !important;
 }
