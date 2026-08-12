@@ -17,6 +17,7 @@ interface Destination {
 
 export default function AdminDestinationsPage() {
   const { t } = useI18n();
+  const token = typeof window !== "undefined" ? localStorage.getItem("admin_token") || "" : "";
   const [items, setItems] = useState<Destination[]>([]);
   const [loading, setLoading] = useState(true);
   const [modal, setModal] = useState(false);
@@ -30,7 +31,7 @@ export default function AdminDestinationsPage() {
   const load = async () => {
     setLoading(true);
     try {
-      const res = await fetch("/api/admin/destinations");
+      const res = await fetch("/api/admin/destinations", { headers: { Authorization: `Bearer ${token}` } });
       const data = await res.json();
       setItems(Array.isArray(data) ? data : []);
     } catch (e) { console.error(e); }
@@ -51,7 +52,7 @@ export default function AdminDestinationsPage() {
       const method = editing._id || editing.id ? "PUT" : "POST";
       const res = await fetch(url, {
         method,
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
         body: JSON.stringify(editing),
       });
       if (res.ok) {
@@ -65,7 +66,7 @@ export default function AdminDestinationsPage() {
   const del = async (id: string) => {
     if (!confirm(t("admin.dest.confirmDel"))) return;
     try {
-      await fetch(`/api/admin/destinations?id=${id}`, { method: "DELETE" });
+      await fetch(`/api/admin/destinations?id=${id}`, { method: "DELETE", headers: { Authorization: `Bearer ${token}` } });
       await load();
     } catch (e) { console.error(e); }
   };
