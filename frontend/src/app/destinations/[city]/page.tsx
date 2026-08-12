@@ -191,6 +191,7 @@ export default function DestinationPage() {
             reviews: found.reviews,
             duration: found.duration,
             tags: found.tags,
+            groupSize: found.groupSize,
             bestTime: found.bestTime,
             description: found.description,
             highlights: found.highlights,
@@ -448,7 +449,7 @@ export default function DestinationPage() {
                   </div>
                   <div className="flex justify-between">
                     <span className="text-gray-500">{t("dest.groupSize")}</span>
-                    <span className="text-[#0A1628] font-medium">{t("dest.upToPeople", { n: 10 })}</span>
+                    <span className="text-[#0A1628] font-medium">{t("dest.upToPeople", { n: (dest as any).groupSize || 10 })}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-gray-500">{t("dest.rating")}</span>

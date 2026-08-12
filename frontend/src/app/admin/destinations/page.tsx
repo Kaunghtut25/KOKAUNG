@@ -10,6 +10,9 @@ interface Destination {
   image: string; minPrice: string;
   bestTime: string; description: string;
   highlights: string;
+  rating?: number; reviews?: number;
+  duration?: string; tags?: string;
+  groupSize?: number;
 }
 
 export default function AdminDestinationsPage() {
@@ -20,7 +23,7 @@ export default function AdminDestinationsPage() {
   const [editing, setEditing] = useState<Destination | null>(null);
   const [saving, setSaving] = useState(false);
 
-  const empty: Destination = { city: "", country: "", image: "", minPrice: "", bestTime: "", description: "", highlights: "" };
+  const empty: Destination = { city: "", country: "", image: "", minPrice: "", bestTime: "", description: "", highlights: "", rating: 4.5, reviews: 0, duration: "", tags: "", groupSize: 10 };
 
   useEffect(() => { load(); }, []);
 
@@ -109,10 +112,15 @@ export default function AdminDestinationsPage() {
                 { key: "image", label: t("admin.dest.fImageUrl") },
                 { key: "minPrice", label: t("admin.dest.fMinPrice") },
                 { key: "bestTime", label: t("admin.dest.fBestTime") },
+  { key: "rating", label: t("admin.dest.fRating"), type: "number" },
+  { key: "reviews", label: t("admin.dest.fReviews"), type: "number" },
+  { key: "duration", label: t("admin.dest.fDuration") },
+  { key: "tags", label: t("admin.dest.fTags") },
+  { key: "groupSize", label: t("admin.dest.fGroupSize"), type: "number" },
               ].map(f => (
                 <div key={f.key}>
                   <label className="text-white/60 text-xs block mb-1">{f.label}</label>
-                  <input className="w-full bg-[#0A1628] border border-white/10 rounded-lg px-3 py-2 text-white text-sm focus:border-[#D4AF37] outline-none" value={editing[f.key as keyof Destination] || ""} onChange={e => setEditing({ ...editing, [f.key]: e.target.value })} />
+                  <input type={f.type === "number" ? "number" : "text"} step={f.type === "number" ? "0.1" : undefined} className="w-full bg-[#0A1628] border border-white/10 rounded-lg px-3 py-2 text-white text-sm focus:border-[#D4AF37] outline-none" value={(editing[f.key as keyof Destination] ?? "") as any} onChange={e => setEditing({ ...editing, [f.key]: f.type === "number" ? Number(e.target.value) : e.target.value })} />
                 </div>
               ))}
               <div>
