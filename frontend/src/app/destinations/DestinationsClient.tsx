@@ -17,6 +17,10 @@ interface Destination {
   bestTime?: string;
   description?: string;
   highlights?: string[];
+  rating?: number;
+  reviews?: number;
+  duration?: string;
+  tags?: string[];
 }
 
 interface Props {
@@ -106,6 +110,42 @@ export default function DestinationsClient({ initialDestinations, siteConfig }: 
                   </h3>
                   {shortDesc && (
                     <p className="text-gray-500 text-sm mb-3 line-clamp-2">{shortDesc}</p>
+                  )}
+                  {(dest.rating || dest.reviews) && (
+                    <div className="flex items-center gap-1 mb-2">
+                      <div className="flex items-center gap-0.5">
+                        {Array.from({ length: 5 }, (_, si) => (
+                          <svg key={si} className={`w-3.5 h-3.5 ${si < Math.round(dest.rating || 0) ? 'text-[#D4AF37]' : 'text-gray-300'}`} fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                          </svg>
+                        ))}
+                      </div>
+                      <span className="text-[#0A1628] font-semibold text-sm">{dest.rating}</span>
+                      {dest.reviews ? <span className="text-gray-400 text-xs">({dest.reviews.toLocaleString()} {lang === "mm" ? "သုံးသပ်ချက်" : "reviews"})</span> : null}
+                    </div>
+                  )}
+                  {(dest.duration || dest.bestTime) && (
+                    <div className="flex flex-wrap gap-x-3 gap-y-1 mb-2 text-xs text-gray-500">
+                      {dest.duration && (
+                        <span className="flex items-center gap-1">
+                          <svg className="w-3.5 h-3.5 text-[#D4AF37]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                          {dest.duration}
+                        </span>
+                      )}
+                      {dest.bestTime && (
+                        <span className="flex items-center gap-1">
+                          <span>☀️</span>
+                          {dest.bestTime}
+                        </span>
+                      )}
+                    </div>
+                  )}
+                  {dest.tags && dest.tags.length > 0 && (
+                    <div className="flex flex-wrap gap-1 mb-3">
+                      {dest.tags.slice(0, 3).map((tag, ti) => (
+                        <span key={ti} className="px-2 py-0.5 rounded-full bg-[#D4AF37]/10 text-[#7A5F08] text-[11px] font-medium border border-[#D4AF37]/20">{tag}</span>
+                      ))}
+                    </div>
                   )}
                   {dest.minPrice && (
                     <p className="text-[#8A6C0B] text-sm font-semibold mb-4">{dest.minPrice}</p>

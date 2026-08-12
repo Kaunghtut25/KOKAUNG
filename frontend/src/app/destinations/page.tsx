@@ -12,6 +12,10 @@ interface Destination {
   bestTime?: string;
   description?: string;
   highlights?: string[];
+  rating?: number;
+  reviews?: number;
+  duration?: string;
+  tags?: string[];
 }
 
 const FALLBACK_DESTINATIONS: Destination[] = [
@@ -114,6 +118,10 @@ async function fetchDestinations(): Promise<Destination[]> {
       bestTime: item.bestTime || "",
       description: item.description || "",
       highlights: typeof item.highlights === "string" ? item.highlights.split(",").map((s: string) => s.trim()).filter(Boolean) : (Array.isArray(item.highlights) ? item.highlights : []),
+      rating: typeof item.rating === "number" ? item.rating : (typeof item.rating === "string" ? parseFloat(item.rating) : undefined),
+      reviews: typeof item.reviews === "number" ? item.reviews : (typeof item.reviews === "string" ? parseInt(item.reviews, 10) : undefined),
+      duration: item.duration || "",
+      tags: typeof item.tags === "string" ? item.tags.split(",").map((s: string) => s.trim()).filter(Boolean) : (Array.isArray(item.tags) ? item.tags : []),
     }));
   } catch {
     return [];
