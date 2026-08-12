@@ -109,7 +109,7 @@ export default function AdminDestinationsPage() {
         {items.length === 0 ? (
           <div className="text-white/60 text-center py-16 text-lg">{t("admin.dest.empty")}</div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 admin-dests-grid">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 admin-dests-grid" style={{ gridTemplateColumns: "repeat(3, minmax(0, 1fr))" }}>
             {items.map((d: any) => (
               <div key={d.id || d._id} className="bg-[#0F1E35] border border-white/10 rounded-xl p-5 hover:border-[#D4AF37]/40 transition group">
                 {d.image && <Image alt={d.city} className="w-full h-40 object-cover rounded-lg mb-4" src={typeof d.images === "string" ? JSON.parse(d.images)[0] || d.image : (d.image || "")} width={1600} height={900} sizes="100vw" />}
