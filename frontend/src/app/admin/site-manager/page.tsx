@@ -140,7 +140,7 @@ const defaultCfg: SiteConfig = {
   },
 };
 
-type Tab = "layout" | "rows" | "faq" | "terms" | "privacy" | "hero" | "heroImages" | "services" | "nav" | "stats" | "why" | "destinations" | "cta" | "contact" | "social" | "socialFeed" | "footer" | "meta" | "testimonials" | "partners" | "heroText" | "cardDims" | "moduleToggles" | "relatedItems" | "deals";
+type Tab = "layout" | "rows" | "faq" | "terms" | "privacy" | "hero" | "heroImages" | "services" | "nav" | "stats" | "why" | "cta" | "contact" | "social" | "socialFeed" | "footer" | "meta" | "testimonials" | "partners" | "heroText" | "cardDims" | "moduleToggles" | "relatedItems" | "deals";
 
 export default function SiteManagerPage() {
   const { t } = useI18n();
@@ -314,7 +314,7 @@ const tabs: { key: Tab; label: string }[] = [
     { key: "moduleToggles", label: t("admin.sm.moduleToggles") },
     { key: "relatedItems", label: t("admin.sm.tab.relatedItems") }, { key: "services", label: t("admin.sm.serviceIcons") },
     { key: "nav", label: t("admin.sm.tab.nav") }, { key: "stats", label: t("admin.sm.statsCards") },
-    { key: "why", label: t("admin.sm.tab.why") }, { key: "destinations", label: t("admin.sm.tab.destinations") },
+    { key: "why", label: t("admin.sm.tab.why") },
     { key: "cta", label: t("admin.sm.tab.cta") }, { key: "deals", label: t("admin.sm.tab.deals") }, { key: "contact", label: t("admin.sm.tab.contact") },
     { key: "social", label: t("admin.sm.tab.social") }, { key: "socialFeed", label: t("admin.sm.tab.socialFeed") }, { key: "footer", label: t("admin.sm.tab.footer") },
     { key: "meta", label: t("admin.sm.tab.meta") },
@@ -628,70 +628,6 @@ const tabs: { key: Tab; label: string }[] = [
                 </div>
               ))}
               <button onClick={() => set("whyChooseCards", [...cfg.whyChooseCards, { icon: "", title: "", description: "", image: "" }])} className="px-4 py-2 bg-white/10 rounded-lg text-sm">{t("admin.sm.addGeneric")}</button>
-            </div>
-          )}
-
-          {tab === "destinations" && (
-            <div className="space-y-4">
-              <h2 className="text-lg font-bold text-white">{t("admin.sm.popularDest")}</h2>
-              {/* FIX 2026-08-12: destinations are managed in ONE place — Admin → Manage Destinations */}
-              <div className="border border-[#D4AF37]/30 bg-[#D4AF37]/10 text-white rounded-lg p-4 space-y-3">
-                <p className="text-sm text-white/80">{t("admin.sm.destManagedNotice")}</p>
-                <a href="/admin/destinations" className="inline-block px-4 py-2 bg-gradient-to-r from-[#D4AF37] to-[#C5A028] text-[#0A1628] font-bold rounded-lg text-sm">{t("admin.sm.openManageDest")} →</a>
-              </div>
-
-              <div className="mt-4 border-t border-white/10 pt-4">
-                <h3 className="text-sm font-semibold text-[#D4AF37] mb-3">{t("admin.sm.sectionHeaderText")}</h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3">
-                  <div><label className={labelCls}>{t("admin.sm.title")}</label>
-                    <input className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }}
-                      value={(cfg.destinationsText?.title) || "Explore The World"}
-                      onChange={e => setCfg(p => ({ ...p, destinationsText: { ...(p.destinationsText || {}), title: e.target.value } }))} /></div>
-                  <div><label className={labelCls}>{t("admin.sm.subtitle")}</label>
-                    <input className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }}
-                      value={(cfg.destinationsText?.subtitle) || "Popular Destinations"}
-                      onChange={e => setCfg(p => ({ ...p, destinationsText: { ...(p.destinationsText || {}), subtitle: e.target.value } }))} /></div>
-                  <div><label className={labelCls}>{t("admin.sm.titleFont")}</label>
-                    <select className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }}
-                      value={(cfg.destinationsText?.titleFont) || "'Playfair Display', Georgia, serif"}
-                      onChange={e => setCfg(p => ({ ...p, destinationsText: { ...(p.destinationsText || {}), titleFont: e.target.value } }))}>
-                      <option value="Georgia, serif">{t("admin.sm.georgia")}</option>
-                      <option value="'Playfair Display', Georgia, serif">{t("admin.sm.playfair")}</option>
-                      <option value="Arial, sans-serif">{t("admin.sm.arial")}</option>
-                      <option value="system-ui, sans-serif">{t("admin.sm.systemUI")}</option>
-                    </select></div>
-                  <div><label className={labelCls}>{t("admin.sm.titleSize")}</label>
-                    <select className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }}
-                      value={(cfg.destinationsText?.titleSize) || "2.5rem"}
-                      onChange={e => setCfg(p => ({ ...p, destinationsText: { ...(p.destinationsText || {}), titleSize: e.target.value } }))}>
-                      <option value="1.5rem">1.5rem</option><option value="2rem">2rem</option><option value="2.5rem">2.5rem</option><option value="3rem">3rem</option></select></div>
-                  <div><label className={labelCls}>{t("admin.sm.titleColor")}</label>
-                    <input className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} type="color"
-                      value={(cfg.destinationsText?.titleColor) || "#0A1628"}
-                      onChange={e => setCfg(p => ({ ...p, destinationsText: { ...(p.destinationsText || {}), titleColor: e.target.value } }))} /></div>
-                </div>
-                <h4 className="text-xs font-semibold text-white/50 mb-2">{t("admin.sm.cardTitleStyle")}</h4>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                  <div><label className={labelCls}>{t("admin.sm.font")}</label>
-                    <select className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }}
-                      value={(cfg.destinationsText?.cardTitleFont) || "'Playfair Display', Georgia, serif"}
-                      onChange={e => setCfg(p => ({ ...p, destinationsText: { ...(p.destinationsText || {}), cardTitleFont: e.target.value } }))}>
-                      <option value="Georgia, serif">{t("admin.sm.georgia")}</option>
-                      <option value="'Playfair Display', Georgia, serif">{t("admin.sm.playfair")}</option>
-                      <option value="Arial, sans-serif">{t("admin.sm.arial")}</option>
-                      <option value="system-ui, sans-serif">{t("admin.sm.systemUI")}</option>
-                    </select></div>
-                  <div><label className={labelCls}>{t("admin.sm.size")}</label>
-                    <select className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }}
-                      value={(cfg.destinationsText?.cardTitleSize) || "1rem"}
-                      onChange={e => setCfg(p => ({ ...p, destinationsText: { ...(p.destinationsText || {}), cardTitleSize: e.target.value } }))}>
-                      <option value="0.875rem">0.875rem</option><option value="1rem">1rem</option><option value="1.125rem">1.125rem</option><option value="1.25rem">1.25rem</option></select></div>
-                  <div><label className={labelCls}>{t("admin.sm.color")}</label>
-                    <input className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} type="color"
-                      value={(cfg.destinationsText?.cardTitleColor) || "#0A1628"}
-                      onChange={e => setCfg(p => ({ ...p, destinationsText: { ...(p.destinationsText || {}), cardTitleColor: e.target.value } }))} /></div>
-                </div>
-              </div>
             </div>
           )}
 
