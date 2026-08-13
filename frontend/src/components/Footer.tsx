@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { FaFacebookF, FaInstagram, FaTelegramPlane, FaMapMarkerAlt, FaPhoneAlt, FaEnvelope, FaClock } from "react-icons/fa";
+import { FaFacebookF, FaInstagram, FaTelegramPlane, FaMapMarkerAlt, FaPhoneAlt, FaEnvelope } from "react-icons/fa";
 import Image from 'next/image';
 import { useI18n } from "@/lib/i18n";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
@@ -62,7 +62,6 @@ export default function Footer() {
   const phone = config?.contact?.phone || "";
   const email = config?.contact?.email || "";
   const address = lang === "mm" ? "အမှတ် ၁၈၊ မြေညီထပ်၊ ဇေယျဝတီလမ်း၊ ဗဟိုလမ်း၊ စမ်းချောင်းမြို့နယ်၊ ရန်ကုန်၊ မြန်မာ" : (config?.contact?.address || "No-18, Ground Floor, Zayya Waddy Street, Baho Road, Sanchaung Tsp, Yangon, Myanmar");
-  const workingHours = lang === "mm" ? "တနင်္လာ-စနေ: နံနက် ၉:၀၀ - ညနေ ၆:၀၀" : (config?.contact?.workingHours || "Mon-Sat: 9:00 AM - 6:00 PM");
   const moduleToggles = (config as any)?.moduleToggles || {};
   const MODULE_BY_HREF: Record<string, string> = {
     "/tours": "tours", "/hotels": "hotels", "/cars": "cars", "/buses": "buses",
@@ -205,12 +204,6 @@ export default function Footer() {
                   </a>
                 </div>
               )}
-              <div className="flex items-start space-x-3">
-                <FaClock className="text-[#D4AF37] mt-1 flex-shrink-0 text-sm" />
-                <p className="text-sm text-white/60">
-                  {workingHours}
-                </p>
-              </div>
               {/* Department Phone Numbers — shown when any exist in Admin */}
               {config?.departmentPhones && typeof config.departmentPhones === "object" &&
                 Object.entries(config.departmentPhones)
