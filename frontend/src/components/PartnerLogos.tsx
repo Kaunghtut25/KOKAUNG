@@ -4,18 +4,21 @@ import { useI18n } from "@/lib/i18n";
 
 type Partner = string | { name: string; logo?: string };
 
-// Bundled logos shipped with the site — shown even when the stored config
-// only has plain names (e.g. pre-logo data). Admin can override per partner.
-const KNOWN_LOGOS: Record<string, string> = {
-  "iata": "/images_v2/iata-logo.png",
-  "umta": "/images_v2/umta-logo.png",
-};
+// Accredited partners — ALWAYS shown with real logos (the section is about
+// trust), merged with admin-managed partners below. Admin can still upload a
+// custom logo per partner; stored plain names keep working.
+const ACCREDITATIONS: { name: string; logo: string }[] = [
+  { name: "IATA", logo: "/images_v2/iata-logo-real.png" },
+  { name: "UMTA", logo: "/images_v2/umta-logo-real.png" },
+];
+
+const KNOWN_LOGOS: Record<string, string> = Object.fromEntries(
+  ACCREDITATIONS.map(a => [a.name.toLowerCase(), a.logo])
+);
 
 const FALLBACK_PARTNERS: Partner[] = [
-  { name: "IATA", logo: KNOWN_LOGOS["iata"] },
-  { name: "UMTA", logo: KNOWN_LOGOS["umta"] },
-  "Shangri-La", "Sedona Hotel", "Sule Palace", "Melia Hotel",
-  "Myanmar Airways", "Thai Airways", "Singapore Airlines", "Emirates",
+  "Myanmar Airways International", "Thai Airways", "Singapore Airlines", "Emirates",
+  "Myanmar National Airway", "Air Thanlwin", "Mann Yadanarpone airline",
 ];
 
 const toPartner = (p: Partner): { name: string; logo?: string } => {
@@ -24,6 +27,21 @@ const toPartner = (p: Partner): { name: string; logo?: string } => {
     return KNOWN_LOGOS[key] ? { name: p.trim(), logo: KNOWN_LOGOS[key] } : { name: p.trim() };
   }
   return { name: p.name, logo: p.logo };
+};
+
+// accreditations always first; then stored/fallback partners, deduped by name
+const buildList = (raw: Partner[]): Partner[] => {
+  const seen = new Set<string>();
+  const out: Partner[] = [];
+  for (const acc of ACCREDITATIONS) { seen.add(acc.name.toLowerCase()); out.push(acc); }
+  for (const p of raw) {
+    const np = toPartner(p);
+    const key = (np.name || "").trim().toLowerCase();
+    if (!key || seen.has(key)) continue;
+    seen.add(key);
+    out.push(np.logo ? np : (KNOWN_LOGOS[key] ? { name: np.name, logo: KNOWN_LOGOS[key] } : np));
+  }
+  return out;
 };
 
 export default function PartnerLogos() {
@@ -41,12 +59,14 @@ export default function PartnerLogos() {
       .catch(() => {});
   }, []);
 
+  const list = buildList(partners);
+
   return (
     <div style={{ background: '#f8f9fa', padding: '32px 20px' }}>
       <div style={{ maxWidth: 1000, margin: '0 auto', textAlign: 'center' }}>
         <h2 style={{ fontFamily: "'Playfair Display',serif", fontSize: 22, color: '#0A1628', marginBottom: 24 }}>{t("home.trustedPartners")}</h2>
         <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', alignItems: 'center', gap: 14 }}>
-          {partners.map((raw, i) => {
+          {list.map((raw, i) => {
             const p = toPartner(raw);
             if (p.logo) {
               return (
