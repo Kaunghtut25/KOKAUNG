@@ -935,7 +935,7 @@ const en: Record<string, string> = {
   "home.travelersSay": "What Our Travelers Say",
   "home.followJourney": "Follow Our Journey",
   "home.trustedPartners": "Our Trusted Partners",
-    "home.trustedPartnersHint": "Logos shown are the official IATA & UMTA accreditations. You can add or replace partner logos from Admin → Site Manager → Partners.",
+    "home.trustedPartnersHint": "Partner names and logos are managed from Admin → Site Manager → Partners.",
   "home.ctaTitle": "Ready to Start Your Journey?",
   "home.ctaDesc": "Let us craft your perfect getaway.",
 
@@ -2269,7 +2269,7 @@ const mm: Record<string, string> = {
   "home.travelersSay": "ခရီးသွားများ၏ ပြောကြားချက်များ",
   "home.followJourney": "ကျွန်ုပ်တို့၏ ခရီးစဉ်ကို လိုက်ပါ",
   "home.trustedPartners": "ကျွန်ုပ်တို့၏ ယုံကြည်ရသော မိတ်ဖက်များ",
-    "home.trustedPartnersHint": "ပြသထားသော လိုဂိုများမှာ တရားဝင် IATA နှင့် UMTA အသိအမှတ်ပြုလက်မှတ်များဖြစ်သည်။ ပါတနာ လိုဂိုများကို Admin → Site Manager → Partners မှ ထည့်သွင်း သို့မဟုတ် ပြောင်းလဲနိုင်သည်။",
+    "home.trustedPartnersHint": "ပါတနာ အမည်များနှင့် လိုဂိုများကို Admin → Site Manager → Partners မှ စီမံနိုင်သည်။",
   "home.ctaTitle": "သင့်ခရီးစဉ်ကို စတင်ရန် အသင့်ဖြစ်ပြီလား?",
   "home.ctaDesc": "သင့်အတွက် ပြီးပြည့်စုံသော ခရီးစဉ်ကို ဖန်တီးပေးပါမည်။",
 

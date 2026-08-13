@@ -4,16 +4,13 @@ import { useI18n } from "@/lib/i18n";
 
 type Partner = string | { name: string; logo?: string };
 
-// Accredited partners — ALWAYS shown with real logos (the section is about
-// trust), merged with admin-managed partners below.
-const ACCREDITATIONS: { name: string; logo: string }[] = [
-  { name: "IATA", logo: "/images_v2/iata-logo-real.png" },
-  { name: "UMTA", logo: "/images_v2/umta-logo-real.png" },
-];
-
-const KNOWN_LOGOS: Record<string, string> = Object.fromEntries(
-  ACCREDITATIONS.map(a => [a.name.toLowerCase(), a.logo])
-);
+// Known bundled logo assets — if an admin-managed partner name matches one
+// of these, its logo is used automatically. Nothing is force-added here:
+// the section shows exactly what Admin → Site Manager → Partners contains.
+const KNOWN_LOGOS: Record<string, string> = {
+  "iata": "/images_v2/iata-logo-real.png",
+  "umta": "/images_v2/umta-logo-real.png",
+};
 
 const FALLBACK_PARTNERS: Partner[] = [
   "Myanmar Airways International", "Thai Airways", "Singapore Airlines", "Emirates",
@@ -62,11 +59,10 @@ const toPartner = (p: Partner): { name: string; logo?: string } => {
   return { name: recoverName(p), logo: typeof p.logo === "string" ? p.logo : "" };
 };
 
-// accreditations always first; then stored/fallback partners, deduped by name
+// stored/fallback partners as-is, deduped by name — purely Admin-driven
 const buildList = (raw: Partner[]): Partner[] => {
   const seen = new Set<string>();
   const out: Partner[] = [];
-  for (const acc of ACCREDITATIONS) { seen.add(acc.name.toLowerCase()); out.push(acc); }
   for (const p of raw) {
     const np = toPartner(p);
     const key = (np.name || "").trim().toLowerCase();
