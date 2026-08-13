@@ -222,8 +222,10 @@ const defaultConfig = {
   auditLog: [],
 
   partners: [
-    "Shangri-La", "Sedona Hotel", "Sule Palace", "Melia Hotel",
-    "Myanmar Airways", "Thai Airways", "Singapore Airlines", "Emirates",
+    { name: "IATA", logo: "/images_v2/iata-logo.png" },
+    { name: "UMTA", logo: "/images_v2/umta-logo.png" },
+    { name: "Shangri-La" }, { name: "Sedona Hotel" }, { name: "Sule Palace" }, { name: "Melia Hotel" },
+    { name: "Myanmar Airways" }, { name: "Thai Airways" }, { name: "Singapore Airlines" }, { name: "Emirates" },
   ],
   // Footer Sections
   footerSections: [

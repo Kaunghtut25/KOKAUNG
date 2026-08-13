@@ -33,7 +33,7 @@ interface SiteConfig {
   statsCards: StatsCard[]; whyChooseCards: WhyCard[];
   whyChooseTitle?: string; whyChooseTagline?: string; whyChooseCardWidth?: number;
   popularDestinations: PopularDestination[];
-  testimonials: Testimonial[]; partners: string[];
+  testimonials: Testimonial[]; partners: (string | { name: string; logo?: string })[];
   ctaTitle: string; ctaDescription: string; ctaButtonLabel: string; ctaButtonHref: string; ctaImage?: string; ctaImage?: string;
   dealsBanner?: { enabled: boolean; badge: string; title: string; buttonLabel: string; buttonHref: string; countdownDays: number };
   contact: ContactInfo; socialLinks: SocialLink[]; footerSections: FooterSection[];
@@ -95,8 +95,10 @@ const defaultCfg: SiteConfig = {
     { name: "Yuki Tanaka", country: "Japan", tour: "Ngapali Beach Escape", text: "Perfect beach vacation. The resort was stunning and transfers were on time.", rating: 5 },
   ],
   partners: [
-    "Shangri-La", "Sedona Hotel", "Sule Palace", "Melia Hotel",
-    "Myanmar Airways", "Thai Airways", "Singapore Airlines", "Emirates",
+    { name: "IATA", logo: "/images_v2/iata-logo.png" },
+    { name: "UMTA", logo: "/images_v2/umta-logo.png" },
+    { name: "Shangri-La" }, { name: "Sedona Hotel" }, { name: "Sule Palace" }, { name: "Melia Hotel" },
+    { name: "Myanmar Airways" }, { name: "Thai Airways" }, { name: "Singapore Airlines" }, { name: "Emirates" },
   ],
   ctaTitle: "", ctaDescription: "", ctaButtonLabel: "Book Now", ctaButtonHref: "/book-now", ctaImage: "", ctaImage: "",
   dealsBanner: { enabled: true, badge: "⏰ LIMITED TIME OFFER", title: "30% OFF Bagan Explorer Tour", buttonLabel: "Book Now", buttonHref: "/book-now", countdownDays: 30 },
@@ -235,7 +237,7 @@ export default function SiteManagerPage() {
   const set = <K extends keyof SiteConfig>(k: K, v: SiteConfig[K]) => setCfg(p => ({ ...p, [k]: v }));
 
   // Image upload zone component
-  const ImageZone = ({ field, index, label, valueField = "image" }: { field: string; index?: number; label: string; valueField?: string }) => {
+  const ImageZone = ({ field, index, label, valueField = "image", previewClassName = "mx-auto mt-2 w-full h-28 object-cover rounded" }: { field: string; index?: number; label: string; valueField?: string; previewClassName?: string }) => {
     const currentVal = index !== undefined ? (cfg as any)[field]?.[index]?.[valueField] : (cfg as any)[field];
     return (
       <div className="mb-3">
@@ -254,7 +256,7 @@ export default function SiteManagerPage() {
             onChange={(e) => handleFileChange(e, field, index, valueField)}
           />
           {currentVal ? (
-            <Image alt={t("admin.sm.preview")} className="mx-auto mt-2 w-full h-28 object-cover rounded" src={currentVal} width={1600} height={900} sizes="100vw" />
+            <Image alt={t("admin.sm.preview")} className={previewClassName} src={currentVal} width={1600} height={900} sizes="100vw" />
           ) : (
             <p className="text-sm text-white/60">{t("admin.sm.dragDrop")}</p>
           )}
@@ -1465,13 +1467,22 @@ const tabs: { key: Tab; label: string }[] = [
             <div className="space-y-4">
               <h2 className="text-lg font-bold text-white">{t("admin.sm.partners")}</h2>
               <p className="text-sm text-white/60">{t("admin.sm.partnersHint")}</p>
-              {cfg.partners.map((p, i) => (
-                <div key={i} className="flex flex-col lg:flex-row lg:items-center gap-3">
-                  <input className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} placeholder={t("admin.sm.partnerName")} value={p} onChange={e => { const a = [...cfg.partners]; a[i] = e.target.value; set("partners", a); }} />
-                  <button onClick={() => set("partners", cfg.partners.filter((_, idx) => idx !== i))} className="text-red-400 text-sm">{t("admin.common.delete")}</button>
-                </div>
-              ))}
-              <button onClick={() => set("partners", [...cfg.partners, ""])} className="px-4 py-2 bg-white/10 rounded-lg text-sm">{t("admin.sm.addPartner")}</button>
+              {(cfg.partners || []).map((p, i) => {
+                const np = typeof p === "string" ? { name: p, logo: "" } : p;
+                return (
+                  <div key={i} className="border border-white/10 rounded-lg p-3 space-y-3">
+                    <div className="flex flex-col lg:flex-row lg:items-center gap-3">
+                      <input className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} placeholder={t("admin.sm.partnerName")} value={np.name} onChange={e => {
+                        const a = (cfg.partners || []).map((x, idx) => idx === i ? { name: e.target.value, logo: (typeof x === "string" ? "" : x.logo) || "" } : x);
+                        set("partners", a);
+                      }} />
+                      <button onClick={() => set("partners", cfg.partners.filter((_, idx) => idx !== i))} className="text-red-400 text-sm">{t("admin.common.delete")}</button>
+                    </div>
+                    <ImageZone field="partners" index={i} label={t("admin.sm.partnerLogo")} valueField="logo" previewClassName="mx-auto mt-2 w-full h-24 object-contain rounded" />
+                  </div>
+                );
+              })}
+              <button onClick={() => set("partners", [...(cfg.partners || []), { name: "", logo: "" }])} className="px-4 py-2 bg-white/10 rounded-lg text-sm">{t("admin.sm.addPartner")}</button>
             </div>
           )}
 
