@@ -161,9 +161,26 @@ export default function SiteManagerPage() {
   useEffect(() => {
     fetch(API).then(r => r.json()).then(d => {
       const social = Array.isArray(d.socialLinks) ? d.socialLinks : Object.values(d.socialLinks || {});
-      setCfg({ ...defaultCfg, ...d, socialLinks: social.length ? social : defaultCfg.socialLinks });
+      const partners = Array.isArray(d.partners) ? d.partners.map((p: any) =>
+        typeof p === "string" ? { name: p, logo: "" } :
+        { name: recoverPartnerName(p) || "", logo: typeof p.logo === "string" ? p.logo : "" }
+      ) : d.partners;
+      setCfg({ ...defaultCfg, ...d, socialLinks: social.length ? social : defaultCfg.socialLinks, partners });
     }).catch(() => { }).finally(() => setLoading(false));
   }, []);
+
+  // recovers a partner name from a corrupted char-map object (artifact of
+  // spreading a string — see uploadFile fix below); keeps existing names
+  const recoverPartnerName = (p: any): string => {
+    if (!p || typeof p !== "object") return "";
+    if (typeof p.name === "string" && p.name.trim()) return p.name.trim();
+    const keys = Object.keys(p).filter(k => /^\d+$/.test(k)).sort((a, b) => Number(a) - Number(b));
+    if (keys.length) {
+      const s = keys.map(k => p[k]).join("");
+      if (s.trim()) return s.trim();
+    }
+    return "";
+  };
 
   const uploadFile = async (file: File, field: string, index?: number, valueField: string = "image") => {
     const zoneKey = field + "_" + (index ?? "");
@@ -180,7 +197,8 @@ export default function SiteManagerPage() {
       const url = blob.url;
       if (index !== undefined) {
         const arr = [...(cfg as any)[field]];
-        arr[index] = { ...arr[index], [valueField]: url };
+        const prev = arr[index];
+        arr[index] = typeof prev === "string" ? { name: prev, [valueField]: url } : { ...prev, [valueField]: url };
         setCfg(p => ({ ...p, [field]: arr }));
       } else {
         setCfg(p => ({ ...p, [field]: url }));

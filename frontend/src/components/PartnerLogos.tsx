@@ -41,12 +41,25 @@ const brandColor = (name: string): string => {
   return "hsl(" + h + ", 55%, 38%)";
 };
 
+// recovers a partner name from a corrupted char-map object (artifact of
+// spreading a string in an older admin save); keeps normal entries as-is
+const recoverName = (p: any): string => {
+  if (!p || typeof p !== "object") return "";
+  if (typeof p.name === "string" && p.name.trim()) return p.name.trim();
+  const keys = Object.keys(p).filter(k => /^\d+$/.test(k)).sort((a, b) => Number(a) - Number(b));
+  if (keys.length) {
+    const s = keys.map(k => p[k]).join("");
+    if (s.trim()) return s.trim();
+  }
+  return "";
+};
+
 const toPartner = (p: Partner): { name: string; logo?: string } => {
   if (typeof p === "string") {
     const key = p.trim().toLowerCase();
     return KNOWN_LOGOS[key] ? { name: p.trim(), logo: KNOWN_LOGOS[key] } : { name: p.trim() };
   }
-  return { name: p.name, logo: p.logo };
+  return { name: recoverName(p), logo: typeof p.logo === "string" ? p.logo : "" };
 };
 
 // accreditations always first; then stored/fallback partners, deduped by name
