@@ -5,8 +5,7 @@ import { useI18n } from "@/lib/i18n";
 type Partner = string | { name: string; logo?: string };
 
 // Accredited partners — ALWAYS shown with real logos (the section is about
-// trust), merged with admin-managed partners below. Admin can still upload a
-// custom logo per partner; stored plain names keep working.
+// trust), merged with admin-managed partners below.
 const ACCREDITATIONS: { name: string; logo: string }[] = [
   { name: "IATA", logo: "/images_v2/iata-logo-real.png" },
   { name: "UMTA", logo: "/images_v2/umta-logo-real.png" },
@@ -20,6 +19,27 @@ const FALLBACK_PARTNERS: Partner[] = [
   "Myanmar Airways International", "Thai Airways", "Singapore Airlines", "Emirates",
   "Myanmar National Airway", "Air Thanlwin", "Mann Yadanarpone airline",
 ];
+
+// Brand colors used for colored logo tiles until a real logo is uploaded.
+const BRAND_COLORS: Record<string, string> = {
+  "iata": "#003A70",
+  "umta": "#0F4C81",
+  "myanmar airways international": "#C8102E",
+  "thai airways": "#5B2D8E",
+  "singapore airlines": "#003876",
+  "emirates": "#D71920",
+  "myanmar national airway": "#9E1B32",
+  "air thanlwin": "#0F766E",
+  "mann yadanarpone airline": "#7F1D1D",
+};
+
+const brandColor = (name: string): string => {
+  const key = name.trim().toLowerCase();
+  if (BRAND_COLORS[key]) return BRAND_COLORS[key];
+  let h = 0;
+  for (let i = 0; i < name.length; i++) h = (h * 31 + name.charCodeAt(i)) % 360;
+  return "hsl(" + h + ", 55%, 38%)";
+};
 
 const toPartner = (p: Partner): { name: string; logo?: string } => {
   if (typeof p === "string") {
@@ -68,6 +88,7 @@ export default function PartnerLogos() {
         <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', alignItems: 'center', gap: 14 }}>
           {list.map((raw, i) => {
             const p = toPartner(raw);
+            const color = brandColor(p.name);
             if (p.logo) {
               return (
                 <div
@@ -79,18 +100,24 @@ export default function PartnerLogos() {
                     src={p.logo}
                     alt={p.name}
                     loading="lazy"
-                    className="max-h-10 w-auto max-w-full object-contain opacity-70 grayscale transition-all duration-200 hover:opacity-100 hover:grayscale-0"
+                    className="max-h-10 w-auto max-w-full object-contain transition-transform duration-200 hover:scale-105"
                   />
                 </div>
               );
             }
             return (
-              <div key={p.name + "_" + i} style={{ padding: '8px 18px', borderRadius: 20, border: '1px solid #D4AF37', background: 'white', fontSize: 13, color: '#0A1628', fontWeight: 500 }}>
-                {p.name}
+              <div
+                key={p.name + "_" + i}
+                title={p.name}
+                className="flex items-center justify-center w-36 h-16 rounded-lg px-3 shadow-sm transition-all duration-200 hover:shadow-md"
+                style={{ background: "linear-gradient(135deg, " + color + ", " + color + "cc)", border: '1px solid rgba(255,255,255,0.25)' }}
+              >
+                <span className="text-white text-[13px] font-semibold text-center leading-tight">{p.name}</span>
               </div>
             );
           })}
         </div>
+        <p className="text-xs text-gray-400 mt-4">{t("home.trustedPartnersHint")}</p>
       </div>
     </div>
   );
