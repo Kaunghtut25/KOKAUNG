@@ -85,9 +85,8 @@ export async function GET(request: NextRequest) {
     const fallbackMap: Record<string, Dest> = {};
     FALLBACK_DESTINATIONS.forEach((f) => { fallbackMap[slugify(f.city)] = f; });
 
-    const items = rawDests.length > 0
-      ? rawDests.map((d) => transformDest(d, fallbackMap[slugify(d.city)]))
-      : FALLBACK_DESTINATIONS.map((f) => transformDest({ city: f.city, country: f.country, image: f.image, minPrice: f.minPrice, bestTime: f.bestTime, description: f.description, highlights: f.highlights }, f));
+    // Admin-deleted destinations must NOT reappear: empty store => empty list.
+    const items = rawDests.map((d) => transformDest(d, fallbackMap[slugify(d.city)]));
 
     return NextResponse.json({ success: true, data: items, total: items.length });
   } catch (err: unknown) {

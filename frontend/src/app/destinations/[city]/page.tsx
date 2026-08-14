@@ -29,129 +29,6 @@ interface PopularDestination {
 
 const DEST_HERO = "https://vydupdjfr38dxlzx.public.blob.vercel-storage.com/uploads/img_1784609663178_ta1biy-bangkok-x7Q8kUMuXRvj6qMJAZxBbawKS4zkjI.jpg";
 
-const FALLBACK_DESTINATIONS: PopularDestination[] = [
-  {
-    city: "Paris", country: "France",
-    image: "/images_v2/dest-paris-v2.jpg",
-    minPrice: "Ks 850,000",
-    rating: 4.8, reviews: 2340, duration: "5 Days",
-    tags: ["Luxury", "Romance", "Culture"],
-    bestTime: "April to June and September to October",
-    description: "Iconic Eiffel Tower, Louvre Museum, Seine River cruises and world-class cuisine. Paris is the city of love, lights, and timeless elegance.",
-    highlights: ["Eiffel Tower", "Louvre Museum", "Notre-Dame", "Montmartre", "Seine River Cruise", "Champs-Elysees"],
-  },
-  {
-    city: "Dubai", country: "United Arab Emirates",
-    image: "/images_v2/dest-dubai-v2.jpg",
-    minPrice: "Ks 680,000",
-    rating: 4.7, reviews: 1890, duration: "4 Days",
-    tags: ["Luxury", "Shopping", "Modern"],
-    bestTime: "November to March (mild weather)",
-    description: "Burj Khalifa, desert safaris, gold souks and futuristic architecture. Dubai is a city of superlatives with the tallest building and largest mall.",
-    highlights: ["Burj Khalifa", "Dubai Mall", "Palm Jumeirah", "Desert Safari", "Dubai Marina", "Gold Souk"],
-  },
-  {
-    city: "Seoul", country: "South Korea",
-    image: "/images_v2/dest-korea-v2.jpg",
-    minPrice: "Ks 550,000",
-    rating: 4.6, reviews: 1560, duration: "6 Days",
-    tags: ["Culture", "Food", "K-Pop"],
-    bestTime: "March to May and September to November",
-    description: "Ancient palaces, vibrant street food, K-pop culture and stunning cherry blossoms. Seoul is a dynamic city where ancient palaces sit alongside modern culture.",
-    highlights: ["Gyeongbokgung Palace", "Bukchon Hanok Village", "Myeongdong Shopping", "N Seoul Tower", "Hongdae", "Korean Street Food"],
-  },
-  {
-    city: "Bangkok", country: "Thailand",
-    image: "/images_v2/hero-thailand-v2.jpg",
-    minPrice: "Ks 150,000",
-    rating: 4.5, reviews: 3210, duration: "4 Days",
-    tags: ["Beach", "Temple", "Food"],
-    bestTime: "November to February (cool season)",
-    description: "Golden temples, pristine beaches, floating markets and warm Thai hospitality. Bangkok is a vibrant metropolis where ancient temples meet modern skyscrapers.",
-    highlights: ["Grand Palace", "Wat Arun", "Floating Markets", "Chatuchak Weekend Market", "Khao San Road", "Thai Street Food"],
-  },
-  {
-    city: "Singapore", country: "Singapore",
-    image: "/images_v2/hero-singapore-v2.jpg",
-    minPrice: "Ks 250,000",
-    rating: 4.7, reviews: 1980, duration: "3 Days",
-    tags: ["Modern", "Food", "Shopping"],
-    bestTime: "February to April (dry season)",
-    description: "Marina Bay Sands, Gardens by the Bay, hawker food paradise. Singapore is a dazzling city-state of futuristic architecture and multicultural neighborhoods.",
-    highlights: ["Marina Bay Sands", "Gardens by the Bay", "Sentosa Island", "Universal Studios", "Chinatown", "Orchard Road"],
-  },
-  {
-    city: "Tokyo", country: "Japan",
-    image: "/images_v2/dest-japan-v2.jpg",
-    minPrice: "Ks 780,000",
-    rating: 4.9, reviews: 2870, duration: "7 Days",
-    tags: ["Culture", "Food", "Nature"],
-    bestTime: "March to May (cherry blossom) or October to November (autumn)",
-    description: "Ancient temples, bullet trains, cherry blossoms, exquisite cuisine. Tokyo blends ultramodern technology with ancient traditions.",
-    highlights: ["Shibuya Crossing", "Meiji Shrine", "Tsukiji Fish Market", "Akihabara", "Harajuku", "Tokyo Tower"],
-  },
-  {
-    city: "Bali", country: "Indonesia",
-    image: "https://vydupdjfr38dxlzx.public.blob.vercel-storage.com/uploads/img_1784609670120_iixb10-bali-e92X2ozIcinwD996tg4B5u2BXS0cdz.jpg",
-    minPrice: "From Ks 180,000",
-    rating: 4.6, reviews: 1230, duration: "5 Days",
-    tags: ["Beach", "Nature", "Culture"],
-    bestTime: "April to October (dry season)",
-    description: "Bali is the Island of Gods, offering stunning beaches, lush rice terraces, ancient temples, and a vibrant arts scene. Perfect for relaxation and cultural exploration.",
-    highlights: ["Ubud Rice Terraces", "Tanah Lot Temple", "Seminyak Beach", "Uluwatu Cliff Temple", "Monkey Forest", "Balinese Spa"],
-  },
-  {
-    city: "Maldives", country: "Maldives",
-    image: "https://vydupdjfr38dxlzx.public.blob.vercel-storage.com/uploads/img_1784609671009_3evgmu-maldives-hypfQQJCg06kuyANjh41tsEh3jJ1iZ.jpg",
-    minPrice: "From Ks 380,000",
-    rating: 4.9, reviews: 890, duration: "4 Days",
-    tags: ["Beach", "Luxury", "Romance"],
-    bestTime: "November to April (dry season)",
-    description: "The Maldives is a tropical paradise of overwater villas, crystal-clear lagoons, and pristine white-sand beaches. The ultimate luxury getaway.",
-    highlights: ["Overwater Villas", "Snorkeling", "Dolphin Watching", "Sandbank Picnics", "Underwater Restaurant", "Sunset Cruises"],
-  },
-  {
-    city: "Yangon", country: "Myanmar",
-    image: "https://vydupdjfr38dxlzx.public.blob.vercel-storage.com/uploads/img_1784609672110_hoxenr-yangon-ZR2KEYFv4nTcNHRSbkTYE73ZoXIegP.jpg",
-    minPrice: "From Ks 80,000",
-    rating: 4.3, reviews: 670, duration: "3 Days",
-    tags: ["Culture", "History", "Temple"],
-    bestTime: "November to February (cool season)",
-    description: "Yangon is Myanmar''s largest city and former capital, home to the magnificent Shwedagon Pagoda. Explore colonial architecture and authentic Burmese cuisine.",
-    highlights: ["Shwedagon Pagoda", "Bogyoke Market", "Kandawgyi Lake", "Colonial Buildings", "Chinatown", "Burmese Tea Shops"],
-  },
-  {
-    city: "Bagan", country: "Myanmar",
-    image: "https://vydupdjfr38dxlzx.public.blob.vercel-storage.com/uploads/img_1784609673423_cxib2z-bagan-XuauRMTtDqUuuRh7T11ier0WFheWOP.jpg",
-    minPrice: "From Ks 95,000",
-    rating: 4.7, reviews: 540, duration: "3 Days",
-    tags: ["History", "Culture", "Nature"],
-    bestTime: "November to February (cool season)",
-    description: "Bagan is an archaeological wonderland with over 2,000 ancient temples spread across a vast plain. Hot air balloon rides at sunrise offer unforgettable views.",
-    highlights: ["Ananda Temple", "Shwezigon Pagoda", "Sunrise Ballooning", "E-Bike Temple Tour", "Irrawaddy River Sunset", "Lacquerware Workshops"],
-  },
-  {
-    city: "Ho Chi Minh City", country: "Vietnam",
-    image: "https://vydupdjfr38dxlzx.public.blob.vercel-storage.com/uploads/img_1784609674645_4crguu-ho-chi-minh-city-BcBT3Ux26O1qAcrfZ3qiJWRIqtF9tM.jpg",
-    minPrice: "From Ks 105,000",
-    rating: 4.4, reviews: 780, duration: "4 Days",
-    tags: ["Food", "History", "Culture"],
-    bestTime: "December to April (dry season)",
-    description: "Ho Chi Minh City (Saigon) is Vietnam''s economic powerhouse with vibrant energy. Explore the Cu Chi Tunnels, taste amazing pho, and experience the buzzing nightlife.",
-    highlights: ["Cu Chi Tunnels", "Ben Thanh Market", "War Remnants Museum", "Notre-Dame Basilica", "Bui Vien Walking Street", "Vietnamese Coffee"],
-  },
-  {
-    city: "Kuala Lumpur", country: "Malaysia",
-    image: "https://vydupdjfr38dxlzx.public.blob.vercel-storage.com/uploads/img_1784609676271_plrv46-kuala-lumpur-9BY1o9HTEVFgEy8zC00KyY98WYR3Ze.jpg",
-    minPrice: "From Ks 150,000",
-    rating: 4.5, reviews: 920, duration: "4 Days",
-    tags: ["Modern", "Food", "Shopping"],
-    bestTime: "May to July and December to February",
-    description: "Kuala Lumpur is a melting pot of cultures with the iconic Petronas Twin Towers, colorful Batu Caves, and incredible street food from Malay, Chinese, and Indian traditions.",
-    highlights: ["Petronas Twin Towers", "Batu Caves", "Jalan Alor Food Street", "Bukit Bintang", "Merdeka Square", "KL Bird Park"],
-  },
-];
-
 function toSlug(text: string): string {
   return (text || "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 }
@@ -204,10 +81,8 @@ export default function DestinationPage() {
     return () => { cancelled = true; };
   }, [key]);
 
-  const fallbackDest = FALLBACK_DESTINATIONS.find(
-    (d) => toSlug(d.city) === key
-  );
-  const dest = storeDest || fallbackDest;
+  // Admin-deleted destinations must NOT reappear: no fallback record.
+  const dest = storeDest;
 
   if (!dest) {
     return (

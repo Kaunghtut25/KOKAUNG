@@ -9,17 +9,7 @@ import { mmDestinations, mmLookup } from "@/lib/mm-content";
 
 const FALLBACK_IMG = "/images_v2/cta-bg-v2.jpg";
 
-const FALLBACK_DESTS = [
-  { city: "Paris", country: "France", image: "/images_v2/dest-paris-v2.jpg", minPrice: "Ks 850,000", rating: 4.8, reviews: 2340, duration: "5 Days", tags: ["Luxury", "Romance", "Culture"], description: "Iconic Eiffel Tower, Louvre Museum, Seine River cruises and world-class cuisine." },
-  { city: "Dubai", country: "United Arab Emirates", image: "/images_v2/dest-dubai-v2.jpg", minPrice: "Ks 680,000", rating: 4.7, reviews: 1890, duration: "4 Days", tags: ["Luxury", "Shopping", "Modern"], description: "Burj Khalifa, desert safaris, gold souks and futuristic architecture." },
-  { city: "Seoul", country: "South Korea", image: "/images_v2/dest-korea-v2.jpg", minPrice: "Ks 550,000", rating: 4.6, reviews: 1560, duration: "6 Days", tags: ["Culture", "Food", "K-Pop"], description: "Ancient palaces, vibrant street food, K-pop culture and stunning cherry blossoms." },
-  { city: "Bangkok", country: "Thailand", image: "/images_v2/hero-thailand-v2.jpg", minPrice: "Ks 150,000", rating: 4.5, reviews: 3210, duration: "4 Days", tags: ["Beach", "Temple", "Food"], description: "Golden temples, pristine beaches, floating markets and warm Thai hospitality." },
-  { city: "Singapore", country: "Singapore", image: "/images_v2/hero-singapore-v2.jpg", minPrice: "Ks 250,000", rating: 4.7, reviews: 1980, duration: "3 Days", tags: ["Modern", "Food", "Shopping"], description: "Marina Bay Sands, Gardens by the Bay, hawker food paradise." },
-  { city: "Tokyo", country: "Japan", image: "/images_v2/dest-japan-v2.jpg", minPrice: "Ks 780,000", rating: 4.9, reviews: 2870, duration: "7 Days", tags: ["Culture", "Food", "Nature"], description: "Ancient temples, bullet trains, cherry blossoms, exquisite cuisine." },
 
-];
-
-// Map old country-name cities from Redis to correct city names for detail page matching
 const CITY_FIX_MAP: Record<string, string> = {
   "Korea": "Seoul",
   "Thailand": "Bangkok",
@@ -202,16 +192,13 @@ export default function PopularDestinations({ siteConfig }: { siteConfig?: any }
         }).filter((d: any) => d.city);
         if (mapped.length > 0) { setDests(mapped); return; }
       }
-      // fallback: site-config popularDestinations, then FALLBACK_DESTS
-      if (cfgData?.popularDestinations != null) {
-        const fixed = cfgData.popularDestinations.map((dest: any) => ({ ...dest, city: CITY_FIX_MAP[dest.city] || dest.city }));
-        setDests(fixed.length ? fixed : FALLBACK_DESTS);
-      } else {
-        setDests(FALLBACK_DESTS);
-      }
-    }).catch(() => { setDests(FALLBACK_DESTS); }).finally(() => { setLoaded(true); setLoading(false); });
+      // Admin-deleted destinations must NOT reappear: no fallback lists.
+      setDests([]);
+    }).catch(() => { setDests([]); }).finally(() => { setLoaded(true); setLoading(false); });
   }, []);
 
+  // Hide the whole section when there is nothing to show (admin deleted all).
+  if (!loading && dests.length === 0) return null;
 
   return (
     <section className="max-w-7xl mx-auto px-4 py-12">
