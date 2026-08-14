@@ -273,7 +273,9 @@ html[data-narrow="1"] .lg\:flex-row {
   flex-direction: column !important;
   align-items: stretch !important;
 }
-html[data-narrow="1"] [class*="flex-wrap"] button {
+/* Grow buttons only in toolbar-style rows (no heading in the container);
+   header rows that contain a title keep natural button widths. */
+html[data-narrow="1"] [class*="flex-wrap"]:not(:has(h1, h2, h3, h4)) button {
   flex: 1 1 45% !important;
 }
 html[data-narrow="1"] main th,
