@@ -12,6 +12,7 @@ import DealsBanner from '@/components/DealsBanner';
 import FAQAccordion from '@/components/FAQAccordion';
 import TestimonialSlider from '@/components/TestimonialSlider';
 import Image from "next/image";
+import FlagIcon from '@/components/FlagIcon';
 interface InsurancePlan {
   slug?: string;
   id?: string;
@@ -184,7 +185,7 @@ export default function InsuranceClient({ initialPlans, siteConfig }: InsuranceC
         </div>
       </section>
       <div className="flex justify-center gap-2 pt-8 pb-2">
-        <button onClick={() => setCurrency('MMK')} className={`px-3 py-1 rounded-full text-[11px] font-semibold transition-all ${currency==='MMK'?'bg-gold text-[#0A1628]':'bg-white/20 text-gray-600 border border-gray-200'}`}>🇲🇲 MMK</button>
+        <button onClick={() => setCurrency('MMK')} className={`px-3 py-1 rounded-full text-[11px] font-semibold transition-all ${currency==='MMK'?'bg-gold text-[#0A1628]':'bg-white/20 text-gray-600 border border-gray-200'}`}><FlagIcon code="mm" width={16} className="inline-block mr-1" /> MMK</button>
         <button onClick={() => setCurrency('USD')} className={`px-3 py-1 rounded-full text-[11px] font-semibold transition-all ${currency==='USD'?'bg-gold text-[#0A1628]':'bg-white/20 text-gray-600 border border-gray-200'}`}>💵 USD</button>
       </div>
 <section className="max-w-7xl mx-auto px-4 sm:px-6 pt-4 pb-12">

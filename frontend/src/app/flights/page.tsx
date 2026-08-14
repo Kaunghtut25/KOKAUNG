@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { HiSearch, HiArrowRight, HiCalendar, HiUser, HiGlobe, HiClock, HiStar, HiShieldCheck, HiLocationMarker } from "react-icons/hi";
 import { useI18n } from "@/lib/i18n";
+import FlagIcon from '@/components/FlagIcon';
 
 // ── types ──
 interface FlightOffer {
@@ -92,7 +93,7 @@ const airlinePartners = [
   { name: "Qatar Airways", code: "QR", logo: "🏆", tier: "premier" },
   { name: "Thai Airways", code: "TG", logo: "🌸", tier: "gold" },
   { name: "ANA", code: "NH", logo: "🎌", tier: "gold" },
-  { name: "Korean Air", code: "KE", logo: "🇰🇷", tier: "gold" },
+  { name: "Korean Air", code: "KE", logo: "kr", tier: "gold" },
   { name: "AirAsia", code: "AK", logo: "🛫", tier: "silver" },
   { name: "Bangkok Airways", code: "PG", logo: "🏝️", tier: "silver" },
   { name: "China Airlines", code: "CI", logo: "🐉", tier: "silver" },
@@ -603,7 +604,7 @@ export default function FlightsPage() {
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               {airlinePartners.filter(a => a.tier === "premier").map((airline, i) => (
                 <div key={i} className="bg-gradient-to-br from-[#D4AF37]/10 to-transparent border border-[#D4AF37]/20 rounded-2xl p-6 text-center hover:border-[#D4AF37]/40 transition-all group">
-                  <div className="text-4xl mb-3">{airline.logo}</div>
+                  <div className="text-4xl mb-3 flex justify-center">{/^[a-z]{2}$/.test(airline.logo) ? <FlagIcon code={airline.logo} width={30} /> : airline.logo}</div>
                   <h4 className="text-white font-semibold">{airline.name}</h4>
                   <p className="text-[#D4AF37] text-xs mt-1 font-medium">{airline.code}</p>
                 </div>
@@ -619,7 +620,7 @@ export default function FlightsPage() {
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-3 gap-4">
               {airlinePartners.filter(a => a.tier === "gold").map((airline, i) => (
                 <div key={i} className="bg-white/5 border border-[#D4AF37]/10 rounded-2xl p-5 text-center hover:border-[#D4AF37]/20 transition-all">
-                  <div className="text-3xl mb-2">{airline.logo}</div>
+                  <div className="text-3xl mb-2 flex justify-center">{/^[a-z]{2}$/.test(airline.logo) ? <FlagIcon code={airline.logo} width={26} /> : airline.logo}</div>
                   <h4 className="text-white/80 text-sm font-medium">{airline.name}</h4>
                   <p className="text-gray-300 text-xs mt-0.5">{airline.code}</p>
                 </div>
@@ -635,7 +636,7 @@ export default function FlightsPage() {
             <div className="flex flex-wrap justify-center gap-4">
               {airlinePartners.filter(a => a.tier === "silver").map((airline, i) => (
                 <div key={i} className="bg-white/[0.03] border border-white/5 rounded-xl px-5 py-3 text-center hover:border-[#D4AF37]/20 transition-all min-w-[130px]">
-                  <div className="text-2xl mb-1">{airline.logo}</div>
+                  <div className="text-2xl mb-1 flex justify-center">{/^[a-z]{2}$/.test(airline.logo) ? <FlagIcon code={airline.logo} width={22} /> : airline.logo}</div>
                   <h4 className="text-white/60 text-xs font-medium">{airline.name}</h4>
                 </div>
               ))}

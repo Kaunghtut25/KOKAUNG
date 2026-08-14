@@ -11,6 +11,7 @@ import DealsBanner from '@/components/DealsBanner';
 import FAQAccordion from '@/components/FAQAccordion';
 import TestimonialSlider from '@/components/TestimonialSlider';
 import Image from "next/image";
+import FlagIcon from '@/components/FlagIcon';
 
 interface VisaService {
   slug?: string;
@@ -27,13 +28,13 @@ interface VisaService {
 }
 
 const COUNTRY_FLAGS: Record<string, string> = {
-  Thailand: '🇹🇭', Singapore: '🇸🇬', Malaysia: '🇲🇾', Vietnam: '🇻🇳',
-  China: '🇨🇳', Japan: '🇯🇵', 'South Korea': '🇰🇷', India: '🇮🇳',
-  'United Arab Emirates': '🇦🇪', Cambodia: '🇰🇭', Indonesia: '🇮🇩',
-  Taiwan: '🇹🇼', Philippines: '🇵🇭', Australia: '🇦🇺',
-  'United Kingdom': '🇬🇧', 'Hong Kong': '🇭🇰', Macau: '🇲🇴',
-  'Sri Lanka': '🇱🇰', Nepal: '🇳🇵', Maldives: '🇲🇻', Laos: '🇱🇦',
-  Brunei: '🇧🇳', Myanmar: '🇲🇲',
+  Thailand: 'th', Singapore: 'sg', Malaysia: 'my', Vietnam: 'vn',
+  China: 'cn', Japan: 'jp', 'South Korea': 'kr', India: 'in',
+  'United Arab Emirates': 'ae', Cambodia: 'kh', Indonesia: 'id',
+  Taiwan: 'tw', Philippines: 'ph', Australia: 'au',
+  'United Kingdom': 'gb', 'Hong Kong': 'hk', Macau: 'mo',
+  'Sri Lanka': 'lk', Nepal: 'np', Maldives: 'mv', Laos: 'la',
+  Brunei: 'bn', Myanmar: 'mm',
 };
 
 const COUNTRY_IMAGES: Record<string, string> = {
@@ -92,7 +93,7 @@ const FALLBACK_VISAS: VisaService[] = [
 function VisaGridCard({ visa }: { visa: VisaService }) {
   const router = useRouter();
   const { t } = useI18n();
-  const flag = COUNTRY_FLAGS[visa.country] || '🌏';
+  const flag = COUNTRY_FLAGS[visa.country] || '';
   const imageUrl = visa.image || COUNTRY_IMAGES[visa.country];
 
   return (
@@ -106,13 +107,13 @@ function VisaGridCard({ visa }: { visa: VisaService }) {
           <Image alt={visa.country} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" src={imageUrl} width={1600} height={900} sizes="100vw" />
           <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
           <div className="absolute bottom-1.5 left-2 flex items-center gap-1.5">
-            <span className="text-xl">{flag}</span>
+            <span className="text-xl inline-flex items-center"><FlagIcon code={flag} width={24} /></span>
             <h3 className="text-white font-semibold text-sm drop-shadow-md" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>{visa.country}</h3>
           </div>
         </div>
       ) : (
         <div className="h-52 bg-gradient-to-br from-[#D4AF37]/20 to-[#F5A623]/20 flex items-center justify-center">
-          <span className="text-4xl">{flag}</span>
+          <span className="text-4xl inline-flex items-center"><FlagIcon code={flag} width={48} /></span>
         </div>
       )}
       <div className="p-4 flex flex-col flex-1 justify-between">
@@ -205,7 +206,7 @@ export default function VisasClient({ initialVisas, siteConfig }: VisasClientPro
         </div>
       </section>
       <div className="flex justify-center gap-2 pt-8 pb-2">
-        <button onClick={() => setCurrency('MMK')} className={`px-3 py-1 rounded-full text-[11px] font-semibold transition-all ${currency==='MMK'?'bg-gold text-[#0A1628]':'bg-white/20 text-gray-600 border border-gray-200'}`}>🇲🇲 MMK</button>
+        <button onClick={() => setCurrency('MMK')} className={`px-3 py-1 rounded-full text-[11px] font-semibold transition-all ${currency==='MMK'?'bg-gold text-[#0A1628]':'bg-white/20 text-gray-600 border border-gray-200'}`}><FlagIcon code="mm" width={16} className="inline-block mr-1" /> MMK</button>
         <button onClick={() => setCurrency('USD')} className={`px-3 py-1 rounded-full text-[11px] font-semibold transition-all ${currency==='USD'?'bg-gold text-[#0A1628]':'bg-white/20 text-gray-600 border border-gray-200'}`}>💵 USD</button>
       </div>
 <section className="max-w-7xl mx-auto px-4 sm:px-6 pt-4 pb-20">
