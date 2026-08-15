@@ -57,6 +57,19 @@ export interface AuthPayload {
 /** Roles allowed into the admin panel. Used by middleware + API routes. */
 export const ADMIN_ROLES = ["admin", "staff", "editor", "viewer"] as const;
 
+/** Role rank for permission checks (higher = more privileged). */
+export const ROLE_RANK: Record<string, number> = {
+  viewer: 0,
+  editor: 1,
+  staff: 2,
+  admin: 3,
+};
+
+/** Resolve a role to its rank; unknown/missing roles get -1 (below viewer). */
+export function roleRank(role?: string): number {
+  return role ? (ROLE_RANK[role] ?? -1) : -1;
+}
+
 /** Sign a payload into a signed token. Throws if no secret configured. */
 export async function signToken(payload: AuthPayload): Promise<string> {
   const body = b64urlEncode(JSON.stringify(payload));

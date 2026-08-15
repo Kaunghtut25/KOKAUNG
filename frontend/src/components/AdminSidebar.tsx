@@ -5,6 +5,7 @@ import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
 import { useI18n } from "@/lib/i18n";
 import Image from "next/image";
+import { decodeTokenPayload, roleRank } from "@/lib/auth";
 
 interface NavItem {
   labelKey: string;
@@ -38,12 +39,17 @@ export default function AdminSidebar() {
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [adminUser, setAdminUser] = useState<string>("");
+  const [adminRole, setAdminRole] = useState<string>("");
+  const [role, setRole] = useState<string>("admin");
 
   useEffect(() => {
     // FIX: 2026-08-04 admin-users-v3 — show LIVE user data from the API,
     // not the stale localStorage snapshot captured at login time.
     const snapshot = localStorage.getItem("admin_user");
-    const setFrom = (u: any) => setAdminUser(u?.name || u?.email || "Admin");
+    const setFrom = (u: any) => {
+      setAdminUser(u?.name || u?.email || "Admin");
+      if (u?.role) setAdminRole(u.role);
+    };
     if (snapshot) {
       try { setFrom(JSON.parse(snapshot)); } catch { setAdminUser(snapshot); }
     }
@@ -66,6 +72,17 @@ export default function AdminSidebar() {
   }, []);
 
   useEffect(() => {
+    const token = localStorage.getItem("admin_token");
+    if (token) {
+      const p = decodeTokenPayload(token);
+      if (p?.role && roleRank(p.role) >= 0) {
+        setRole(p.role);
+        setAdminRole(p.role);
+      }
+    }
+  }, []);
+
+  useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth < 768) {
         setCollapsed(true);
@@ -80,6 +97,18 @@ export default function AdminSidebar() {
     localStorage.removeItem("admin_token");
     localStorage.removeItem("admin_user");
     router.push("/auth/login");
+  };
+
+  const rank = roleRank(role);
+  const canSee = (path: string) => {
+    // Admin-only: user management + site settings
+    if (path === "/admin/users" || path === "/admin/settings") return rank >= 3;
+    // Editor+: site manager (content editing)
+    if (path === "/admin/site-manager") return rank >= 1;
+    // Staff+: bookings management
+    if (path === "/admin/bookings") return rank >= 2;
+    // Viewer+: all content pages (read-only for viewer)
+    return rank >= 0;
   };
 
   const isActive = (path: string) => {
@@ -110,7 +139,7 @@ export default function AdminSidebar() {
       {/* Navigation */}
       <nav className="flex-1 py-4 overflow-y-auto">
         <ul className="space-y-1 px-3">
-          {navItems.map((item) => (
+          {navItems.filter((item) => canSee(item.path)).map((item) => (
             <li key={item.path}>
               <Link
                 href={item.path}
@@ -141,7 +170,7 @@ export default function AdminSidebar() {
             </span>
             <div className={`${collapsed && !mobileOpen ? "hidden" : "block"} overflow-hidden`}>
               <p className="text-white/80 text-sm font-medium truncate">{adminUser}</p>
-              <p className="text-white/50 text-[10px]">Administrator</p>
+              <p className="text-white/50 text-[10px] capitalize">{adminRole || "Administrator"}</p>
             </div>
           </div>
         )}

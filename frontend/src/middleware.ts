@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { isAdminToken, verifyToken } from "@/lib/auth";
+import { isAdminToken, verifyToken, roleRank } from "@/lib/auth";
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
@@ -40,11 +40,22 @@ export async function middleware(request: NextRequest) {
         return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
       }
 
-      // Role-gated: "viewer" role is read-only — block all non-GET writes
+      // Role-gated writes: viewer read-only; users/settings admin-only;
+      // site-config + bookings staff+; all other content editor+
       if (request.method !== "GET") {
         const payload = await verifyToken(token);
-        if (payload?.role === "viewer") {
+        const rank = roleRank(payload?.role);
+        if (rank < 1) {
           return NextResponse.json({ message: "Read-only role: writes not allowed" }, { status: 403 });
+        }
+        if ((pathname === "/api/admin/users" || pathname === "/api/admin/settings") && rank < 3) {
+          return NextResponse.json({ message: "Admin role required for this action" }, { status: 403 });
+        }
+        if (
+          (pathname === "/api/admin/site-config" || pathname.startsWith("/api/admin/bookings")) &&
+          rank < 2
+        ) {
+          return NextResponse.json({ message: "Staff role or higher required for this action" }, { status: 403 });
         }
       }
     }

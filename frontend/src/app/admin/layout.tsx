@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { decodeTokenPayload } from "@/lib/auth";
+import { decodeTokenPayload, ADMIN_ROLES } from "@/lib/auth";
 import AdminSidebar from "@/components/AdminSidebar";
 import { LanguageProvider } from "@/lib/i18n";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
@@ -73,7 +73,7 @@ export default function AdminLayout({
         return;
       }
       const payload = decodeTokenPayload(token);
-      if (!payload || payload.role !== "admin" || (payload.exp && payload.exp < Date.now())) {
+      if (!payload || !(ADMIN_ROLES as readonly string[]).includes(payload.role) || (payload.exp && payload.exp < Date.now())) {
         localStorage.removeItem("admin_token");
         localStorage.removeItem("admin_user");
         router.replace("/auth/login");
