@@ -43,6 +43,7 @@ export async function POST(request: NextRequest) {
       // flight-specific fields
       airline, airlineCode, flightNo, departTime, arriveTime,
       stops, offerId, clientType, tripType,
+      requestId,
     } = body;
 
     // Validation
@@ -54,9 +55,30 @@ export async function POST(request: NextRequest) {
     if (!travelType || !validTypes.includes(travelType)) {
       errors.push(`Valid travel type is required (${validTypes.join('/')})`);
     }
+    if (departDate && !/^\d{4}-\d{2}-\d{2}$/.test(departDate)) errors.push('Depart date must be YYYY-MM-DD');
+    if (returnDate && !/^\d{4}-\d{2}-\d{2}$/.test(returnDate)) errors.push('Return date must be YYYY-MM-DD');
+    if (passengers !== undefined && passengers !== null && passengers !== '') {
+      const pax = Number(passengers);
+      if (!Number.isInteger(pax) || pax < 1 || pax > 9) errors.push('Passengers must be a whole number between 1 and 9');
+    }
+    if (amount !== undefined && amount !== null && amount !== '') {
+      const amt = Number(amount);
+      if (!Number.isFinite(amt) || amt < 0) errors.push('Amount must be a non-negative number');
+    }
 
     if (errors.length > 0) {
       return NextResponse.json({ success: false, message: 'Validation failed', errors }, { status: 400 });
+    }
+
+    // FIX 2026-08-16: idempotency — same requestId (per booking form session) never creates a duplicate.
+    if (requestId) {
+      try {
+        const all = await storeGetAll('bookings');
+        const existing = all.find((b: any) => b.requestId === requestId);
+        if (existing) {
+          return NextResponse.json({ success: true, message: 'Booking already submitted', referenceNumber: existing.referenceNumber, duplicate: true, data: existing });
+        }
+      } catch (dupErr) { console.error('[Booking] dedup check failed:', dupErr); }
     }
 
     // Generate reference number: A9-<TYPE>-<timestamp in base36>
@@ -87,6 +109,7 @@ export async function POST(request: NextRequest) {
       tripType: tripType || 'oneway',
       status: 'New',
       referenceNumber: ref,
+      requestId: requestId || '',
       createdAt: new Date().toISOString(),
     };
 

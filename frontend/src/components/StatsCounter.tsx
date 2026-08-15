@@ -60,12 +60,15 @@ export default function StatsCounter() {
       .catch(() => {});
   }, []);
 
+  // FIX 2026-08-16: never show "0+" — hide cards that parse to 0/negative; keep label-only cards (e.g. IATA Accredited).
+  const visible = stats.filter((s) => s.num === null || s.num > 0);
+  if (visible.length === 0) return null; // hide section until real admin-configured stats arrive
   if (stats.length === 0) return null; // hide section until real admin-configured stats arrive
 
   return (
     <div style={{ background: 'linear-gradient(135deg,#0A1628,#0F2035)', padding: '40px 20px' }}>
       <div style={{ maxWidth: 1000, margin: '0 auto', display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(150px,1fr))', gap: 24 }}>
-        {stats.map((s, i) =>
+        {visible.map((s, i) =>
           s.num != null ? (
             <Counter key={i} target={s.num} label={s.label} suffix={s.suffix} />
           ) : (

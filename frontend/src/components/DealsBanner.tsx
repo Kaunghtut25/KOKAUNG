@@ -27,8 +27,9 @@ export default function DealsBanner() {
   const [deals, setDeals] = useState<DealsConfig>(DEFAULT_DEALS);
   const [time, setTime] = useState({ d: 0, h: 0, m: 0, s: 0 });
   const [status, setStatus] = useState<"active" | "upcoming" | "expired">("active");
+  // FIX 2026-08-16: promo copy (badge/title) comes ONLY from admin site-config — no fabricated deal titles.
   const dealsBanner = lang === "mm"
-    ? { ...deals, badge: '⏰ အချိန်အကန့်အသတ်ဖြင့်', title: 'Bagan Explorer ခရီးစဉ် ၃၀% လျှော့ဈေး', buttonLabel: t("common.bookNow") }
+    ? { ...deals, badge: '⏰ အချိန်အကန့်အသတ်ဖြင့်', buttonLabel: t("common.bookNow") }
     : deals;
 
   useEffect(() => {
@@ -40,19 +41,12 @@ export default function DealsBanner() {
       .catch(() => {});
   }, []);
 
-  // FIX 2026-08-15: server-authoritative countdown — endAt/startAt from site-config (admin), timezone-aware.
+  // FIX 2026-08-16: DISABLED unless an absolute endAt exists — no rolling countdown, no fake expiry.
   useEffect(() => {
-    if (!deals.enabled) return;
-    let target = 0;
-    if (deals.endAt) {
-      const parsed = Date.parse(deals.endAt);
-      if (!isNaN(parsed)) target = parsed;
-    }
-    if (!target) {
-      const days = deals.countdownDays && deals.countdownDays > 0 ? deals.countdownDays : 0;
-      if (!days) { setStatus("expired"); return; } // no end date configured — never show a rolling countdown
-      target = Date.now() + days * 24 * 60 * 60 * 1000;
-    }
+    if (!deals.enabled || !deals.endAt) return; // DISABLED: no end date configured
+    const parsed = Date.parse(deals.endAt);
+    if (isNaN(parsed)) return; // DISABLED: invalid date
+    const target = parsed;
     const tick = () => {
       const now = Date.now();
       if (deals.startAt) {
@@ -70,9 +64,10 @@ export default function DealsBanner() {
     tick();
     const t = setInterval(tick, 1000);
     return () => clearInterval(t);
-  }, [deals.enabled, deals.endAt, deals.startAt, deals.countdownDays]);
+  }, [deals.enabled, deals.endAt, deals.startAt]);
 
-  if (!deals.enabled) return null;
+  // DISABLED state: promotion without a valid absolute end date is never rendered.
+  if (!deals.enabled || !deals.endAt || isNaN(Date.parse(deals.endAt))) return null;
 
   return (
     <div style={{ background: 'linear-gradient(135deg,#0A1628,#0F2035)', borderBottom: '3px solid #D4AF37', padding: '24px 20px', textAlign: 'center' }}>

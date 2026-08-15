@@ -208,6 +208,13 @@ function BookNowContent() {
     return errs.length === 0;
   };
 
+  // FIX 2026-08-16: stable idempotency key per form session — retries/double-clicks create one booking.
+
+  // FIX 2026-08-16: stable idempotency key per form session — retries/double-clicks create one booking.
+
+  // FIX 2026-08-16: stable idempotency key per form session — retries/double-clicks create one booking.
+  const [requestId] = useState(() => (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function' ? crypto.randomUUID() : 'bk-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 8)));
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrors([]);
@@ -218,6 +225,7 @@ function BookNowContent() {
     try {
       const payload = {
         ...formData,
+        requestId,
         // Include search summary data for richer booking records
         itemName: searchSummary?.itemName || searchSummary?.from || "",
         amount: searchSummary?.amount || 0,
