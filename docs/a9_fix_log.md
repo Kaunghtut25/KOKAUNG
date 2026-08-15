@@ -55,3 +55,10 @@ Restore point: tag `restore-point-2026-08-15-3c3de84` @ `3c3de84`.
 - Company facts ("since 2015", IATA, hours, 24/7) → Phase 6 single authoritative source (**HUMAN VERIFICATION REQUIRED**).
 - Live `Kalaw` exists as two DB records (different `gen_` ids from list vs detail) → duplicate-cleanup item (Phase 19).
 - next.config still ignores TS/lint at build (Phase 21/23); no tests yet (Phase 20); HSTS missing (Phase 13).
+
+## Batch 2 (2026-08-16, commit 14270ce) — HSTS / SEO dedup / duplicate records
+- HSTS added to next.config.js (max-age=63072000; includeSubDomains; preload) — VERIFIED live.
+- Static public/robots.txt + sitemap.xml removed (App Router built-ins win).
+- sitemap.ts rewritten dynamic: live tour/hotel/car slugs from store; stale hardcoded slugs (kalaw-trekking-experience etc., would 404) gone. VERIFIED: 25 URLs, includes /tours/kalaw + singapore-city-escape.
+- Duplicate-slug records (2x Kalaw in DB): detail route now picks deterministically (active > complete > newest > id); list route dedupes by slug. VERIFIED: list & detail both serve gen_1786505067769_jxzug9 (desc 156, itin 5), stable across calls.
+- DB cleanup of the inactive Kalaw duplicate still recommended (needs admin/DB access — cannot reach Supabase from local env).
