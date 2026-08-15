@@ -62,3 +62,15 @@ Restore point: tag `restore-point-2026-08-15-3c3de84` @ `3c3de84`.
 - sitemap.ts rewritten dynamic: live tour/hotel/car slugs from store; stale hardcoded slugs (kalaw-trekking-experience etc., would 404) gone. VERIFIED: 25 URLs, includes /tours/kalaw + singapore-city-escape.
 - Duplicate-slug records (2x Kalaw in DB): detail route now picks deterministically (active > complete > newest > id); list route dedupes by slug. VERIFIED: list & detail both serve gen_1786505067769_jxzug9 (desc 156, itin 5), stable across calls.
 - DB cleanup of the inactive Kalaw duplicate still recommended (needs admin/DB access — cannot reach Supabase from local env).
+
+## 2026-08-16 — Grade-A Phase 3: P0 residuals + booking idempotency (ff5c42a)
+
+Branch: fix/a9-grade-a-production -> merged to main (ff5c42a). Checkpoint tag: checkpoint-a9-grade-a-2026-08-16.
+
+1. **StatsCounter — never render "0+"** (G-01 residual): cards that parse to 0/negative are now filtered out (label-only cards like "IATA Accredited" / "24/7 Support" kept). No code path can render a "0+" statistic anymore; section hides when nothing valid remains.
+2. **DealsBanner — DISABLED without an absolute end date** (G-03 residual): removed the rolling 'Date.now() + countdownDays' fallback. A promotion only renders when endAt is a valid ISO date (ACTIVE countdown / UPCOMING / EXPIRED). Missing or invalid endAt -> banner not rendered. ALSO removed a fabricated hardcoded MM promo title ("Bagan Explorer 30% discount") — promo copy now comes only from admin site-config.
+3. **Tour publish validation** (G-02 residual): api/admin/tours POST/PUT now reject saves where price is missing/0 AND Quote Required is off ("A tour needs a price (MMK or USD) or Quote Required"). priceMMK/priceUSD must be non-negative numbers; title required on create.
+4. **Booking idempotency + validation** (G-09 start): booking-receiver accepts a client requestId; a repeat submission with the same requestId returns the existing booking (duplicate:true) instead of creating a second row/email. Added server validation: YYYY-MM-DD dates, passengers 1-9 integer, amount non-negative. book-now sends a stable crypto.randomUUID per form session (retries reuse it).
+5. **Docs**: A9_GRADE_A_FIX_PLAN.md (root-cause report, phase 1+2, commit 2bd99d3).
+
+Admin follow-ups: set **Offer Ends** (endAt) in Site Manager to re-enable the promo banner; DB CHECK constraints + unique slug index still recommended (no Supabase creds locally); booking-receiver rate limiting = future phase.
