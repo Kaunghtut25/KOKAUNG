@@ -14,13 +14,7 @@ const MM_BADGE_LABELS: Record<string, string> = {
   "24/7 Support": "၂၄/၇ အကူအညီ",
 };
 
-const FALLBACK_BADGES = [
-  { icon: '✈️', label: 'IATA Accredited' },
-  { icon: '🌏', label: 'ASEAN Travel Association' },
-  { icon: '⭐', label: 'TripAdvisor 5-Star' },
-  { icon: '🏛️', label: 'Myanmar Tourism Federation' },
-  { icon: '🏆', label: 'Best Travel Agency 2024' },
-];
+const FALLBACK_BADGES: { icon: string; label: string }[] = []; // FIX 2026-08-15: config-only — no hardcoded claims
 
 export default function TrustBadges() {
   const { lang } = useI18n();
@@ -40,7 +34,9 @@ export default function TrustBadges() {
       .catch(() => {});
   }, []);
 
-  return (
+    if (badges.length === 0) return null; // FIX 2026-08-15: hide until admin config provides real badges
+
+return (
     <div style={{ background: '#f8f9fa', padding: '16px 20px', borderBottom: '1px solid #eee' }}>
       <div style={{ maxWidth: 1000, margin: '0 auto', display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: 24 }}>
         {badges.map(b => (

@@ -25,14 +25,7 @@ const DEFAULT_WHY = {
   cardWidth: 280,
 };
 
-const FALLBACK_FEATURES = [
-  { icon: '🕐', title: '24/7 Customer Support', desc: 'Round-the-clock assistance whenever you need it', image: '' },
-  { icon: '✈️', title: 'IATA Certified', desc: 'Official accreditation since 2015', image: '' },
-  { icon: '💰', title: 'Best Price Guarantee', desc: 'Unbeatable rates across all services', image: '' },
-  { icon: '🏛️', title: 'Local Expertise', desc: '10+ years in Myanmar travel industry', image: '' },
-  { icon: '🛡️', title: 'Travel Insurance', desc: 'Comprehensive coverage for peace of mind', image: '' },
-  { icon: '⭐', title: '5000+ Happy Travelers', desc: '98% customer satisfaction rate', image: '' },
-];
+const FALLBACK_FEATURES: { icon: string; title: string; desc: string; image?: string }[] = []; // FIX 2026-08-15: config-only — no hardcoded claims
 
 export default function WhyChooseUs() {
   const { lang } = useI18n();
@@ -60,7 +53,9 @@ export default function WhyChooseUs() {
       .catch(() => {});
   }, []);
 
-  return (
+    if (features.length === 0) return null; // FIX 2026-08-15: hide until admin config provides real cards
+
+return (
     <div style={{ maxWidth: 1200, margin: '0 auto', padding: '40px 20px' }}>
       <h2 style={{ textAlign: 'center', fontFamily: "'Playfair Display',serif", fontSize: 28, color: '#0A1628', marginBottom: 8 }}>{lang === "mm" ? MM_WHY_TITLE : title}</h2>
       <p style={{ textAlign: 'center', color: '#666', fontSize: 15, marginBottom: 32 }}>{lang === "mm" ? MM_WHY_TAGLINE : tagline}</p>
