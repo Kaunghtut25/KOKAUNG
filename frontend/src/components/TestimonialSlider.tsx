@@ -13,18 +13,10 @@ interface Review {
   image?: string;
 }
 
-const FALLBACK_REVIEWS: Review[] = [
-  { name: 'John Smith', country: 'Australia', tour: 'Bagan Explorer', text: 'Amazing experience! The hot air balloon ride was breathtaking. Professional team from start to finish.', rating: 5 },
-  { name: 'Sarah Chen', country: 'Singapore', tour: 'Inle Lake Discovery', text: 'Beautiful lake, friendly people. A9 made everything seamless. Highly recommend!', rating: 5 },
-  { name: 'Marcus Weber', country: 'Germany', tour: 'Yangon City Tour', text: 'Rich culture and history. Our guide was knowledgeable and spoke excellent English.', rating: 5 },
-  { name: 'Yuki Tanaka', country: 'Japan', tour: 'Ngapali Beach Escape', text: 'Perfect beach vacation. The resort was stunning and transfers were on time.', rating: 5 },
-  { name: 'Emily Brown', country: 'UK', tour: 'Mrauk U Adventure', text: 'Off the beaten path experience. A9 knows Myanmar like no other agency.', rating: 5 },
-  { name: 'David Lee', country: 'USA', tour: 'Golden Rock Pilgrimage', text: 'Spiritual journey of a lifetime. Everything was well organized and safe.', rating: 5 },
-];
-
+// FIX 2026-08-15: no hardcoded placeholder reviews — testimonials render ONLY from admin site-config.
 export default function TestimonialSlider() {
   const { t, lang } = useI18n();
-  const [reviews, setReviews] = useState<Review[]>(FALLBACK_REVIEWS);
+  const [reviews, setReviews] = useState<Review[]>([]);
   const [idx, setIdx] = useState(0);
 
   useEffect(() => {
@@ -58,9 +50,11 @@ export default function TestimonialSlider() {
     'Mrauk U Adventure': { text: 'လူသွားလူလာနည်းတဲ့ လမ်းကြောင်းအတွေ့အကြုံ။ A9 က မြန်မာကို အခြားအေဂျင်စီတွေထက် ပိုသိတယ်။', country: 'ယူကေ' },
     'Golden Rock Pilgrimage': { text: 'တစ်သက်တာမှာ တစ်ကြိမ်သာရတဲ့ ဝိညာဉ်ရေးခရီး။ အရာရာ စနစ်ကျပြီး လုံခြုံပါတယ်။', country: 'အမေရိက' },
   };
-  const r = lang === "mm" ? { ...reviews[idx], ...(mmTexts[reviews[idx].tour] || {}) } : reviews[idx];
-  const tourMM = lang === "mm" ? (mmLookup(mmTours, { title: r.tour }).title || r.tour) : r.tour;
+  if (reviews.length === 0) return null; // no testimonials configured — hide section entirely
+  const current = reviews[idx] || reviews[0];
+  const r = lang === "mm" && current ? { ...current, ...(mmTexts[current.tour] || {}) } : current;
   if (!r) return null;
+  const tourMM = lang === "mm" ? (mmLookup(mmTours, { title: r.tour }).title || r.tour) : r.tour;
 
   return (
     <div style={{ background: 'linear-gradient(135deg,#0A1628,#0F2035)', padding: '40px 20px' }}>

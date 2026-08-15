@@ -106,11 +106,17 @@ export default function HotelCard({ hotel, currency = "MMK", cardWidth, cardHeig
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-1">
               <div className="flex items-center gap-0.5">{renderStars(hotel.rating)}</div>
-              <span className="text-gray-500 text-[11px]">({hotel.reviewCount})</span>
+              {hotel.reviewCount ? <span className="text-gray-500 text-[11px]">({hotel.reviewCount})</span> : null}
             </div>
             <div className="text-right">
-              <span className="text-[#0A1628] text-base font-bold">{currencySymbol} {price.toLocaleString()}</span>
-              <span className="text-gray-500 text-[11px] ml-0.5">/night</span>
+              {price > 0 ? (
+                <>
+                  <span className="text-[#0A1628] text-base font-bold">{currencySymbol} {price.toLocaleString()}</span>
+                  <span className="text-gray-500 text-[11px] ml-0.5">{t("common.perNight")}</span>
+                </>
+              ) : (
+                <span className="text-[#0A1628] text-base font-bold">{t("common.priceOnRequest")}</span>
+              )}
             </div>
           </div>
           {hotel.amenities && hotel.amenities.length > 0 && (

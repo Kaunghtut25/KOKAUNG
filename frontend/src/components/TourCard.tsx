@@ -124,13 +124,19 @@ export default function TourCard({ tour, currency = 'MMK', preloadedImage, cardW
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-1">
               <div className="flex items-center gap-0.5">{renderStars(tour?.rating ?? 0)}</div>
-              <span className="text-gray-500 text-[11px]">({tour?.reviewCount})</span>
+              {tour?.reviewCount ? <span className="text-gray-500 text-[11px]">({tour?.reviewCount})</span> : null}
             </div>
             <div className="text-right">
-              <span className="text-[#0A1628] text-base font-bold">
-                {currencySymbol} {price?.toLocaleString() ?? '0'}
-              </span>
-              <span className="text-gray-500 text-[11px] ml-0.5">/person</span>
+              {price > 0 ? (
+                <>
+                  <span className="text-[#0A1628] text-base font-bold">
+                    {currencySymbol} {price?.toLocaleString()}
+                  </span>
+                  <span className="text-gray-500 text-[11px] ml-0.5">{t("common.perPerson")}</span>
+                </>
+              ) : (
+                <span className="text-[#0A1628] text-base font-bold">{t("common.requestQuote")}</span>
+              )}
             </div>
           </div>
           {tour?.amenities && tour?.amenities.length > 0 && (

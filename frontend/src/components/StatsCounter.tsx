@@ -45,16 +45,9 @@ function parseStat(title: string): { num: number | null; suffix: string; label: 
   return { num, suffix, label: rest };
 }
 
-const FALLBACK_STATS = [
-  { num: 5000, suffix: '+', label: 'Happy Travelers' },
-  { num: 150, suffix: '+', label: 'Tour Packages' },
-  { num: 30, suffix: '+', label: 'Hotel Partners' },
-  { num: 15, suffix: '+', label: 'Years Experience' },
-  { num: 50, suffix: '+', label: 'Destinations' },
-];
-
+// FIX 2026-08-15: no hardcoded fake statistics — stats render ONLY from admin site-config statsCards.
 export default function StatsCounter() {
-  const [stats, setStats] = useState<{ num: number | null; suffix: string; label: string }[]>(FALLBACK_STATS);
+  const [stats, setStats] = useState<{ num: number | null; suffix: string; label: string }[]>([]);
 
   useEffect(() => {
     fetch("/api/admin/site-config")
@@ -66,6 +59,8 @@ export default function StatsCounter() {
       })
       .catch(() => {});
   }, []);
+
+  if (stats.length === 0) return null; // hide section until real admin-configured stats arrive
 
   return (
     <div style={{ background: 'linear-gradient(135deg,#0A1628,#0F2035)', padding: '40px 20px' }}>
