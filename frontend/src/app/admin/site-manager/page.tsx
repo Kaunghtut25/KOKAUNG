@@ -35,7 +35,7 @@ interface SiteConfig {
   popularDestinations: PopularDestination[];
   testimonials: Testimonial[]; partners: (string | { name: string; logo?: string })[];
   ctaTitle: string; ctaDescription: string; ctaButtonLabel: string; ctaButtonHref: string; ctaImage?: string; ctaImage?: string;
-  dealsBanner?: { enabled: boolean; badge: string; title: string; buttonLabel: string; buttonHref: string; countdownDays: number };
+  dealsBanner?: { enabled: boolean; badge: string; title: string; buttonLabel: string; buttonHref: string; countdownDays: number; endAt?: string; startAt?: string };
   contact: ContactInfo; socialLinks: SocialLink[]; footerSections: FooterSection[];
   socialFeed?: { enabled: boolean; instagram: string; photos: string[] };
   sectionLayouts?: Record<string, SectionLayout>;
@@ -101,7 +101,7 @@ const defaultCfg: SiteConfig = {
     { name: "Myanmar Airways" }, { name: "Thai Airways" }, { name: "Singapore Airlines" }, { name: "Emirates" },
   ],
   ctaTitle: "", ctaDescription: "", ctaButtonLabel: "Book Now", ctaButtonHref: "/book-now", ctaImage: "", ctaImage: "",
-  dealsBanner: { enabled: true, badge: "⏰ LIMITED TIME OFFER", title: "30% OFF Bagan Explorer Tour", buttonLabel: "Book Now", buttonHref: "/book-now", countdownDays: 30 },
+  dealsBanner: { enabled: false, badge: "⏰ LIMITED TIME OFFER", title: "", buttonLabel: "Book Now", buttonHref: "/book-now", countdownDays: 0, endAt: "", startAt: "" },
   contact: { email: "", phone: "", address: "", whatsapp: "", messenger: "", viber: "", telegram: "" },
   socialLinks: [
     { platform: "facebook", url: "https://facebook.com/a9global" },
@@ -662,7 +662,9 @@ const tabs: { key: Tab; label: string }[] = [
                 <div><label className={labelCls}>{t("admin.sm.buttonLabel")}</label><input className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} value={(cfg.dealsBanner && cfg.dealsBanner.buttonLabel) || ""} onChange={e => set("dealsBanner", { ...(cfg.dealsBanner || {}), buttonLabel: e.target.value })} /></div>
                 <div><label className={labelCls}>{t("admin.sm.buttonLink")}</label><input className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} value={(cfg.dealsBanner && cfg.dealsBanner.buttonHref) || ""} onChange={e => set("dealsBanner", { ...(cfg.dealsBanner || {}), buttonHref: e.target.value })} /></div>
               </div>
-              <div><label className={labelCls}>{t("admin.sm.countdownDays")}</label><input className={inputCls} type="number" min={1} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} value={(cfg.dealsBanner && cfg.dealsBanner.countdownDays) || 30} onChange={e => set("dealsBanner", { ...(cfg.dealsBanner || {}), countdownDays: parseInt(e.target.value) || 30 })} /></div>
+              <div><label className={labelCls}>{t("admin.sm.countdownDays")}</label><input className={inputCls} type="number" min={1} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} value={(cfg.dealsBanner && cfg.dealsBanner.countdownDays) || 0} onChange={e => set("dealsBanner", { ...(cfg.dealsBanner || {}), countdownDays: parseInt(e.target.value) || 0 })} /></div>
+              <div><label className={labelCls}>{t("admin.sm.endAt")}</label><input className={inputCls} type="datetime-local" style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} value={cfg.dealsBanner && cfg.dealsBanner.endAt ? new Date(new Date(cfg.dealsBanner.endAt).getTime() - new Date(cfg.dealsBanner.endAt).getTimezoneOffset() * 60000).toISOString().slice(0, 16) : ""} onChange={e => set("dealsBanner", { ...(cfg.dealsBanner || {}), endAt: e.target.value ? new Date(e.target.value).toISOString() : "" })} /><p className="text-xs text-white/40">{t("admin.sm.endAtHint")}</p></div>
+              <div><label className={labelCls}>{t("admin.sm.startAt")}</label><input className={inputCls} type="datetime-local" style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} value={cfg.dealsBanner && cfg.dealsBanner.startAt ? new Date(new Date(cfg.dealsBanner.startAt).getTime() - new Date(cfg.dealsBanner.startAt).getTimezoneOffset() * 60000).toISOString().slice(0, 16) : ""} onChange={e => set("dealsBanner", { ...(cfg.dealsBanner || {}), startAt: e.target.value ? new Date(e.target.value).toISOString() : "" })} /><p className="text-xs text-white/40">{t("admin.sm.startAtHint")}</p></div>
             </div>
           )}
 

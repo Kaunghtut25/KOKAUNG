@@ -14,6 +14,7 @@ interface Tour {
   description: string;
   priceMMK: number;
   priceUSD: number;
+  quote_required?: boolean;
   duration: string;
   images: any;
   amenities: any;
@@ -41,6 +42,7 @@ const emptyTour: Tour = {
   description: "",
   priceMMK: 0,
   priceUSD: 0,
+  quote_required: false,
   duration: "",
   images: "",
   amenities: "",
@@ -404,6 +406,17 @@ export default function AdminToursPage() {
             onChange={(e) =>
               handleFieldChange("priceUSD", Number(e.target.value))
             }
+          />
+          <p className="text-xs text-white/40 mt-1">{t("admin.form.quoteHint")}</p>
+          <label className="flex items-center gap-2 text-sm text-white/80 mt-2">
+            <input
+              type="checkbox"
+              checked={!!editingTour.quote_required}
+              onChange={(e) => handleFieldChange("quote_required", e.target.checked)}
+              className="accent-[#D4AF37]"
+            />
+            {t("admin.form.quoteRequired")}
+          </label>
             className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-gold/50 transition-colors"
           />
         </div>
