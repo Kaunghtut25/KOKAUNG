@@ -100,12 +100,28 @@ export async function GET(
   try {
     const { slug } = params;
     const rawTours = await getAll("tours") as Record<string, unknown>[];
-    const tours = rawTours.map(transformTour);
-    const tour = tours.find(t => t.slug === slug || t._id === slug);
-
-    if (!tour) {
+    // FIX 2026-08-16: duplicate-slug records exist in DB (e.g. two "Kalaw" with different gen_ ids).
+    // Pick deterministically: active > content-complete > newest > stable id tiebreak,
+    // so the detail page never serves a different/empty record than the list.
+    const slugify = (title: string) => String(title || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+    const matches = rawTours.filter(t => slugify(t.title as string) === slug || String(t.id || t._id) === slug);
+    if (matches.length === 0) {
       return NextResponse.json({ success: false, message: "Tour not found" }, { status: 404 });
     }
+    const completeness = (t: Record<string, unknown>) =>
+      (t.status === 'inactive' ? 0 : 100) +
+      (t.description ? 10 : 0) +
+      (Array.isArray(t.itinerary) && (t.itinerary as unknown[]).length > 0 ? 5 : 0) +
+      (Number(t.priceMMK) > 0 || Number(t.priceUSD) > 0 ? 2 : 0) +
+      (t.image || (Array.isArray(t.images) && (t.images as string[]).length > 0) ? 1 : 0);
+    const best = [...matches].sort((a, b) => {
+      const d = completeness(b) - completeness(a);
+      if (d !== 0) return d;
+      const da = new Date((b.createdAt as string) || 0).getTime() - new Date((a.createdAt as string) || 0).getTime();
+      if (da !== 0) return da;
+      return String(a.id || a._id).localeCompare(String(b.id || b._id));
+    })[0];
+    const tour = transformTour(best);
 
     // Add sample itinerary if empty
     if (!tour.itinerary || (Array.isArray(tour.itinerary) && tour.itinerary.length === 0)) {

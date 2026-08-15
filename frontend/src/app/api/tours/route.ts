@@ -101,7 +101,15 @@ export async function GET(request: NextRequest) {
       rawTours.sort((a, b) => ((b.rating as number) || 0) - ((a.rating as number) || 0));
     }
 
-    const tours = rawTours.map(transformTour);
+    const allTours = rawTours.map(transformTour);
+
+    // FIX 2026-08-16: dedupe by slug (duplicate records exist in DB) — keep first occurrence
+    const seenSlugs = new Set<string>();
+    const tours = allTours.filter(t => {
+      if (seenSlugs.has(t.slug)) return false;
+      seenSlugs.add(t.slug);
+      return true;
+    });
 
     const total = tours.length;
     const totalPages = Math.max(1, Math.ceil(total / limit));

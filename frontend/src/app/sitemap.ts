@@ -1,6 +1,13 @@
 import { MetadataRoute } from 'next';
+import { getAll } from '@/lib/persistentStore';
 
-export default function sitemap(): MetadataRoute.Sitemap {
+// FIX 2026-08-16: dynamic sitemap from real store data — no stale hardcoded slugs
+// (previous hardcoded slugs like kalaw-trekking-experience 404'd; live slug is "kalaw")
+function slugify(title: string): string {
+  return String(title || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+}
+
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const base = 'https://www.a9travel.com';
   const now = new Date();
   const urls: MetadataRoute.Sitemap = [
@@ -22,38 +29,42 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: base + '/accessibility', lastModified: now, priority: 0.3 },
   ];
 
-  // Tour detail pages (real slugs, de-duplicated)
-  const tourSlugs = [
-    'mandalay-royal-heritage',
-    'mergui-archipelago-adventure',
-    'yangon-city-highlights',
-    'mrauk-u-ancient-kingdom',
-    'bagan-temple-explorer',
-    'kalaw-trekking-experience',
-    'pyin-oo-lwin-hill-station',
-  ];
-  tourSlugs.forEach((slug) => {
-    urls.push({ url: base + '/tours/' + slug, lastModified: now, priority: 0.8 });
-  });
+  // Dynamic collections from the real datastore; graceful empty on store failure.
+  try {
+    const tours = (await getAll('tours')) as Record<string, unknown>[];
+    const seen = new Set<string>();
+    for (const t of tours) {
+      if (t.status === 'inactive') continue;
+      const slug = slugify(t.title as string);
+      if (!slug || seen.has(slug)) continue;
+      seen.add(slug);
+      urls.push({ url: base + '/tours/' + slug, lastModified: now, priority: 0.8 });
+    }
+  } catch { /* store unavailable: static pages only */ }
 
-  // Hotel detail pages
-  const hotelSlugs = [
-    'sule-shangri-la-yangon',
-    'inle-princess-resort',
-    'sanctum-inle-resort',
-    'novotel-yangon-max',
-    'eastern-palace-mandalay',
-    'bagan-lodge',
-  ];
-  hotelSlugs.forEach((slug) => {
-    urls.push({ url: base + '/hotels/' + slug, lastModified: now, priority: 0.8 });
-  });
+  try {
+    const hotels = (await getAll('hotels')) as Record<string, unknown>[];
+    const seen = new Set<string>();
+    for (const h of hotels) {
+      if (h.status === 'inactive') continue;
+      const slug = slugify(h.name as string);
+      if (!slug || seen.has(slug)) continue;
+      seen.add(slug);
+      urls.push({ url: base + '/hotels/' + slug, lastModified: now, priority: 0.8 });
+    }
+  } catch { /* store unavailable */ }
 
-  // Car detail pages
-  const carSlugs = ['toyota-probox', 'honda-cr-v', 'mercedes-s-class', 'ford-transit', 'toyota-hiace'];
-  carSlugs.forEach((slug) => {
-    urls.push({ url: base + '/cars/' + slug, lastModified: now, priority: 0.7 });
-  });
+  try {
+    const cars = (await getAll('cars')) as Record<string, unknown>[];
+    const seen = new Set<string>();
+    for (const c of cars) {
+      if (c.status === 'inactive') continue;
+      const slug = slugify(c.name as string);
+      if (!slug || seen.has(slug)) continue;
+      seen.add(slug);
+      urls.push({ url: base + '/cars/' + slug, lastModified: now, priority: 0.7 });
+    }
+  } catch { /* store unavailable */ }
 
   return urls;
 }
