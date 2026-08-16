@@ -3,7 +3,7 @@
 
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { decodeTokenPayload } from "@/lib/auth";
+import { decodeTokenPayload, roleRank } from "@/lib/auth";
 import { useI18n } from "@/lib/i18n";
 
 export default function AdminRootPage() {
@@ -14,7 +14,9 @@ export default function AdminRootPage() {
     const token = localStorage.getItem("admin_token");
     if (token) {
       const payload = decodeTokenPayload(token);
-      if (payload?.role === "admin" && (!payload.exp || payload.exp > Date.now())) {
+      // FIX 2026-08-16: allow any valid panel role (admin/staff/editor/viewer) —
+      // only invalid/expired tokens go to login; exp is ms (login route signs Date.now()+86400000)
+      if (payload && roleRank(payload.role) >= 0 && (!payload.exp || payload.exp > Date.now())) {
         router.replace("/admin/dashboard");
         return;
       }

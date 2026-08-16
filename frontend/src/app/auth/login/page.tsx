@@ -1,9 +1,10 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import LanguageSwitcher from "@/components/LanguageSwitcher";
+import { decodeTokenPayload, roleRank } from "@/lib/auth";
 import { useI18n } from "@/lib/i18n";
 
 type Step = 'login' | 'forgot' | 'otp' | 'newpw' | 'done';
@@ -21,6 +22,17 @@ export default function LoginPage() {
   const [error, setError] = useState('');
   const [info, setInfo] = useState('');
   const [loading, setLoading] = useState(false);
+
+  // FIX 2026-08-16: already signed in (valid token) → skip the login form
+  useEffect(() => {
+    const token = localStorage.getItem("admin_token");
+    if (token) {
+      const payload = decodeTokenPayload(token);
+      if (payload && roleRank(payload.role) >= 0 && (!payload.exp || payload.exp > Date.now())) {
+        router.replace("/admin");
+      }
+    }
+  }, [router]);
 
   const showError = (msg: string) => { setError(msg); setInfo(''); };
   const showInfo = (msg: string) => { setInfo(msg); setError(''); };
