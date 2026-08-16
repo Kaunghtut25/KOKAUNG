@@ -74,3 +74,33 @@ Branch: fix/a9-grade-a-production -> merged to main (ff5c42a). Checkpoint tag: c
 5. **Docs**: A9_GRADE_A_FIX_PLAN.md (root-cause report, phase 1+2, commit 2bd99d3).
 
 Admin follow-ups: set **Offer Ends** (endAt) in Site Manager to re-enable the promo banner; DB CHECK constraints + unique slug index still recommended (no Supabase creds locally); booking-receiver rate limiting = future phase.
+
+## 2026-08-16 — Phase 4: booking/contact hardening + CRITICAL infra finding (a338701, 6b1ef6f)
+
+### Shipped (a338701)
+1. **Restored missing booking API** — BookingModal (`tours/[slug]`, visas, insurance) and `booking/page.tsx` were posting to `/api/bookings` and `/api/bookings/:id/pay|payment` which DID NOT EXIST (404 → booking flow silently broken). Added POST /api/bookings, POST /api/bookings/[id]/pay, PUT /api/bookings/[id]/payment with validation, requestId idempotency, admin+customer emails, payment recording (status 'Recorded' — no real gateway).
+2. **Contact hardening** — server validation (email/phone format, message <=5000), honeypot spam trap, requestId dedup, Upstash rate limit (10/min/IP, fail-open).
+3. **booking-receiver** — now shares lib/bookingValidation + rate limit.
+4. **New libs**: rateLimit.ts (Upstash REST sliding window), bookingValidation.ts, promoState.ts (pure).
+5. **First unit tests** — vitest + 18 tests (promoState, bookingValidation); npm test green; build green.
+
+### CRITICAL FINDING (6b1ef6f + investigation)
+- **Supabase is NOT configured on Vercel.** `vercel env ls production` shows 19 vars — zero NEXT_PUBLIC_SUPABASE_URL/ANON_KEY. persistentStore.ts is Supabase-first with Upstash Redis fallback; supabase.ts throws 'not configured' on every call.
+- **Consequence:** ALL reads serve from the Upstash Redis cache (site displays fine — tours/hotels/config live in Redis hashes `a9:*`), but writes depend entirely on Redis. Live test: valid contact POST returned 500 `Store unavailable: cannot persist bookings/gen_... (no seed fallback)` (both Supabase and one Redis write attempt failed).
+- **Live behavior matrix:** contact form 500s (was LOSING messages); book-now 'succeeds' with dbSaved:false but admin still gets the notification email; admin saves would fail if Redis write fails (update() -> 404 'Not found').
+- **Mitigation shipped (6b1ef6f):** contact route now store+email best-effort, always returns success (message can never be lost silently). Build green, pushed to main.
+- **Cannot fully root-cause the Redis write failure remotely:** `vercel env pull` returns empty values for ALL vars (CLI token lacks secret-read scope), so no direct Redis probe. Hypotheses: Upstash free-tier request throttling during the 11-request burst, or maxmemory (a9:* hashes have NO TTL — unbounded growth).
+
+### HUMAN ACTION REQUIRED — choose the real database
+- **Option A (recommended): configure Supabase.** Create a Supabase project, run the table schema (see A9_GRADE_A_FIX_PLAN.md G-11 / Supabase SQL below), add NEXT_PUBLIC_SUPABASE_URL + NEXT_PUBLIC_SUPABASE_ANON_KEY to Vercel (Production), redeploy. Existing Redis data will become the cache tier as designed; optionally seed Supabase from Redis.
+- **Option B: adopt Turso** (TURSO_URL/TOKEN already in env) — requires refactoring persistentStore (currently Supabase-flavored) to libsql; larger change.
+- **Option C: keep Redis as the de-facto store** — add TTL/eviction management to a9:* hashes and monitor capacity; not a real relational DB, risky for bookings.
+- Also: `vercel env pull` cannot read secrets with the current CLI token — if future ops need values, add a full-scope token or use the dashboard.
+
+### Supabase schema (Option A)
+```sql
+-- one table per collection: tours, hotels, cars, cruises, visas, insurances, blog, bookings, mingalar, site-config, settings, knowledge
+-- columns: id text primary key, created_at timestamptz default now(), updated_at timestamptz, plus a jsonb 'payload' column
+-- persistentStore inserts the full record object; simplest mapping: table(collection) with a jsonb column named after the collection.
+-- RLS: enable row level security; policy allow_select = anon select; policy allow_insert/update/delete = anon (public content) or service_role only.
+```
