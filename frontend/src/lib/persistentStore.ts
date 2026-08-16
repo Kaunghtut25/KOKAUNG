@@ -1,6 +1,7 @@
 /**
- * persistentStore.ts — Supabase-backed store
- * Replaces in-memory store with real PostgreSQL persistence
+ * persistentStore.ts — Supabase-backed store (generic schema: id, payload jsonb, created_at, updated_at)
+ * Falls back to Upstash Redis cache when Supabase is unavailable.
+ * FIX 2026-08-16: Supabase branch rewritten for the generic schema (supabase/schema.sql).
  */
 
 import { supabase } from './supabase';
@@ -78,14 +79,25 @@ async function redisDelete(collection: string, id: string): Promise<boolean> {
     return false;
   }
 }
-// Fallback seed data (used if Supabase fails)
+
+// ── Supabase row mapping (generic schema) ──────────────────
+function rowToRecord(row: any): any {
+  if (!row) return row;
+  if (!row.payload) return row; // tolerate legacy full-column rows
+  return { ...row.payload, id: row.id, createdAt: row.created_at || row.payload.createdAt, updatedAt: row.updated_at || row.payload.updatedAt };
+}
+function recordToRow(record: any): Record<string, any> {
+  const now = new Date().toISOString();
+  return { id: record.id, payload: record, created_at: record.createdAt || now, updated_at: record.updatedAt || now };
+}
+
 // ── Public API ────────────────────────────────────────────
 
 export async function getAll(collection: Collection): Promise<any[]> {
   const activeOnly = (items: any[]) => (items || []).filter((i: any) => i.status !== "inactive");
   try {
-    const { data, error } = await supabase.from(collection).select('*').order('createdAt', { ascending: false });
-    if (!error && data) return activeOnly(data);
+    const { data, error } = await supabase.from(collection).select('id,payload,created_at,updated_at').order('created_at', { ascending: false });
+    if (!error && data) return activeOnly(data.map(rowToRecord));
   } catch (err) {
     console.warn(`[Store] Supabase getAll(${collection}) failed, trying Redis:`, (err as Error).message?.substring(0, 80));
   }
@@ -97,8 +109,8 @@ export async function getAll(collection: Collection): Promise<any[]> {
 
 export async function getById(collection: Collection, id: string): Promise<any | null> {
   try {
-    const { data, error } = await supabase.from(collection).select('*').eq('id', id).single();
-    if (!error && data) return data;
+    const { data, error } = await supabase.from(collection).select('id,payload,created_at,updated_at').eq('id', id).maybeSingle();
+    if (!error && data) return rowToRecord(data);
   } catch (err) {
     console.warn(`[Store] Supabase getById(${collection}, ${id}) failed:`, (err as Error).message?.substring(0, 80));
   }
@@ -112,8 +124,8 @@ export async function create(collection: Collection, data: Record<string, any>):
   const id = data.id || `gen_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
   const item = { ...data, id, createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() };
   try {
-    const { data: result, error } = await supabase.from(collection).insert(item).select().single();
-    if (!error && result) return result;
+    const { data: result, error } = await supabase.from(collection).insert(recordToRow(item)).select('id,payload,created_at,updated_at').single();
+    if (!error && result) return rowToRecord(result);
   } catch (err) {
     console.warn(`[Store] Supabase create(${collection}) failed, trying Redis:`, (err as Error).message?.substring(0, 80));
   }
@@ -125,8 +137,12 @@ export async function create(collection: Collection, data: Record<string, any>):
 export async function update(collection: Collection, id: string, data: Record<string, any>): Promise<any | null> {
   const payload = { ...data, updatedAt: new Date().toISOString() };
   try {
-    const { data: result, error } = await supabase.from(collection).update(payload).eq('id', id).select().single();
-    if (!error && result) return result;
+    const existingRow = await supabase.from(collection).select('payload').eq('id', id).maybeSingle();
+    if (!existingRow.error && existingRow.data) {
+      const merged = { ...existingRow.data.payload, ...payload, updatedAt: new Date().toISOString() };
+      const { data: result, error } = await supabase.from(collection).update({ payload: merged, updated_at: merged.updatedAt }).eq('id', id).select('id,payload,created_at,updated_at').single();
+      if (!error && result) return rowToRecord(result);
+    }
   } catch (err) {
     console.warn(`[Store] Supabase update(${collection}, ${id}) failed, trying Redis:`, (err as Error).message?.substring(0, 80));
   }
