@@ -44,17 +44,26 @@ export async function POST(request: NextRequest) {
     }
 
     const ref = "A9-MSG-" + Date.now().toString(36).toUpperCase();
-    const inquiry = await storeCreate("bookings", {
-      fullName: name,
-      email,
-      phone: phone || "",
-      travelType: "contact",
-      specialRequests: `[${subject || "General Inquiry"}] ${message}`,
-      status: "New",
-      referenceNumber: ref,
-      requestId: requestId || "",
-      createdAt: new Date().toISOString(),
-    });
+    // FIX 2026-08-16: never lose a customer message — store best-effort, email best-effort, always succeed.
+    let stored = false;
+    let referenceNumber = ref;
+    try {
+      const inquiry = await storeCreate("bookings", {
+        fullName: name,
+        email,
+        phone: phone || "",
+        travelType: "contact",
+        specialRequests: `[${subject || "General Inquiry"}] ${message}`,
+        status: "New",
+        referenceNumber: ref,
+        requestId: requestId || "",
+        createdAt: new Date().toISOString(),
+      });
+      stored = true;
+      referenceNumber = inquiry.referenceNumber || ref;
+    } catch (storeErr) {
+      console.error("[Contact] store failed (email fallback):", storeErr);
+    }
 
     try {
       const { sendBookingEmail } = await import("@/lib/email");
@@ -63,16 +72,19 @@ export async function POST(request: NextRequest) {
         email,
         phone: phone || "N/A",
         travelType: "Contact Form",
-        referenceNumber: inquiry.referenceNumber,
+        referenceNumber,
         specialRequests: `[${subject || "General Inquiry"}] ${message}`,
         contactPreference: "email",
       });
-    } catch { /* email not configured — inquiry still saved */ }
+    } catch (emailErr) {
+      console.error("[Contact] email failed:", emailErr);
+    }
 
     return NextResponse.json({
       success: true,
       message: "Message sent successfully! We'll get back to you soon.",
-      referenceNumber: inquiry.referenceNumber,
+      referenceNumber,
+      stored,
     });
   } catch (err: any) {
     return NextResponse.json({ success: false, message: err.message || "Server error" }, { status: 500 });
