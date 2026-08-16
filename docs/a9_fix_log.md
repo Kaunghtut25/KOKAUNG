@@ -106,3 +106,17 @@ Admin follow-ups: set **Offer Ends** (endAt) in Site Manager to re-enable the pr
 ```
 
 
+### Phase 6 (7ae4ace, 2026-08-16) — fabricated fallbacks removed + honest hotel info + payment validation
+- **P0-rule completion (fabricated fallback data was still live):**
+  - `hotels/page.tsx`: deleted `FALLBACK_HOTELS` (13 fake hotels: Sedona, Aureum Palace, Mandalay Hill Resort, Ngapali Bay Villas, Strand, Chatrium, Pullman, Kandawgyi Palace…). Empty store now returns `[]` → client empty state. Image fallback swapped from sedona blob URL to neutral `/images_v2/hotel1-v2.jpg`.
+  - `tours/page.tsx`: deleted `FALLBACK_TOURS` (16 fake tours with full invented itineraries — Classic Vietnam, Myanmar Highlights, Ngapali, Bagan Temples, Putao Trek…). Empty store returns `[]`. Image fallback → `/images_v2/tour-bagan-v2.jpg`.
+  - `hotels/[slug]/page.tsx`: deleted the `rawHotels.length < 5` fallback merge (6 more fake hotels). Detail page now only shows real API data; unknown slug → existing not-found state.
+  - `blog/[slug]/page.tsx`: deleted `ALL_POSTS` (10 static posts with invented business claims — "exclusive airline partnerships", insurance coverage numbers, "from Ks 150,000" prices) AND `FALLBACK_BLOG_POSTS` (10 more). Page now uses only real `/api/blog` content. Direct URLs to old fabricated slugs now 404.
+- **G-08 honest hotel room info:** `HotelCard` + hotel detail: `availableRooms` is static config, not live inventory → removed "Sold Out" / "Only N left" / "Fully booked" / "Limited availability — book soon!" / "Good availability" + the fake availability progress bar. Now shows neutral "N rooms" (badge only when > 0); detail panel shows "N rooms at this property" (or "Contact us for room options"); room selector max = 9; Book Now no longer disabled by `availableRooms === 0`.
+- **Payment hardening:** `/api/bookings/:id/pay` + `/api/bookings/:id/payment` validate `paymentMethod` against `kbzpay|wavepay|bank|bank_transfer` → 400 on invalid (before booking lookup).
+- Build green, 18/18 tests green, deployed to main.
+
+### OBSERVED (Phase 6 probes, flag for later phases)
+- **Live `/api/blog` returns 40 posts with EMPTY slug field** + visible duplicate titles (e.g. "Cruise vs Land Tour" ×6, "Essential Packing List" ×4) — blog inventory has duplicates and the API mapping drops `slug`. Detail page derives slugs from titles so links work, but duplicates/empty-slug need DB cleanup (needs Supabase/Redis access).
+- Hotel/tour **static seed arrays were the only source of some content** — e.g. 13 hotel entries vs 6 real live hotels. If the business wants Sedona/The Strand etc. back, they must be re-added via admin (they are NOT in the live store).
+
