@@ -21,6 +21,16 @@ export async function middleware(request: NextRequest) {
       loginUrl.searchParams.set("redirect", pathname);
       return NextResponse.redirect(loginUrl);
     }
+
+    // FIX 2026-08-16: users / settings / cleanup pages are admin-only (rank >= 3)
+    const pagePayload = await verifyToken(token);
+    const pageRank = roleRank(pagePayload?.role);
+    if (
+      (pathname === "/admin/users" || pathname === "/admin/settings" || pathname === "/admin/cleanup") &&
+      pageRank < 3
+    ) {
+      return NextResponse.redirect(new URL("/admin/dashboard", request.url));
+    }
   }
 
   // Protect /api/admin/* routes — EXCEPT public GET on site-config and settings
@@ -40,15 +50,22 @@ export async function middleware(request: NextRequest) {
         return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
       }
 
+      // FIX 2026-08-16: rank computed for every non-public request
+      const payload = await verifyToken(token);
+      const rank = roleRank(payload?.role);
+
+      // users API is admin-only even for GET (user list is sensitive)
+      if (pathname === "/api/admin/users" && rank < 3) {
+        return NextResponse.json({ message: "Admin role required for this action" }, { status: 403 });
+      }
+
       // Role-gated writes: viewer read-only; users/settings admin-only;
       // site-config + bookings staff+; all other content editor+
       if (request.method !== "GET") {
-        const payload = await verifyToken(token);
-        const rank = roleRank(payload?.role);
         if (rank < 1) {
           return NextResponse.json({ message: "Read-only role: writes not allowed" }, { status: 403 });
         }
-        if ((pathname === "/api/admin/users" || pathname === "/api/admin/settings") && rank < 3) {
+        if (pathname === "/api/admin/settings" && rank < 3) {
           return NextResponse.json({ message: "Admin role required for this action" }, { status: 403 });
         }
         if (

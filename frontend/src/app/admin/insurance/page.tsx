@@ -5,6 +5,7 @@ import Link from "next/link";
 import AdminFormModal from "@/components/AdminFormModal";
 import { useI18n } from "@/lib/i18n";
 import Image from "next/image";
+import { useClientRole } from "@/lib/useClientRole";
 
 interface Insurance {
   id: string;
@@ -43,6 +44,7 @@ const emptyInsurance: Insurance = {
 };
 
 export default function AdminInsurancePage() {
+  const isViewer = useClientRole() === "viewer";
   const { t } = useI18n();
   const [insurances, setInsurances] = useState<Insurance[]>([]);
   const [loading, setLoading] = useState(true);
@@ -406,12 +408,14 @@ export default function AdminInsurancePage() {
             {t("admin.insurance.subtitle")}
           </p>
         </div>
+        {!isViewer && ((
         <button
           onClick={openCreateModal}
           className="px-5 py-2.5 rounded-lg bg-gold text-deepblue-dark font-semibold text-sm hover:bg-gold/90 transition-all flex items-center gap-2"
         >
           <span>🛡️</span> {t("admin.insurance.addNew")}
         </button>
+        ))}
       </div>
 
       <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl overflow-hidden">
@@ -464,6 +468,7 @@ export default function AdminInsurancePage() {
                         <Link href={`/insurance/${insurance.id}`} target="_blank" rel="noopener noreferrer" className="px-3 py-1 rounded bg-blue-500/10 text-blue-400 text-xs hover:bg-blue-500/20 transition-colors">
                           {t("admin.common.view")}
                         </Link>
+                        {!isViewer && (<>
                         <button
                           onClick={() => openEditModal(insurance)}
                           className="px-3 py-1 rounded bg-gold/10 text-gold text-xs hover:bg-gold/20 transition-colors"
@@ -476,6 +481,7 @@ export default function AdminInsurancePage() {
                         >
                           {t("admin.common.delete")}
                         </button>
+                        </>)}
                       </div>
                     </td>
                   </tr>

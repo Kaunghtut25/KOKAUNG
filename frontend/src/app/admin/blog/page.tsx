@@ -5,6 +5,7 @@ import { api } from '@/lib/api';
 import Link from 'next/link';
 import { useI18n } from '@/lib/i18n';
 import Image from "next/image";
+import { useClientRole } from "@/lib/useClientRole";
 
 interface BlogPost {
   _id: string;
@@ -19,6 +20,7 @@ interface BlogPost {
 }
 
 export default function AdminBlogPage() {
+  const isViewer = useClientRole() === "viewer";
   const { t } = useI18n();
   const token = typeof window !== "undefined" ? localStorage.getItem("admin_token") : "";
   const [posts, setPosts] = useState<BlogPost[]>([]);
@@ -156,6 +158,7 @@ export default function AdminBlogPage() {
       </div>
 
       {/* Create/Edit Form */}
+      {!isViewer && ((
       <form onSubmit={handleSubmit} className="bg-white/5 rounded-xl p-6 mb-8 border border-white/10 space-y-4">
         <h2 className="text-lg font-semibold">{editingId ? t("admin.blog.editPost") : t("admin.blog.newPost")}</h2>
         <input type="text" value={title} onChange={(e) => setTitle(e.target.value)} placeholder={t("admin.blog.phTitle")} required
@@ -224,6 +227,7 @@ export default function AdminBlogPage() {
           )}
         </div>
       </form>
+      ))}
 
       {/* Posts List */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -243,8 +247,10 @@ export default function AdminBlogPage() {
                 <span className="text-xs text-gray-500 mt-2 block">{new Date(post.createdAt).toLocaleDateString()}</span>
               </div>
               <div className="flex gap-2 flex-shrink-0">
+                {!isViewer && (<>
                 <button onClick={() => handleEdit(post)} className="px-3 py-1 text-xs bg-blue-500/20 text-blue-400 rounded-lg hover:bg-blue-100">{t("admin.common.edit")}</button>
                 <button onClick={() => handleDelete(post._id)} className="px-3 py-1 text-xs bg-red-500/20 text-red-400 rounded-lg hover:bg-red-100">{t("admin.common.delete")}</button>
+                </>)}
               </div>
             </div>
           ))

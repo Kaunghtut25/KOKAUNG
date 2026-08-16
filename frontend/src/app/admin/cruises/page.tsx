@@ -5,6 +5,7 @@ import Link from "next/link";
 import AdminFormModal from "@/components/AdminFormModal";
 import { useI18n } from "@/lib/i18n";
 import Image from "next/image";
+import { useClientRole } from "@/lib/useClientRole";
 
 interface cruise {
   id: string;
@@ -50,6 +51,7 @@ const emptyCruise: cruise = {
 };
 
 export default function AdminCruisesPage() {
+  const isViewer = useClientRole() === "viewer";
   const { t } = useI18n();
   const [cruises, setCruises] = useState<cruise[]>([]);
   const [loading, setLoading] = useState(true);
@@ -618,12 +620,14 @@ export default function AdminCruisesPage() {
             {t("admin.cruises.subtitle")}
           </p>
         </div>
+        {!isViewer && ((
         <button
           onClick={openCreateModal}
           className="px-5 py-2.5 rounded-lg bg-gold text-deepblue-dark font-semibold text-sm hover:bg-gold/90 transition-all flex items-center gap-2"
         >
           <span>🚢</span> {t("admin.cruises.addNew")}
         </button>
+        ))}
       </div>
 
       {/* Cruises Table */}
@@ -717,6 +721,7 @@ export default function AdminCruisesPage() {
                           <Link href={`/cruises/${cruise.id}`} target="_blank" rel="noopener noreferrer" className="px-3 py-1.5 rounded-lg bg-blue-500/10 text-blue-400 text-xs font-medium hover:bg-blue-500/20 transition-colors">
                             {t("admin.common.view")}
                           </Link>
+                          {!isViewer && (<>
                           <button
                             onClick={() => openEditModal(cruise)}
                             className="px-3 py-1.5 rounded-lg bg-gold/10 text-gold text-xs font-medium hover:bg-gold/20 transition-colors"
@@ -729,6 +734,7 @@ export default function AdminCruisesPage() {
                           >
                             {t("admin.common.delete")}
                           </button>
+                          </>)}
                         </div>
                       </td>
                     </tr>

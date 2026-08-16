@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useI18n } from "@/lib/i18n";
 import toast from "react-hot-toast";
+import { useClientRole } from "@/lib/useClientRole";
 
 interface KnowledgeItem {
   id?: string;
@@ -18,6 +19,7 @@ const API_BASE = process.env.NEXT_PUBLIC_API_URL || "/api";
 const EMPTY: KnowledgeItem = { topic: "", keywords: "", question: "", answer: "", status: "active" };
 
 export default function AdminKnowledgePage() {
+  const isViewer = useClientRole() === "viewer";
   const { t } = useI18n();
   const [items, setItems] = useState<KnowledgeItem[]>([]);
   const [loading, setLoading] = useState(true);
@@ -99,12 +101,14 @@ export default function AdminKnowledgePage() {
             <h1 className="text-xl font-bold text-[#0A1628] mt-1">🧠 {t("admin.knowledge.title")}</h1>
             <p className="text-sm text-gray-500 mt-1">{t("admin.knowledge.hint")}</p>
           </div>
+          {!isViewer && ((
           <button
             onClick={startAdd}
             className="bg-[#0A1628] text-white px-4 py-2 rounded-md text-sm font-semibold hover:bg-[#1a2b42]"
           >
             + {t("admin.knowledge.add")}
           </button>
+          ))}
         </div>
 
         {/* Form */}
@@ -170,8 +174,10 @@ export default function AdminKnowledgePage() {
                   <div className="text-sm text-gray-600 mt-1 line-clamp-2 whitespace-pre-wrap">{it.answer}</div>
                 </div>
                 <div className="flex flex-col gap-1 shrink-0">
+                  {!isViewer && (<>
                   <button onClick={() => startEdit(it)} className="text-xs px-2 py-1 rounded border border-gray-300 hover:bg-gray-100">{t("admin.common.edit")}</button>
                   <button onClick={() => remove(it)} className="text-xs px-2 py-1 rounded border border-red-200 text-red-600 hover:bg-red-50">{t("admin.common.delete")}</button>
+                  </>)}
                 </div>
               </div>
             ))}

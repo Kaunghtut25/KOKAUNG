@@ -6,6 +6,7 @@ import AdminFormModal from "@/components/AdminFormModal";
 import { useI18n } from "@/lib/i18n";
 import { generateItinerary, parseDays } from "@/lib/tourItinerary";
 import Image from "next/image";
+import { useClientRole } from "@/lib/useClientRole";
 
 interface Tour {
   id: string;
@@ -76,6 +77,7 @@ function detectTourType(tour: any): 'inbound' | 'outbound' {
 }
 
 export default function AdminToursPage() {
+  const isViewer = useClientRole() === "viewer";
   const { t } = useI18n();
   const [tours, setTours] = useState<Tour[]>([]);
   const [typeFilter, setTypeFilter] = useState<"all" | "inbound" | "outbound">("all");
@@ -810,12 +812,14 @@ export default function AdminToursPage() {
             {t("admin.tours.subtitle")}
           </p>
         </div>
+        {!isViewer && ((
         <button
           onClick={openCreateModal}
           className="px-5 py-2.5 rounded-lg bg-gold text-deepblue-dark font-semibold text-sm hover:bg-gold/90 transition-all flex items-center gap-2"
         >
           <span>✈️</span> {t("admin.tours.addNew")}
         </button>
+        ))}
       </div>
 
       {/* ─── Inbound / Outbound / All Tabs ─── */}
@@ -954,6 +958,7 @@ export default function AdminToursPage() {
                           <Link href={`/tours/${tour.id}`} target="_blank" rel="noopener noreferrer" className="px-3 py-1.5 rounded-lg bg-blue-500/10 text-blue-400 text-xs font-medium hover:bg-blue-500/20 transition-colors">
                             {t("admin.tours.view")}
                           </Link>
+                          {!isViewer && (<>
                           <button
                             onClick={() => openEditModal(tour)}
                             className="px-3 py-1.5 rounded-lg bg-gold/10 text-gold text-xs font-medium hover:bg-gold/20 transition-colors"
@@ -966,6 +971,7 @@ export default function AdminToursPage() {
                           >
                             {t("admin.tours.delete")}
                           </button>
+                          </>)}
                         </div>
                       </td>
                     </tr>

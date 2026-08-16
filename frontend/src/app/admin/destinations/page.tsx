@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useI18n } from "@/lib/i18n";
 import Image from "next/image";
 import Link from "next/link";
+import { useClientRole } from "@/lib/useClientRole";
 
 interface Destination {
   _id?: string; id?: string;
@@ -22,6 +23,7 @@ function toSlug(text: string): string {
 }
 
 export default function AdminDestinationsPage() {
+  const isViewer = useClientRole() === "viewer";
   const { t } = useI18n();
   const token = typeof window !== "undefined" ? localStorage.getItem("admin_token") || "" : "";
   const [items, setItems] = useState<Destination[]>([]);
@@ -132,9 +134,11 @@ export default function AdminDestinationsPage() {
             {t("admin.dest.title")} ({items.length})
           </h1>
         </div>
+        {!isViewer && ((
         <button onClick={openNew} className="px-5 py-2.5 rounded-lg bg-gold text-deepblue-dark font-semibold text-sm hover:bg-gold/90 transition-all flex items-center gap-2">
           <span>🌍</span> {t("admin.dest.addNew")}
         </button>
+        ))}
       </div>
 
       {/* ─── Destinations Table (zoom-safe: overflow-x-auto, no card grid) ─── */}
@@ -199,12 +203,14 @@ export default function AdminDestinationsPage() {
                           <Link href={`/destinations/${toSlug(d.city)}`} target="_blank" rel="noopener noreferrer" className="px-3 py-1.5 rounded-lg bg-blue-500/10 text-blue-400 text-xs font-medium hover:bg-blue-500/20 transition-colors">
                             {t("admin.common.view")}
                           </Link>
+                          {!isViewer && (<>
                           <button onClick={() => openEdit(d)} className="px-3 py-1.5 rounded-lg bg-gold/10 text-gold text-xs font-medium hover:bg-gold/20 transition-colors">
                             {t("admin.common.edit")}
                           </button>
                           <button onClick={() => del(d.id || d._id)} className="px-3 py-1.5 rounded-lg bg-red-500/10 text-red-400 text-xs font-medium hover:bg-red-500/20 transition-colors">
                             {t("admin.common.delete")}
                           </button>
+                          </>)}
                         </div>
                       </td>
                     </tr>
