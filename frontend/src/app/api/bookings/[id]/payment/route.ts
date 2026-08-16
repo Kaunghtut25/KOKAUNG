@@ -7,7 +7,11 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
   try {
     const { id } = params;
     const body = await request.json();
-    const paymentMethod = body.paymentMethod || "bank";
+    const PAYMENT_METHODS = new Set(["kbzpay", "wavepay", "bank", "bank_transfer"]);
+    const paymentMethod = body.paymentMethod;
+    if (typeof paymentMethod !== "string" || !PAYMENT_METHODS.has(paymentMethod)) {
+      return NextResponse.json({ success: false, message: "Invalid payment method" }, { status: 400 });
+    }
     const transactionId = body.transactionId || "";
 
     const all = await storeGetAll("bookings");

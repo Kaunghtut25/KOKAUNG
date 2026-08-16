@@ -43,18 +43,6 @@ async function getHotelBySlug(slug: string): Promise<HotelDetail | null> {
       rawHotels = (j && (j.data || j)) || [];
     } catch (e) { console.error('hotels api fetch failed', e); }
     if (!Array.isArray(rawHotels)) rawHotels = [];
-  if (rawHotels.length < 5) {
-    // Fallback hotels when store is empty
-    const fallbackHotels: any[] = [
-      { id: "h1", _id: "h1", name: "Sedona Hotel Yangon", location: "Yangon", address: "1 Kaba Aye Pagoda Road, Yangon", description: "Luxury 5-star hotel with stunning views of Inya Lake, world-class spa, and fine dining restaurants. Perfect for business and leisure travelers.", rating: 4.5, reviewCount: 128, pricePerNightMMK: 185000, pricePerNightUSD: 88, availableRooms: 45, totalRooms: 120, amenities: "Pool, Spa, Gym, Restaurant, WiFi, Bar, Room Service", row: 1, status: "active", featured: true },
-      { id: "h2", _id: "h2", name: "Aureum Palace Bagan", location: "Bagan", address: "Bagan Archaeological Zone", description: "Luxury resort nestled among ancient temples with breathtaking views of the Bagan plains. Features a stunning infinity pool and award-winning spa.", rating: 4.7, reviewCount: 95, pricePerNightMMK: 245000, pricePerNightUSD: 118, availableRooms: 20, totalRooms: 80, amenities: "Pool, Spa, Restaurant, WiFi, Bar, Temple View", row: 2, status: "active", featured: true },
-      { id: "h3", _id: "h3", name: "Inle Princess Resort", location: "Inle Lake", address: "East Inle Lake, Shan State", description: "Beautiful lakeside resort featuring traditional Myanmar architecture with modern luxury. Each bungalow offers stunning lake views and private terraces.", rating: 4.6, reviewCount: 72, pricePerNightMMK: 220000, pricePerNightUSD: 105, availableRooms: 15, totalRooms: 50, amenities: "Lake View, Spa, Restaurant, WiFi, Boat Tours", row: 2, status: "active", featured: true },
-      { id: "h4", _id: "h4", name: "Mandalay Hill Resort", location: "Mandalay", address: "At the foot of Mandalay Hill", description: "Elegant resort at the base of sacred Mandalay Hill with panoramic views of the city. Walking distance to major pagodas and the Royal Palace.", rating: 4.4, reviewCount: 63, pricePerNightMMK: 195000, pricePerNightUSD: 93, availableRooms: 30, totalRooms: 90, amenities: "Pool, Gym, Restaurant, WiFi, Spa, Hill View", row: 2, status: "active", featured: true },
-      { id: "h5", _id: "h5", name: "Ngapali Bay Villas", location: "Ngapali", address: "Ngapali Beach, Rakhine State", description: "Beachfront villas with private pools overlooking the pristine Bay of Bengal. The ultimate tropical getaway with white sand and crystal waters.", rating: 4.8, reviewCount: 54, pricePerNightMMK: 320000, pricePerNightUSD: 152, availableRooms: 10, totalRooms: 25, amenities: "Beach, Pool, Restaurant, WiFi, Spa, Diving", row: 3, status: "active", featured: true },
-      { id: "h6", _id: "h6", name: "The Strand Yangon", location: "Yangon", address: "92 Strand Road, Yangon", description: "Iconic colonial-era luxury hotel in downtown Yangon. Built in 1901, this heritage landmark offers timeless elegance and world-renowned butler service.", rating: 4.6, reviewCount: 210, pricePerNightMMK: 280000, pricePerNightUSD: 134, availableRooms: 12, totalRooms: 32, amenities: "Restaurant, Bar, Spa, WiFi, Butler, Heritage Wing", row: 3, status: "active", featured: true },
-    ].filter(function(h: any) { return h.id === slug || h._id === slug || (h.name||"").toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"") === slug; });
-    rawHotels.push(...fallbackHotels);
-  }
     const found = rawHotels.find((h: any) => {
       const hSlug = (h.name || h.location || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
       return hSlug === slug || h.id === slug || h._id === slug;
@@ -214,23 +202,9 @@ export default function HotelDetailPage() {
 
   const bookNowUrl = `/book-now?type=hotel&name=${encodeURIComponent(hotel.name)}&id=${encodeURIComponent(hotel._id)}&priceMMK=${hotel.pricePerNightMMK}&priceUSD=${hotel.pricePerNightUSD}&location=${encodeURIComponent(hotel.location)}`;
 
-  const roomsLabel = hotel.availableRooms === 0
-    ? 'Sold Out'
-    : hotel.availableRooms <= 3
-    ? 'Only ' + hotel.availableRooms + ' left'
-    : hotel.availableRooms + ' rooms available';
-
-  const roomsBadgeClass = hotel.availableRooms === 0
-    ? 'bg-red-500/20 text-red-300 border-red-500/30'
-    : hotel.availableRooms <= 3
-    ? 'bg-orange-500/20 text-orange-300 border-orange-500/30'
-    : 'bg-green-500/20 text-green-300 border-green-500/30';
-
-  const availabilityText = hotel.availableRooms === 0
-    ? 'Fully booked'
-    : hotel.availableRooms <= 5
-    ? 'Limited availability — book soon!'
-    : 'Good availability';
+  // FIX 2026-08-16 (G-08): availableRooms is static config, not live inventory — no scarcity claims
+  const roomsLabel = hotel.availableRooms > 0 ? hotel.availableRooms + ' rooms' : '';
+  const roomsBadgeClass = 'bg-[#0A1628]/70 text-white/90 border-white/20';
 
   return (
     <main className="min-h-screen bg-white">
@@ -250,9 +224,11 @@ export default function HotelDetailPage() {
               <span className="px-3 py-1 rounded-full bg-[#D4AF37]/20 text-[#D4AF37] text-xs font-semibold border border-[#D4AF37]/30 backdrop-blur-sm">
                 📍 {hotel.location}
               </span>
-              <span className={`px-3 py-1 rounded-full text-xs font-semibold border backdrop-blur-sm ${roomsBadgeClass}`}>
-                {roomsLabel}
-              </span>
+              {roomsLabel && (
+                <span className={`px-3 py-1 rounded-full text-xs font-semibold border backdrop-blur-sm ${roomsBadgeClass}`}>
+                  {roomsLabel}
+                </span>
+              )}
             </div>
             <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold text-white mb-3 drop-shadow-lg" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
               {hotel.name}
@@ -308,19 +284,10 @@ export default function HotelDetailPage() {
 
             <div className="bg-[#0A1628] rounded-2xl p-6 md:p-8">
               <h2 className="text-2xl font-bold text-white mb-2" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
-                Rooms Available
+                Rooms
               </h2>
-              <p className="text-white/60 text-sm mb-4">
-                {hotel.totalRooms} total rooms · {hotel.availableRooms} available now
-              </p>
-              <div className="w-full bg-gray-700 rounded-full h-2 mb-4">
-                <div
-                  className="bg-gradient-to-r from-[#D4AF37] to-[#F5A623] h-2 rounded-full transition-all"
-                  style={{ width: hotel.totalRooms > 0 ? (hotel.availableRooms / hotel.totalRooms * 100) + '%' : '0%' }}
-                />
-              </div>
-              <p className="text-[#D4AF37] text-sm font-medium">
-                {availabilityText}
+              <p className="text-white/60 text-sm">
+                {hotel.totalRooms > 0 ? hotel.totalRooms + ' rooms at this property' : 'Contact us for room options'}
               </p>
             </div>
           </div>
@@ -351,10 +318,6 @@ export default function HotelDetailPage() {
                   <span className="text-gray-600">{t("hotel.rating")}</span>
                   <span className="text-[#0A1628] flex items-center gap-1">★ {hotel.rating.toFixed(1)} ({hotel.reviewCount} reviews)</span>
                 </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-600">{t("hotel.availableRooms")}</span>
-                  <span className="text-[#0A1628]">{hotel.availableRooms}</span>
-                </div>
               </div>
 
               <hr className="border-[#D4AF37]/10" />
@@ -381,7 +344,7 @@ export default function HotelDetailPage() {
                     <span className="w-12 text-center text-[#0A1628] font-semibold">{rooms}</span>
                     <button
                       type="button"
-                      onClick={() => setRooms(Math.min(hotel.availableRooms, rooms + 1))}
+                      onClick={() => setRooms(Math.min(9, rooms + 1))}
                       className="w-8 h-8 rounded-lg border border-gray-300 text-gray-600 hover:bg-gray-100 transition-colors flex items-center justify-center"
                     >
                       +
@@ -401,7 +364,7 @@ export default function HotelDetailPage() {
               {/* Book Now */}
               <button
                 onClick={handleBookNow}
-                disabled={!hotel || hotel.availableRooms === 0}
+                disabled={!hotel}
                 className="w-full py-3.5 rounded-xl bg-gradient-to-r from-[#D4AF37] to-[#F5A623] text-[#0A1628] font-bold text-base shadow-lg shadow-[#D4AF37]/30 hover:shadow-xl hover:shadow-[#D4AF37]/40 hover:scale-[1.02] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {t("common.bookNow")}

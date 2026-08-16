@@ -31,7 +31,8 @@ export default function HotelCard({ hotel, currency = "MMK", cardWidth, cardHeig
     return map[hotel._id as string] || "/images_v2/hotel1-v2.jpg";
   })();
   const roomsAvailable = hotel.availableRooms ?? 0;
-  const roomsLabel = roomsAvailable === 0 ? "Sold Out" : roomsAvailable <= 3 ? `Only ${roomsAvailable} left` : `${roomsAvailable} rooms`;
+  // FIX 2026-08-16 (G-08): availableRooms is static config, not live inventory — no scarcity claims
+  const roomsLabel = roomsAvailable > 0 ? `${roomsAvailable} rooms` : '';
 
   const renderStars = (rating: number) => {
     return Array.from({ length: 5 }, (_, i) => (
@@ -83,16 +84,14 @@ export default function HotelCard({ hotel, currency = "MMK", cardWidth, cardHeig
               📍 {hotel.location}
             </span>
           </div>
-          {/* Rooms badge */}
-          <div className="absolute top-7 right-3 z-20">
-            <span className={`inline-block px-2.5 py-0.5 rounded-full text-[11px] font-medium backdrop-blur-sm border ${
-              roomsAvailable === 0 ? "bg-red-500/20 text-red-400 border-red-500/30" :
-              roomsAvailable <= 3 ? "bg-orange-500/20 text-orange-400 border-orange-500/30" :
-              "bg-green-500/20 text-green-400 border-green-500/30"
-            }`}>
-              {roomsLabel}
-            </span>
-          </div>
+          {/* Rooms badge — informational only (static config, not live inventory) */}
+          {roomsLabel && (
+            <div className="absolute top-7 right-3 z-20">
+              <span className="inline-block px-2.5 py-0.5 rounded-full text-[11px] font-medium backdrop-blur-sm border bg-[#0A1628]/70 text-white/90 border-white/20">
+                {roomsLabel}
+              </span>
+            </div>
+          )}
         </div>
 
         {/* Navy-to-White Gradient */}
