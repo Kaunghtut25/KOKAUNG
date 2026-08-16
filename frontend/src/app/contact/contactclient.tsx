@@ -25,7 +25,9 @@ export default function ContactClient({ siteConfig }: { siteConfig: any }) {
     phone: "",
     subject: "General Inquiry",
     message: "",
+    website: "", // honeypot — humans never see/fill this
   });
+  const [requestId] = useState(() => (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function' ? crypto.randomUUID() : 'ct-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 8)));
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -60,6 +62,10 @@ export default function ContactClient({ siteConfig }: { siteConfig: any }) {
       toast.error(t("contact.errRequired"));
       return;
     }
+    if (!/\S+@\S+\.\S+/.test(form.email)) {
+      toast.error(t("contact.errEmail"));
+      return;
+    }
 
     setLoading(true);
     try {
@@ -69,6 +75,8 @@ export default function ContactClient({ siteConfig }: { siteConfig: any }) {
         phone: form.phone,
         subject: form.subject,
         message: form.message,
+        website: form.website,
+        requestId,
       });
       toast.success(t("contact.okSent"));
       setForm({
@@ -241,6 +249,10 @@ export default function ContactClient({ siteConfig }: { siteConfig: any }) {
                                transition-colors duration-200 resize-none"
                   />
                 </div>
+
+                {/* Honeypot — hidden from humans, catches bots */}
+                <input type="text" name="website" value={form.website} onChange={handleChange} tabIndex={-1} autoComplete="off"
+                  aria-hidden="true" style={{ position: 'absolute', left: '-9999px', width: '1px', height: '1px' }} />
 
                 <button
                   type="submit"

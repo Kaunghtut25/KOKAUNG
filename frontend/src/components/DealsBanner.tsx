@@ -1,6 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { useI18n } from "@/lib/i18n";
+import { computePromoStatus, computeCountdown } from "@/lib/promoState";
 
 type DealsConfig = {
   enabled: boolean;
@@ -41,25 +42,19 @@ export default function DealsBanner() {
       .catch(() => {});
   }, []);
 
-  // FIX 2026-08-16: DISABLED unless an absolute endAt exists — no rolling countdown, no fake expiry.
+  // FIX 2026-08-16: promo state from pure lib (computePromoStatus/computeCountdown — unit-tested).
   useEffect(() => {
-    if (!deals.enabled || !deals.endAt) return; // DISABLED: no end date configured
-    const parsed = Date.parse(deals.endAt);
-    if (isNaN(parsed)) return; // DISABLED: invalid date
-    const target = parsed;
+    if (!deals.enabled) return;
+    const end = deals.endAt ? Date.parse(deals.endAt) : NaN;
+    if (Number.isNaN(end)) return; // DISABLED: no valid end date
     const tick = () => {
       const now = Date.now();
-      if (deals.startAt) {
-        const start = Date.parse(deals.startAt);
-        if (!isNaN(start) && now < start) { setStatus("upcoming"); setTime({ d: 0, h: 0, m: 0, s: 0 }); return; }
-      }
-      const diff = target - now;
-      if (diff <= 0) { setStatus("expired"); setTime({ d: 0, h: 0, m: 0, s: 0 }); return; }
-      setStatus("active");
-      setTime({
-        d: Math.floor(diff / 86400000), h: Math.floor(diff / 3600000) % 24,
-        m: Math.floor(diff / 60000) % 60, s: Math.floor(diff / 1000) % 60,
-      });
+      const st = computePromoStatus(deals.endAt, deals.startAt, now);
+      if (st === "disabled") return;
+      setStatus(st);
+      const cd = st === "active" ? computeCountdown(end, now) : null;
+      if (cd) setTime(cd);
+      else if (st !== "active") setTime({ d: 0, h: 0, m: 0, s: 0 });
     };
     tick();
     const t = setInterval(tick, 1000);
@@ -67,7 +62,7 @@ export default function DealsBanner() {
   }, [deals.enabled, deals.endAt, deals.startAt]);
 
   // DISABLED state: promotion without a valid absolute end date is never rendered.
-  if (!deals.enabled || !deals.endAt || isNaN(Date.parse(deals.endAt))) return null;
+  if (!deals.enabled || computePromoStatus(deals.endAt, deals.startAt) === "disabled") return null;
 
   return (
     <div style={{ background: 'linear-gradient(135deg,#0A1628,#0F2035)', borderBottom: '3px solid #D4AF37', padding: '24px 20px', textAlign: 'center' }}>

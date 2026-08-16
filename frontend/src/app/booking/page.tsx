@@ -44,6 +44,7 @@ function BookingPageContent() {
   const [bookingId, setBookingId] = useState('');
   const [transactionId, setTransactionId] = useState('');
 
+  const [requestId] = useState(() => (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function' ? crypto.randomUUID() : 'bk-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 8)));
   const [customer, setCustomer] = useState<CustomerInfo>({
     name: '',
     email: '',
@@ -160,6 +161,7 @@ function BookingPageContent() {
         currency: 'MMK',
         paymentMethod,
         transactionId: txId,
+        requestId,
       };
 
       const booking = await createBooking(bookingData);

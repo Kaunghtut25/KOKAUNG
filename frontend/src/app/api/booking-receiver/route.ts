@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { sendBookingEmail, sendCustomerConfirmationEmail } from "@/lib/email";
 import { create as storeCreate, getAll as storeGetAll } from "@/lib/persistentStore";
+import { validateBookingInput } from "@/lib/bookingValidation";
+import { rateLimit, clientIp } from "@/lib/rateLimit";
 
 export const dynamic = 'force-dynamic';
 
@@ -33,6 +35,10 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
+    const rl = await rateLimit("booking-receiver:" + clientIp(request), 10, 60);
+    if (!rl.ok) {
+      return NextResponse.json({ success: false, message: 'Too many booking attempts. Please try again later.' }, { status: 429 });
+    }
     const body = await request.json();
     const {
       fullName, email, phone, travelType,
@@ -46,25 +52,8 @@ export async function POST(request: NextRequest) {
       requestId,
     } = body;
 
-    // Validation
-    const errors: string[] = [];
-    if (!fullName) errors.push('Full name is required');
-    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) errors.push('A valid email is required');
-    if (!phone) errors.push('Phone number is required');
-    const validTypes = ['flight', 'hotel', 'tour', 'car', 'visa', 'insurance', 'cruise', 'mingalar', 'lounge', 'oneway', 'roundtrip', 'multi-city'];
-    if (!travelType || !validTypes.includes(travelType)) {
-      errors.push(`Valid travel type is required (${validTypes.join('/')})`);
-    }
-    if (departDate && !/^\d{4}-\d{2}-\d{2}$/.test(departDate)) errors.push('Depart date must be YYYY-MM-DD');
-    if (returnDate && !/^\d{4}-\d{2}-\d{2}$/.test(returnDate)) errors.push('Return date must be YYYY-MM-DD');
-    if (passengers !== undefined && passengers !== null && passengers !== '') {
-      const pax = Number(passengers);
-      if (!Number.isInteger(pax) || pax < 1 || pax > 9) errors.push('Passengers must be a whole number between 1 and 9');
-    }
-    if (amount !== undefined && amount !== null && amount !== '') {
-      const amt = Number(amount);
-      if (!Number.isFinite(amt) || amt < 0) errors.push('Amount must be a non-negative number');
-    }
+    // Validation (shared lib — FIX 2026-08-16)
+    const errors = validateBookingInput(body);
 
     if (errors.length > 0) {
       return NextResponse.json({ success: false, message: 'Validation failed', errors }, { status: 400 });

@@ -40,6 +40,7 @@ export default function BookingModal({
   const [bookingId, setBookingId] = useState("");
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [requestId] = useState(() => (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function' ? crypto.randomUUID() : 'bk-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 8)));
 
   // Reset all state on open/mount
   const resetState = useCallback(() => {
@@ -130,6 +131,7 @@ export default function BookingModal({
         travelDate,
         travelers,
         specialRequests,
+        requestId,
       });
       const bId = bookingRes.data?.booking?._id || bookingRes.data?._id || `BK-${Date.now()}`;
       setBookingId(bId);

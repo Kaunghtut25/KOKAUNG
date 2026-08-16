@@ -1,34 +1,61 @@
 import { NextRequest, NextResponse } from "next/server";
-import { create as storeCreate } from "@/lib/persistentStore";
+import { create as storeCreate, getAll as storeGetAll } from "@/lib/persistentStore";
+import { rateLimit, clientIp } from "@/lib/rateLimit";
 
 export const dynamic = 'force-dynamic';
 
+// FIX 2026-08-16: contact hardening — server validation, honeypot spam trap, requestId idempotency, rate limit.
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.json();
-    const { name, email, phone, subject, message } = body;
-
-    // Validation
-    if (!name || !email || !message) {
+    const rl = await rateLimit("contact:" + clientIp(request), 10, 60);
+    if (!rl.ok) {
       return NextResponse.json(
-        { success: false, message: "Name, email, and message are required" },
-        { status: 400 }
+        { success: false, message: "Too many messages. Please try again later." },
+        { status: 429, headers: { "X-RateLimit-Limit": String(rl.limit), "X-RateLimit-Remaining": "0", "Retry-After": String(rl.retryAfterSec) } }
       );
     }
+    const body = await request.json();
+    const { name, email, phone, subject, message, website, requestId } = body;
 
-    // Store inquiry in database
+    // Honeypot: bots fill the hidden "website" field — silently pretend success, store nothing.
+    if (website) {
+      return NextResponse.json({ success: true, message: "Message sent successfully! We'll get back to you soon." });
+    }
+
+    const errors: string[] = [];
+    if (!name || !String(name).trim()) errors.push("Name is required");
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(email))) errors.push("A valid email is required");
+    if (phone && !/^[+\d][\d\s\-()]{5,20}$/.test(String(phone).trim())) errors.push("A valid phone number is required");
+    if (!message || !String(message).trim()) errors.push("Message is required");
+    if (message && String(message).length > 5000) errors.push("Message must be 5000 characters or fewer");
+    if (errors.length > 0) {
+      return NextResponse.json({ success: false, message: "Validation failed", errors }, { status: 400 });
+    }
+
+    // Idempotency: same requestId (per form session) never stores a duplicate.
+    if (requestId) {
+      try {
+        const all = await storeGetAll("bookings");
+        const existing = all.find((b: any) => b.requestId === requestId && b.travelType === "contact");
+        if (existing) {
+          return NextResponse.json({ success: true, message: "Message already sent", referenceNumber: existing.referenceNumber, duplicate: true });
+        }
+      } catch { /* best-effort */ }
+    }
+
+    const ref = "A9-MSG-" + Date.now().toString(36).toUpperCase();
     const inquiry = await storeCreate("bookings", {
       fullName: name,
       email,
       phone: phone || "",
       travelType: "contact",
-      specialRequests: `[${subject}] ${message}`,
+      specialRequests: `[${subject || "General Inquiry"}] ${message}`,
       status: "New",
-      referenceNumber: "A9-MSG-" + Date.now().toString(36).toUpperCase(),
+      referenceNumber: ref,
+      requestId: requestId || "",
       createdAt: new Date().toISOString(),
     });
 
-    // Try to send email notification (if Resend is configured)
     try {
       const { sendBookingEmail } = await import("@/lib/email");
       await sendBookingEmail({
@@ -37,12 +64,10 @@ export async function POST(request: NextRequest) {
         phone: phone || "N/A",
         travelType: "Contact Form",
         referenceNumber: inquiry.referenceNumber,
-        specialRequests: `[${subject}] ${message}`,
+        specialRequests: `[${subject || "General Inquiry"}] ${message}`,
         contactPreference: "email",
       });
-    } catch {
-      // Email not configured — inquiry still saved in DB
-    }
+    } catch { /* email not configured — inquiry still saved */ }
 
     return NextResponse.json({
       success: true,
@@ -50,9 +75,6 @@ export async function POST(request: NextRequest) {
       referenceNumber: inquiry.referenceNumber,
     });
   } catch (err: any) {
-    return NextResponse.json(
-      { success: false, message: err.message || "Server error" },
-      { status: 500 }
-    );
+    return NextResponse.json({ success: false, message: err.message || "Server error" }, { status: 500 });
   }
 }
