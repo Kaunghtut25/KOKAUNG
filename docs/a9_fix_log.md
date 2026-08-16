@@ -120,3 +120,11 @@ Admin follow-ups: set **Offer Ends** (endAt) in Site Manager to re-enable the pr
 - **Live `/api/blog` returns 40 posts with EMPTY slug field** + visible duplicate titles (e.g. "Cruise vs Land Tour" ×6, "Essential Packing List" ×4) — blog inventory has duplicates and the API mapping drops `slug`. Detail page derives slugs from titles so links work, but duplicates/empty-slug need DB cleanup (needs Supabase/Redis access).
 - Hotel/tour **static seed arrays were the only source of some content** — e.g. 13 hotel entries vs 6 real live hotels. If the business wants Sedona/The Strand etc. back, they must be re-added via admin (they are NOT in the live store).
 
+
+### Phase 6b (1cd330b, 2026-08-16) — admin root redirect bug + login skip + viewer enforcement
+- **Bug (user report):** /auth/login and /admin "not working" while /admin/site-manager + /admin/dashboard work.
+- **Root cause:** AdminRootPage (/admin) required payload.role === 'admin'. Staff/editor/viewer accounts (created via Manage Users) were bounced from /admin back to /auth/login; their direct section links worked, so it looked random. /auth/login also never skipped when a valid session existed (shows login form even when signed in).
+- **Fix:** /admin now redirects to /admin/dashboard for ANY valid panel role (roleRank >= 0, exp check ms-compatible); /auth/login now auto-redirects to /admin when a valid token exists (decodeTokenPayload + roleRank, client-safe).
+- **Viewer write enforcement (confirmed):** middleware rank < 1 → 403 'Read-only role: writes not allowed' on every non-GET /api/admin/*. Viewer CANNOT edit/delete server-side. Live checks: /api/admin/tours no-auth → 401; login API 400/401 correct; /admin + section pages no-auth → 307 to login.
+- **Known UX gap:** content admin pages still SHOW Add/Edit/Delete buttons to viewer (clicks → 403). Button hiding for viewer role = follow-up across ~12 pages.
+- Build green; live-verified: deployed login chunk contains redirect; /auth/login 200; /admin 307.
