@@ -104,3 +104,5 @@ Admin follow-ups: set **Offer Ends** (endAt) in Site Manager to re-enable the pr
 -- persistentStore inserts the full record object; simplest mapping: table(collection) with a jsonb column named after the collection.
 -- RLS: enable row level security; policy allow_select = anon select; policy allow_insert/update/delete = anon (public content) or service_role only.
 ```
+
+
