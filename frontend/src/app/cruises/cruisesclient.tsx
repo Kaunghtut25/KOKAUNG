@@ -122,8 +122,9 @@ const FALLBACK_CRUISES: Cruise[] = [
 
 export default function CruisesClient({ initialCruises, siteConfig }: { initialCruises: Cruise[]; siteConfig?: any }) {
   const layout = siteConfig?.sectionLayouts?.cruises || { desktop: 3, tablet: 2, mobile: 1 };
-  // Card size = Sky Lounge (mingalar) size unless cruises-specific dims are set
-  const loungeDims = siteConfig?.cardDimensions?.cruises || siteConfig?.cardDimensions?.mingalar;
+  // Card size mirrors the Sky Lounge (mingalar) card size exactly.
+  // Change the Sky Lounge size in Site Manager to adjust cruises cards too.
+  const loungeDims = siteConfig?.cardDimensions?.mingalar;
   const heroImage = siteConfig?.heroImages?.cruises || "/images_v2/hero-cruises-v2.jpg";
   const crt = siteConfig?.heroText?.cruises || {};
   const crTitle = crt.title || "";
