@@ -20,3 +20,5 @@ scripts/ollama-gate-secret.txt
 *.db
 *.sqlite
 *.sqlite3
+
+tsconfig.tsbuildinfo
