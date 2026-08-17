@@ -157,6 +157,7 @@ export default function SiteManagerPage() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [tab, setTab] = useState<Tab>("hero");
+  const [search, setSearch] = useState("");
   const [toast, setToast] = useState<{ msg: string; type: "success" | "error" } | null>(null);
   const [uploadingKey, setUploadingKey] = useState("");
   const [uploadErrors, setUploadErrors] = useState<Record<string, string>>({});
@@ -396,20 +397,43 @@ const inputCls = "w-full px-3 py-2 rounded-lg border border-white/10 text-white 
           </div>
         )}
 
-        {/* Section Navigator — flat list */}
-        <div className="mb-6 bg-white/10 rounded-xl shadow-sm p-4">
-          <div className="flex flex-wrap gap-2">
-            {sectionGroups.flatMap(g => g.items).map(i => (
-              <button
-                key={i.key}
-                onClick={() => setTab(i.key)}
-                className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${tab === i.key ? "bg-[#D4AF37] text-white" : "text-white/60 hover:bg-white/10 hover:text-white"}`}
-              >
-                {i.label}
-              </button>
-            ))}
-          </div>
+        {/* Section Navigator — search + grouped categories */}
+        <div className="mb-6 bg-white/10 rounded-xl shadow-sm p-4 space-y-4">
+          <input
+            type="text"
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+            placeholder={t("admin.sm.searchSections")}
+            className="w-full px-3 py-2 rounded-lg border border-white/10 bg-white/5 text-white text-sm placeholder-white/40 focus:outline-none focus:border-[#D4AF37]/50"
+          />
+          {sectionGroups.map(g => {
+            const q = search.trim().toLowerCase();
+            const items = g.items.filter(i => !q || i.label.toLowerCase().includes(q));
+            if (!items.length) return null;
+            return (
+              <div key={g.key}>
+                <div className="flex items-center gap-1.5 text-[11px] uppercase tracking-wider text-white/40 font-semibold mb-2">
+                  <span aria-hidden="true">{g.icon}</span>{g.label}
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  {items.map(i => (
+                    <button
+                      key={i.key}
+                      onClick={() => setTab(i.key)}
+                      className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${tab === i.key ? "bg-[#D4AF37] text-white" : "text-white/60 hover:bg-white/10 hover:text-white"}`}
+                    >
+                      {i.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            );
+          })}
+          {search.trim() && !sectionGroups.some(g => g.items.some(i => i.label.toLowerCase().includes(search.trim().toLowerCase()))) && (
+            <div className="text-white/50 text-sm">{t("admin.sm.noResults")}</div>
+          )}
         </div>
+
         {/* Tab Content */}
         <div className="bg-white/10 rounded-xl shadow-sm p-6">
           {tab === "hero" && (
