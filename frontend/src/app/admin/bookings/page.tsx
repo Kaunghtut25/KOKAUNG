@@ -390,7 +390,7 @@ export default function AdminBookingsPage() {
                       {inquiryModal.arriveTime && <div><span className="text-white/60 text-xs">{t("admin.book.arriveTime")}</span><p className="text-white">{inquiryModal.arriveTime}</p></div>}
                       {inquiryModal.stops !== undefined && inquiryModal.stops !== "" && <div><span className="text-white/60 text-xs">{t("admin.book.stops")}</span><p className="text-white">{inquiryModal.stops === "0" ? "Nonstop" : inquiryModal.stops + " stop(s)"}</p></div>}
                       {inquiryModal.offerId && <div><span className="text-white/60 text-xs">{t("admin.book.offerId")}</span><p className="text-white font-mono text-xs">{inquiryModal.offerId}</p></div>}
-                      {inquiryModal.amount > 0 && <div><span className="text-white/60 text-xs">{t("admin.book.price")}</span><p className="text-gold font-bold">{inquiryModal.amount} {inquiryModal.currency}</p></div>}
+                      {(inquiryModal.amount ?? 0) > 0 && <div><span className="text-white/60 text-xs">{t("admin.book.price")}</span><p className="text-gold font-bold">{inquiryModal.amount} {inquiryModal.currency}</p></div>}
                     </div>
                   </div>
                   )}

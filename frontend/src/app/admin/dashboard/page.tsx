@@ -225,7 +225,7 @@ export default function AdminDashboardPage() {
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3">
           {quickActions.map((action) => (
             <a
-              key={action.label}
+              key={action.labelKey}
               href={action.href}
               className="flex flex-col items-center justify-center gap-2 p-4 rounded-xl bg-white/5 border border-white/10 hover:border-gold/40 hover:bg-white/[0.07] transition-all duration-300 group text-center"
             >

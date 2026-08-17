@@ -4,8 +4,8 @@ import { randomBytes, scryptSync, timingSafeEqual } from "crypto";
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
 
-export const ADMIN_ROLES = ["admin", "staff", "editor", "viewer"] as const;
-export const ALL_AUTHORITIES = [
+const ADMIN_ROLES = ["admin", "staff", "editor", "viewer"] as const;
+const ALL_AUTHORITIES = [
   "tours", "hotels", "cars", "cruises", "visas", "insurances",
   "bookings", "users", "settings", "blog", "destinations", "sky-lounge",
 ] as const;
@@ -17,7 +17,7 @@ function hashPassword(password: string): string {
   return salt + ":" + hash;
 }
 
-export function verifyPassword(password: string, stored: string): boolean {
+function verifyPassword(password: string, stored: string): boolean {
   try {
     const [salt, hash] = String(stored || "").split(":");
     if (!salt || !hash) return false;

@@ -99,7 +99,7 @@ export default function AdminDestinationsPage() {
       const data = await res.json();
       const url = data?.uploads?.[0]?.url;
       if (!url) { setUploadMsg(t("admin.common.uploadFailed")); return; }
-      setEditing({ ...editing, image: url });
+      if (editing) setEditing({ ...editing, image: url });
       setUploadMsg(t("admin.dest.dropDone"));
     } catch (e) { console.error(e); setUploadMsg(t("admin.common.uploadFailed")); }
     setUploading(false);

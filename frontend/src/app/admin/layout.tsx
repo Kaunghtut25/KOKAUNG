@@ -73,7 +73,7 @@ export default function AdminLayout({
         return;
       }
       const payload = decodeTokenPayload(token);
-      if (!payload || !(ADMIN_ROLES as readonly string[]).includes(payload.role) || (payload.exp && payload.exp < Date.now())) {
+      if (!payload || !payload.role || !(ADMIN_ROLES as readonly string[]).includes(payload.role) || (payload.exp && payload.exp < Date.now())) {
         localStorage.removeItem("admin_token");
         localStorage.removeItem("admin_user");
         router.replace("/auth/login");

@@ -34,9 +34,10 @@ interface SiteConfig {
   whyChooseTitle?: string; whyChooseTagline?: string; whyChooseCardWidth?: number;
   popularDestinations: PopularDestination[];
   testimonials: Testimonial[]; partners: (string | { name: string; logo?: string })[];
-  ctaTitle: string; ctaDescription: string; ctaButtonLabel: string; ctaButtonHref: string; ctaImage?: string; ctaImage?: string;
+  ctaTitle: string; ctaDescription: string; ctaButtonLabel: string; ctaButtonHref: string; ctaImage?: string;
   dealsBanner?: { enabled: boolean; badge: string; title: string; buttonLabel: string; buttonHref: string; countdownDays: number; endAt?: string; startAt?: string };
   contact: ContactInfo; socialLinks: SocialLink[]; footerSections: FooterSection[];
+  departmentPhones?: Record<string, string>;
   socialFeed?: { enabled: boolean; instagram: string; photos: string[] };
   sectionLayouts?: Record<string, SectionLayout>;
   relatedItems?: { maxItems: number; crossSections: Record<string, { enabled: boolean; maxItems: number }> };
@@ -100,7 +101,7 @@ const defaultCfg: SiteConfig = {
     { name: "Shangri-La" }, { name: "Sedona Hotel" }, { name: "Sule Palace" }, { name: "Melia Hotel" },
     { name: "Myanmar Airways" }, { name: "Thai Airways" }, { name: "Singapore Airlines" }, { name: "Emirates" },
   ],
-  ctaTitle: "", ctaDescription: "", ctaButtonLabel: "Book Now", ctaButtonHref: "/book-now", ctaImage: "", ctaImage: "",
+  ctaTitle: "", ctaDescription: "", ctaButtonLabel: "Book Now", ctaButtonHref: "/book-now", ctaImage: "",
   dealsBanner: { enabled: false, badge: "⏰ LIMITED TIME OFFER", title: "", buttonLabel: "Book Now", buttonHref: "/book-now", countdownDays: 0, endAt: "", startAt: "" },
   contact: { email: "", phone: "", address: "", whatsapp: "", messenger: "", viber: "", telegram: "" },
   socialLinks: [

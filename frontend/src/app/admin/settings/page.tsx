@@ -768,7 +768,7 @@ export default function AdminSettingsPage() {
                 : "text-white/50 hover:text-white"
             }`}
           >
-            {tab.label}
+            {t(tab.labelKey)}
           </button>
         ))}
       </div>
