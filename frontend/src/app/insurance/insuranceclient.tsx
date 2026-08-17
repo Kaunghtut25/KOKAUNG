@@ -100,7 +100,7 @@ function InsuranceCard({ plan, currency, onSelect, cardWidth, cardHeight }: { pl
 
   return (
     <div onClick={() => router.push("/insurance/" + (plan.slug||plan._id || plan.id))} className="rounded-2xl overflow-hidden group cursor-pointer border border-gray-100 hover:border-gold/40 transition-all duration-300 bg-white shadow-sm hover:shadow-xl hover:-translate-y-1 flex flex-col" style={{ width: cardWidth || undefined, height: cardHeight || undefined }}>
-      <div className="relative h-40 overflow-hidden">
+      <div className="relative h-44 overflow-hidden">
         <Image alt={name} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" onError={(e) => { (e.target as HTMLImageElement).src = '/images_v2/ins1-v3.jpg'; }} src={imageUrl} width={1600} height={900} sizes="100vw" />
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
         <div className="absolute bottom-2 left-3 right-3">
@@ -150,7 +150,6 @@ export default function InsuranceClient({ initialPlans, siteConfig }: InsuranceC
   const iTitleFont = it.titleFont || "'Playfair Display', serif";
   const iTitleSize = it.titleSize || "2.5rem";
   const iSubtitleSize = it.subtitleSize || "1rem";
-  const layout = siteConfig?.sectionLayouts?.insurance || { desktop: 3, tablet: 2, mobile: 1 };
   const [plans, setPlans] = useState<InsurancePlan[]>(initialPlans.length > 0 ? initialPlans : FALLBACK_PLANS);
   const [loading, setLoading] = useState(initialPlans.length === 0);
   const [currency, setCurrency] = useState<'MMK' | 'USD'>('MMK');
@@ -198,13 +197,13 @@ export default function InsuranceClient({ initialPlans, siteConfig }: InsuranceC
       </div>
 <section className="max-w-7xl mx-auto px-4 sm:px-6 pt-4 pb-12">
         {loading ? (
-          <div className={`grid grid-cols-${layout.mobile} sm:grid-cols-${layout.tablet} lg:grid-cols-${layout.desktop} gap-4`}>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {[1,2,3,4,5,6,7,8,9].map(i => <SkeletonCard key={i} />)}
           </div>
         ) : (
-          <div className={`grid grid-cols-${layout.mobile} sm:grid-cols-${layout.tablet} lg:grid-cols-${layout.desktop} gap-4 sm:gap-5`}>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {displayPlans.map(plan => (
-              <InsuranceCard key={plan._id} plan={plan} currency={currency} onSelect={() => setSelectedPlan(plan)} cardWidth={siteConfig?.cardDimensions?.insurance?.width} cardHeight={siteConfig?.cardDimensions?.insurance?.height} />
+              <InsuranceCard key={plan._id} plan={plan} currency={currency} onSelect={() => setSelectedPlan(plan)} />
             ))}
           </div>
         )}

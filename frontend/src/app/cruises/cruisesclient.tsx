@@ -122,6 +122,8 @@ const FALLBACK_CRUISES: Cruise[] = [
 
 export default function CruisesClient({ initialCruises, siteConfig }: { initialCruises: Cruise[]; siteConfig?: any }) {
   const layout = siteConfig?.sectionLayouts?.cruises || { desktop: 3, tablet: 2, mobile: 1 };
+  // Card size = Sky Lounge (mingalar) size unless cruises-specific dims are set
+  const loungeDims = siteConfig?.cardDimensions?.cruises || siteConfig?.cardDimensions?.mingalar;
   const heroImage = siteConfig?.heroImages?.cruises || "/images_v2/hero-cruises-v2.jpg";
   const crt = siteConfig?.heroText?.cruises || {};
   const crTitle = crt.title || "";
@@ -176,46 +178,41 @@ export default function CruisesClient({ initialCruises, siteConfig }: { initialC
               ? '$' + Number(cruise.priceUSD || 0).toLocaleString()
               : 'Ks ' + Number(cruise.priceMMK || 0).toLocaleString();
             return (
-              <div key={cruise.id} onClick={() => router.push("/cruises/" + (cruise.id || cruise._id || cruise.slug))} className="bg-white rounded-2xl border border-gray-200 overflow-hidden hover:shadow-xl hover:border-[#D4AF37]/40 transition-all group cursor-pointer">
-                <div className="relative overflow-hidden" style={{ height: (siteConfig?.cardDimensions?.cruises?.height) || 192 }}>
+              <div key={cruise.id} onClick={() => router.push("/cruises/" + (cruise.id || cruise._id || cruise.slug))} className="bg-white rounded-2xl border border-gray-200 overflow-hidden hover:shadow-xl hover:border-[#D4AF37]/40 transition-all group cursor-pointer flex flex-col" style={{ width: loungeDims?.width || undefined, maxWidth: "100%", height: loungeDims?.height || undefined }}>
+                <div className="relative overflow-hidden" style={{ height: loungeDims?.height ? Math.round(loungeDims.height * 0.5) : 192 }}>
                   <Image alt={cruise.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" onError={(e) => { (e.target as HTMLImageElement).src = '/images_v2/hero-cruises-v2.jpg'; }} src={cruise.images?.[0] || '/images_v2/hero-cruises-v2.jpg'} width={1600} height={900} sizes="100vw" />
                   <div className="absolute top-3 right-3 bg-[#D4AF37] text-[#0A1628] text-xs font-bold px-3 py-1 rounded-full">
                     {cruise.duration}
                   </div>
                 </div>
-                <div className="p-5">
-                  <h3 className="text-lg font-bold text-[#0A1628] group-hover:text-[#D4AF37] transition-colors mb-1">{cruise.title}</h3>
-                  <p className="text-gray-500 text-sm mb-2">{cruise.destination}</p>
-                  <p className="text-gray-600 text-sm line-clamp-2 mb-4">{cruise.description}</p>
-                  <div className="flex flex-wrap gap-1 mb-4">
-                    {(typeof cruise.amenities === 'string' && cruise.amenities.trim() ? cruise.amenities.split(',') : []).slice(0, 3).map((a, i) => (
-                      <span key={i} className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full">{a.trim()}</span>
-                    ))}
-                  </div>
-                  <div className="flex items-center justify-between mb-3">
+                <div className="p-4 flex flex-col flex-1">
+                  <h3 className="text-[15px] font-bold text-[#0A1628] group-hover:text-[#D4AF37] transition-colors mb-1">{cruise.title}</h3>
+                  <p className="text-gray-500 text-xs mb-1">{cruise.destination}</p>
+                  <p className="text-gray-600 text-xs leading-snug line-clamp-2 mb-2">{cruise.description}</p>
+                  <div className="flex items-center justify-between mb-2">
                     <div>
-                      <span className="text-[#8A6C0B] font-bold text-xl">{displayPrice}</span>
+                      <span className="text-[#8A6C0B] font-bold text-lg">{displayPrice}</span>
                       <span className="text-gray-500 text-xs ml-1">/ person</span>
                     </div>
                   </div>
                   {/* Action Buttons */}
-                  <div className="flex gap-2">
+                  <div className="flex gap-2 mt-auto pt-2">
                     <Link
                       href={'/cruises/' + (cruise.id || cruise._id || cruise.slug)}
-                      className="flex-1 px-3 py-2 border border-[#D4AF37] text-[#8A6C0B] text-sm font-semibold rounded-full text-center hover:bg-[#D4AF37] hover:text-[#0A1628] transition-colors"
+                      className="flex-1 px-2 py-1.5 border border-[#D4AF37] text-[#8A6C0B] text-xs font-semibold rounded-full text-center hover:bg-[#D4AF37] hover:text-[#0A1628] transition-colors"
                     >
                       {t("common.viewDetails")}
                     </Link>
                     <button
                       onClick={() => router.push('/book-now?type=cruise&name=' + encodeURIComponent(cruise.title||cruise.name||'') + '&destination=' + encodeURIComponent(cruise.destination) + '&id=' + (cruise.id || cruise._id || ''))}
-                      className="flex-1 px-3 py-2 bg-[#D4AF37] text-[#0A1628] text-sm font-semibold rounded-full hover:bg-[#C19B2F] transition-colors"
+                      className="flex-1 px-2 py-1.5 bg-[#D4AF37] text-[#0A1628] text-xs font-semibold rounded-full hover:bg-[#C19B2F] transition-colors"
                     >
                       {t("common.bookNow")}
                     </button>
                   </div>
                   <button
                     onClick={() => router.push('/contact?subject=' + encodeURIComponent('Cruise Inquiry') + '&item=' + encodeURIComponent(cruise.title || cruise.name || ''))}
-                    className="w-full mt-2 py-2 text-sm text-gray-600 hover:text-[#D4AF37] transition-colors"
+                    className="w-full mt-1 py-1.5 text-xs text-gray-600 hover:text-[#D4AF37] transition-colors"
                   >
                     {t("common.contactUs")}
                   </button>
