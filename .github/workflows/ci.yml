@@ -28,7 +28,9 @@ jobs:
 
       - name: Type-check
         run: npx tsc --noEmit
-        continue-on-error: true  # non-blocking until all TS errors resolved
+
+      - name: Test
+        run: npx vitest run
 
       - name: Build
         run: npx next build
