@@ -7,7 +7,7 @@
 import { supabase } from './supabase';
 import { Redis } from '@upstash/redis';
 
-type Collection = "tours" | "hotels" | "cars" | "cruises" | "visas" | "insurances" | "blog" | "bookings" | "mingalar" | "site-config" | "settings" | "knowledge" | "destinations" | "users";
+type Collection = "tours" | "hotels" | "cars" | "cruises" | "visas" | "insurances" | "blog" | "bookings" | "mingalar" | "site-config" | "settings" | "knowledge" | "destinations" | "users" | "audit-log";
 
 // ── Redis client (lazy) ────────────────────────────────────
 let _redis: any = null;
@@ -139,12 +139,19 @@ export async function create(collection: Collection, data: Record<string, any>):
   const item = { ...data, id, createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() };
   try {
     const { data: result, error } = await supabase.from(collection).insert(recordToRow(item)).select('id,payload,created_at,updated_at').single();
-    if (!error && result) return rowToRecord(result);
+    if (!error && result) {
+      if (collection !== "audit-log") await appendAudit(collection, "create", id);
+      return rowToRecord(result);
+    }
   } catch (err) {
     console.warn(`[Store] Supabase create(${collection}) failed, trying Redis:`, (err as Error).message?.substring(0, 80));
   }
   const redisResult = await redisSet(collection, item);
-  if (redisResult) { console.warn(`[Store] Saved ${collection}/${id} to Upstash Redis`); return redisResult; }
+  if (redisResult) {
+    console.warn(`[Store] Saved ${collection}/${id} to Upstash Redis`);
+    if (collection !== "audit-log") await appendAudit(collection, "create", id);
+    return redisResult;
+  }
   throw new Error(`Store unavailable: cannot persist ${collection}/${id} (no seed fallback)`);
 }
 
@@ -155,25 +162,39 @@ export async function update(collection: Collection, id: string, data: Record<st
     if (!existingRow.error && existingRow.data) {
       const merged = { ...existingRow.data.payload, ...payload, updatedAt: new Date().toISOString() };
       const { data: result, error } = await supabase.from(collection).update({ payload: merged, updated_at: merged.updatedAt }).eq('id', id).select('id,payload,created_at,updated_at').single();
-      if (!error && result) return rowToRecord(result);
+      if (!error && result) {
+        if (collection !== "audit-log") await appendAudit(collection, "update", id);
+        return rowToRecord(result);
+      }
     }
   } catch (err) {
     console.warn(`[Store] Supabase update(${collection}, ${id}) failed, trying Redis:`, (err as Error).message?.substring(0, 80));
   }
   const redisResult = await redisUpdate(collection, id, payload);
-  if (redisResult) { console.warn(`[Store] Updated ${collection}/${id} in Upstash Redis`); return redisResult; }
+  if (redisResult) {
+    console.warn(`[Store] Updated ${collection}/${id} in Upstash Redis`);
+    if (collection !== "audit-log") await appendAudit(collection, "update", id);
+    return redisResult;
+  }
   return null;
 }
 
 export const delete_ = async (collection: Collection, id: string): Promise<boolean> => {
   try {
     const { error } = await supabase.from(collection).delete().eq('id', id);
-    if (!error) return true;
+    if (!error) {
+      if (collection !== "audit-log") await appendAudit(collection, "delete", id);
+      return true;
+    }
   } catch (err) {
     console.warn(`[Store] Supabase delete(${collection}, ${id}) failed:`, (err as Error).message?.substring(0, 80));
   }
   const redisOk = await redisDelete(collection, id);
-  if (redisOk) { console.warn(`[Store] Deleted ${collection}/${id} from Upstash Redis`); return true; }
+  if (redisOk) {
+    console.warn(`[Store] Deleted ${collection}/${id} from Upstash Redis`);
+    if (collection !== "audit-log") await appendAudit(collection, "delete", id);
+    return true;
+  }
   return false;
 
 };
@@ -203,3 +224,17 @@ export async function getDashboardStats(): Promise<Record<string, number>> {
 
 export const updateById = update;
 export const deleteById = delete_;
+
+// ── Audit logging (FIX 2026-08-17 Phase 22) ──────────────────
+async function appendAudit(collection: string, action: "create" | "update" | "delete", id: string): Promise<void> {
+  try {
+    await create("audit-log", {
+      collection,
+      action,
+      targetId: id,
+      at: new Date().toISOString(),
+    });
+  } catch (err) {
+    console.warn("[Store] audit-log write failed:", (err as Error).message?.substring(0, 80));
+  }
+}

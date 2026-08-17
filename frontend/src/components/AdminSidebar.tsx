@@ -30,6 +30,7 @@ const navItems: NavItem[] = [
   { labelKey: "admin.manageUsers", icon: "👥", path: "/admin/users" },
   { labelKey: "admin.skyLounge", icon: "✨", path: "/admin/sky-lounge" },
   { labelKey: "admin.siteSettings", icon: "⚙️", path: "/admin/settings" },
+  { labelKey: "admin.auditLog", icon: "🔍", path: "/admin/audit-log" },
 ];
 
 export default function AdminSidebar() {
@@ -107,7 +108,7 @@ export default function AdminSidebar() {
     const secs = sectionsForPath(path);
     const hasSec = rank >= 3 || secs.length === 0 || auths.length === 0 || auths.some((a) => secs.includes(a));
     // Admin-only: user management + site settings
-    if (path === "/admin/users" || path === "/admin/settings") return rank >= 3;
+    if (path === "/admin/users" || path === "/admin/settings" || path === "/admin/audit-log") return rank >= 3;
     // Editor+: site manager (content editing)
     if (path === "/admin/site-manager") return rank >= 1 && hasSec;
     // Staff+: bookings management
