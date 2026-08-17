@@ -118,11 +118,19 @@ function VisaGridCard({ visa }: { visa: VisaService }) {
       )}
       <div className="p-4 flex flex-col flex-1 justify-between">
         <p className="text-xs text-gray-500">{visa.processingTime}</p>
-        <div className="flex flex-wrap gap-1.5 mt-1">
-          {visa.requirements.slice(0, 3).map((r, i) => (
-            <span key={i} className="text-[11px] bg-[#D4AF37]/10 text-[#7A5F08] px-2 py-1 rounded-full">{r}</span>
-          ))}
-        </div>
+        {visa.requirements.length > 0 && (
+          <div className="mt-1.5">
+            <p className="text-[10px] uppercase tracking-wider text-gray-400 mb-1">{t("visa.requiredDocs")}</p>
+            <ul className="space-y-1">
+              {visa.requirements.map((r, i) => (
+                <li key={i} className="flex items-start gap-1.5 text-[11px] leading-snug text-[#7A5F08]">
+                  <svg className="w-3 h-3 text-[#D4AF37] flex-shrink-0 mt-[1px]" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" /></svg>
+                  <span>{r}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
         {(visa.visaFeeMMK > 0 || visa.visaFeeUSD > 0) && (
           <div className="pt-2 flex gap-3 text-xs">
             {visa.visaFeeMMK > 0 && <span className="text-[#8A6C0B] font-bold">Ks {visa.visaFeeMMK.toLocaleString()}</span>}

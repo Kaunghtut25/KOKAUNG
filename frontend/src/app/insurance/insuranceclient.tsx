@@ -109,11 +109,19 @@ function InsuranceCard({ plan, currency, onSelect, cardWidth, cardHeight }: { pl
       </div>
       <div className="p-3 flex flex-col flex-1 justify-between gap-1.5">
         <p className="text-[11px] text-gray-500">{coverage} · {duration}</p>
-        <div className="flex flex-wrap gap-1">
-          {benefits.map((b, i) => (
-            <span key={i} className="text-[10px] bg-[#D4AF37]/10 text-[#7A5F08] px-1.5 py-0.5 rounded-full">{b}</span>
-          ))}
-        </div>
+        {benefits.length > 0 && (
+          <div>
+            <p className="text-[10px] uppercase tracking-wider text-gray-400 mb-0.5">{t("ins.includedBenefits")}</p>
+            <ul className="space-y-0.5">
+              {benefits.map((b, i) => (
+                <li key={i} className="flex items-start gap-1.5 text-[10px] leading-snug text-[#7A5F08]">
+                  <svg className="w-3 h-3 text-[#D4AF37] flex-shrink-0 mt-[1px]" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" /></svg>
+                  <span>{b}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
         <div className="mt-auto pt-1">
           <span className="text-[#8A6C0B] font-bold text-sm">{symbol} {price.toLocaleString()}</span>
         </div>
