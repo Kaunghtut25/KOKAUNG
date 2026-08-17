@@ -448,7 +448,7 @@ export default function HomePageClient({ siteConfig: ssrConfig }: { siteConfig?:
         </div>
 
       </section>
-      <div className="relative -mt-24 md:-mt-32 z-40 px-4">
+      <div className={"relative z-40 px-4 " + (effectiveMode ? "-mt-24 md:-mt-32" : "")}>
         <div className="max-w-5xl mx-auto">
           {effectiveMode ? (
           <div id="search-engine" className="bg-white rounded-2xl border-2 border-[#D4AF37]/30 shadow-xl p-5 md:p-7 overflow-visible">
