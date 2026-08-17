@@ -254,7 +254,7 @@ export default function AdminDestinationsPage() {
                 >
                   {editing.image ? (
                     <div className="relative">
-                      <img src={editing.image} alt={editing.city || "destination"} className="w-full h-40 object-cover rounded-lg" />
+                      <img src={editing.image} alt={editing.city || "destination"} width={640} height={160} className="w-full h-40 object-cover rounded-lg" />
                       <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition flex items-center justify-center gap-2 rounded-lg">
                         <span className="text-xs text-white bg-black/60 px-2 py-1 rounded">{t("admin.dest.dropReplace")}</span>
                       </div>

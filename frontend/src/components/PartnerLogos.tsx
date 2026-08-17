@@ -108,6 +108,8 @@ export default function PartnerLogos() {
                   <img
                     src={p.logo}
                     alt={p.name}
+                    width={40}
+                    height={40}
                     loading="lazy"
                     className="max-h-10 w-auto max-w-full object-contain transition-transform duration-200 hover:scale-105"
                   />
