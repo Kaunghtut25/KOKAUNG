@@ -56,6 +56,12 @@ export default function TourDetailPage() {
     paymentMethod: 'kbzpay',
   });
 
+  // FIX 2026-08-17: price/currencySymbol/totalPrice were dropped by 5c6d3a0 (P0 fallback removal)
+  // while the JSX still referenced them -> ReferenceError crashed every tour detail page.
+  const price = currency === 'MMK' ? (tour?.priceMMK ?? 0) : (tour?.priceUSD ?? 0);
+  const currencySymbol = currency === 'MMK' ? 'Ks' : '$';
+  const totalPrice = price * (bookingForm.travelers || 1);
+
   useEffect(() => {
     if (!slug) return;
 

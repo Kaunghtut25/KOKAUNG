@@ -408,6 +408,7 @@ export default function AdminToursPage() {
             onChange={(e) =>
               handleFieldChange("priceUSD", Number(e.target.value))
             }
+            className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-gold/50 transition-colors"
           />
           <p className="text-xs text-white/40 mt-1">{t("admin.form.quoteHint")}</p>
           <label className="flex items-center gap-2 text-sm text-white/80 mt-2">
@@ -415,12 +416,10 @@ export default function AdminToursPage() {
               type="checkbox"
               checked={!!editingTour.quote_required}
               onChange={(e) => handleFieldChange("quote_required", e.target.checked)}
-              className="accent-[#D4AF37]"
+              className="accent-[#D4AF37] w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-gold/50 transition-colors"
             />
             {t("admin.form.quoteRequired")}
           </label>
-            className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-gold/50 transition-colors"
-          />
         </div>
       </div>
 
