@@ -78,8 +78,9 @@ export async function signToken(payload: AuthPayload): Promise<string> {
 }
 
 /** Verify a signed token. Returns payload or null (invalid/expired/no secret). */
-export async function verifyToken(token: string): Promise<AuthPayload | null> {
+export async function verifyToken(token: string | undefined | null): Promise<AuthPayload | null> {
   try {
+    if (!token) return null;
     const parts = token.split('.');
     if (parts.length !== 2) return null;
     const [body, sig] = parts;

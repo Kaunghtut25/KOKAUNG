@@ -33,6 +33,15 @@ export async function middleware(request: NextRequest) {
     }
   }
 
+  // Protect booking-receiver reads/updates (GET list + PATCH status) — POST stays public for the booking form
+  if (pathname.startsWith("/api/booking-receiver") && request.method !== "POST") {
+    const header = request.headers.get("authorization");
+    const token = header?.startsWith("Bearer ") ? header.slice(7) : undefined;
+    if (!(await isAdminToken(token))) {
+      return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+    }
+  }
+
   // Protect /api/admin/* routes — EXCEPT public GET on site-config and settings
   if (pathname.startsWith("/api/admin/")) {
     // Allow public GET on site-config and settings (needed for Footer, Navbar, Contact, etc.)

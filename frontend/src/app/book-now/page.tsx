@@ -42,8 +42,8 @@ function BookNowContent() {
     if (!type) return;
 
     const bookingTypes: Record<string, string> = {
-      tour: "Tour Package", hotel: "Hotel Booking", car: "Car Rental",
-      visa: "Visa Service", insurance: "Insurance", cruise: "Cruise", lounge: "Sky Lounge", blog: "Blog Inquiry",
+      tour: "book.typeTour", hotel: "book.typeHotel", car: "book.typeCar",
+      visa: "book.typeVisa", insurance: "book.typeInsurance", cruise: "book.typeCruise", lounge: "book.typeLounge", blog: "book.typeBlog",
     };
     if (type in bookingTypes) {
       const title = searchParams.get("title") || searchParams.get("name") || searchParams.get("plan") || searchParams.get("country") || "";
@@ -70,12 +70,12 @@ function BookNowContent() {
       }
 
       setSearchSummary({
-        type: bookingTypes[type],
+        type: t(bookingTypes[type]),
         from: title,
         to: dest + (dur ? " \u2022 " + dur : "") + (coverage ? " \u2022 " + coverage : ""),
-        departDate: date || "Flexible",
+        departDate: date || t("book.flexible"),
         returnDate: priceDisplay,
-        passengers: travelers + " Traveler(s)",
+        passengers: travelers + " " + (Number(travelers) === 1 ? t("book.passenger") : t("book.passengers")),
         travelClass: "",
         itemName: title,
         amount: amt,
@@ -123,21 +123,21 @@ function BookNowContent() {
 
     const isFlightSearch = type === "flight" && from && to;
 
-    const tripTypeLabel = tripType === "roundtrip" ? "Round Trip Flight" : tripType === "multicity" ? "Multi-City Flight" : "One Way Flight";
-    const typeLabel = isFlightSearch ? tripTypeLabel : type === "oneway" ? "One Way" : type === "roundtrip" ? "Round Trip" : "Multi-City";
+    const tripTypeLabel = tripType === "roundtrip" ? t("book.roundTripFlight") : tripType === "multicity" ? t("book.multiCityFlight") : t("book.oneWayFlight");
+    const typeLabel = isFlightSearch ? tripTypeLabel : type === "oneway" ? t("book.oneWay") : type === "roundtrip" ? t("book.roundTrip") : t("book.multiCity");
 
     const fromLabel = isFlightSearch && fromCity ? fromCity + " (" + from + ")" + (fromCountry ? ", " + fromCountry : "") : from;
     const toLabel = isFlightSearch && toCity ? toCity + " (" + to + ")" + (toCountry ? ", " + toCountry : "") : to;
 
-    const classLabel = travelClass === "ECONOMY" ? "Economy" : travelClass === "PREMIUM_ECONOMY" ? "Premium Economy" : travelClass === "BUSINESS" ? "Business" : travelClass === "FIRST" ? "First" : travelClass;
-    const clientLabel = clientType === "foreigner" ? "Foreigner" : "Local (Myanmar)";
+    const classLabel = travelClass === "ECONOMY" ? t("flights.cabinEconomy") : travelClass === "PREMIUM_ECONOMY" ? t("flights.cabinPremium") : travelClass === "BUSINESS" ? t("flights.cabinBusiness") : travelClass === "FIRST" ? t("flights.cabinFirst") : travelClass;
+    const clientLabel = clientType === "foreigner" ? t("book.foreigner") : t("book.local");
 
     // Build rich summary for flight search
     let summary: SearchSummary = {
       type: typeLabel,
       from: fromLabel,
       to: toLabel,
-      departDate: departDate || "Flexible",
+      departDate: departDate || t("book.flexible"),
       returnDate: returnDate || "",
       passengers: paxLabel,
       travelClass: classLabel,
@@ -147,13 +147,13 @@ function BookNowContent() {
     if (isFlightSearch) {
       const flightInfo = [
         airline ? airline + " (" + flightNo + ")" : "",
-        departTime ? "Depart: " + departTime : "",
-        arriveTime ? "Arrive: " + arriveTime : "",
-        stops === "0" ? "Nonstop" : stops + " stop" + (stops !== "1" ? "s" : ""),
+        departTime ? t("book.depart") + " " + departTime : "",
+        arriveTime ? t("book.arrive") + " " + arriveTime : "",
+        stops === "0" ? t("flights.nonstop") : stops === "1" ? t("flights.oneStop") : t("flights.stops", { count: stops }),
         price ? currency + " " + parseFloat(price).toLocaleString("en-US", { minimumFractionDigits: 2 }) : "",
       ].filter(Boolean).join(" | ");
       summary.to = toLabel + (flightInfo ? " - " + flightInfo : "");
-      summary.itemName = "Flight " + from + " to " + to + (airline ? " | " + airline + " " + flightNo : "");
+      summary.itemName = t("book.flightItem", { from, to }) + (airline ? " | " + airline + " " + flightNo : "");
       summary.amount = parseFloat(price) || 0;
       summary.currency = currency;
 
@@ -162,7 +162,7 @@ function BookNowContent() {
       if (legsJson) {
         try {
           const legs = JSON.parse(legsJson);
-          legsDisplay = legs.map((l: any, i: number) => "Leg " + (i+1) + ": " + (l.from || "?") + " to " + (l.to || "?") + " on " + (l.date || "?")).join(" | ");
+          legsDisplay = legs.map((l: any, i: number) => t("book.leg") + " " + (i + 1) + ": " + (l.from || "?") + " " + t("book.legTo") + " " + (l.to || "?") + " " + t("book.legOn") + " " + (l.date || "?")).join(" | ");
         } catch {}
       }
 
@@ -207,10 +207,6 @@ function BookNowContent() {
     setErrors(errs);
     return errs.length === 0;
   };
-
-  // FIX 2026-08-16: stable idempotency key per form session — retries/double-clicks create one booking.
-
-  // FIX 2026-08-16: stable idempotency key per form session — retries/double-clicks create one booking.
 
   // FIX 2026-08-16: stable idempotency key per form session — retries/double-clicks create one booking.
   const [requestId] = useState(() => (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function' ? crypto.randomUUID() : 'bk-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 8)));
