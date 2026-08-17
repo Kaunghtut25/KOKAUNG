@@ -70,7 +70,7 @@ export const en: Record<string, string> = {
   "admin.auditLog": "Audit Log",
   "admin.section.services": "Services",
   "admin.section.content": "Content",
-  "admin.section.system": "System",
+  "admin.section.system": "Admin",
   "admin.knowledge": "Chat Knowledge",
   "admin.knowledge.title": "Chatbot Knowledge Base",
   "admin.knowledge.topic": "Topic",
