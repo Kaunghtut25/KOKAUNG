@@ -12,11 +12,11 @@ const inter = Inter({
 export const metadata: Metadata = {
   metadataBase: new URL("https://a9travel.com"),
   title: {
-    default: "A9 Global Travels & Tours | Luxury Travel Myanmar",
+    default: "A9 Global Travels & Tours | Luxury Travel in Myanmar",
     template: "%s | A9 Global Travel",
   },
   description:
-    "Your premier IATA-accredited luxury travel partner in Myanmar since 2015. Premium tours, hotels, cars, visas & insurance. Book your journey today.",
+    "Your premier IATA-accredited luxury travel partner in Myanmar since 2015. Premium tours, hotels, cars, visas, insurance & cruises — book your journey today.",
   keywords: [
     "Myanmar Tours", "Yangon Travel Agency", "IATA Travel Myanmar",
     "Hotel Booking Yangon", "Visa Services Myanmar", "Car Rental Myanmar",
@@ -28,7 +28,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     siteName: "A9 Global Travels & Tours",
-    title: "A9 Global Travels & Tours | Luxury Travel Myanmar",
+    title: "A9 Global Travels & Tours | Luxury Travel in Myanmar",
     description: "A9 Global Travels & Tours: your premier IATA-accredited luxury travel partner in Myanmar. Premium tours, hotels, cars, visas & insurance since 2015.",
     url: "https://a9travel.com",
     images: [{ url: "/og-image.jpg", width: 1200, height: 630, alt: "A9 Global Travels Myanmar luxury travel preview" }],
@@ -73,6 +73,7 @@ const jsonLd = {
   "contactPoint": {
     "@type": "ContactPoint",
     "telephone": "+959781617111",
+    "email": "info@a9globaltravel.com",
     "contactType": "customer service"
   },
   "sameAs": ["https://facebook.com/a9globaltravel", "https://instagram.com/a9globaltravel"]

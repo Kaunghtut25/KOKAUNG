@@ -141,7 +141,7 @@ export default function Calendar({
             onTouchEnd={handleTouchEnd}
           >
             <div className="flex items-center justify-between px-4 py-3.5 bg-gradient-to-r from-[#D4AF37]/10 to-[#D4AF37]/5 border-b border-[#D4AF37]/10">
-              <button type="button" onClick={goPrev} className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-[#D4AF37]/10 transition-colors">
+              <button type="button" onClick={goPrev} className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-[#D4AF37]/10 transition-colors">
                 <svg className="w-4 h-4 text-[#0A1628]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
                 </svg>
@@ -149,7 +149,7 @@ export default function Calendar({
               <h3 className="text-sm font-semibold text-[#0A1628] tracking-wide">
                 {MONTH_NAMES[viewMonth]} {viewYear}
               </h3>
-              <button type="button" onClick={goNext} className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-[#D4AF37]/10 transition-colors">
+              <button type="button" onClick={goNext} className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-[#D4AF37]/10 transition-colors">
                 <svg className="w-4 h-4 text-[#0A1628]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                 </svg>

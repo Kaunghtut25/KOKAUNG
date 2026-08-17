@@ -132,7 +132,7 @@ function PassengerSelector({ passengers, onChange }: { passengers: PassengerCoun
       {isOpen && (
         <div className="absolute top-full left-0 right-0 z-50 bg-white border border-gray-200 rounded-lg shadow-xl mt-1 p-3">
           {(["adults","children","infants"] as const).map(k=><div key={k} className="flex items-center justify-between py-1.5"><span className="text-sm text-gray-700 capitalize">{k}</span><div className="flex items-center gap-2"><button type="button" onClick={()=>update(k,-1)} className={`w-7 h-7 rounded-full flex items-center justify-center text-sm font-bold transition-colors ${passengers[k] <= (k==="adults"?1:0) ? 'bg-gray-100 text-gray-300 cursor-not-allowed' : 'bg-gray-200 text-gray-600 hover:bg-gray-300'}`} disabled={passengers[k] <= (k==="adults"?1:0)}>−</button><span className="w-6 text-center text-gray-900 font-semibold text-sm">{passengers[k]}</span><button type="button" onClick={()=>update(k,1)} className="w-7 h-7 rounded-full bg-gray-200 text-gray-600 text-sm font-bold hover:bg-gray-300 flex items-center justify-center transition-colors">+</button></div></div>)}
-          <button type="button" onClick={() => setIsOpen(false)} className="w-full mt-2 py-1.5 rounded-lg bg-[#D4AF37] text-[#0A1628] text-xs font-semibold hover:bg-[#C5A028] transition-colors">Done</button>
+          <button type="button" onClick={() => setIsOpen(false)} className="w-full mt-2 py-2.5 rounded-lg bg-[#D4AF37] text-[#0A1628] text-xs font-semibold hover:bg-[#C5A028] transition-colors">Done</button>
         </div>
       )}
     </div>
@@ -199,11 +199,11 @@ function BusDatePicker({ value, onChange }: { value: string; onChange: (v: strin
         <div className="absolute top-full left-0 mt-1 z-50 bg-white border border-gray-200 rounded-xl shadow-2xl p-4 w-72" style={{minWidth:"280px"}}>
           {/* Header */}
           <div className="flex items-center justify-between mb-3">
-            <button onClick={prevMonth} className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100 text-gray-500 transition-colors">
+            <button onClick={prevMonth} className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-gray-100 text-gray-500 transition-colors">
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7"/></svg>
             </button>
             <span className="text-sm font-semibold text-gray-800">{months[viewMonth]} {viewYear}</span>
-            <button onClick={nextMonth} className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100 text-gray-500 transition-colors">
+            <button onClick={nextMonth} className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-gray-100 text-gray-500 transition-colors">
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7"/></svg>
             </button>
           </div>
@@ -464,7 +464,7 @@ export default function HomePageClient({ siteConfig: ssrConfig }: { siteConfig?:
                       <AirportInput label="" value={leg.from} onChange={(val)=>updateMultiCityLeg(index,"from",val)} placeholder={t("home.fromCity")} icon={<svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" /></svg>} />
                       <AirportInput label="" value={leg.to} onChange={(val)=>updateMultiCityLeg(index,"to",val)} placeholder={t("home.toCity")} icon={<svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /></svg>} />
                       <div className="flex-1 min-w-[140px]"><label className="block text-gray-500 text-xs uppercase tracking-wider mb-1 flex items-center gap-1"><span className="text-[#D4AF37]">📅</span>{t("home.date")}</label><BusDatePicker value={leg.date} onChange={(v)=>updateMultiCityLeg(index,"date",v)} /></div>
-                      {multiCityLegs.length>2&&<button type="button" onClick={()=>handleRemoveLeg(index)} className="flex items-center justify-center w-7 h-7 mt-3 rounded-full text-gray-300 hover:text-red-400 hover:bg-red-50 transition-all flex-shrink-0 text-sm">✕</button>}
+                      {multiCityLegs.length>2&&<button type="button" onClick={()=>handleRemoveLeg(index)} className="flex items-center justify-center w-11 h-11 mt-3 rounded-full text-gray-300 hover:text-red-400 hover:bg-red-50 transition-all flex-shrink-0 text-sm">✕</button>}
                     </div>)}
                   </div>
                   {multiCityLegs.length<6&&<div className="flex items-start gap-2"><div className="w-10 flex-shrink-0"/><div className="flex-1"><button type="button" onClick={handleAddLeg} className="flex items-center gap-2 text-[#D4AF37] hover:text-[#C5A028] text-sm font-medium transition-colors cursor-pointer py-1"><svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4"/></svg>{t("home.addAnotherFlight")}</button></div></div>}
@@ -503,25 +503,25 @@ export default function HomePageClient({ siteConfig: ssrConfig }: { siteConfig?:
                   <div className="w-full md:w-auto">
                     <label className="block text-gray-500 text-xs uppercase tracking-wider mb-1"><span className="text-[#D4AF37]">👥</span> {t("home.passengers")}</label>
                     <div className="flex gap-1 bg-gray-50 border border-gray-200 rounded-lg p-1">
-                      <button type="button" onClick={()=>{if(totalPax>1)setBusPassengers({...bp,adults:Math.max(1,bp.adults-1)})}} disabled={totalPax<=1} className="w-8 h-8 rounded-md bg-white text-gray-600 font-bold hover:bg-gray-100 disabled:opacity-30 transition-all cursor-pointer">−</button>
+                      <button type="button" onClick={()=>{if(totalPax>1)setBusPassengers({...bp,adults:Math.max(1,bp.adults-1)})}} disabled={totalPax<=1} className="w-10 h-10 rounded-md bg-white text-gray-600 font-bold hover:bg-gray-100 disabled:opacity-30 transition-all cursor-pointer">−</button>
                       <span className="flex items-center justify-center min-w-[60px] text-xs font-medium text-gray-700">{totalPax} {t("home.pax")}</span>
-                      <button type="button" onClick={()=>{if(totalPax<9)setBusPassengers({...bp,adults:bp.adults+1})}} disabled={totalPax>=9} className="w-8 h-8 rounded-md bg-white text-gray-600 font-bold hover:bg-gray-100 disabled:opacity-30 transition-all cursor-pointer">+</button>
+                      <button type="button" onClick={()=>{if(totalPax<9)setBusPassengers({...bp,adults:bp.adults+1})}} disabled={totalPax>=9} className="w-10 h-10 rounded-md bg-white text-gray-600 font-bold hover:bg-gray-100 disabled:opacity-30 transition-all cursor-pointer">+</button>
                     </div>
                   </div>
                   <div className="w-full md:w-auto">
                     <label className="block text-gray-500 text-xs uppercase tracking-wider mb-1">🧑 {t("home.adults")}</label>
                     <div className="flex gap-1 bg-gray-50 border border-gray-200 rounded-lg p-1">
-                      <button type="button" onClick={()=>{if(bp.adults>1&&totalPax>1)setBusPassengers({...bp,adults:bp.adults-1})}} disabled={bp.adults<=1} className="w-8 h-8 rounded-md bg-white text-gray-600 font-bold hover:bg-gray-100 disabled:opacity-30 transition-all cursor-pointer">−</button>
+                      <button type="button" onClick={()=>{if(bp.adults>1&&totalPax>1)setBusPassengers({...bp,adults:bp.adults-1})}} disabled={bp.adults<=1} className="w-10 h-10 rounded-md bg-white text-gray-600 font-bold hover:bg-gray-100 disabled:opacity-30 transition-all cursor-pointer">−</button>
                       <span className="flex items-center justify-center min-w-[30px] text-xs font-medium text-gray-700">{bp.adults}</span>
-                      <button type="button" onClick={()=>{if(totalPax<9)setBusPassengers({...bp,adults:bp.adults+1})}} disabled={totalPax>=9} className="w-8 h-8 rounded-md bg-white text-gray-600 font-bold hover:bg-gray-100 disabled:opacity-30 transition-all cursor-pointer">+</button>
+                      <button type="button" onClick={()=>{if(totalPax<9)setBusPassengers({...bp,adults:bp.adults+1})}} disabled={totalPax>=9} className="w-10 h-10 rounded-md bg-white text-gray-600 font-bold hover:bg-gray-100 disabled:opacity-30 transition-all cursor-pointer">+</button>
                     </div>
                   </div>
                   <div className="w-full md:w-auto">
                     <label className="block text-gray-500 text-xs uppercase tracking-wider mb-1">👶 {t("home.children")}</label>
                     <div className="flex gap-1 bg-gray-50 border border-gray-200 rounded-lg p-1">
-                      <button type="button" onClick={()=>setBusPassengers({...bp,children:Math.max(0,bp.children-1)})} disabled={bp.children<=0} className="w-8 h-8 rounded-md bg-white text-gray-600 font-bold hover:bg-gray-100 disabled:opacity-30 transition-all cursor-pointer">−</button>
+                      <button type="button" onClick={()=>setBusPassengers({...bp,children:Math.max(0,bp.children-1)})} disabled={bp.children<=0} className="w-10 h-10 rounded-md bg-white text-gray-600 font-bold hover:bg-gray-100 disabled:opacity-30 transition-all cursor-pointer">−</button>
                       <span className="flex items-center justify-center min-w-[30px] text-xs font-medium text-gray-700">{bp.children}</span>
-                      <button type="button" onClick={()=>{if(totalPax<9)setBusPassengers({...bp,children:bp.children+1})}} disabled={totalPax>=9} className="w-8 h-8 rounded-md bg-white text-gray-600 font-bold hover:bg-gray-100 disabled:opacity-30 transition-all cursor-pointer">+</button>
+                      <button type="button" onClick={()=>{if(totalPax<9)setBusPassengers({...bp,children:bp.children+1})}} disabled={totalPax>=9} className="w-10 h-10 rounded-md bg-white text-gray-600 font-bold hover:bg-gray-100 disabled:opacity-30 transition-all cursor-pointer">+</button>
                     </div>
                   </div>
                   <div className="w-full md:w-[180px]">
