@@ -922,13 +922,14 @@ const inputCls = "w-full px-3 py-2 rounded-lg border border-white/10 text-white 
               <p className="text-sm text-white/60">{t("admin.sm.layoutHint")}</p>
               {sectionKeys.map(sk => {
                 const sl = cfg.sectionLayouts?.[sk.key] || { desktop: 3, tablet: 2, mobile: 1 };
+                const locked = sk.key === "insurance"; // fixed: 4 per row like visas
                 return (
                   <div key={sk.key} className="border border-white/10 bg-white/5 text-white rounded-lg p-4 space-y-3">
-                    <h3 className="font-medium text-white">{sk.label}</h3>
+                    <h3 className="font-medium text-white">{sk.label}{locked && <span className="ml-2 text-xs text-[#D4AF37]">— {t("admin.sm.insLayoutFixed")}</span>}</h3>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                       <div>
                         <label className="block text-xs font-medium text-white/60 mb-1">{t("admin.sm.desktop")}</label>
-                        <select className="w-full px-3 py-2 rounded-lg border border-white/10 text-white text-sm" style={{ backgroundColor: "rgba(255,255,255,0.06)", color: "white" }} value={sl.desktop} onChange={e => {
+                        <select className="w-full px-3 py-2 rounded-lg border border-white/10 text-white text-sm" style={{ backgroundColor: "rgba(255,255,255,0.06)", color: "white" }} disabled={locked} value={locked ? 4 : sl.desktop} onChange={e => {
                           const v = parseInt(e.target.value);
                           setCfg(p => ({ ...p, sectionLayouts: { ...p.sectionLayouts, [sk.key]: { ...sl, desktop: v } } }));
                         }}>
@@ -937,7 +938,7 @@ const inputCls = "w-full px-3 py-2 rounded-lg border border-white/10 text-white 
                       </div>
                       <div>
                         <label className="block text-xs font-medium text-white/60 mb-1">{t("admin.sm.tablet")}</label>
-                        <select className="w-full px-3 py-2 rounded-lg border border-white/10 text-white text-sm" style={{ backgroundColor: "rgba(255,255,255,0.06)", color: "white" }} value={sl.tablet} onChange={e => {
+                        <select className="w-full px-3 py-2 rounded-lg border border-white/10 text-white text-sm" style={{ backgroundColor: "rgba(255,255,255,0.06)", color: "white" }} disabled={locked} value={locked ? 2 : sl.tablet} onChange={e => {
                           const v = parseInt(e.target.value);
                           setCfg(p => ({ ...p, sectionLayouts: { ...p.sectionLayouts, [sk.key]: { ...sl, tablet: v } } }));
                         }}>
@@ -946,7 +947,7 @@ const inputCls = "w-full px-3 py-2 rounded-lg border border-white/10 text-white 
                       </div>
                       <div>
                         <label className="block text-xs font-medium text-white/60 mb-1">{t("admin.sm.mobile")}</label>
-                        <select className="w-full px-3 py-2 rounded-lg border border-white/10 text-white text-sm" style={{ backgroundColor: "rgba(255,255,255,0.06)", color: "white" }} value={sl.mobile} onChange={e => {
+                        <select className="w-full px-3 py-2 rounded-lg border border-white/10 text-white text-sm" style={{ backgroundColor: "rgba(255,255,255,0.06)", color: "white" }} disabled={locked} value={locked ? 1 : sl.mobile} onChange={e => {
                           const v = parseInt(e.target.value);
                           setCfg(p => ({ ...p, sectionLayouts: { ...p.sectionLayouts, [sk.key]: { ...sl, mobile: v } } }));
                         }}>
@@ -1283,20 +1284,26 @@ const inputCls = "w-full px-3 py-2 rounded-lg border border-white/10 text-white 
                 { key: "mingalar", label: t("admin.sm.section.skyLounge") },
               ].map(({ key, label }) => {
                 const cd = cfg.cardDimensions?.[key] || { width: 300, height: 420 };
+                const locked = key === "cruises" || key === "insurance";
+                const note = key === "cruises" ? t("admin.sm.cruiseDimsFollow")
+                  : key === "insurance" ? t("admin.sm.insDimsAuto")
+                  : key === "mingalar" ? t("admin.sm.mingalarDimsNote")
+                  : null;
                 return (
                   <div key={key} className="border border-white/10 bg-white/5 text-white rounded-lg p-4">
                     <h4 className="font-medium mb-2">{label} {t("admin.sm.cards")}</h4>
+                    {note && <p className={"text-xs mb-2 " + (locked ? "text-[#D4AF37]" : "text-white/50")}>{note}</p>}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                       <div>
                         <label className={labelCls}>{t("admin.sm.widthPx")}</label>
                         <input type="number" className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }}
-                          value={cd.width} min={200} max={800} step={10}
+                          value={cd.width} min={200} max={800} step={10} disabled={locked}
                           onChange={e => setCfg(p => ({ ...p, cardDimensions: { ...(p.cardDimensions || {}), [key]: { ...cd, width: parseInt(e.target.value) || 300 } } }))} />
                       </div>
                       <div>
                         <label className={labelCls}>{t("admin.sm.heightPx")}</label>
                         <input type="number" className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }}
-                          value={cd.height} min={200} max={900} step={10}
+                          value={cd.height} min={200} max={900} step={10} disabled={locked}
                           onChange={e => setCfg(p => ({ ...p, cardDimensions: { ...(p.cardDimensions || {}), [key]: { ...cd, height: parseInt(e.target.value) || 420 } } }))} />
                       </div>
                     </div>
