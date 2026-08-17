@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState, useCallback } from "react";
 import { useI18n } from "@/lib/i18n";
+import { useClientRole } from "@/lib/useClientRole";
 import Image from "next/image";
 
 /* ─────────────────────────────────────────────────────────────
@@ -94,6 +95,7 @@ const btnGhost =
 
 export default function AdminAboutPage() {
   const { t } = useI18n();
+  const isViewer = useClientRole() === "viewer";
   const token = typeof window !== "undefined" ? localStorage.getItem("admin_token") : "";
   const [about, setAbout] = useState<AboutConfig>(defaultAbout);
   const [loading, setLoading] = useState(true);
@@ -271,11 +273,17 @@ export default function AdminAboutPage() {
         </div>
         <div className="flex items-center gap-3">
           {savedMsg && <span className="text-sm text-emerald-400">{savedMsg}</span>}
+{!isViewer && (
           <button onClick={save} disabled={saving} className={btnGold}>
             {saving ? t("admin.common.saving") : t("admin.about.saveBtn")}
           </button>
+          )}
         </div>
       </div>
+
+      {isViewer && (
+        <div className="mb-4 rounded-lg border border-yellow-500/40 bg-yellow-500/10 px-4 py-2 text-sm text-yellow-200">{t("admin.readOnly.banner")}</div>
+      )}
 
       {uploadError && (
         <div className="bg-red-500/10 border border-red-500/30 text-red-400 text-sm rounded-lg px-4 py-2">
@@ -314,9 +322,11 @@ export default function AdminAboutPage() {
                 <div className="flex items-center justify-center h-full text-white/50 text-sm">{t("admin.about.noImage")}</div>
               )}
             </div>
+{!isViewer && (
             <button onClick={() => openUploader("heroImage")} disabled={uploadingKey === "heroImage"} className={`${btnGhost} mt-2 w-full`}>
               {uploadingKey === "heroImage" ? t("admin.form.uploading") : t("admin.about.uploadHero")}
             </button>
+            )}
           </div>
         </div>
       </div>
@@ -462,12 +472,14 @@ export default function AdminAboutPage() {
                 <input className={inputCls} placeholder={t("admin.about.phCertTitle")} value={c.title} onChange={(e) => updateCert(i, { title: e.target.value })} />
                 <input className={inputCls} placeholder={t("admin.about.phCertCode")} value={c.code} onChange={(e) => updateCert(i, { code: e.target.value })} />
               </div>
+{!isViewer && (
               <div className="flex flex-row sm:flex-col gap-2 flex-shrink-0">
                 <button onClick={() => openUploader(`cert:${i}`)} disabled={uploadingKey === `cert:${i}`} className={`${btnGhost} text-xs px-3 py-1.5`}>
                   {uploadingKey === `cert:${i}` ? "..." : "📤"}
                 </button>
                 <button onClick={() => removeCert(i)} className="px-3 py-1.5 rounded-lg bg-red-500/10 text-red-400 text-xs hover:bg-red-500/20 transition-colors">🗑️</button>
               </div>
+              )}
             </div>
           ))}
         </div>

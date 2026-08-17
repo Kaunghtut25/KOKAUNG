@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { useI18n } from "@/lib/i18n";
+import { useClientRole } from "@/lib/useClientRole";
 import toast from "react-hot-toast";
 import Image from "next/image";
 
@@ -21,6 +22,7 @@ const API_BASE = process.env.NEXT_PUBLIC_API_URL || "/api";
 
 export default function AdminMingalarPage() {
   const { t } = useI18n();
+  const isViewer = useClientRole() === "viewer";
   const [items, setItems] = useState<LoungeItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [editing, setEditing] = useState<LoungeItem | null>(null);
@@ -231,7 +233,11 @@ export default function AdminMingalarPage() {
         <Link href="/admin/dashboard" className="text-[#D4AF37] hover:text-[#C5A028] text-sm">{t("admin.common.dashboardBack")}</Link>
       </div>
 
-      {/* Form */}
+      {isViewer && (
+        <div className="mb-4 rounded-lg border border-yellow-500/40 bg-yellow-500/10 px-4 py-2 text-sm text-yellow-200">{t("admin.readOnly.banner")}</div>
+      )}
+
+{!isViewer && (
       <div className="bg-[#1a2744] rounded-xl p-6 mb-6 border border-gray-700">
         <h2 className="text-white font-semibold mb-4">{editing ? t("admin.sky.editCard") : t("admin.sky.addCard")}</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
@@ -307,6 +313,7 @@ export default function AdminMingalarPage() {
           )}
         </div>
       </div>
+      )}
 
       {/* Cards List */}
       {loading ? (
@@ -334,8 +341,10 @@ export default function AdminMingalarPage() {
                 <div className="flex gap-2 mt-3">
                   <Link href={`/mingalar/${item._id || item.id}`} target="_blank" rel="noopener noreferrer" className="text-xs px-3 py-1 bg-cyan-600 text-white rounded hover:bg-cyan-500 inline-block text-center">{t("admin.common.view")}</Link>
 
+{!isViewer && (<>
                   <button onClick={() => handleEdit(item)} className="text-xs px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-500">{t("admin.common.edit")}</button>
                   <button onClick={() => handleDelete(item)} className="text-xs px-3 py-1 bg-red-600 text-white rounded hover:bg-red-500">{t("admin.common.delete")}</button>
+                  </>)}
                 </div>
               </div>
             </div>

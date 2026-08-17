@@ -4,6 +4,7 @@ import React, { useEffect, useState, useCallback } from "react";
 import Link from "next/link";
 import AdminFormModal from "@/components/AdminFormModal";
 import { useI18n } from "@/lib/i18n";
+import { useClientRole } from "@/lib/useClientRole";
 import Image from "next/image";
 
 interface Visa {
@@ -42,6 +43,7 @@ const emptyVisa: Visa = {
 
 export default function AdminVisasPage() {
   const { t } = useI18n();
+  const isViewer = useClientRole() === "viewer";
   const [visas, setVisas] = useState<Visa[]>([]);
   const [loading, setLoading] = useState(true);
   const [modalOpen, setModalOpen] = useState(false);
@@ -395,13 +397,19 @@ export default function AdminVisasPage() {
             {t("admin.visas.subtitle")}
           </p>
         </div>
+{!isViewer && (
         <button
           onClick={openCreateModal}
           className="px-5 py-2.5 rounded-lg bg-gold text-deepblue-dark font-semibold text-sm hover:bg-gold/90 transition-all flex items-center gap-2"
         >
           <span>🛂</span> {t("admin.visas.addNew")}
         </button>
+        )}
       </div>
+
+      {isViewer && (
+        <div className="mb-4 rounded-lg border border-yellow-500/40 bg-yellow-500/10 px-4 py-2 text-sm text-yellow-200">{t("admin.readOnly.banner")}</div>
+      )}
 
       <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl overflow-hidden">
         <div className="overflow-x-auto">
@@ -452,6 +460,7 @@ export default function AdminVisasPage() {
                         <Link href={`/visas/${visa.id}`} target="_blank" rel="noopener noreferrer" className="px-3 py-1 rounded bg-blue-500/10 text-blue-400 text-xs hover:bg-blue-500/20 transition-colors">
                           {t("admin.common.view")}
                         </Link>
+{!isViewer && (<>
                         <button
                           onClick={() => openEditModal(visa)}
                           className="px-3 py-1 rounded bg-gold/10 text-gold text-xs hover:bg-gold/20 transition-colors"
@@ -464,6 +473,7 @@ export default function AdminVisasPage() {
                         >
                           {t("admin.common.delete")}
                         </button>
+                        </>)}
                       </div>
                     </td>
                   </tr>

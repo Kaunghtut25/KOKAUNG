@@ -47,6 +47,7 @@ export const en: Record<string, string> = {
   "footer.umta": "UMTA Member",
 
   // Admin
+  "admin.readOnly.banner": "Read-only view — you can browse but cannot save changes.",
   "admin.panel": "ADMIN PANEL",
   "admin.administrator": "Administrator",
   "admin.logout": "Logout",

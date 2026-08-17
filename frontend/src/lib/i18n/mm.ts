@@ -47,6 +47,7 @@ export const mm: Record<string, string> = {
   "footer.umta": "UMTA အဖွဲ့ဝင်",
 
   // Admin
+  "admin.readOnly.banner": "ကြည့်ရှုခွင့်သာ — ပြောင်းလဲမှုများကို သိမ်းဆည်း၍မရပါ။",
   "admin.panel": "အက်မင် စနစ်",
   "admin.administrator": "အက်မင်နစ္စထရေတာ",
   "admin.logout": "ထွက်မည်",
