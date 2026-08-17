@@ -163,6 +163,7 @@ export interface BookingData {
   currency: 'MMK' | 'USD';
   paymentMethod: 'kbzpay' | 'wavepay' | 'bank_transfer';
   transactionId?: string;
+  requestId?: string;
 }
 
 export interface Booking {

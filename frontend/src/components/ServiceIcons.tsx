@@ -93,13 +93,13 @@ export default function ServiceIcons___FINALV5() {
             {services.filter(item => moduleToggles[item.key] !== false).map((item) => {
               if ('href' in item) {
                 const active = item.href !== '/' && (pathname === item.href || pathname.startsWith(item.href + '/'));
-                return <NavLink key={item.href} label={lang === "mm" ? (MM_LABELS[item.label] || item.label) : item.label} icon={item.icon} href={item.href} active={active} />;
+                return <NavLink key={item.href} label={lang === "mm" ? (MM_LABELS[item.label || ""] || item.label || "") : (item.label || "")} icon={item.icon || ""} href={item.href || "/"} active={active} />;
               }
               const active = isHomePage && mode === item.key;
               return (
                 <ToggleButton
                   key={item.label}
-                  label={lang === "mm" ? (MM_LABELS[item.label] || item.label) : item.label}
+                  label={lang === "mm" ? (MM_LABELS[item.label || ""] || item.label || "") : (item.label || "")}
                   icon={item.icon}
                   active={active}
                   onToggle={() => {

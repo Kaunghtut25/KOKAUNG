@@ -221,7 +221,7 @@ export default function ToursClient(props: any) {
             <option value="price_desc">{t("list.priceHighLow")}</option>
             <option value="duration">{t("list.durationShortLong")}</option>
           </select>
-          <CurrencyToggle currency={currency} setCurrency={setCurrency} />
+          <CurrencyToggle activeCurrency={currency} onToggle={setCurrency} />
         </div>
       </section>
 

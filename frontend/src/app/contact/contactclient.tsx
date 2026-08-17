@@ -84,6 +84,7 @@ export default function ContactClient({ siteConfig }: { siteConfig: any }) {
         email: "",
         phone: "",
         subject: "General Inquiry",
+        website: "",
         message: "",
       });
     } catch {

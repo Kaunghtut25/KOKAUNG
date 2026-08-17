@@ -29,7 +29,7 @@ const FALLBACK_FEATURES: { icon: string; title: string; desc: string; image?: st
 
 export default function WhyChooseUs() {
   const { lang } = useI18n();
-  const [features, setFeatures] = useState<{ icon: string; title: string; desc: string; image: string }[]>(FALLBACK_FEATURES);
+  const [features, setFeatures] = useState<{ icon: string; title: string; desc: string; image?: string }[]>(FALLBACK_FEATURES);
   const [title, setTitle] = useState(DEFAULT_WHY.title);
   const [tagline, setTagline] = useState(DEFAULT_WHY.tagline);
   const [cardWidth, setCardWidth] = useState(DEFAULT_WHY.cardWidth);

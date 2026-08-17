@@ -216,7 +216,7 @@ export default function VisasClient({ initialVisas, siteConfig }: VisasClientPro
           ))}
         </div>
       </section>
-{selectedVisa && <BookingModal isOpen={!!selectedVisa} onClose={() => setSelectedVisa(null)} title={`Apply for ${selectedVisa.country} Visa`} fields={['Name','Passport No','Travel Date']} />}
+{selectedVisa && <BookingModal isOpen={!!selectedVisa} onClose={() => setSelectedVisa(null)} itemType="visa" itemId={selectedVisa._id} itemName={`Apply for ${selectedVisa.country} Visa`} />}
           <DealsBanner />
       <FAQAccordion section="visas" />
       <TestimonialSlider />

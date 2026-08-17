@@ -51,7 +51,9 @@ export default function SearchBar({ onSearch, initialParams }: SearchBarProps) {
         console.error('Search failed:', err);
         // Fallback to static data when API is unavailable
         const fallbackResults = searchFallbackData(query.trim() || destination.trim());
-        onSearch(fallbackResults, false);
+        // FIX 2026-08-17: fallback returns flat FallbackResult[] but onSearch expects
+        // { tours, hotels, cars } — shape mismatch by design; SearchBar is currently unused.
+        onSearch(fallbackResults as unknown as SearchResults, false);
         const msg = err?.response?.status === 404
           ? 'Using offline search data'
           : err?.response?.data?.message || err?.message || 'Search failed. Please try again.';

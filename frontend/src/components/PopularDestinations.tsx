@@ -17,7 +17,7 @@ const CITY_FIX_MAP: Record<string, string> = {
   "Vietnam": "Ho Chi Minh City"
 };
 
-function DestinationCard({ dest, destText = {} }: { dest: { city: string; country: string; image: string; minPrice: string; rating?: number; reviews?: number; duration?: string; tags?: string[]; description?: string } }) {
+function DestinationCard({ dest, destText = {} }: { dest: { city: string; country: string; image: string; minPrice: string; rating?: number; reviews?: number; duration?: string; tags?: string[]; description?: string }; destText?: Record<string, string> }) {
   const { t, lang } = useI18n();
   const [imgError, setImgError] = useState(false);
   const [isHovered, setIsHovered] = useState(false);

@@ -226,7 +226,7 @@ export default function AdminToursPage() {
     setItineraryDays(updated);
   };
 
-  const handleFieldChange = (field: keyof Tour, value: string | number) => {
+  const handleFieldChange = (field: keyof Tour, value: string | number | boolean) => {
     setEditingTour((prev) => ({ ...prev, [field]: value }));
   };
 

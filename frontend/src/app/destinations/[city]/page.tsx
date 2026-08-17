@@ -25,6 +25,7 @@ interface PopularDestination {
   description?: string;
   description2?: string;
   highlights?: string[];
+  groupSize?: string;
 }
 
 const DEST_HERO = "https://vydupdjfr38dxlzx.public.blob.vercel-storage.com/uploads/img_1784609663178_ta1biy-bangkok-x7Q8kUMuXRvj6qMJAZxBbawKS4zkjI.jpg";

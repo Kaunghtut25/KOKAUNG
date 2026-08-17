@@ -368,7 +368,7 @@ export default function TourDetailPage() {
                               </p>
                               {day.meals.length > 0 && (
                                 <div className="flex flex-wrap gap-1.5 mt-3">
-                                  {day.meals.map((meal) => (
+                                  {day.meals.map((meal: string) => (
                                     <span
                                       key={meal}
                                       className="px-2.5 py-1 rounded-full bg-[#D4AF37]/10 text-[#7A5F08] text-xs font-medium border border-[#D4AF37]/20"
@@ -409,7 +409,7 @@ export default function TourDetailPage() {
                       <p className="text-gray-600 text-sm leading-relaxed">{day.description}</p>
                       {day.meals && day.meals.length > 0 && (
                         <div className="flex gap-2 mt-2">
-                          {day.meals.map((meal, mi) => (
+                          {day.meals.map((meal: string, mi: number) => (
                             <span key={mi} className="px-2 py-0.5 rounded-full bg-orange-500/10 text-orange-400 text-xs border border-orange-500/20">
                               {meal}
                             </span>
