@@ -147,7 +147,7 @@ export default function Navbar() {
         mobileOpen ? "opacity-100" : "opacity-0 pointer-events-none"}`}
         onClick={() => setMobileOpen(false)} />
 
-      <div className={`fixed top-0 right-0 z-50 h-full w-72 bg-[#0A1628] border-l border-[#D4AF37]/20 shadow-2xl transform transition-transform duration-500 ease-in-out lg:hidden ${
+      <div aria-hidden={!mobileOpen} className={`fixed top-0 right-0 z-50 h-full w-72 bg-[#0A1628] border-l border-[#D4AF37]/20 shadow-2xl transform transition-transform duration-500 ease-in-out lg:hidden ${
         mobileOpen ? "translate-x-0" : "translate-x-full"}`}>
         <div className="flex flex-col h-full pt-6">
           <div className="px-6 pb-6 border-b border-[#D4AF37]/20">

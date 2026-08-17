@@ -90,6 +90,14 @@ export default function PrivacyClient({ siteConfig }: { siteConfig: any }) {
               <strong> info@a9globaltravel.com</strong> or <strong>+95 9 781 617 111</strong> (A9 Global Travels &amp; Tours,
               Yangon, Myanmar). We respond to all requests within 30 days.
             </p>
+            <h3 style={{ color: '#0A1628', fontSize: 17, marginBottom: 8, marginTop: 18 }}>Data Protection Officer (DPO)</h3>
+            <p style={{ marginBottom: 16 }}>
+              A9 Global Travels &amp; Tours has designated a Data Protection Officer responsible for overseeing our
+              compliance with the GDPR and this Privacy Policy. For any data-protection matter, or to exercise any of your
+              rights, you may contact our Data Protection Officer directly at <strong>info@a9globaltravel.com</strong> or
+              <strong>+95 9 781 617 111</strong>.
+            </p>
+
             <h3 style={{ color: '#0A1628', fontSize: 17, marginBottom: 8, marginTop: 18 }}>Data Sharing &amp; International Transfers</h3>
             <p style={{ marginBottom: 16 }}>
               We share personal data only with the parties necessary to provide the services you request &mdash; such as hotels,
