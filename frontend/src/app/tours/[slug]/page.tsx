@@ -13,7 +13,6 @@ import Calendar from '@/components/Calendar';
 import ErrorBoundary from '@/components/ErrorBoundary';
 import { useI18n } from '@/lib/i18n';
 import { mmTours } from '@/lib/mm-content';
-import { generateItinerary, parseDays } from '@/lib/tourItinerary';
 type TabKey = 'overview' | 'itinerary' | 'included' | 'reviews';
 
 // ─── Fallback tours when API is unavailable ─────────────────
@@ -112,16 +111,9 @@ export default function TourDetailPage() {
     router.push(bookUrl.toString());
   };
 
-  const generatedItinerary = useMemo(
-    () => generateItinerary(parseDays(tour?.duration || ''), tour?.destination || '', lang === "mm" ? t : undefined),
-    [tour?.duration, tour?.destination, lang]
-  );
-
-  // FIX 2026-08-12: prefer DB itinerary (editable via Admin) when present; fall back to auto-generated
-  const displayItinerary = useMemo(
-    () => (tour?.itinerary && tour.itinerary.length > 0 ? tour.itinerary : generatedItinerary),
-    [tour?.itinerary, generatedItinerary]
-  );
+  // FIX 2026-08-17 (P0): real itineraries only — no auto-generated placeholder days.
+  // Empty until an admin publishes one via the Itinerary Editor.
+  const displayItinerary = tour?.itinerary && tour.itinerary.length > 0 ? tour.itinerary : [];
 
     // Dynamic tabs from site config — filter visible and respect ordering
   const [detailPageTabs, setDetailPageTabs] = useState<{ key: string; label: string; visible: boolean }[]>([]);
@@ -406,6 +398,13 @@ export default function TourDetailPage() {
                     </div>
                   </div>
                 ))}
+                {(displayItinerary as any[]).length === 0 && (
+                  <div className="rounded-xl border border-dashed border-gray-300 bg-gray-50 p-8 text-center">
+                    <div className="text-3xl mb-2">🗓️</div>
+                    <p className="text-[#0A1628] font-semibold mb-1">{t("tour.itinerary.emptyTitle")}</p>
+                    <p className="text-gray-500 text-sm">{t("tour.itinerary.emptyDesc")}</p>
+                  </div>
+                )}
               </div>
             )}
 
