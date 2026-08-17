@@ -70,6 +70,7 @@ export default function AdminMingalarPage() {
     setUploading(true);
     setUploadError("");
     try {
+      const token = getToken();
       const fd = new FormData();
       fd.append('file', file);
       const res = await fetch('/api/upload', { method: 'POST', headers: { Authorization: 'Bearer ' + token }, body: fd });
