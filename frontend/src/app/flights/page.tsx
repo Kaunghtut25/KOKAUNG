@@ -62,19 +62,6 @@ function formatDuration(isoDuration: string) {
   return h + (h && min ? " " : "") + min;
 }
 
-function stopsText(count: number) {
-  if (count === 0) return "Nonstop";
-  if (count === 1) return "1 Stop";
-  return `${count} Stops`;
-}
-
-const cabinLabels: Record<string, string> = {
-  ECONOMY: "Economy",
-  PREMIUM_ECONOMY: "Premium Economy",
-  BUSINESS: "Business",
-  FIRST: "First",
-};
-
 // ── static data ──
 const popularRoutes = [
   { from: "Yangon (RGN)", to: "Bangkok (BKK)", fromCity: "Yangon", toCity: "Bangkok", price: "From $120", duration: "1h 30m", airline: "Thai Airways", stops: "Nonstop", featured: true },
@@ -130,7 +117,8 @@ export default function FlightsPage() {
   const [dictionaries, setDictionaries] = useState<Dictionaries>({});
   const [searched, setSearched] = useState(false);
 
-  const [typingTimer, setTypingTimer] = useState<ReturnType<typeof setTimeout> | null>(null);
+  const [originTimer, setOriginTimer] = useState<ReturnType<typeof setTimeout> | null>(null);
+  const [destTimer, setDestTimer] = useState<ReturnType<typeof setTimeout> | null>(null);
 
   // ── airport search ──
   async function searchAirports(keyword: string, setter: (a: Airport[]) => void) {
@@ -148,16 +136,16 @@ export default function FlightsPage() {
     setOrigin(val);
     setOriginSelected(null);
     setShowOriginDropdown(true);
-    if (typingTimer) clearTimeout(typingTimer);
-    setTypingTimer(setTimeout(() => searchAirports(val, setOriginAirports), 350));
+    if (originTimer) clearTimeout(originTimer);
+    setOriginTimer(setTimeout(() => searchAirports(val, setOriginAirports), 350));
   }
 
   function handleDestInput(val: string) {
     setDestination(val);
     setDestSelected(null);
     setShowDestDropdown(true);
-    if (typingTimer) clearTimeout(typingTimer);
-    setTypingTimer(setTimeout(() => searchAirports(val, setDestAirports), 350));
+    if (destTimer) clearTimeout(destTimer);
+    setDestTimer(setTimeout(() => searchAirports(val, setDestAirports), 350));
   }
 
   function selectOrigin(airport: Airport) {
@@ -181,7 +169,7 @@ export default function FlightsPage() {
     const destCode = destSelected?.code || destination.toUpperCase().split(" ").pop()?.replace(/[()]/g, "");
 
     if (!originCode || !destCode || !departDate) {
-      setError("Please fill in origin, destination, and departure date.");
+      setError(t("flights.errInputs"));
       return;
     }
 
@@ -211,7 +199,7 @@ export default function FlightsPage() {
         setDictionaries(data.dictionaries || {});
       }
     } catch {
-      setError("Network error. Please try again.");
+      setError(t("flights.errNetwork"));
     } finally {
       setLoading(false);
     }
@@ -222,10 +210,8 @@ export default function FlightsPage() {
     <main className="min-h-screen bg-[#0A1628]">
       {/* ── Hero ── */}
       <section className="relative h-[55vh] min-h-[420px] flex items-center justify-center">
-        <div
-          className="absolute inset-0 bg-cover bg-center"
-          style={{ backgroundImage: "url('/images_v2/hero-flights-v2.jpg')" }}
-        />
+        {/* FIX 2026-08-17: hero-flights-v2.jpg never existed — gradient-only hero until a real flights asset is provided */}
+        <div className="absolute inset-0 bg-gradient-to-b from-[#0A1628]/60 via-[#101F36] to-[#0A1628]" />
         <div className="absolute inset-0 bg-gradient-to-b from-[#0A1628]/70 via-[#0A1628]/50 to-[#0A1628]" />
         <div className="relative z-10 text-center px-4 max-w-4xl">
           <h1 className="font-['Playfair_Display',serif] text-4xl md:text-6xl font-bold text-white mb-4 drop-shadow-lg">
@@ -328,7 +314,6 @@ export default function FlightsPage() {
                 <select
                   value={adults}
                   aria-label={t("flights.passengers")}
-                  aria-label={t("flights.passengers")}
                   onChange={(e) => setAdults(Number(e.target.value))}
                   className="flex-1 px-2 py-3 border border-gray-200 rounded-xl text-xs text-gray-700 font-medium focus:outline-none focus:border-[#D4AF37] focus:ring-2 focus:ring-[#D4AF37]/20 transition-all"
                 >
@@ -338,7 +323,6 @@ export default function FlightsPage() {
                 </select>
                 <select
                   value={travelClass}
-                  aria-label={t("flights.travelClass")}
                   aria-label={t("flights.travelClass")}
                   onChange={(e) => setTravelClass(e.target.value)}
                   className="flex-1 px-2 py-3 border border-gray-200 rounded-xl text-xs text-gray-700 font-medium focus:outline-none focus:border-[#D4AF37] focus:ring-2 focus:ring-[#D4AF37]/20 transition-all"
@@ -371,7 +355,6 @@ export default function FlightsPage() {
         {error && (
           <div className="bg-red-50 border border-red-200 rounded-xl p-6 text-center mb-8">
             <p className="text-red-600 font-semibold">{error}</p>
-            <p className="text-red-500 text-sm mt-1">{t("flights.errInputs")}</p>
           </div>
         )}
 
