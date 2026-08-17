@@ -339,6 +339,15 @@ export default function HomePageClient({ siteConfig: ssrConfig }: { siteConfig?:
   const slides = siteConfig?.heroSlides?.length ? siteConfig.heroSlides : defaultSlides;
   const services = siteConfig?.serviceIcons?.length ? siteConfig.serviceIcons.filter((s:any)=>s.enabled!==false) : defaultServices;
 
+  // FIX: 2026-08-17 module toggles must hide the search form too
+  // (previously only the ServiceIcons strip + nav were gated — the widget
+  // always defaulted to the flights form even with Flights toggled off)
+  const flightsOn = siteConfig?.moduleToggles?.flights !== false;
+  const busesOn = siteConfig?.moduleToggles?.buses !== false;
+  const effectiveMode = searchMode === 'flights'
+    ? (flightsOn ? 'flights' : (busesOn ? 'buses' : null))
+    : (busesOn ? 'buses' : (flightsOn ? 'flights' : null));
+
   // Auto-slide: delayed start (first advance after 10s so the initial slide settles fast),
   // pauses when the tab is hidden, and never races the initial paint.
   useEffect(() => {
@@ -441,9 +450,10 @@ export default function HomePageClient({ siteConfig: ssrConfig }: { siteConfig?:
       </section>
       <div className="relative -mt-24 md:-mt-32 z-40 px-4">
         <div className="max-w-5xl mx-auto">
+          {effectiveMode ? (
           <div id="search-engine" className="bg-white rounded-2xl border-2 border-[#D4AF37]/30 shadow-xl p-5 md:p-7 overflow-visible">
             {/* FLIGHTS FORM */}
-            {searchMode==='flights' && (<>
+            {effectiveMode==='flights' && (<>
               <div className="flex gap-1 mb-5 bg-gray-100 rounded-lg p-1 w-fit">
                 {(["oneway","roundtrip","multicity"] as TabType[]).map((tab)=><button key={tab} onClick={()=>{setActiveTab(tab);if(tab!=="roundtrip")setReturnDate("");if(tab==="multicity")setMultiCityLegs([{from:"",to:"",date:""},{from:"",to:"",date:""}]);}} className={"px-4 py-2 min-h-[48px] flex items-center rounded-md text-sm font-medium transition-all duration-300 cursor-pointer "+(activeTab===tab?"bg-[#D4AF37] text-[#0A1628] shadow-md":"text-gray-600 hover:text-gray-900 hover:bg-gray-200")}>{tab==="oneway"?"✈ "+t("home.oneWay"):tab==="roundtrip"?"🔄 "+t("home.roundTrip"):"🌐 "+t("home.multiCity")}</button>)}
               </div>
@@ -482,7 +492,7 @@ export default function HomePageClient({ siteConfig: ssrConfig }: { siteConfig?:
               </form>
             </>)}
 
-            {searchMode==='buses' && (()=>{const bp=busPassengers;const totalPax=bp.adults+bp.children;return (
+            {effectiveMode==='buses' && (()=>{const bp=busPassengers;const totalPax=bp.adults+bp.children;return (
               <form onSubmit={(e)=>{e.preventDefault();try{const events=JSON.parse(localStorage.getItem('a9_search_submit_events')||'[]');events.push({type:'bus',from:busFrom,to:busTo,date:busDate,adults:bp.adults,children:bp.children,client:busClientType,timestamp:new Date().toISOString()});if(events.length>100)events.splice(0,events.length-100);localStorage.setItem('a9_search_submit_events',JSON.stringify(events))}catch(e){};router.push('/book-now?type=bus&from='+encodeURIComponent(busFrom)+'&to='+encodeURIComponent(busTo)+'&date='+encodeURIComponent(busDate)+'&adults='+bp.adults+'&children='+bp.children+'&client='+encodeURIComponent(busClientType))}} className="space-y-3">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                   <div><label className="block text-gray-500 text-xs uppercase tracking-wider mb-1">🚍 {t("home.fromCity")}</label><CityDropdown cities={busCities} value={busFrom} onChange={setBusFrom} placeholder="Select city" /></div>
@@ -526,6 +536,7 @@ export default function HomePageClient({ siteConfig: ssrConfig }: { siteConfig?:
               </form>
             );})()}
           </div>
+          ) : null}
         </div>
       </div>
       {/* ========== Trust Badges ========== */}
