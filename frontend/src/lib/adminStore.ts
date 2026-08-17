@@ -142,7 +142,7 @@ export function seed() {
     },
     {
       id: "fc5", carType: "Mercedes S-Class", description: "Ultimate luxury sedan for VIPs. Premium comfort with massage seats and privacy partition.",
-      capacity: 3, features: "AC, WiFi, Massage Seats, Privacy", images: "/images/unsplash-43.jpg",
+      capacity: 3, features: "AC, WiFi, Massage Seats, Privacy", images: "/images_v2/unsplash-42-v2.jpg",
       pricing: [{ duration: "Full Day", priceMMK: 250000, priceUSD: 119 }], status: "active",
     },
     {
@@ -293,7 +293,7 @@ export function seed() {
   const blogCol = new Map<string, unknown>();
   const blogPosts = [
     { id: "b1", title: "Top 10 Must-Visit Destinations in Myanmar", content: "Myanmar is a land of golden pagodas, ancient temples, and breathtaking landscapes. From the plains of Bagan to the serene waters of Inle Lake, here are the top 10 destinations you must visit on your next trip.", image: "/images_v2/unsplash-4-v2.jpg", author: "A9 Global Team", tags: ["Myanmar", "Travel Tips", "Destinations"], createdAt: new Date().toISOString() },
-    { id: "b2", title: "Travel Tips: How to Get the Best Flight Deals", content: "Booking flights can be expensive, but with these insider tips you can save hundreds on your next trip. Learn when to book, which days to fly, and how to use price alerts effectively.", image: "/images/unsplash-1.jpg", author: "A9 Global Team", tags: ["Flights", "Travel Tips", "Budget"], createdAt: new Date(Date.now() - 86400000).toISOString() },
+    { id: "b2", title: "Travel Tips: How to Get the Best Flight Deals", content: "Booking flights can be expensive, but with these insider tips you can save hundreds on your next trip. Learn when to book, which days to fly, and how to use price alerts effectively.", image: "/images_v2/unsplash-2-v2.jpg", author: "A9 Global Team", tags: ["Flights", "Travel Tips", "Budget"], createdAt: new Date(Date.now() - 86400000).toISOString() },
     { id: "b3", title: "Visa Guide: Everything You Need to Know for 2026", content: "Planning an international trip? Our comprehensive visa guide covers requirements for popular destinations including Thailand, Singapore, Japan, South Korea, and more.", image: "/images_v2/unsplash-26-v2.jpg", author: "A9 Global Team", tags: ["Visa", "Guide", "International"], createdAt: new Date(Date.now() - 172800000).toISOString() },
   ];
   blogPosts.forEach(b => blogCol.set(b.id, b));
