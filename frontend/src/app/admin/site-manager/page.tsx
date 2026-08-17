@@ -16,7 +16,7 @@ interface SocialLink { platform: string; url: string; }
 interface FooterLink { label: string; href: string; }
 interface FooterSection { title: string; links: FooterLink[]; }
 
-interface SectionLayout { desktop: number; tablet: number; mobile: number; }
+interface SectionLayout { desktop: number; tablet: number; mobile: number; cardsPerRow?: number; }
 interface FaqItem { id: string; question: string; answer: string; }
 interface TermItem { id: string; title: string; content: string; }
 interface PrivacyItem { id: string; title: string; content: string; }
@@ -35,7 +35,7 @@ interface SiteConfig {
   popularDestinations: PopularDestination[];
   testimonials: Testimonial[]; partners: (string | { name: string; logo?: string })[];
   ctaTitle: string; ctaDescription: string; ctaButtonLabel: string; ctaButtonHref: string; ctaImage?: string;
-  dealsBanner?: { enabled: boolean; badge: string; title: string; buttonLabel: string; buttonHref: string; countdownDays: number; endAt?: string; startAt?: string };
+  dealsBanner?: { enabled?: boolean; badge?: string; title?: string; buttonLabel?: string; buttonHref?: string; countdownDays?: number; endAt?: string; startAt?: string };
   contact: ContactInfo; socialLinks: SocialLink[]; footerSections: FooterSection[];
   departmentPhones?: Record<string, string>;
   socialFeed?: { enabled: boolean; instagram: string; photos: string[] };
@@ -43,6 +43,11 @@ interface SiteConfig {
   relatedItems?: { maxItems: number; crossSections: Record<string, { enabled: boolean; maxItems: number }> };
   sectionRows?: Record<string, string[]>;
   heroImages?: Record<string, string>;
+  heroText?: Record<string, { title: string; subtitle: string; titleFont: string; titleSize: string; subtitleSize: string }>;
+  cardDimensions?: Record<string, { width: number; height: number }>;
+  heroDimensions?: Record<string, { mobile: number; desktop: number }>;
+  moduleToggles?: Record<string, boolean>;
+  detailPageTabs?: Record<string, { key: string; label?: string }[]>;
 }
 
 const API = "/api/admin/site-config";
@@ -143,7 +148,7 @@ const defaultCfg: SiteConfig = {
   },
 };
 
-type Tab = "layout" | "rows" | "faq" | "terms" | "privacy" | "hero" | "heroImages" | "services" | "nav" | "stats" | "why" | "cta" | "contact" | "social" | "socialFeed" | "footer" | "meta" | "testimonials" | "partners" | "heroText" | "cardDims" | "moduleToggles" | "relatedItems" | "deals";
+type Tab = "layout" | "rows" | "faq" | "terms" | "privacy" | "hero" | "heroImages" | "services" | "nav" | "stats" | "why" | "cta" | "contact" | "social" | "socialFeed" | "footer" | "meta" | "testimonials" | "partners" | "heroText" | "cardDims" | "moduleToggles" | "relatedItems" | "deals" | "detailTabs";
 
 export default function SiteManagerPage() {
   const { t } = useI18n();
@@ -341,6 +346,7 @@ const tabs: { key: Tab; label: string }[] = [
     { key: "meta", label: t("admin.sm.tab.meta") },
     { key: "testimonials", label: t("admin.sm.testimonials") },
     { key: "partners", label: t("admin.sm.partners") },
+    { key: "detailTabs", label: t("admin.sm.tourTabs") },
   ];
 
   const inputCls = "w-full px-3 py-2 rounded-lg border border-white/10 text-white text-sm";
@@ -991,7 +997,7 @@ const tabs: { key: Tab; label: string }[] = [
                   </div>
                   <div>
                     <label className="block text-xs font-medium text-white/60 mb-1">{t("admin.sm.question")}</label>
-                    <textarea style={{ backgroundColor: "rgba(255,255,255,0.06)", color: "white" }}
+                    <textarea
                       id={`faq-question-${faq.id}`}
                       className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }}
                       rows={2}
@@ -1005,7 +1011,7 @@ const tabs: { key: Tab; label: string }[] = [
                   </div>
                   <div>
                     <label className="block text-xs font-medium text-white/60 mb-1">{t("admin.sm.answer")}</label>
-                    <textarea style={{ backgroundColor: "rgba(255,255,255,0.06)", color: "white" }}
+                    <textarea
                       className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }}
                       rows={3}
                       value={faq.answer}
@@ -1054,7 +1060,7 @@ const tabs: { key: Tab; label: string }[] = [
                   </div>
                   <div>
                     <label className="block text-xs font-medium text-white/60 mb-1">{t("admin.sm.content")}</label>
-                    <textarea style={{ backgroundColor: "rgba(255,255,255,0.06)", color: "white" }}
+                    <textarea
                       className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }}
                       rows={4}
                       value={item.content}
@@ -1103,7 +1109,7 @@ const tabs: { key: Tab; label: string }[] = [
                   </div>
                   <div>
                     <label className="block text-xs font-medium text-white/60 mb-1">{t("admin.sm.content")}</label>
-                    <textarea style={{ backgroundColor: "rgba(255,255,255,0.06)", color: "white" }}
+                    <textarea
                       className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }}
                       rows={4}
                       value={item.content}
@@ -1136,13 +1142,13 @@ const tabs: { key: Tab; label: string }[] = [
                     <button onClick={() => set("testimonials", cfg.testimonials.filter((_, idx) => idx !== i))} className="text-red-400 text-sm">{t("admin.common.delete")}</button>
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                    <div><label className={labelCls}>{t("admin.sm.name")}</label><input className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} value={tm.name} onChange={e => { const a = [...cfg.testimonials]; a[i] = { ...t, name: e.target.value }; set("testimonials", a); }} /></div>
-                    <div><label className={labelCls}>{t("admin.sm.country")}</label><input className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} value={tm.country} onChange={e => { const a = [...cfg.testimonials]; a[i] = { ...t, country: e.target.value }; set("testimonials", a); }} /></div>
+                    <div><label className={labelCls}>{t("admin.sm.name")}</label><input className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} value={tm.name} onChange={e => { const a = [...cfg.testimonials]; a[i] = { ...tm, name: e.target.value }; set("testimonials", a); }} /></div>
+                    <div><label className={labelCls}>{t("admin.sm.country")}</label><input className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} value={tm.country} onChange={e => { const a = [...cfg.testimonials]; a[i] = { ...tm, country: e.target.value }; set("testimonials", a); }} /></div>
                   </div>
-                  <div><label className={labelCls}>{t("admin.sm.tour")}</label><input className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} value={tm.tour} onChange={e => { const a = [...cfg.testimonials]; a[i] = { ...t, tour: e.target.value }; set("testimonials", a); }} /></div>
-                  <div><label className={labelCls}>{t("admin.sm.textQuote")}</label><textarea className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} rows={3} value={tm.text} onChange={e => { const a = [...cfg.testimonials]; a[i] = { ...t, text: e.target.value }; set("testimonials", a); }} /></div>
-                  <div><label className={labelCls}>{t("admin.sm.rating")}</label><input type="number" min="1" max="5" className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} value={tm.rating} onChange={e => { const a = [...cfg.testimonials]; a[i] = { ...t, rating: parseInt(e.target.value) || 5 }; set("testimonials", a); }} /></div>
-                  <div><label className={labelCls}>{t("admin.sm.photoUrl")}</label><input type="text" placeholder="https://..." className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} value={tm.image || ""} onChange={e => { const a = [...cfg.testimonials]; a[i] = { ...t, image: e.target.value }; set("testimonials", a); }} /></div>
+                  <div><label className={labelCls}>{t("admin.sm.tour")}</label><input className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} value={tm.tour} onChange={e => { const a = [...cfg.testimonials]; a[i] = { ...tm, tour: e.target.value }; set("testimonials", a); }} /></div>
+                  <div><label className={labelCls}>{t("admin.sm.textQuote")}</label><textarea className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} rows={3} value={tm.text} onChange={e => { const a = [...cfg.testimonials]; a[i] = { ...tm, text: e.target.value }; set("testimonials", a); }} /></div>
+                  <div><label className={labelCls}>{t("admin.sm.rating")}</label><input type="number" min="1" max="5" className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} value={tm.rating} onChange={e => { const a = [...cfg.testimonials]; a[i] = { ...tm, rating: parseInt(e.target.value) || 5 }; set("testimonials", a); }} /></div>
+                  <div><label className={labelCls}>{t("admin.sm.photoUrl")}</label><input type="text" placeholder="https://..." className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} value={tm.image || ""} onChange={e => { const a = [...cfg.testimonials]; a[i] = { ...tm, image: e.target.value }; set("testimonials", a); }} /></div>
                 </div>
               ))}
               <button onClick={() => set("testimonials", [...cfg.testimonials, { name: "", country: "", tour: "", text: "", rating: 5, image: "" }])} className="px-4 py-2 bg-white/10 rounded-lg text-sm">{t("admin.sm.addTestimonial")}</button>
