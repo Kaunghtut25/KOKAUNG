@@ -7,7 +7,7 @@
 import { supabase } from './supabase';
 import { Redis } from '@upstash/redis';
 
-type Collection = "tours" | "hotels" | "cars" | "cruises" | "visas" | "insurances" | "blog" | "bookings" | "mingalar" | "site-config" | "settings" | "knowledge";
+type Collection = "tours" | "hotels" | "cars" | "cruises" | "visas" | "insurances" | "blog" | "bookings" | "mingalar" | "site-config" | "settings" | "knowledge" | "destinations" | "users";
 
 // ── Redis client (lazy) ────────────────────────────────────
 let _redis: any = null;

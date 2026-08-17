@@ -8,8 +8,9 @@ export async function GET(request: NextRequest) {
     const limit = parseInt(searchParams.get("limit") || "10", 10);
     const status = searchParams.get("status") || undefined;
 
-    const result = getBookings(page, limit, status);
-    return NextResponse.json(result);
+    const all = await getBookings();
+    const items = status ? all.filter((b) => String(b.status || b.paymentStatus || "") === status) : all;
+    return NextResponse.json(items.slice((page - 1) * limit, page * limit));
   } catch (err: any) {
     return NextResponse.json({ message: err.message || "Server error" }, { status: 500 });
   }

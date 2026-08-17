@@ -50,6 +50,7 @@ export interface AuthPayload {
   role?: string;
   name?: string;
   authorities?: string[];
+  purpose?: string;
   iat?: number;
   exp?: number;
 }
