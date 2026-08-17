@@ -25,3 +25,10 @@ tsc 0 · vitest 36/36 · build 0 · pushed.
 Live (buildId `Jc3z5hjhwryyx3uqoyJQb`):
 - /insurance: grid `... md:grid-cols-3 lg:grid-cols-4 gap-4` present; no fixed card dims → 4 cards per row like visas.
 - /cruises: cards `width:340px;height:420px`, image `height:210px` — identical footprint to /mingalar cards.
+
+## Admin panel consistency (commit `a2cb48b`, buildId `piJC2hFXkbXGjWx99yjo`)
+User asked "also updated on admin panel?" — the Site Manager still showed stale controls. Updated:
+- Layout tab: Insurance desktop/tablet/mobile selects **locked to 4/2/1** + gold note "Fixed: 4 per row (like the Visas page)" (public page hardcodes the visas grid, so the old control was a no-op).
+- Card & Hero Dimensions tab: **Insurance + Cruises width/height inputs disabled** with notes (insurance "Automatic — fills the 4-column grid"; cruises "Follows the Sky Lounge card size (edit it below)"). **Sky Lounge (mingalar) inputs stay editable** + hint "also applies to Cruises cards".
+- 4 new admin.sm.* keys EN+MM; parity 1363/1363, SM 251, zero drift.
+- Verified live: new EN dict chunk `6146-ab23cbd31c0a24e0.js` contains `insLayoutFixed` (MM is unicode-escaped in minified output; local parity check covers it).
