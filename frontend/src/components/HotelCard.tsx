@@ -131,7 +131,7 @@ export default function HotelCard({ hotel, currency = "MMK", cardWidth, cardHeig
         {/* Buttons */}
         <div className="px-4 pb-4 pt-1.5 space-y-2">
           <div
-            onClick={(e) => { e.stopPropagation(); router.push("/book-now?type=hotel&name=" + encodeURIComponent(hotel.name) + "&id=" + encodeURIComponent(hotel._id||hotel._id||"") + "&priceMMK=" + (hotel.priceMMK||0) + "&priceUSD=" + (hotel.priceUSD||0) + "&location=" + encodeURIComponent(hotel.location||"")); }}
+            onClick={(e) => { e.stopPropagation(); router.push("/book-now?type=hotel&name=" + encodeURIComponent(hotel.name) + "&id=" + encodeURIComponent(hotel._id||"") + "&priceMMK=" + (hotel.pricePerNightMMK||0) + "&priceUSD=" + (hotel.pricePerNightUSD||0) + "&location=" + encodeURIComponent(hotel.location||"")); }}
             className={`w-full py-2.5 rounded-xl text-center font-bold text-sm transition-all duration-400 ${
               isHovered ? "bg-gradient-to-r from-[#D4AF37] to-[#F5A623] text-[#0A1628] shadow-lg shadow-[#D4AF37]/40 scale-[1.02]" : "bg-gradient-to-r from-[#D4AF37] to-[#C5A028] text-[#0A1628] shadow-md shadow-[#D4AF37]/20"
             }`}>

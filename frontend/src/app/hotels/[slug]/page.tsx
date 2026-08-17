@@ -167,7 +167,7 @@ export default function HotelDetailPage() {
             <h2 className="text-xl text-[#0A1628] font-semibold">{t("hotel.notFound")}</h2>
             <p className="text-gray-500">{t("hotel.notFoundDesc")}</p>
             <Link href="/hotels" className="px-6 py-2 rounded-xl bg-gradient-to-r from-[#D4AF37] to-[#C5A028] text-gray-900 font-semibold inline-block">
-              Back to Hotels
+              {t("hotel.backToHotels")}
             </Link>
           </div>
         </div>
@@ -216,7 +216,7 @@ export default function HotelDetailPage() {
         <div className="absolute inset-0 bg-gradient-to-t from-[#0A1628] via-[#0A1628]/40 to-transparent" />
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(212,175,55,0.06),transparent_70%)]" />
         <Link href="/hotels" className="absolute top-6 left-4 md:top-8 md:left-8 z-20 flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur-md border border-white/20 rounded-full text-white hover:bg-white/20 transition-all text-sm">
-          ← Back to Hotels
+          ← {t("hotel.backToHotels")}
         </Link>
         <div className="absolute bottom-0 left-0 right-0 p-6 md:p-10 z-10">
           <div className="max-w-7xl mx-auto">
@@ -235,7 +235,7 @@ export default function HotelDetailPage() {
             </h1>
             <div className="flex items-center gap-3">
               <div className="flex items-center gap-1">{renderStars(hotel.rating)}</div>
-              <span className="text-white/70 text-sm">{hotel.rating.toFixed(1)} ({hotel.reviewCount} reviews)</span>
+              <span className="text-white/70 text-sm">{hotel.rating.toFixed(1)} ({hotel.reviewCount} {t("hotel.reviews")})</span>
             </div>
           </div>
         </div>
@@ -257,17 +257,17 @@ export default function HotelDetailPage() {
           <div className="lg:col-span-2 space-y-10">
             <div>
               <h2 className="text-2xl font-bold text-[#0A1628] mb-4" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
-                About This Hotel
+                {t("hotel.about")}
               </h2>
               <p className="text-gray-600 leading-relaxed text-base">
-                {hotel.description || 'Experience world-class hospitality with elegant rooms, modern amenities, and exceptional service. Perfect for both business and leisure travelers seeking comfort and convenience.'}
+                {hotel.description || t("hotel.noDescription")}
               </p>
             </div>
 
             {hotel.amenities.length > 0 && (
               <div>
                 <h2 className="text-2xl font-bold text-[#0A1628] mb-4" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
-                  Amenities
+                  {t("hotel.amenities")}
                 </h2>
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
                   {hotel.amenities.map((amenity: string, idx: number) => (
@@ -284,10 +284,10 @@ export default function HotelDetailPage() {
 
             <div className="bg-[#0A1628] rounded-2xl p-6 md:p-8">
               <h2 className="text-2xl font-bold text-white mb-2" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
-                Rooms
+                {t("hotel.rooms")}
               </h2>
               <p className="text-white/60 text-sm">
-                {hotel.totalRooms > 0 ? hotel.totalRooms + ' rooms at this property' : 'Contact us for room options'}
+                {hotel.totalRooms > 0 ? t("hotel.roomsAtProperty", { count: hotel.totalRooms }) : t("hotel.contactForRooms")}
               </p>
             </div>
           </div>
@@ -299,9 +299,9 @@ export default function HotelDetailPage() {
               <div className="flex items-center justify-between">
                 <div>
                   <span className="text-3xl font-bold text-[#8A6C0B]">
-                    {currencySymbol} {price.toLocaleString()}
+                    {price > 0 ? currencySymbol + ' ' + price.toLocaleString() : t("common.priceOnRequest")}
                   </span>
-                  <span className="text-gray-500 text-sm ml-1">{t("common.perNight")}</span>
+                  {price > 0 && <span className="text-gray-500 text-sm ml-1">{t("common.perNight")}</span>}
                 </div>
                 <CurrencyToggle activeCurrency={currency} onToggle={setCurrency} />
               </div>
@@ -312,11 +312,11 @@ export default function HotelDetailPage() {
               <div className="space-y-2 text-sm">
                 <div className="flex justify-between">
                   <span className="text-gray-600">{t("hotel.perNight")}</span>
-                  <span className="text-[#0A1628]">{currencySymbol} {price.toLocaleString()}</span>
+                  <span className="text-[#0A1628]">{price > 0 ? currencySymbol + ' ' + price.toLocaleString() : t("common.priceOnRequest")}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-600">{t("hotel.rating")}</span>
-                  <span className="text-[#0A1628] flex items-center gap-1">★ {hotel.rating.toFixed(1)} ({hotel.reviewCount} reviews)</span>
+                  <span className="text-[#0A1628] flex items-center gap-1">★ {hotel.rating.toFixed(1)} ({hotel.reviewCount} {t("hotel.reviews")})</span>
                 </div>
               </div>
 
@@ -355,9 +355,9 @@ export default function HotelDetailPage() {
 
               {/* Total */}
               <div className="flex justify-between items-center py-3 border-t border-[#D4AF37]/10">
-                <span className="text-gray-700 font-medium">Total ({rooms} room{rooms > 1 ? 's' : ''})</span>
+                <span className="text-gray-700 font-medium">{t("hotel.total")} ({rooms} {rooms > 1 ? t("hotel.rooms") : t("hotel.room")})</span>
                 <span className="text-2xl font-bold text-[#8A6C0B]">
-                  {currencySymbol} {totalPrice.toLocaleString()}
+                  {price > 0 ? currencySymbol + ' ' + totalPrice.toLocaleString() : t("common.priceOnRequest")}
                 </span>
               </div>
 
@@ -377,7 +377,7 @@ export default function HotelDetailPage() {
               href="/hotels"
               className="block w-full py-3 rounded-xl text-center font-semibold text-sm border-2 border-[#D4AF37] text-[#8A6C0B] hover:bg-[#D4AF37] hover:text-[#0A1628] transition-all duration-300 mt-4"
             >
-              ← Back to All Hotels
+              ← {t("hotel.backToHotels")}
             </Link>
           </div>
         </div>

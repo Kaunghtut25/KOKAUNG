@@ -60,11 +60,24 @@ export default function HotelsClient({ initialHotels, siteConfig }: HotelsClient
     setter(value);
   };
 
-  // Apply sort
-  const sortedHotels = [...initialHotels].sort((a, b) => {
+  // Apply filters (location / rating / price range) then sort — FIX 2026-08-17 (Phase 8)
+  const filteredHotels = initialHotels.filter((h) => {
+    if (location) {
+      const q = location.trim().toLowerCase();
+      if (!((h.location || "").toLowerCase().includes(q) || (h.name || "").toLowerCase().includes(q))) return false;
+    }
+    if (rating && (h.rating || 0) < Number(rating)) return false;
+    const p = currency === "MMK" ? (h.pricePerNightMMK || 0) : (h.pricePerNightUSD || 0);
+    if (minPrice && p < Number(minPrice)) return false;
+    if (maxPrice && p > Number(maxPrice)) return false;
+    return true;
+  });
+  const sortedHotels = [...filteredHotels].sort((a, b) => {
     if (sort === 'rating') return (b.rating || 0) - (a.rating || 0);
-    if (sort === 'price_asc') return (a.priceMMK || 0) - (b.priceMMK || 0);
-    if (sort === 'price_desc') return (b.priceMMK || 0) - (a.priceMMK || 0);
+    const pa = currency === 'MMK' ? (a.pricePerNightMMK || 0) : (a.pricePerNightUSD || 0);
+    const pb = currency === 'MMK' ? (b.pricePerNightMMK || 0) : (b.pricePerNightUSD || 0);
+    if (sort === 'price_asc') return pa - pb;
+    if (sort === 'price_desc') return pb - pa;
     return 0;
   });
   const pool: Hotel[] = [...sortedHotels];
@@ -109,7 +122,7 @@ export default function HotelsClient({ initialHotels, siteConfig }: HotelsClient
                 placeholder={t("list.searchLocation")} className="w-full pl-9 pr-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-gray-900 placeholder-gray-400 text-sm focus:outline-none focus:border-[#D4AF37] transition-colors" />
             </div>
             <div className="relative">
-              <select value={rating} onChange={(e) => handleFilterChange(setRating, e.target.value)} aria-label={t("list.ratingFilter")} aria-label={t("list.ratingFilter")} aria-label={t("list.ratingFilter")} aria-label={t("list.ratingFilter")} aria-label={t("list.ratingFilter")}
+              <select value={rating} onChange={(e) => handleFilterChange(setRating, e.target.value)} aria-label={t("list.ratingFilter")}
                 className="px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-gray-900 text-sm focus:outline-none focus:border-[#D4AF37] transition-colors appearance-none cursor-pointer pr-8">
                 <option value="">{t("list.anyRating")}</option>
                 <option value="3">3+ Stars</option>
@@ -119,13 +132,13 @@ export default function HotelsClient({ initialHotels, siteConfig }: HotelsClient
             </div>
             <div className="flex gap-2 items-center">
               <input type="number" value={minPrice} onChange={(e) => handleFilterChange(setMinPrice, e.target.value)}
-                placeholder={t("list.minMMK")} className="w-[100px] px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-gray-900 placeholder-gray-400 text-sm focus:outline-none focus:border-[#D4AF37] transition-colors [appearance:textfield]" />
+                placeholder={currency === 'MMK' ? t("list.minMMK") : t("list.minPrice")} className="w-[100px] px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-gray-900 placeholder-gray-400 text-sm focus:outline-none focus:border-[#D4AF37] transition-colors [appearance:textfield]" />
               <span className="text-gray-600">–</span>
               <input type="number" value={maxPrice} onChange={(e) => handleFilterChange(setMaxPrice, e.target.value)}
-                placeholder={t("list.maxMMK")} className="w-[100px] px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-gray-900 placeholder-gray-400 text-sm focus:outline-none focus:border-[#D4AF37] transition-colors [appearance:textfield]" />
+                placeholder={currency === 'MMK' ? t("list.maxMMK") : t("list.maxPrice")} className="w-[100px] px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-gray-900 placeholder-gray-400 text-sm focus:outline-none focus:border-[#D4AF37] transition-colors [appearance:textfield]" />
             </div>
             <div className="relative">
-              <select value={sort} onChange={(e) => handleFilterChange(setSort, e.target.value)} aria-label={t("list.sortHotels")} aria-label={t("list.sortHotels")} aria-label={t("list.sortHotels")} aria-label={t("list.sortHotels")} aria-label={t("list.sortHotels")}
+              <select value={sort} onChange={(e) => handleFilterChange(setSort, e.target.value)} aria-label={t("list.sortHotels")}
                 className="px-4 py-2 rounded-xl border border-[#D4AF37]/30 bg-white text-[#0A1628] text-sm font-medium">
                 <option value="">{t("list.sortByColon")}</option>
                 <option value="rating">{t("list.ratingColon")}</option>
@@ -138,9 +151,15 @@ export default function HotelsClient({ initialHotels, siteConfig }: HotelsClient
         </div>
       </section>
 <section className="max-w-7xl mx-auto px-4 py-10 pb-20">
-        {sortedHotels.length === 0 && (
+        {initialHotels.length === 0 && (
           <div className="flex gap-4 overflow-hidden">
             {Array.from({ length: 4 }).map((_, i) => <div key={i} className="flex-shrink-0" style={{ width: (siteConfig?.cardDimensions?.hotels?.width) || 300 }}><SkeletonCard /></div>)}
+          </div>
+        )}
+
+        {sortedHotels.length === 0 && initialHotels.length > 0 && (
+          <div className="text-center py-16">
+            <p className="text-gray-500">{t("hotel.noResults")}</p>
           </div>
         )}
 

@@ -290,7 +290,7 @@ export default function AdminHotelsPage() {
     <div className="space-y-4">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
-          <label className="block text-white/70 text-sm mb-1">Name</label>
+          <label className="block text-white/70 text-sm mb-1">{t("admin.form.name")}</label>
           <input
             type="text"
             value={editingHotel.name}
@@ -316,7 +316,7 @@ export default function AdminHotelsPage() {
       </div>
 
       <div>
-        <label className="block text-white/70 text-sm mb-1">Address</label>
+        <label className="block text-white/70 text-sm mb-1">{t("admin.form.address")}</label>
         <input
           type="text"
           value={editingHotel.address}
@@ -327,7 +327,7 @@ export default function AdminHotelsPage() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
-          <label className="block text-white/70 text-sm mb-1">Phone</label>
+          <label className="block text-white/70 text-sm mb-1">{t("admin.form.phone")}</label>
           <input
             type="tel"
             name="phone"
@@ -338,7 +338,7 @@ export default function AdminHotelsPage() {
           />
         </div>
         <div>
-          <label className="block text-white/70 text-sm mb-1">Email</label>
+          <label className="block text-white/70 text-sm mb-1">{t("admin.form.email")}</label>
           <input
             type="email"
             name="email"
@@ -410,11 +410,11 @@ export default function AdminHotelsPage() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
-          <label className="block text-white/70 text-sm mb-1">Review Count</label>
+          <label className="block text-white/70 text-sm mb-1">{t("admin.form.reviewCount")}</label>
           <input type="number" min={0} value={editingHotel.reviewCount} onChange={(e) => handleFieldChange("reviewCount", Number(e.target.value))} className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-gold/50 transition-colors" />
         </div>
         <div>
-          <label className="block text-white/70 text-sm mb-1">Row</label>
+          <label className="block text-white/70 text-sm mb-1">{t("admin.form.row")}</label>
           <select value={editingHotel.row} onChange={(e) => handleFieldChange("row", Number(e.target.value))} className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-gold/50 transition-colors">
             {[1,2,3,4,5,6].map((r) => (<option key={r} value={r}>{t("admin.form.row")} {r}</option>))}
           </select>
@@ -607,7 +607,7 @@ export default function AdminHotelsPage() {
                 </div>
                 <div>
                   <label className="block text-white/60 text-xs mb-1">
-                    Price MMK
+                    {t("admin.form.priceMmk")}
                   </label>
                   <input
                     type="number"
@@ -624,7 +624,7 @@ export default function AdminHotelsPage() {
                 </div>
                 <div>
                   <label className="block text-white/60 text-xs mb-1">
-                    Price USD
+                    {t("admin.form.priceUsd")}
                   </label>
                   <input
                     type="number"
@@ -658,7 +658,7 @@ export default function AdminHotelsPage() {
                 </div>
                 <div>
                   <label className="block text-white/60 text-xs mb-1">
-                    Available
+                    {t("admin.form.available")}
                   </label>
                   <input
                     type="number"
@@ -681,7 +681,7 @@ export default function AdminHotelsPage() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
-          <label className="block text-white/70 text-sm mb-1">Status</label>
+          <label className="block text-white/70 text-sm mb-1">{t("admin.form.status")}</label>
           <select
             value={editingHotel.status}
             onChange={(e) =>

@@ -756,6 +756,7 @@ const en: Record<string, string> = {
   "admin.form.quoteRequired": "Price on Request (hide price, show Request a Quote)",
   "admin.form.quoteHint": "Leave price 0 and enable this to show \"Request a Quote\" on the site.",
   "admin.form.priceNightUsd": "Price/Night USD",
+    "admin.form.available": "Available",
   "admin.form.contactPhone": "Contact phone",
   "admin.form.dragDrop": "Drag & drop image here",
   "admin.form.imagePreview": "Image Preview",
@@ -1066,6 +1067,15 @@ const en: Record<string, string> = {
   "hotel.checkInDate": "Check-in Date",
   "hotel.rooms": "Rooms",
   "hotel.noPayment": "No payment required to book",
+    "hotel.about": "About This Hotel",
+    "hotel.amenities": "Amenities",
+    "hotel.room": "Room",
+    "hotel.reviews": "reviews",
+    "hotel.total": "Total",
+    "hotel.roomsAtProperty": "{count} rooms at this property",
+    "hotel.contactForRooms": "Contact us for room options",
+    "hotel.noResults": "No hotels found matching your filters.",
+    "hotel.noDescription": "Detailed description coming soon.",
 
   // Car detail page
   "car.notFound": "Car Not Found",
@@ -2105,6 +2115,9 @@ const mm: Record<string, string> = {
   "admin.form.quoteRequired": "ဈေးနှုန်းစုံစမ်းရန် (ဈေးဖော်ပြမည်မဟုတ်)",
   "admin.form.quoteHint": "ဈေး 0 ထားပြီး ဤရွေးချယ်မှုဖွင့်ပါက ဆိုက်တွင် \"Request a Quote\" ပြပါမည်။",
   "admin.form.priceNightUsd": "တစ်ညဈေးနှုန်း (USD)",
+
+
+    "admin.form.available": "ရနိုင်သည်",
   "admin.form.contactPhone": "ဆက်သွယ်ရန် ဖုန်း",
   "admin.form.dragDrop": "ပုံကို ဤနေရာတွင် ဆွဲချ၍ ထည့်ပါ",
   "admin.form.imagePreview": "ပုံအကြည့်အစမ်း",
@@ -2415,6 +2428,15 @@ const mm: Record<string, string> = {
   "hotel.checkInDate": "ဝင်ရောက်မည့်ရက်",
   "hotel.rooms": "အခန်းများ",
   "hotel.noPayment": "ကြိုတင်ငွေပေးချေရန် မလိုပါ",
+    "hotel.about": "ဟိုတယ်အကြောင်း",
+    "hotel.amenities": "သာယာဆောင်များ",
+    "hotel.room": "အခန်း",
+    "hotel.reviews": "သုံးသပ်ချက်များ",
+    "hotel.total": "စုစုပေါင်း",
+    "hotel.roomsAtProperty": "ဤဟိုတယ်တွင် အခန်း {count} ခန်းရှိသည်",
+    "hotel.contactForRooms": "အခန်းရွေးချယ်မှုများအတွက် ကျွန်ုပ်တို့ကို ဆက်သွယ်ပါ",
+    "hotel.noResults": "သင့်စစ်ထုတ်မှုနှင့် ကိုက်ညီသော ဟိုတယ်မရှိပါ။",
+    "hotel.noDescription": "ဟိုတယ်အကြောင်းအသေးစိတ် မကြာမီဖော်ပြပါမည်။",
 
   // Car detail page
   "car.notFound": "ကားရှာမတွေ့ပါ",
