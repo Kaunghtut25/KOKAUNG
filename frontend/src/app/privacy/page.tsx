@@ -8,5 +8,12 @@ async function fetchSiteConfig() {
 
 export default async function PrivacyPage() {
   const siteConfig = await fetchSiteConfig();
-  return <PrivacyClient siteConfig={siteConfig || {}} />;
+  const safeConfig = { ...(siteConfig || {}) };
+  if (Array.isArray((safeConfig as any).privacy)) {
+    (safeConfig as any).privacy = (safeConfig as any).privacy.map((it: any) => ({
+      ...it,
+      content: typeof it.content === "string" ? it.content.replace(/\+?95 ?9 ?123 ?456 ?789/g, "+95 9 781 617 111") : it.content,
+    }));
+  }
+  return <PrivacyClient siteConfig={safeConfig} />;
 }

@@ -10,6 +10,10 @@ export async function GET() {
     // Stored data overrides defaults, but branding fields always use code defaults
     const stored = cfg?.[0] || {};
     const merged = { ...defaultConfig, ...stored, contact: { ...defaultConfig.contact, ...(stored.contact || {}) } };
+    const PHONE_FIX = /\+?95 ?9 ?123 ?456 ?789/g;
+    if (Array.isArray(merged.privacy)) {
+      merged.privacy = merged.privacy.map((it: any) => ({ ...it, content: typeof it.content === "string" ? it.content.replace(PHONE_FIX, "+95 9 781 617 111") : it.content }));
+    }
     return NextResponse.json(merged);
   } catch {
     return NextResponse.json(defaultConfig);
