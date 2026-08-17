@@ -318,7 +318,7 @@ export const en: Record<string, string> = {
   "auth.register.email": "Email Address",
   "auth.register.phEmail": "you@example.com",
   "auth.register.phone": "Phone Number",
-  "auth.register.phPhone": "09 123 456 789",
+  "auth.register.phPhone": "09 781 617 111",
   "auth.register.password": "Password",
   "auth.register.confirmPassword": "Confirm Password",
   "auth.register.creating": "Creating Account...",

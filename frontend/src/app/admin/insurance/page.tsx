@@ -345,7 +345,7 @@ export default function AdminInsurancePage() {
             type="text"
             value={editingInsurance.phone}
             onChange={(e) => handleFieldChange("phone", e.target.value)}
-            placeholder="e.g. +95 9 123 456 789"
+            placeholder="e.g. +95 9 781 617 111"
             className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-gold/50 transition-colors"
           />
         </div>

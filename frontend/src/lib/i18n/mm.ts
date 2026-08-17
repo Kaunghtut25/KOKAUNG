@@ -318,7 +318,7 @@ export const mm: Record<string, string> = {
   "auth.register.email": "အီးမေးလ် လိပ်စာ",
   "auth.register.phEmail": "you@example.com",
   "auth.register.phone": "ဖုန်းနံပါတ်",
-  "auth.register.phPhone": "09 123 456 789",
+  "auth.register.phPhone": "09 781 617 111",
   "auth.register.password": "စကားဝှက်",
   "auth.register.confirmPassword": "စကားဝှက် အတည်ပြုပါ",
   "auth.register.creating": "အကောင့် ဖန်တီးနေသည်...",

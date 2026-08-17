@@ -18,7 +18,10 @@ export default function PrivacyClient({ siteConfig }: { siteConfig: any }) {
       .then((r) => r.json())
       .then((data) => {
         if (data.privacy && data.privacy.length > 0) {
-          setPrivacy(data.privacy);
+          setPrivacy(data.privacy.map((it: any) => ({
+            ...it,
+            content: typeof it.content === "string" ? it.content.replace(/\+?95 ?9 ?123 ?456 ?789/g, "+95 9 781 617 111") : it.content,
+          })));
         }
       })
       .catch(() => {});

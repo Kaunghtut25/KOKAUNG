@@ -196,7 +196,7 @@ export default function ContactClient({ siteConfig }: { siteConfig: any }) {
                       type="tel"
                       value={form.phone}
                       onChange={handleChange}
-                      placeholder="09 123 456 789"
+                      placeholder="09 781 617 111"
                       className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400
                                  focus:outline-none focus:border-[#D4AF37] focus:ring-1 focus:ring-[#D4AF37]/50
                                  transition-colors duration-200"
