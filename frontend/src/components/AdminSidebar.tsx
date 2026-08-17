@@ -11,26 +11,33 @@ interface NavItem {
   labelKey: string;
   icon: string;
   path: string;
+  section?: string;
 }
 
 const navItems: NavItem[] = [
   { labelKey: "admin.dashboard", icon: "📊", path: "/admin/dashboard" },
-  { labelKey: "admin.siteManager", icon: "⚙️", path: "/admin/site-manager" },
-  { labelKey: "admin.manageAbout", icon: "📄", path: "/admin/about" },
-  { labelKey: "admin.manageFlights", icon: "✈️", path: "/admin/bookings" },
-  { labelKey: "admin.manageTours", icon: "🏔️", path: "/admin/tours" },
-  { labelKey: "admin.manageDestinations", icon: "🌍", path: "/admin/destinations" },
-  { labelKey: "admin.manageHotels", icon: "🏨", path: "/admin/hotels" },
-  { labelKey: "admin.manageCars", icon: "🚗", path: "/admin/cars" },
-  { labelKey: "admin.manageVisas", icon: "🛂", path: "/admin/visas" },
-  { labelKey: "admin.manageInsurance", icon: "🛡️", path: "/admin/insurance" },
-  { labelKey: "admin.manageCruises", icon: "🚢", path: "/admin/cruises" },
-  { labelKey: "admin.manageBlog", icon: "📝", path: "/admin/blog" },
-    { labelKey: "admin.knowledge", icon: "🧠", path: "/admin/knowledge" },
-  { labelKey: "admin.manageUsers", icon: "👥", path: "/admin/users" },
-  { labelKey: "admin.skyLounge", icon: "✨", path: "/admin/sky-lounge" },
-  { labelKey: "admin.siteSettings", icon: "⚙️", path: "/admin/settings" },
-  { labelKey: "admin.auditLog", icon: "🔍", path: "/admin/audit-log" },
+  { labelKey: "admin.manageFlights", icon: "✈️", path: "/admin/bookings", section: "services" },
+  { labelKey: "admin.manageTours", icon: "🏔️", path: "/admin/tours", section: "services" },
+  { labelKey: "admin.manageDestinations", icon: "🌍", path: "/admin/destinations", section: "services" },
+  { labelKey: "admin.manageHotels", icon: "🏨", path: "/admin/hotels", section: "services" },
+  { labelKey: "admin.manageCars", icon: "🚗", path: "/admin/cars", section: "services" },
+  { labelKey: "admin.manageVisas", icon: "🛂", path: "/admin/visas", section: "services" },
+  { labelKey: "admin.manageInsurance", icon: "🛡️", path: "/admin/insurance", section: "services" },
+  { labelKey: "admin.manageCruises", icon: "🚢", path: "/admin/cruises", section: "services" },
+  { labelKey: "admin.skyLounge", icon: "✨", path: "/admin/sky-lounge", section: "services" },
+  { labelKey: "admin.manageBlog", icon: "📝", path: "/admin/blog", section: "content" },
+  { labelKey: "admin.manageAbout", icon: "📄", path: "/admin/about", section: "content" },
+  { labelKey: "admin.knowledge", icon: "🧠", path: "/admin/knowledge", section: "content" },
+  { labelKey: "admin.siteManager", icon: "🛠️", path: "/admin/site-manager", section: "system" },
+  { labelKey: "admin.siteSettings", icon: "🔧", path: "/admin/settings", section: "system" },
+  { labelKey: "admin.manageUsers", icon: "👥", path: "/admin/users", section: "system" },
+  { labelKey: "admin.auditLog", icon: "🔍", path: "/admin/audit-log", section: "system" },
+];
+
+const navSections: { key: string; labelKey: string }[] = [
+  { key: "services", labelKey: "admin.section.services" },
+  { key: "content", labelKey: "admin.section.content" },
+  { key: "system", labelKey: "admin.section.system" },
 ];
 
 export default function AdminSidebar() {
@@ -124,6 +131,25 @@ export default function AdminSidebar() {
     return pathname.startsWith(path);
   };
 
+  const renderItem = (item: NavItem) => (
+    <li key={item.path}>
+      <Link
+        href={item.path}
+        onClick={() => setMobileOpen(false)}
+        className={`flex items-center gap-3 px-4 py-3 rounded-md text-sm font-medium transition-all duration-200 ${
+          isActive(item.path)
+            ? "bg-gold/15 text-gold border-l-2 border-gold"
+            : "text-white/70 hover:bg-gold/10 hover:text-white border-l-2 border-transparent"
+        }`}
+      >
+        <span className="text-lg">{item.icon}</span>
+        <span className={`${collapsed && !mobileOpen ? "hidden" : "block"}`}>
+          {t(item.labelKey)}
+        </span>
+      </Link>
+    </li>
+  );
+
   const sidebarContent = (
     <div className="flex flex-col h-full">
       {/* Logo */}
@@ -145,24 +171,21 @@ export default function AdminSidebar() {
       {/* Navigation */}
       <nav className="flex-1 py-4 overflow-y-auto">
         <ul className="space-y-1 px-3">
-          {navItems.filter((item) => canSee(item.path)).map((item) => (
-            <li key={item.path}>
-              <Link
-                href={item.path}
-                onClick={() => setMobileOpen(false)}
-                className={`flex items-center gap-3 px-4 py-3 rounded-md text-sm font-medium transition-all duration-200 ${
-                  isActive(item.path)
-                    ? "bg-gold/15 text-gold border-l-2 border-gold"
-                    : "text-white/70 hover:bg-gold/10 hover:text-white border-l-2 border-transparent"
-                }`}
-              >
-                <span className="text-lg">{item.icon}</span>
-                <span className={`${collapsed && !mobileOpen ? "hidden" : "block"}`}>
-                  {t(item.labelKey)}
-                </span>
-              </Link>
-            </li>
-          ))}
+          {navItems.filter((item) => canSee(item.path) && !item.section).map(renderItem)}
+          {navSections.map((sec) => {
+            const items = navItems.filter((item) => canSee(item.path) && item.section === sec.key);
+            if (items.length === 0) return null;
+            return (
+              <React.Fragment key={sec.key}>
+                <li className="pt-3 pb-1">
+                  <span className={`px-4 text-[10px] font-semibold uppercase tracking-wider text-gold/50 ${collapsed && !mobileOpen ? "hidden" : "block"}`}>
+                    {t(sec.labelKey)}
+                  </span>
+                </li>
+                {items.map(renderItem)}
+              </React.Fragment>
+            );
+          })}
         </ul>
       </nav>
 
