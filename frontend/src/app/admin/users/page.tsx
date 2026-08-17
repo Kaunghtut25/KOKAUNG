@@ -33,6 +33,9 @@ const AUTHORITIES = [
   { key: "blog", labelKey: "admin.users.auth.blog" },
   { key: "destinations", labelKey: "admin.users.auth.destinations" },
   { key: "sky-lounge", labelKey: "admin.users.auth.sky" },
+  { key: "about", labelKey: "admin.users.auth.about" },
+  { key: "site-manager", labelKey: "admin.users.auth.siteManager" },
+  { key: "knowledge", labelKey: "admin.users.auth.knowledge" },
 ];
 
 // FIX: 2026-08-04 admin-users-v2b — admin API routes require the bearer token

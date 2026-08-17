@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { isAdminToken, verifyToken, roleRank } from "@/lib/auth";
+import { isAdminToken, verifyToken, roleRank, sectionsForPath, hasSectionAccess } from "@/lib/auth";
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
@@ -29,6 +29,12 @@ export async function middleware(request: NextRequest) {
       (pathname === "/admin/users" || pathname === "/admin/settings" || pathname === "/admin/cleanup") &&
       pageRank < 3
     ) {
+      return NextResponse.redirect(new URL("/admin/dashboard", request.url));
+    }
+
+    // FIX 2026-08-17: per-section access (Section Access in Manage Users) — pages
+    const pageSections = sectionsForPath(pathname);
+    if (pageSections.length > 0 && !(await hasSectionAccess(pagePayload, pageSections))) {
       return NextResponse.redirect(new URL("/admin/dashboard", request.url));
     }
   }
@@ -62,6 +68,12 @@ export async function middleware(request: NextRequest) {
       // FIX 2026-08-16: rank computed for every non-public request
       const payload = await verifyToken(token);
       const rank = roleRank(payload?.role);
+
+      // FIX 2026-08-17: per-section access (Section Access in Manage Users) — API routes (GET + writes)
+      const apiSections = sectionsForPath(pathname);
+      if (apiSections.length > 0 && !(await hasSectionAccess(payload, apiSections))) {
+        return NextResponse.json({ message: "You don't have access to this section" }, { status: 403 });
+      }
 
       // users API is admin-only even for GET (user list is sensitive)
       if (pathname === "/api/admin/users" && rank < 3) {

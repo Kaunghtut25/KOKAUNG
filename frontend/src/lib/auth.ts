@@ -71,6 +71,64 @@ export function roleRank(role?: string): number {
   return role ? (ROLE_RANK[role] ?? -1) : -1;
 }
 
+/** All grantable section authorities (Section Access in Manage Users). */
+export const ALL_AUTHORITIES = [
+  "tours", "hotels", "cars", "cruises", "visas", "insurances",
+  "bookings", "users", "settings", "blog", "destinations", "sky-lounge",
+  "about", "site-manager", "knowledge",
+] as const;
+
+/** Map an admin pathname (page or /api/admin/* route) to the section authority/ies required to access it. */
+export function sectionsForPath(pathname: string): string[] {
+  const p = pathname.split("?")[0];
+  const m: [string, string[]][] = [
+    ["/admin/dashboard", []],
+    ["/admin/about", ["about"]],
+    ["/admin/site-manager", ["site-manager"]],
+    ["/admin/tours", ["tours"]],
+    ["/admin/hotels", ["hotels"]],
+    ["/admin/cars", ["cars"]],
+    ["/admin/cruises", ["cruises"]],
+    ["/admin/visas", ["visas"]],
+    ["/admin/insurance", ["insurances"]],
+    ["/admin/blog", ["blog"]],
+    ["/admin/destinations", ["destinations"]],
+    ["/admin/sky-lounge", ["sky-lounge"]],
+    ["/admin/bookings", ["bookings"]],
+    ["/admin/knowledge", ["knowledge"]],
+    ["/admin/users", ["users"]],
+    ["/admin/settings", ["settings"]],
+    ["/api/admin/tours", ["tours"]],
+    ["/api/admin/hotels", ["hotels"]],
+    ["/api/admin/cars", ["cars"]],
+    ["/api/admin/cruises", ["cruises"]],
+    ["/api/admin/visas", ["visas"]],
+    ["/api/admin/insurances", ["insurances"]],
+    ["/api/admin/blog", ["blog"]],
+    ["/api/admin/destinations", ["destinations"]],
+    ["/api/admin/mingalar", ["sky-lounge"]],
+    ["/api/admin/bookings", ["bookings"]],
+    ["/api/admin/knowledge", ["knowledge"]],
+    ["/api/admin/users", ["users"]],
+    ["/api/admin/settings", ["settings"]],
+    ["/api/admin/chat-config", ["settings"]],
+    ["/api/admin/site-config", ["site-manager", "about"]],
+  ];
+  for (const [prefix, secs] of m) {
+    if (p === prefix || p.startsWith(prefix + "/")) return secs;
+  }
+  return [];
+}
+
+/** True when the token holder may access at least one required section. Admin (rank 3) = implicit all; empty authorities = all sections. */
+export function hasSectionAccess(payload: AuthPayload | null, required: string[]): boolean {
+  if (!payload || required.length === 0) return true;
+  if (roleRank(payload.role) >= 3) return true;
+  const auths = Array.isArray(payload.authorities) ? payload.authorities : [];
+  if (auths.length === 0) return true;
+  return auths.some((a) => required.includes(a));
+}
+
 /** Sign a payload into a signed token. Throws if no secret configured. */
 export async function signToken(payload: AuthPayload): Promise<string> {
   const body = b64urlEncode(JSON.stringify(payload));

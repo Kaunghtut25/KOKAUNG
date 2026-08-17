@@ -5,7 +5,7 @@ import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
 import { useI18n } from "@/lib/i18n";
 import Image from "next/image";
-import { decodeTokenPayload, roleRank } from "@/lib/auth";
+import { decodeTokenPayload, roleRank, sectionsForPath } from "@/lib/auth";
 
 interface NavItem {
   labelKey: string;
@@ -41,6 +41,7 @@ export default function AdminSidebar() {
   const [adminUser, setAdminUser] = useState<string>("");
   const [adminRole, setAdminRole] = useState<string>("");
   const [role, setRole] = useState<string>("admin");
+  const [auths, setAuths] = useState<string[]>([]);
 
   useEffect(() => {
     // FIX: 2026-08-04 admin-users-v3 — show LIVE user data from the API,
@@ -78,6 +79,7 @@ export default function AdminSidebar() {
       if (p?.role && roleRank(p.role) >= 0) {
         setRole(p.role);
         setAdminRole(p.role);
+        if (Array.isArray(p.authorities)) setAuths(p.authorities);
       }
     }
   }, []);
@@ -101,14 +103,17 @@ export default function AdminSidebar() {
 
   const rank = roleRank(role);
   const canSee = (path: string) => {
+    // FIX 2026-08-17: also respect Section Access (authorities) from the token
+    const secs = sectionsForPath(path);
+    const hasSec = rank >= 3 || secs.length === 0 || auths.length === 0 || auths.some((a) => secs.includes(a));
     // Admin-only: user management + site settings
     if (path === "/admin/users" || path === "/admin/settings") return rank >= 3;
     // Editor+: site manager (content editing)
-    if (path === "/admin/site-manager") return rank >= 1;
+    if (path === "/admin/site-manager") return rank >= 1 && hasSec;
     // Staff+: bookings management
-    if (path === "/admin/bookings") return rank >= 2;
-    // Viewer+: all content pages (read-only for viewer)
-    return rank >= 0;
+    if (path === "/admin/bookings") return rank >= 2 && hasSec;
+    // Viewer+: content pages (read-only for viewer) within granted sections
+    return rank >= 0 && hasSec;
   };
 
   const isActive = (path: string) => {

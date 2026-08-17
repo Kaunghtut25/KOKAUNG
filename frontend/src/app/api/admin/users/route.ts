@@ -1,14 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
+import { ALL_AUTHORITIES } from "@/lib/auth";
 import { randomBytes, scryptSync, timingSafeEqual } from "crypto";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
 
 const ADMIN_ROLES = ["admin", "staff", "editor", "viewer"] as const;
-const ALL_AUTHORITIES = [
-  "tours", "hotels", "cars", "cruises", "visas", "insurances",
-  "bookings", "users", "settings", "blog", "destinations", "sky-lounge",
-] as const;
 
 // ── scrypt password hashing (same scheme as auth/register) ──
 function hashPassword(password: string): string {
