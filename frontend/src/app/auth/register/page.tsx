@@ -1,78 +1,20 @@
 "use client";
 
-import React, { useState } from "react";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
-import toast from "react-hot-toast";
-import api from "@/lib/api";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 import { useI18n } from "@/lib/i18n";
 
+// FIX 2026-08-17: self-registration closed — admins create accounts via /admin/users.
 export default function RegisterPage() {
-  const router = useRouter();
   const { t } = useI18n();
-  const [form, setForm] = useState({
-    fullName: "",
-    email: "",
-    phone: "",
-    password: "",
-    confirmPassword: "",
-  });
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setForm((prev) => ({ ...prev, [name]: value }));
-    if (error) setError("");
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError("");
-
-    if (!form.fullName || !form.email || !form.phone || !form.password || !form.confirmPassword) {
-      setError(t("auth.register.errRequired"));
-      return;
-    }
-
-    if (form.password !== form.confirmPassword) {
-      setError(t("auth.register.errPwMatch"));
-      return;
-    }
-
-    if (form.password.length < 6) {
-      setError(t("auth.register.errPwLen"));
-      return;
-    }
-
-    setLoading(true);
-    try {
-      await api.post("/auth/register", {
-        fullName: form.fullName,
-        email: form.email,
-        phone: form.phone,
-        password: form.password,
-      });
-      toast.success(t("auth.register.ok"));
-      router.push("/auth/login");
-    } catch (err: unknown) {
-      const message =
-        err && typeof err === "object" && "response" in err
-          ? (err as { response?: { data?: { message?: string } } }).response?.data?.message || t("auth.register.errFail")
-          : t("auth.register.errFail");
-      setError(message);
-      toast.error(message);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#0A1628] via-[#0F1F3D] to-[#0A1628] px-4 py-12">
       <div className="glass-card w-full max-w-md p-8 sm:p-10">
-        <div className="flex justify-end -mb-4"><LanguageSwitcher dark={false} /></div>
-        {/* Heading */}
+        <div className="flex justify-end -mb-4">
+          <LanguageSwitcher dark={false} />
+        </div>
+
         <div className="text-center mb-8">
           <h1
             className="text-3xl sm:text-4xl font-bold mb-2"
@@ -87,156 +29,12 @@ export default function RegisterPage() {
           </p>
         </div>
 
-        {/* Form */}
-        <form onSubmit={handleSubmit} className="space-y-5">
-          <div>
-            <label
-              htmlFor="fullName"
-              className="block text-white/80 text-sm font-medium mb-1.5"
-            >
-              {t("auth.register.fullName")}
-            </label>
-            <input
-              id="fullName"
-              name="fullName"
-              type="text"
-              value={form.fullName}
-              onChange={handleChange}
-              placeholder={t("auth.register.phName")}
-              className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-white/30
-                         focus:outline-none focus:border-[#D4AF37] focus:ring-1 focus:ring-[#D4AF37]/50
-                         transition-colors duration-200"
-            />
-          </div>
+        <div className="rounded-xl border border-[#D4AF37]/30 bg-[#D4AF37]/10 p-6 text-center">
+          <div className="text-3xl mb-3">🔒</div>
+          <p className="text-white font-semibold text-base mb-2">{t("auth.register.closed")}</p>
+          <p className="text-white/60 text-sm leading-relaxed">{t("auth.register.closedHint")}</p>
+        </div>
 
-          <div>
-            <label
-              htmlFor="email"
-              className="block text-white/80 text-sm font-medium mb-1.5"
-            >
-              {t("auth.register.email")}
-            </label>
-            <input
-              id="email"
-              name="email"
-              type="email"
-              value={form.email}
-              onChange={handleChange}
-              placeholder={t("auth.register.phEmail")}
-              className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-white/30
-                         focus:outline-none focus:border-[#D4AF37] focus:ring-1 focus:ring-[#D4AF37]/50
-                         transition-colors duration-200"
-            />
-          </div>
-
-          <div>
-            <label
-              htmlFor="phone"
-              className="block text-white/80 text-sm font-medium mb-1.5"
-            >
-              {t("auth.register.phone")}
-            </label>
-            <input
-              id="phone"
-              name="phone"
-              type="tel"
-              value={form.phone}
-              onChange={handleChange}
-              placeholder={t("auth.register.phPhone")}
-              className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-white/30
-                         focus:outline-none focus:border-[#D4AF37] focus:ring-1 focus:ring-[#D4AF37]/50
-                         transition-colors duration-200"
-            />
-          </div>
-
-          <div>
-            <label
-              htmlFor="password"
-              className="block text-white/80 text-sm font-medium mb-1.5"
-            >
-              {t("auth.register.password")}
-            </label>
-            <input
-              id="password"
-              name="password"
-              type="password"
-              value={form.password}
-              onChange={handleChange}
-              placeholder="••••••••"
-              className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-white/30
-                         focus:outline-none focus:border-[#D4AF37] focus:ring-1 focus:ring-[#D4AF37]/50
-                         transition-colors duration-200"
-            />
-          </div>
-
-          <div>
-            <label
-              htmlFor="confirmPassword"
-              className="block text-white/80 text-sm font-medium mb-1.5"
-            >
-              {t("auth.register.confirmPassword")}
-            </label>
-            <input
-              id="confirmPassword"
-              name="confirmPassword"
-              type="password"
-              value={form.confirmPassword}
-              onChange={handleChange}
-              placeholder="••••••••"
-              className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-white/30
-                         focus:outline-none focus:border-[#D4AF37] focus:ring-1 focus:ring-[#D4AF37]/50
-                         transition-colors duration-200"
-            />
-          </div>
-
-          {/* Error message */}
-          {error && (
-            <p className="text-red-400 text-sm text-center bg-red-900/20 border border-red-500/20 rounded-lg py-2 px-4">
-              {error}
-            </p>
-          )}
-
-          {/* Submit */}
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full py-3.5 rounded-xl font-semibold text-white text-base
-                       bg-gradient-to-r from-[#D4AF37] to-[#F5A623]
-                       hover:from-[#C4A037] hover:to-[#E59620]
-                       disabled:opacity-50 disabled:cursor-not-allowed
-                       transition-all duration-200 shadow-lg shadow-[#D4AF37]/20"
-          >
-            {loading ? (
-              <span className="flex items-center justify-center gap-2">
-                <svg
-                  className="animate-spin h-5 w-5 text-white"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                >
-                  <circle
-                    className="opacity-25"
-                    cx="12"
-                    cy="12"
-                    r="10"
-                    stroke="currentColor"
-                    strokeWidth="4"
-                  />
-                  <path
-                    className="opacity-75"
-                    fill="currentColor"
-                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
-                  />
-                </svg>
-                {t("auth.register.creating")}
-              </span>
-            ) : (
-              t("auth.register.register")
-            )}
-          </button>
-        </form>
-
-        {/* Sign In link */}
         <p className="text-center text-white/50 text-sm mt-6">
           {t("auth.register.haveAccount")}{" "}
           <Link

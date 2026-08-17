@@ -324,6 +324,8 @@ const en: Record<string, string> = {
   "auth.register.errPwLen": "Password must be at least 6 characters.",
   "auth.register.ok": "Registration successful!",
   "auth.register.errFail": "Registration failed. Please try again.",
+  "auth.register.closed": "Registration is closed",
+  "auth.register.closedHint": "New accounts are created by A9 Global staff only. Please contact us to get access.",
 
 
   "admin.sm.crossHint": "Toggle and configure cross-section “Explore in...” recommendations that appear after “You May Also Like”.",
@@ -1669,6 +1671,8 @@ const mm: Record<string, string> = {
   "auth.register.errPwLen": "စကားဝှက်သည် အနည်းဆုံး စာလုံး ၆ လုံး ရှိရမည်။",
   "auth.register.ok": "မှတ်ပုံတင်ခြင်း အောင်မြင်ပါပြီ!",
   "auth.register.errFail": "မှတ်ပုံတင်ရန် မအောင်မြင်ပါ။ ထပ်စမ်းကြည့်ပါ။",
+  "auth.register.closed": "မှတ်ပုံတင်ခြင်း ပိတ်ထားသည်",
+  "auth.register.closedHint": "အကောင့်အသစ်များကို A9 Global ဝန်ထမ်းများကသာ ဖန်တီးပါသည်။ ကျေးဇူးပြု၍ ကျွန်ုပ်တို့ထံ ဆက်သွယ်ပါ။",
 
 
   "admin.sm.crossHint": "“You May Also Like” ပြီးနောက် ပေါ်လာသော “Explore in...” အခြားအမျိုးအစား အကြံပြုချက်များကို ဖွင့်/ပိတ်ပြီး သတ်မှတ်ပါ။",
