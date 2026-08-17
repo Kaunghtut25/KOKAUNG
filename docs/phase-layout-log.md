@@ -39,3 +39,8 @@ Fix in `components/HomePageClient.tsx`:
 - `flightsOn/busesOn` from `siteConfig.moduleToggles`; `effectiveMode` = flights (if on) else buses (if on) else null; widget renders only when non-null.
 - Flights form renders only when `effectiveMode==='flights'`; buses form when `effectiveMode==='buses'`; both off → widget hidden.
 - Live-verified: with Flights OFF in DB, home SSR HTML shows the bus form ("Select city", no One Way/Round Trip/Multi-City).
+
+## Hero overlap when both search modules off (commit `0b04a26`, buildId `4RQ93nI_P5fCSwNXS8VfI`)
+With Flights AND Buses both toggled off, the widget hides but the empty `-mt-24 md:-mt-32` wrapper still pulled the next section up, clipping the "Popular Destinations / Explore The World" heading under the hero (confirmed via screenshot + AutoGLM image recognition).
+Fix: the negative margin is now applied only while the widget renders — `className={"relative z-40 px-4 " + (effectiveMode ? "-mt-24 md:-mt-32" : "")}`.
+Live-verified: wrapper renders `class="relative z-40 px-4 "`, no `-mt-24`, heading flows directly below hero.
