@@ -32,3 +32,10 @@ User asked "also updated on admin panel?" — the Site Manager still showed stal
 - Card & Hero Dimensions tab: **Insurance + Cruises width/height inputs disabled** with notes (insurance "Automatic — fills the 4-column grid"; cruises "Follows the Sky Lounge card size (edit it below)"). **Sky Lounge (mingalar) inputs stay editable** + hint "also applies to Cruises cards".
 - 4 new admin.sm.* keys EN+MM; parity 1363/1363, SM 251, zero drift.
 - Verified live: new EN dict chunk `6146-ab23cbd31c0a24e0.js` contains `insLayoutFixed` (MM is unicode-escaped in minified output; local parity check covers it).
+
+## Module toggles now gate the home search widget (commit `f58ab5d`, buildId `yXtAesW7qnVTQ_HTcsMom`)
+Bug: Flights module toggle OFF hid the ServiceIcons strip + nav/footer links, but the home `#search-engine` widget always defaulted to the flights form (SearchModeContext defaults `mode='flights'`; HomePageClient never read `moduleToggles`).
+Fix in `components/HomePageClient.tsx`:
+- `flightsOn/busesOn` from `siteConfig.moduleToggles`; `effectiveMode` = flights (if on) else buses (if on) else null; widget renders only when non-null.
+- Flights form renders only when `effectiveMode==='flights'`; buses form when `effectiveMode==='buses'`; both off → widget hidden.
+- Live-verified: with Flights OFF in DB, home SSR HTML shows the bus form ("Select city", no One Way/Round Trip/Multi-City).
