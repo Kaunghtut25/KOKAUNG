@@ -956,6 +956,14 @@ export const en: Record<string, string> = {
     "home.trustedPartnersHint": "Partner names and logos are managed from Admin → Site Manager → Partners.",
   "home.ctaTitle": "Ready to Start Your Journey?",
   "home.ctaDesc": "Let us craft your perfect getaway.",
+  "home.aboutTitle": "Your Trusted Travel Partner in Myanmar Since 2015",
+  "home.aboutP1": "A9 Global Travels & Tours is an IATA-accredited travel agency based in Yangon, Myanmar. Since 2015 we have helped travellers explore Myanmar and beyond with hand-crafted tours, comfortable hotels, private car hire with airport transfers, visa assistance and travel insurance — all under one roof.",
+  "home.aboutP2": "From the golden pagodas of Bagan and the colonial streets of Yangon to beach escapes and cross-border journeys, our team designs custom itineraries around the way you want to travel. Every booking is managed end-to-end by our Yangon office, with 24-hour support and clear, honest pricing.",
+  "home.aboutP3": "Beyond Myanmar, we arrange international flights, cruises and bus travel, and offer 9 insurance plans from basic single-trip cover to comprehensive annual policies. Contact us today for a personalised quote — your journey starts with a conversation.",
+  "home.aboutB1": "IATA-accredited since 2015",
+  "home.aboutB2": "Custom itineraries designed by local experts",
+  "home.aboutB3": "Tours, hotels, cars, visas, insurance, cruises & buses",
+  "home.aboutB4": "Based in Yangon — real people, real support",
 
   // Newsletter
   "newsletter.placeholder": "Your email address",

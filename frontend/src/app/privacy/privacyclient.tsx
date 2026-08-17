@@ -7,7 +7,7 @@ const defaultPrivacy = [
   { id: "p1", title: "Information We Collect", content: "We collect personal information including name, email, phone number, and travel preferences when you make a booking or contact us." },
   { id: "p2", title: "How We Use Your Information", content: "Your information is used to process bookings, provide customer support, send travel updates, and improve our services. We do not sell or rent your personal data." },
   { id: "p3", title: "Data Security", content: "We implement appropriate security measures to protect your personal information from unauthorized access, alteration, or disclosure." },
-  { id: "p4", title: "Contact Us", content: "For privacy concerns, contact us at info@a9globaltravel.com or +95 9 123 456 789." },
+  { id: "p4", title: "Contact Us", content: "For privacy concerns, contact us at info@a9globaltravel.com or +95 9 781 617 111." },
 ];
 
 export default function PrivacyClient({ siteConfig }: { siteConfig: any }) {
@@ -86,6 +86,29 @@ export default function PrivacyClient({ siteConfig }: { siteConfig: any }) {
               To exercise any of your rights, or for any GDPR-related request, contact us at
               <strong> info@a9globaltravel.com</strong> or <strong>+95 9 781 617 111</strong> (A9 Global Travels &amp; Tours,
               Yangon, Myanmar). We respond to all requests within 30 days.
+            </p>
+            <h3 style={{ color: '#0A1628', fontSize: 17, marginBottom: 8, marginTop: 18 }}>Data Sharing &amp; International Transfers</h3>
+            <p style={{ marginBottom: 16 }}>
+              We share personal data only with the parties necessary to provide the services you request &mdash; such as hotels,
+              airlines, bus operators, visa processors and insurance providers &mdash; and only to the extent required to
+              complete your booking or request. Where a service requires it, data may be transferred to providers outside the
+              EEA; we rely on appropriate safeguards, including standard contractual clauses where applicable. We never sell or
+              rent your personal data.
+            </p>
+
+            <h3 style={{ color: '#0A1628', fontSize: 17, marginBottom: 8, marginTop: 18 }}>Cookies &amp; Local Storage</h3>
+            <p style={{ marginBottom: 16 }}>
+              We use local storage in your browser to remember your language preference and search selections, and Google
+              Analytics (anonymised) to understand how visitors use our website. We do not use advertising trackers or
+              third-party marketing cookies. You can clear this data at any time through your browser settings.
+            </p>
+
+            <h3 style={{ color: '#0A1628', fontSize: 17, marginBottom: 8, marginTop: 18 }}>Policy Updates &amp; Contact</h3>
+            <p style={{ marginBottom: 16 }}>
+              We may update this policy from time to time; the latest version will always be published on this page with its
+              effective date. If you have any question about this policy or our use of your data, or would like to raise a
+              data-protection request on behalf of your organisation, write to <strong>info@a9globaltravel.com</strong> or call
+              <strong> +95 9 781 617 111</strong>.
             </p>
           </div>
         </div>
