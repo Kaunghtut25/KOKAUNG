@@ -24,7 +24,11 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
 
 export async function DELETE(req: NextRequest, { params }: { params: { id: string } }) {
   try {
-    deleteById('blog', params.id);
+    const items = await getAll('blog') as any[];
+    const item = items.find((i: any) => i._id === params.id || i.id === params.id);
+    if (!item) return NextResponse.json({ success: false, message: "Not found" }, { status: 404 });
+    const ok = await deleteById('blog', item.id ?? item._id);
+    if (!ok) return NextResponse.json({ success: false, message: "Delete failed" }, { status: 500 });
     return NextResponse.json({ success: true });
   } catch (err: any) {
     return NextResponse.json({ success: false, message: err.message }, { status: 500 });

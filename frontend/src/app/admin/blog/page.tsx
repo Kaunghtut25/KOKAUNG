@@ -8,7 +8,8 @@ import Image from "next/image";
 import { useClientRole } from "@/lib/useClientRole";
 
 interface BlogPost {
-  _id: string;
+  _id?: string;
+  id?: string;
   title: string;
   content: string;
   image: string;
@@ -125,7 +126,8 @@ export default function AdminBlogPage() {
     } catch (err) { console.error(err); }
   };
 
-  const handleDelete = async (id: string) => {
+  const handleDelete = async (id?: string) => {
+    if (!id) return;
     if (!confirm(t('admin.blog.confirmDel'))) return;
     try {
       await fetch('/api/admin/blog/' + id, { method: 'DELETE', headers: { Authorization: `Bearer ${token}` } });
@@ -140,7 +142,7 @@ export default function AdminBlogPage() {
     setTags(Array.isArray(post.tags) ? (post.tags as unknown as string[]).join(', ') : post.tags || '');
     setPhone(post.phone || '');
     setEmail(post.email || '');
-    setEditingId(post._id);
+    setEditingId(post.id || post._id || null);
     if (post.image) {
       setImagePreview(post.image);
     } else {
@@ -233,7 +235,7 @@ export default function AdminBlogPage() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {loading ? <p className="text-gray-500">{t("common.loading")}</p> :
           posts.map((post: BlogPost) => (
-            <div key={post._id} className="bg-white/5 backdrop-blur rounded-xl p-5 border border-white/10 flex flex-col md:flex-row md:items-start gap-4 hover:border-[#D4AF37]/30 transition-all">
+            <div key={post.id || post._id} className="bg-white/5 backdrop-blur rounded-xl p-5 border border-white/10 flex flex-col md:flex-row md:items-start gap-4 hover:border-[#D4AF37]/30 transition-all">
               <Image alt="" className="w-16 h-16 rounded-lg object-cover flex-shrink-0" src={post.image} width={1600} height={900} sizes="100vw" />
               <div className="flex-1 min-w-0">
                 <h3 className="font-semibold text-white line-clamp-2">{post.title}</h3>
@@ -249,7 +251,7 @@ export default function AdminBlogPage() {
               <div className="flex gap-2 flex-shrink-0">
                 {!isViewer && (<>
                 <button onClick={() => handleEdit(post)} className="px-3 py-1 text-xs bg-blue-500/20 text-blue-400 rounded-lg hover:bg-blue-100">{t("admin.common.edit")}</button>
-                <button onClick={() => handleDelete(post._id)} className="px-3 py-1 text-xs bg-red-500/20 text-red-400 rounded-lg hover:bg-red-100">{t("admin.common.delete")}</button>
+                <button onClick={() => handleDelete(post.id || post._id)} className="px-3 py-1 text-xs bg-red-500/20 text-red-400 rounded-lg hover:bg-red-100">{t("admin.common.delete")}</button>
                 </>)}
               </div>
             </div>
