@@ -113,9 +113,9 @@ export default function ToursClient(props: any) {
       <section className="relative pt-24 pb-12 px-4 overflow-hidden" style={{ height: (props.siteConfig?.heroDimensions?.["tours"]?.desktop || 480) + "px" }}>
         <div className="absolute inset-0">
           {heroImgOk ? (
-            <Image src={heroImage} alt="A9 Global Tours" fill sizes="100vw" className="object-cover" onError={() => setHeroImgOk(false)} />
+            <Image src={heroImage} alt="A9 Global Tours" fill sizes="100vw" className="object-cover" priority onError={() => setHeroImgOk(false)} />
           ) : (
-            <Image src="/images_v2/hero-tours-v2.jpg" alt="A9 Global Tours" fill sizes="100vw" className="object-cover" />
+            <Image src="/images_v2/hero-tours-v2.jpg" alt="A9 Global Tours" fill sizes="100vw" className="object-cover" priority />
           )}
           <div className="absolute inset-0 bg-gradient-to-b from-[#0A1628]/80 via-[#0A1628]/40 to-[#0A1628]/60" />
         </div>

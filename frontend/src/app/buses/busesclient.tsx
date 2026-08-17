@@ -62,7 +62,7 @@ export default function BusesClient({ initialRoutes, siteConfig }: BusesClientPr
 
       {/* ── Hero ── */}
       <section className="relative w-full h-64 sm:h-80 overflow-hidden">
-        <Image alt={t("buses.heroAlt")} className="w-full h-full object-cover" onError={(e) => { (e.target as HTMLImageElement).src = "/images_v2/hero-cars.jpg"; }} src={heroImage} width={1600} height={900} sizes="100vw" />
+        <Image alt={t("buses.heroAlt")} className="w-full h-full object-cover" onError={(e) => { (e.target as HTMLImageElement).src = "/images_v2/hero-cars.jpg"; }} src={heroImage} width={1600} height={900} sizes="100vw" priority />
         <div className="absolute inset-0 bg-gradient-to-b from-[#0A1628]/70 to-[#0A1628]/40" />
         <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4">
           <h1 className="font-bold text-white text-3xl sm:text-4xl md:text-5xl mb-3" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>

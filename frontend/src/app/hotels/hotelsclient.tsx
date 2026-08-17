@@ -97,7 +97,7 @@ export default function HotelsClient({ initialHotels, siteConfig }: HotelsClient
     <main className="min-h-screen bg-white">
 <section className="relative pt-24 pb-12 px-4 overflow-hidden" style={{ height: (siteConfig?.heroDimensions?.["hotels"]?.desktop || 350) + "px" }}>
         <div className="absolute inset-0">
-          <Image alt="A9 Global Hotels" className="w-full h-full object-cover" onError={(e) => { (e.target as HTMLImageElement).src = "/images_v2/hero-hotels-v2.jpg"; }} src={heroImage} width={1600} height={900} sizes="100vw" />
+          <Image alt="A9 Global Hotels" className="w-full h-full object-cover" onError={(e) => { (e.target as HTMLImageElement).src = "/images_v2/hero-hotels-v2.jpg"; }} src={heroImage} width={1600} height={900} sizes="100vw" priority />
           <div className="absolute inset-0 bg-gradient-to-b from-black/40 to-transparent" />
         </div>
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(212,175,55,0.08),transparent_70%)]" />

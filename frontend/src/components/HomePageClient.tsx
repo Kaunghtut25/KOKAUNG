@@ -16,10 +16,11 @@ import TrustBadges from '@/components/TrustBadges';
 import DealsBanner from '@/components/DealsBanner';
 import WhyChooseUs from '@/components/WhyChooseUs';
 import StatsCounter from '@/components/StatsCounter';
-import TestimonialSlider from '@/components/TestimonialSlider';
-import SocialFeed from '@/components/SocialFeed';
-import PartnerLogos from '@/components/PartnerLogos';
-import Newsletter from '@/components/Newsletter';
+import dynamic from 'next/dynamic';
+const TestimonialSlider = dynamic(() => import('@/components/TestimonialSlider'));
+const SocialFeed = dynamic(() => import('@/components/SocialFeed'));
+const PartnerLogos = dynamic(() => import('@/components/PartnerLogos'));
+const Newsletter = dynamic(() => import('@/components/Newsletter'));
 type TabType = "oneway" | "roundtrip" | "multicity";
 
 interface FlightLeg { from: string; to: string; date: string; }

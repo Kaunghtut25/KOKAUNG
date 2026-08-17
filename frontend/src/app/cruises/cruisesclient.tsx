@@ -141,7 +141,7 @@ export default function CruisesClient({ initialCruises, siteConfig }: { initialC
     <main className="min-h-screen bg-white">
       {/* Hero */}
       <section className="relative h-[400px] md:h-[500px] w-full overflow-hidden" style={{ height: (siteConfig?.heroDimensions?.["cruises"]?.desktop || 500) + "px" }}>
-        <Image alt="Luxury Cruises" onError={(e) => { (e.target as HTMLImageElement).src = "/images_v2/hero-cruises-v2.jpg"; }} className="w-full h-full object-cover" src={heroImage} width={1600} height={900} sizes="100vw" />
+        <Image alt="Luxury Cruises" onError={(e) => { (e.target as HTMLImageElement).src = "/images_v2/hero-cruises-v2.jpg"; }} className="w-full h-full object-cover" src={heroImage} width={1600} height={900} sizes="100vw" priority />
         <div className="absolute inset-0 bg-gradient-to-t from-[#0A1628]/90 via-[#0A1628]/40 to-[#0A1628]/30" />
         <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4">
           <h1 className="font-bold text-white mb-4" style={{ fontFamily: crTitleFont, fontSize: crTitleSize }}>
