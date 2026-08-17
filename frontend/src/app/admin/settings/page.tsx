@@ -97,13 +97,44 @@ export default function AdminSettingsPage() {
   const [settings, setSettings] = useState<SiteSettings>(defaultSettings);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const [activeTab, setActiveTab] = useState<"general" | "hero" | "social" | "certs" | "theme">("general");
+  const [activeTab, setActiveTab] = useState<"general" | "hero" | "social" | "certs" | "theme" | "chat">("general");
   const [toast, setToast] = useState<{ message: string; type: "success" | "error" } | null>(null);
   const logoInputRef = useRef<HTMLInputElement>(null);
   const fileInputRefs = useRef<(HTMLInputElement | null)[]>([]);
   const [uploading, setUploading] = useState(false);
   const [uploadError, setUploadError] = useState("");
   const [logoUrlInput, setLogoUrlInput] = useState("");
+// Live Chat config tab state (admin-configured AI provider / keys / model)
+  const [chatCfg, setChatCfg] = useState({
+    provider: "auto" as "auto" | "openai" | "anthropic" | "ollama",
+    openaiApiKey: "",
+    openaiBaseUrl: "",
+    openaiModel: "",
+    anthropicApiKey: "",
+    anthropicModel: "",
+    ollamaBaseUrl: "",
+    ollamaModel: "",
+  });
+  const [chatMeta, setChatMeta] = useState({
+    openaiApiKeySet: false,
+    openaiApiKeyPreview: "",
+    anthropicApiKeySet: false,
+    anthropicApiKeyPreview: "",
+  });
+  const [chatEnv, setChatEnv] = useState<{
+    openaiBaseUrl: string;
+    openaiModel: string;
+    anthropicModel: string;
+    ollamaBaseUrl: string;
+    ollamaModel: string;
+    openaiApiKeySet: boolean;
+    anthropicApiKeySet: boolean;
+  } | null>(null);
+  const [chatLoading, setChatLoading] = useState(false);
+  const [chatSaving, setChatSaving] = useState(false);
+  const [removeOpenaiKey, setRemoveOpenaiKey] = useState(false);
+  const [removeAnthropicKey, setRemoveAnthropicKey] = useState(false);
+  
 
   const [token, setToken] = useState("");
   useEffect(() => { setToken(localStorage.getItem("admin_token") || ""); }, []);
@@ -310,6 +341,72 @@ export default function AdminSettingsPage() {
     // Upload to server
     await uploadFile(file, page);
   };
+
+  const fetchChatConfig = useCallback(async () => {
+    setChatLoading(true);
+    try {
+      const res = await fetch(`${API_BASE}/admin/chat-config`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (res.ok) {
+        const d = await res.json();
+        setChatCfg((prev) => ({
+          ...prev,
+          provider: d.provider === "openai" || d.provider === "anthropic" || d.provider === "ollama" ? d.provider : "auto",
+          openaiBaseUrl: d.openaiBaseUrl || "",
+          openaiModel: d.openaiModel || "",
+          anthropicModel: d.anthropicModel || "",
+          ollamaBaseUrl: d.ollamaBaseUrl || "",
+          ollamaModel: d.ollamaModel || "",
+        }));
+        setChatMeta({
+          openaiApiKeySet: !!d.openaiApiKeySet,
+          openaiApiKeyPreview: d.openaiApiKeyPreview || "",
+          anthropicApiKeySet: !!d.anthropicApiKeySet,
+          anthropicApiKeyPreview: d.anthropicApiKeyPreview || "",
+        });
+        setChatEnv(d.env || null);
+        setRemoveOpenaiKey(false);
+        setRemoveAnthropicKey(false);
+      }
+    } catch (err) {
+      console.error("Failed to fetch chat config:", err);
+    } finally {
+      setChatLoading(false);
+    }
+  }, [token]);
+
+  const handleChatSave = async () => {
+    setChatSaving(true);
+    try {
+      const res = await fetch(`${API_BASE}/admin/chat-config`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+        body: JSON.stringify({
+          ...chatCfg,
+          openaiApiKey: removeOpenaiKey ? "__CLEAR__" : chatCfg.openaiApiKey,
+          anthropicApiKey: removeAnthropicKey ? "__CLEAR__" : chatCfg.anthropicApiKey,
+        }),
+      });
+      if (res.ok) {
+        showToast(t("admin.settings.chatSavedOk"), "success");
+        setChatCfg((prev) => ({ ...prev, openaiApiKey: "", anthropicApiKey: "" }));
+        await fetchChatConfig();
+      } else {
+        showToast(t("admin.settings.chatSaveFailed"), "error");
+      }
+    } catch (err) {
+      console.error("Chat config save failed:", err);
+      showToast(t("admin.settings.chatSaveFailed"), "error");
+    } finally {
+      setChatSaving(false);
+    }
+  };
+
+  // Load chat config lazily when the tab is opened
+  useEffect(() => {
+    if (activeTab === "chat") fetchChatConfig();
+  }, [activeTab, fetchChatConfig]);
 
   const renderGeneralTab = () => (
     <div className="space-y-6">
@@ -693,6 +790,184 @@ export default function AdminSettingsPage() {
       </div>
     </div>
   );
+const renderChatTab = () => (
+    <div className="space-y-6">
+      <div className="bg-white/5 border border-white/10 rounded-xl p-6">
+        <h3 className="text-lg font-semibold text-gold mb-2">{t("admin.settings.chatTitle")}</h3>
+        <p className="text-white/60 text-sm mb-6">{t("admin.settings.chatSubtitle")}</p>
+
+        {chatLoading ? (
+          <p className="text-gold/70 animate-pulse text-sm">{t("admin.settings.chatLoading")}</p>
+        ) : (
+          <>
+            {/* Provider */}
+            <div className="mb-6">
+              <label className="block text-white/60 text-xs mb-1">{t("admin.settings.chatProvider")}</label>
+              <select
+                value={chatCfg.provider}
+                onChange={(e) => setChatCfg((prev) => ({ ...prev, provider: e.target.value as typeof prev.provider }))}
+                className="w-full md:w-80 bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-gold/50 transition-colors"
+              >
+                <option value="auto" className="bg-deepblue">{t("admin.settings.chatProviderAuto")}</option>
+                <option value="openai" className="bg-deepblue">{t("admin.settings.chatProviderOpenAI")}</option>
+                <option value="anthropic" className="bg-deepblue">{t("admin.settings.chatProviderAnthropic")}</option>
+                <option value="ollama" className="bg-deepblue">{t("admin.settings.chatProviderOllama")}</option>
+              </select>
+            </div>
+
+            {/* OpenAI */}
+            <div className="bg-white/[0.03] border border-white/10 rounded-lg p-4 mb-4 space-y-3">
+              <h4 className="text-sm font-semibold text-white/80">{t("admin.settings.chatOpenaiSection")}</h4>
+              <div>
+                <label className="block text-white/60 text-xs mb-1">{t("admin.settings.chatOpenaiKey")}</label>
+                <div className="flex gap-2 items-start">
+                  <input
+                    type="password"
+                    value={chatCfg.openaiApiKey}
+                    onChange={(e) => setChatCfg((prev) => ({ ...prev, openaiApiKey: e.target.value }))}
+                    placeholder={chatMeta.openaiApiKeySet ? chatMeta.openaiApiKeyPreview : ""}
+                    className="flex-1 bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-gold/50 transition-colors"
+                    autoComplete="off"
+                  />
+                  {chatMeta.openaiApiKeySet && (
+                    <button
+                      type="button"
+                      onClick={() => setRemoveOpenaiKey((v) => !v)}
+                      className={`px-3 py-2 rounded-lg text-xs font-medium whitespace-nowrap transition-colors ${
+                        removeOpenaiKey ? "bg-red-500/20 text-red-300" : "bg-white/5 text-white/60 hover:text-white"
+                      }`}
+                    >
+                      {removeOpenaiKey ? "✓" : "✕"} {t("admin.settings.chatRemoveKey")}
+                    </button>
+                  )}
+                </div>
+                <p className="text-white/40 text-xs mt-1">
+                  {chatMeta.openaiApiKeySet
+                    ? `${t("admin.settings.chatKeySet")} ${chatMeta.openaiApiKeyPreview}`
+                    : t("admin.settings.chatKeyNotSet")}
+                  {" · "}
+                  {t("admin.settings.chatKeepKeyHint")}
+                </p>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-white/60 text-xs mb-1">{t("admin.settings.chatOpenaiBaseUrl")}</label>
+                  <input
+                    type="text"
+                    value={chatCfg.openaiBaseUrl}
+                    onChange={(e) => setChatCfg((prev) => ({ ...prev, openaiBaseUrl: e.target.value }))}
+                    placeholder={chatEnv?.openaiBaseUrl || "https://api.openai.com/v1"}
+                    className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-gold/50 transition-colors"
+                  />
+                </div>
+                <div>
+                  <label className="block text-white/60 text-xs mb-1">{t("admin.settings.chatOpenaiModel")}</label>
+                  <input
+                    type="text"
+                    value={chatCfg.openaiModel}
+                    onChange={(e) => setChatCfg((prev) => ({ ...prev, openaiModel: e.target.value }))}
+                    placeholder={chatEnv?.openaiModel || "gpt-4o-mini"}
+                    className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-gold/50 transition-colors"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Anthropic */}
+            <div className="bg-white/[0.03] border border-white/10 rounded-lg p-4 mb-4 space-y-3">
+              <h4 className="text-sm font-semibold text-white/80">{t("admin.settings.chatAnthropicSection")}</h4>
+              <div>
+                <label className="block text-white/60 text-xs mb-1">{t("admin.settings.chatAnthropicKey")}</label>
+                <div className="flex gap-2 items-start">
+                  <input
+                    type="password"
+                    value={chatCfg.anthropicApiKey}
+                    onChange={(e) => setChatCfg((prev) => ({ ...prev, anthropicApiKey: e.target.value }))}
+                    placeholder={chatMeta.anthropicApiKeySet ? chatMeta.anthropicApiKeyPreview : ""}
+                    className="flex-1 bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-gold/50 transition-colors"
+                    autoComplete="off"
+                  />
+                  {chatMeta.anthropicApiKeySet && (
+                    <button
+                      type="button"
+                      onClick={() => setRemoveAnthropicKey((v) => !v)}
+                      className={`px-3 py-2 rounded-lg text-xs font-medium whitespace-nowrap transition-colors ${
+                        removeAnthropicKey ? "bg-red-500/20 text-red-300" : "bg-white/5 text-white/60 hover:text-white"
+                      }`}
+                    >
+                      {removeAnthropicKey ? "✓" : "✕"} {t("admin.settings.chatRemoveKey")}
+                    </button>
+                  )}
+                </div>
+                <p className="text-white/40 text-xs mt-1">
+                  {chatMeta.anthropicApiKeySet
+                    ? `${t("admin.settings.chatKeySet")} ${chatMeta.anthropicApiKeyPreview}`
+                    : t("admin.settings.chatKeyNotSet")}
+                  {" · "}
+                  {t("admin.settings.chatKeepKeyHint")}
+                </p>
+              </div>
+              <div>
+                <label className="block text-white/60 text-xs mb-1">{t("admin.settings.chatAnthropicModel")}</label>
+                <input
+                  type="text"
+                  value={chatCfg.anthropicModel}
+                  onChange={(e) => setChatCfg((prev) => ({ ...prev, anthropicModel: e.target.value }))}
+                  placeholder={chatEnv?.anthropicModel || "claude-3-5-sonnet-latest"}
+                  className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-gold/50 transition-colors"
+                />
+              </div>
+            </div>
+
+            {/* Ollama (local) */}
+            <div className="bg-white/[0.03] border border-white/10 rounded-lg p-4 mb-4 space-y-3">
+              <h4 className="text-sm font-semibold text-white/80">{t("admin.settings.chatOllamaSection")}</h4>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-white/60 text-xs mb-1">{t("admin.settings.chatOllamaBaseUrl")}</label>
+                  <input
+                    type="text"
+                    value={chatCfg.ollamaBaseUrl}
+                    onChange={(e) => setChatCfg((prev) => ({ ...prev, ollamaBaseUrl: e.target.value }))}
+                    placeholder={chatEnv?.ollamaBaseUrl || "http://localhost:11434/v1"}
+                    className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-gold/50 transition-colors"
+                  />
+                </div>
+                <div>
+                  <label className="block text-white/60 text-xs mb-1">{t("admin.settings.chatOllamaModel")}</label>
+                  <input
+                    type="text"
+                    value={chatCfg.ollamaModel}
+                    onChange={(e) => setChatCfg((prev) => ({ ...prev, ollamaModel: e.target.value }))}
+                    placeholder={chatEnv?.ollamaModel || "qwen2.5-coder:3b"}
+                    className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-gold/50 transition-colors"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <p className="text-white/40 text-xs mb-4">{t("admin.settings.chatKeyHint")}</p>
+
+            <button
+              onClick={handleChatSave}
+              disabled={chatSaving}
+              className="px-6 py-2.5 rounded-lg bg-gold text-deepblue-dark font-semibold text-sm hover:bg-gold/90 disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center gap-2"
+            >
+              {chatSaving ? (
+                <>
+                  <span className="animate-spin">⏳</span> {t("admin.common.saving")}
+                </>
+              ) : (
+                <>
+                  <span>💾</span> {t("admin.settings.chatSave")}
+                </>
+              )}
+            </button>
+          </>
+        )}
+      </div>
+    </div>
+  );
 
   if (loading) {
     return (
@@ -709,6 +984,7 @@ export default function AdminSettingsPage() {
     { key: "social", labelKey: "admin.settings.tabSocial", icon: "🔗" },
     { key: "certs", labelKey: "admin.settings.tabCerts", icon: "🏅" },
     { key: "theme", labelKey: "admin.settings.tabTheme", icon: "🎨" },
+    { key: "chat", labelKey: "admin.settings.tabChat", icon: "🤖" },
   ] as const;
 
   return (
@@ -779,6 +1055,7 @@ export default function AdminSettingsPage() {
       {activeTab === "social" && renderSocialTab()}
       {activeTab === "certs" && renderCertificationsTab()}
       {activeTab === "theme" && renderThemeTab()}
+      {activeTab === "chat" && renderChatTab()}
     </div>
   );
 }

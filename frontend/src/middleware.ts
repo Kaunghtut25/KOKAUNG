@@ -68,6 +68,10 @@ export async function middleware(request: NextRequest) {
         return NextResponse.json({ message: "Admin role required for this action" }, { status: 403 });
       }
 
+      // chat-config holds API keys — admin-only even for GET
+      if (pathname === "/api/admin/chat-config" && rank < 3) {
+        return NextResponse.json({ message: "Admin role required for this action" }, { status: 403 });
+      }
       // Role-gated writes: viewer read-only; users/settings admin-only;
       // site-config + bookings staff+; all other content editor+
       if (request.method !== "GET") {

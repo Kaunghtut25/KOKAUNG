@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { Redis } from '@upstash/redis';
+import { effectiveSettings, resolveProvider, type StoredChatConfig } from '@/lib/chatConfig';
 
 // v82b: allow up to 60s for local Ollama generation (Vercel default is 10s)
 export const maxDuration = 60;
@@ -224,7 +225,6 @@ BURMESE REPLY STYLE (when the visitor writes in Burmese, reply in proper Myanmar
 EXAMPLE: Visitor: "မင်္ဂလာပါ" - Reply: "မင်္ဂလာပါရှင်။ A9 Global Travels & Tours မှ ကြိုဆိုပါတယ်ရှင်။ ကျွန်မက Miya ပါ။ ခရီးသွားခရီးစဉ်တွေ၊ လေယာဉ်လက်မှတ်၊ ဟိုတယ်၊ ဗီဇာနဲ့ အာမခံလေးတွေအထိ ကူညီပေးနိုင်ပါတယ်။ ဘယ်လိုကူညီပေးရမလဲ ပြောပြပါရှင်။"
 CRITICAL: ALWAYS answer the visitor ACTUAL question first, in the same language they used. The greeting is only a short opening line (1 sentence max). If they ask for phone numbers, address, hours or emails, give the BUSINESS INFO values immediately and completely - do NOT ask about tours, do NOT copy the example tour content, and do NOT end the reply early.
 
-
 TRAVEL KNOWLEDGE GUIDELINES (use this expertise when relevant):
 - A9 operates tours, hotels, cars, cruises, visas, insurance & sky lounge across Myanmar.
 - Top Myanmar destinations: Yangon (Shwedagon Pagoda), Bagan (temple plain), Mandalay, Inle Lake, Ngapali Beach, Golden Rock (Kyaiktiyo), Nay Pyi Taw.
@@ -312,13 +312,27 @@ export async function POST(req: NextRequest) {
   }
 
   // ── 2. BRAIN: try LLM, fall back to keyword bot ──
-  const apiKey = process.env.OPENAI_API_KEY;
-  const anthropicKey = process.env.ANTHROPIC_API_KEY;
-  const ollamaBase = process.env.OLLAMA_BASE_URL; // e.g. http://localhost:11434/v1 (local Ollama)
-  const ollamaModel = process.env.OLLAMA_MODEL || 'qwen2.5-coder:3b';
+  // Admin-configured chat settings (stored server-side in Redis a9:settings/chat-config;
+  // keys are never sent to the client). Env vars remain the fallback.
+  let storedChatCfg: StoredChatConfig = {};
+  if (redis) {
+    try {
+      const rawCfg = await redis.hget('a9:settings', 'chat-config');
+      if (rawCfg) storedChatCfg = typeof rawCfg === 'string' ? (JSON.parse(rawCfg) as StoredChatConfig) : (rawCfg as StoredChatConfig);
+    } catch (e) { console.error('[chat] chat-config read FAIL', (e as Error).message); }
+  }
+  const eff = effectiveSettings(storedChatCfg, process.env);
+  const apiKey = eff.openaiApiKey;
+  const anthropicKey = eff.anthropicApiKey;
+  const ollamaBase = eff.ollamaBaseUrl;
+  const ollamaModel = eff.ollamaModel;
+  const openaiModel = eff.openaiModel;
+  const openaiBase = eff.openaiBaseUrl;
+  const anthropicModel = eff.anthropicModel;
+  const provider = resolveProvider(storedChatCfg, process.env);
   let reply = '';
 
-  if (apiKey || anthropicKey || ollamaBase) {
+  if (provider !== 'none') {
     try {
       const [catalog, researchText, kb] = await Promise.all([
         fetchCatalog(),
@@ -328,12 +342,12 @@ export async function POST(req: NextRequest) {
       const knowledgeText = matchKnowledge(lastUserText, kb);
       const system = buildSystemPrompt(phone, email, catalog, researchText, knowledgeText);
 
-      if (anthropicKey && !apiKey) {
+      if (provider === 'anthropic') {
         const res = await fetch('https://api.anthropic.com/v1/messages', {
           method: 'POST',
           headers: { 'content-type': 'application/json', 'x-api-key': anthropicKey, 'anthropic-version': '2023-06-01' },
           body: JSON.stringify({
-            model: process.env.ANTHROPIC_MODEL || 'claude-3-5-sonnet-latest',
+            model: anthropicModel,
             max_tokens: 1200,
             system,
             messages: merged.slice(-10).map((m: any) => ({ role: m.sender === 'user' ? 'user' : 'assistant', content: m.text })),
@@ -341,7 +355,7 @@ export async function POST(req: NextRequest) {
         });
         const data = await res.json();
         reply = data?.content?.[0]?.text ?? '';
-      } else if (ollamaBase && !apiKey) {
+      } else if (provider === 'ollama') {
         // Local Ollama (OpenAI-compatible /v1) — no real API key needed
         try {
           const res = await fetch(ollamaBase.replace(/\/$/, '') + '/chat/completions', {
@@ -367,12 +381,12 @@ export async function POST(req: NextRequest) {
         } catch (e) {
           console.error('[chat] ollama call error', (e as Error).message);
         }
-      } else {
-        const res = await fetch(process.env.OPENAI_BASE_URL || 'https://api.openai.com/v1/chat/completions', {
+      } else if (provider === 'openai') {
+        const res = await fetch(openaiBase, {
           method: 'POST',
           headers: { 'content-type': 'application/json', authorization: `Bearer ${apiKey}` },
           body: JSON.stringify({
-            model: process.env.OPENAI_MODEL || 'gpt-4o-mini',
+            model: openaiModel,
             messages: [
               { role: 'system', content: system },
               ...merged.slice(-10).map((m: any) => ({ role: m.sender === 'user' ? 'user' : 'assistant', content: m.text })),
