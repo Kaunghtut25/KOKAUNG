@@ -40,3 +40,23 @@ Commit: `fix(tours): restore missing price defs (detail crash) + repair admin to
 ### Note
 - Keep `ignoreBuildErrors: true` until Phase 21 fixes the ~40 listed errors;
   then flip it off. The tsc run is now part of the Phase 7 toolchain.
+
+## Phase 7b2 — second crash class found & fixed (2026-08-17, commit d21330a)
+
+The price fix alone did NOT stop the crash. Live console capture (puppeteer+Edge)
+showed the real error: ReferenceError: displayHero is not defined.
+
+Commit 5c6d3a0 deleted FIVE definitions from tours/[slug]/page.tsx in one cleanup:
+price, currencySymbol, totalPrice (fixed in c45b559), plus heroImage/displayHero and
+renderStars (fixed here). All restored; 
+px tsc --noEmit now reports ZERO
+"Cannot find name" across the whole codebase.
+
+Also fixed: admin/sky-lounge uploadFile used bare 	oken (ReferenceError on image
+upload); added const token = getToken().
+
+### Live verification (all three tour pages, post-deploy)
+- /tours/kalaw: renders; real 5-day DB itinerary; Request Quote CTA; no console errors
+- /tours/bagan-popa: renders; Request Quote CTA; related tours show Singapore price (correct); no errors
+- /tours/singapore-city-escape: renders; Ks 1,250,000/ person; honest empty itinerary state; no errors
+- Deploy identity: buildId match deploy URL vs www alias (wlNHYAES... for c45b559 era; re-checked after d21330a)
