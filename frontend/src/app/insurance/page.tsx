@@ -1,4 +1,5 @@
 import { getAll } from '@/lib/persistentStore';
+import { uniqueInsuranceImages } from '@/lib/insuranceImages';
 import InsuranceClient from './insuranceclient';
 
 async function fetchSiteConfig() {
@@ -39,7 +40,7 @@ async function getInitialPlans(): Promise<InsurancePlan[]> {
   try {
     const raw = await getAll('insurances') as any[];
     if (raw.length === 0) return FALLBACK_9;
-    return raw.map((p: any) => ({
+    const mapped = raw.map((p: any) => ({
       _id: p._id || p.id || '',
       planName: p.title || p.planName || p.name || '',
       title: p.title || '',
@@ -52,6 +53,7 @@ async function getInitialPlans(): Promise<InsurancePlan[]> {
       image: p.image || undefined,
       images: p.images || undefined,
     }));
+    return uniqueInsuranceImages(mapped);
   } catch {
     return FALLBACK_9;
   }

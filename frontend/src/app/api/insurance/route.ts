@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getAll } from "@/lib/persistentStore";
+import { uniqueInsuranceImages } from "@/lib/insuranceImages";
 
 export const dynamic = 'force-dynamic';
 
@@ -51,9 +52,10 @@ function transformInsurance(raw: Record<string, unknown>) {
 export async function GET() {
   try {
     const plans = await getAll("insurances") as Record<string, unknown>[];
+    const data = uniqueInsuranceImages(plans.map(transformInsurance));
     return NextResponse.json({
       success: true,
-      data: plans.map(transformInsurance),
+      data,
     });
   } catch (err: any) {
     return NextResponse.json({ success: false, message: err.message || "Server error" }, { status: 500 });
