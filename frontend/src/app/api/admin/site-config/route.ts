@@ -345,4 +345,19 @@ const defaultConfig = {
     { id: "p3", title: "Data Security", content: "We implement appropriate security measures to protect your personal information from unauthorized access, alteration, or disclosure." },
     { id: "p4", title: "Contact Us", content: "For privacy concerns, contact us at info@a9globaltravel.com or +95 9 781 617 111." },
   ],
+
+  aboutContent: {
+    title: "Your Trusted Travel Partner in Myanmar Since 2015",
+    paragraphs: [
+      "A9 Global Travels & Tours is an IATA-accredited travel agency based in Yangon, Myanmar. Since 2015 we have helped travellers explore Myanmar and beyond with hand-crafted tours, comfortable hotels, private car hire with airport transfers, visa assistance and travel insurance — all under one roof.",
+      "From the golden pagodas of Bagan and the colonial streets of Yangon to beach escapes and cross-border journeys, our team designs custom itineraries around the way you want to travel. Every booking is managed end-to-end by our Yangon office, with 24-hour support and clear, honest pricing.",
+      "Beyond Myanmar, we arrange international flights, cruises and bus travel, and offer 9 insurance plans from basic single-trip cover to comprehensive annual policies. Contact us today for a personalised quote — your journey starts with a conversation."
+    ],
+    bullets: [
+      "IATA-accredited since 2015",
+      "Custom itineraries designed by local experts",
+      "Tours, hotels, cars, visas, insurance, cruises & buses",
+      "Based in Yangon — real people, real support"
+    ]
+  },
 };

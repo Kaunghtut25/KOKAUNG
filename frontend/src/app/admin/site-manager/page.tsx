@@ -40,6 +40,7 @@ interface SiteConfig {
   departmentPhones?: Record<string, string>;
   socialFeed?: { enabled: boolean; instagram: string; photos: string[] };
   sectionLayouts?: Record<string, SectionLayout>;
+  aboutContent?: { title: string; paragraphs: string[]; bullets: string[] };
   relatedItems?: { maxItems: number; crossSections: Record<string, { enabled: boolean; maxItems: number }> };
   sectionRows?: Record<string, string[]>;
   heroImages?: Record<string, string>;
@@ -148,7 +149,7 @@ const defaultCfg: SiteConfig = {
   },
 };
 
-type Tab = "layout" | "rows" | "faq" | "terms" | "privacy" | "hero" | "heroImages" | "services" | "nav" | "stats" | "why" | "cta" | "contact" | "social" | "socialFeed" | "footer" | "meta" | "testimonials" | "partners" | "heroText" | "cardDims" | "moduleToggles" | "relatedItems" | "deals" | "detailTabs";
+type Tab = "layout" | "rows" | "faq" | "terms" | "privacy" | "hero" | "heroImages" | "services" | "nav" | "stats" | "why" | "cta" | "contact" | "social" | "socialFeed" | "footer" | "meta" | "testimonials" | "partners" | "heroText" | "cardDims" | "moduleToggles" | "aboutContent" | "relatedItems" | "deals" | "detailTabs";
 
 export default function SiteManagerPage() {
   const { t } = useI18n();
@@ -342,6 +343,7 @@ const sectionGroups: { key: string; label: string; icon: string; items: { key: T
     { key: "cardDims", label: t("admin.sm.tab.cardDims") },
   ]},
   { key: "content", label: t("admin.sm.group.content"), icon: "🏠", items: [
+    { key: "aboutContent", label: t("admin.sm.tab.aboutContent") },
     { key: "why", label: t("admin.sm.tab.why") },
     { key: "stats", label: t("admin.sm.statsCards") },
     { key: "services", label: t("admin.sm.serviceIcons") },
@@ -674,7 +676,74 @@ const inputCls = "w-full px-3 py-2 rounded-lg border border-white/10 text-white 
             </div>
           )}
 
-          {tab === "why" && (
+          {tab === "aboutContent" && (
+        <div className="space-y-5">
+          <h2 className="text-lg font-bold text-white">{t("admin.sm.tab.aboutContent")}</h2>
+          <p className="text-sm text-white/60">{t("admin.sm.aboutContentHint")}</p>
+          <div>
+            <label className="block text-xs font-medium text-white/60 mb-1">{t("admin.sm.title")}</label>
+            <input
+              className="w-full px-3 py-2 rounded-lg border border-white/10 text-white text-sm"
+              style={{ backgroundColor: "rgba(255,255,255,0.05)" }}
+              value={cfg.aboutContent?.title || ""}
+              onChange={e => set("aboutContent", { ...(cfg.aboutContent || { paragraphs: [], bullets: [] }), title: e.target.value })}
+            />
+          </div>
+          <div className="space-y-3">
+            <label className="block text-xs font-medium text-white/60 mb-1">{t("admin.sm.paragraphs")}</label>
+            {(cfg.aboutContent?.paragraphs || []).map((p, i) => (
+              <div key={i} className="flex gap-2 items-start">
+                <textarea
+                  className="flex-1 px-3 py-2 rounded-lg border border-white/10 text-white text-sm"
+                  rows={3}
+                  style={{ backgroundColor: "rgba(255,255,255,0.05)" }}
+                  value={p}
+                  onChange={e => {
+                    const a = [...(cfg.aboutContent?.paragraphs || [])];
+                    a[i] = e.target.value;
+                    set("aboutContent", { ...(cfg.aboutContent || { title: "", bullets: [] }), paragraphs: a });
+                  }}
+                />
+                <button onClick={() => {
+                  const a = (cfg.aboutContent?.paragraphs || []).filter((_: any, idx: number) => idx !== i);
+                  set("aboutContent", { ...(cfg.aboutContent || { title: "", bullets: [] }), paragraphs: a });
+                }} className="text-red-400 text-sm mt-1 shrink-0">{t("admin.common.delete")}</button>
+              </div>
+            ))}
+            <button
+              onClick={() => set("aboutContent", { ...(cfg.aboutContent || { title: "", paragraphs: [], bullets: [] }), paragraphs: [...(cfg.aboutContent?.paragraphs || []), ""] })}
+              className="px-3 py-1.5 bg-white/10 rounded-lg text-xs text-white/50 hover:bg-white/20"
+            >+ {t("admin.sm.addParagraph")}</button>
+          </div>
+          <div className="space-y-3">
+            <label className="block text-xs font-medium text-white/60 mb-1">{t("admin.sm.bullets")}</label>
+            {(cfg.aboutContent?.bullets || []).map((b, i) => (
+              <div key={i} className="flex gap-2 items-center">
+                <input
+                  className="flex-1 px-3 py-2 rounded-lg border border-white/10 text-white text-sm"
+                  style={{ backgroundColor: "rgba(255,255,255,0.05)" }}
+                  value={b}
+                  onChange={e => {
+                    const a = [...(cfg.aboutContent?.bullets || [])];
+                    a[i] = e.target.value;
+                    set("aboutContent", { ...(cfg.aboutContent || { title: "", paragraphs: [] }), bullets: a });
+                  }}
+                />
+                <button onClick={() => {
+                  const a = (cfg.aboutContent?.bullets || []).filter((_: any, idx: number) => idx !== i);
+                  set("aboutContent", { ...(cfg.aboutContent || { title: "", paragraphs: [] }), bullets: a });
+                }} className="text-red-400 text-sm shrink-0">{t("admin.common.delete")}</button>
+              </div>
+            ))}
+            <button
+              onClick={() => set("aboutContent", { ...(cfg.aboutContent || { title: "", paragraphs: [] }), bullets: [...(cfg.aboutContent?.bullets || []), ""] })}
+              className="px-3 py-1.5 bg-white/10 rounded-lg text-xs text-white/50 hover:bg-white/20"
+            >+ {t("admin.sm.addBullet")}</button>
+          </div>
+        </div>
+      )}
+
+      {tab === "why" && (
             <div className="space-y-4">
               <h2 className="text-lg font-bold text-white">{t("admin.sm.whyChooseUs")}</h2>
               <p className="text-sm text-white/60">{t("admin.sm.whyHint")}</p>

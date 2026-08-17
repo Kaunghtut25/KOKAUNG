@@ -544,15 +544,21 @@ export default function HomePageClient({ siteConfig: ssrConfig }: { siteConfig?:
       {/* SEO content block - FIX: 2026-08-17 audit content length */}
       <section className="py-16 bg-white">
         <div className="max-w-4xl mx-auto px-4">
-          <h2 className="text-3xl md:text-4xl font-bold text-[#0A1628] font-['Playfair_Display',serif] mb-6 text-center">{t("home.aboutTitle")}</h2>
+          <h2 className="text-3xl md:text-4xl font-bold text-[#0A1628] font-['Playfair_Display',serif] mb-6 text-center">{siteConfig?.aboutContent?.title || t("home.aboutTitle")}</h2>
           <div className="space-y-4 text-gray-600 leading-relaxed">
-            <p>{t("home.aboutP1")}</p>
-            <p>{t("home.aboutP2")}</p>
-            <p>{t("home.aboutP3")}</p>
+            {(siteConfig?.aboutContent?.paragraphs?.length
+              ? siteConfig.aboutContent.paragraphs
+              : [t("home.aboutP1"), t("home.aboutP2"), t("home.aboutP3")]
+            ).map((text: string, i: number) => (
+              <p key={i}>{text}</p>
+            ))}
           </div>
           <ul className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-3">
-            {(["home.aboutB1","home.aboutB2","home.aboutB3","home.aboutB4"] as const).map(k => (
-              <li key={k} className="flex items-start gap-2 text-sm text-gray-700"><span className="text-[#D4AF37] mt-0.5">✔</span>{t(k)}</li>
+            {(siteConfig?.aboutContent?.bullets?.length
+              ? siteConfig.aboutContent.bullets
+              : [t("home.aboutB1"), t("home.aboutB2"), t("home.aboutB3"), t("home.aboutB4")]
+            ).map((text: string, i: number) => (
+              <li key={i} className="flex items-start gap-2 text-sm text-gray-700"><span className="text-[#D4AF37] mt-0.5">✔</span>{text}</li>
             ))}
           </ul>
         </div>
