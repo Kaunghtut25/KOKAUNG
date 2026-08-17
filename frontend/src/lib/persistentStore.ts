@@ -93,16 +93,30 @@ function recordToRow(record: any): Record<string, any> {
 
 // ── Public API ────────────────────────────────────────────
 
+// FIX: 2026-08-17 audit - normalize stale placeholder phone in site-config
+// (DB copy may hold +95 9 123 456 789; render-side fix until next admin save)
+function sanitizeSiteConfigPhone(v: unknown): unknown {
+  if (typeof v === "string") return v.replace(/\+?95 ?9 ?123 ?456 ?789/g, "+95 9 781 617 111");
+  if (Array.isArray(v)) return v.map(sanitizeSiteConfigPhone);
+  if (v && typeof v === "object") {
+    const o: Record<string, unknown> = {};
+    for (const k of Object.keys(v)) o[k] = sanitizeSiteConfigPhone((v as Record<string, unknown>)[k]);
+    return o;
+  }
+  return v;
+}
+
 export async function getAll(collection: Collection): Promise<any[]> {
   const activeOnly = (items: any[]) => (items || []).filter((i: any) => i.status !== "inactive");
+  const normalize = (items: any[]) => collection === "site-config" ? (items || []).map((i: any) => ({ ...i, ...(sanitizeSiteConfigPhone(i) as Record<string, unknown>) })) : items;
   try {
     const { data, error } = await supabase.from(collection).select('id,payload,created_at,updated_at').order('created_at', { ascending: false });
-    if (!error && data) return activeOnly(data.map(rowToRecord));
+    if (!error && data) return normalize(activeOnly(data.map(rowToRecord)));
   } catch (err) {
     console.warn(`[Store] Supabase getAll(${collection}) failed, trying Redis:`, (err as Error).message?.substring(0, 80));
   }
   const redisData = await redisGetAll(collection);
-  if (redisData !== null && redisData.length > 0) return activeOnly(redisData);
+  if (redisData !== null && redisData.length > 0) return normalize(activeOnly(redisData));
   console.warn(`[Store] Data unavailable for ${collection}`);
   return [];
 }
