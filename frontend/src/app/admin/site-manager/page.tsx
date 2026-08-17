@@ -156,6 +156,7 @@ export default function SiteManagerPage() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [tab, setTab] = useState<Tab>("hero");
+  const [search, setSearch] = useState("");
   const [toast, setToast] = useState<{ msg: string; type: "success" | "error" } | null>(null);
   const [uploadingKey, setUploadingKey] = useState("");
   const [uploadErrors, setUploadErrors] = useState<Record<string, string>>({});
@@ -327,29 +328,47 @@ const rowSectionKeys: { key: string; label: string }[] = [
   { key: "cars", label: t("admin.sm.section.cars") },
 ];
 
-const tabs: { key: Tab; label: string }[] = [
-  { key: "layout", label: t("admin.sm.tab.layout") },
-  { key: "rows", label: t("admin.sm.tab.rows") },
-  { key: "faq", label: t("admin.sm.section.faq") },
-  { key: "terms", label: t("admin.sm.section.terms") },
-  { key: "privacy", label: t("admin.sm.section.privacy") },
+const sectionGroups: { key: string; label: string; icon: string; items: { key: Tab; label: string }[] }[] = [
+  { key: "structure", label: t("admin.sm.group.structure"), icon: "🧱", items: [
+    { key: "layout", label: t("admin.sm.tab.layout") },
+    { key: "rows", label: t("admin.sm.tab.rows") },
+    { key: "nav", label: t("admin.sm.tab.nav") },
+    { key: "footer", label: t("admin.sm.tab.footer") },
+  ]},
+  { key: "hero", label: t("admin.sm.group.hero"), icon: "🎠", items: [
     { key: "hero", label: t("admin.sm.heroSlides") },
     { key: "heroImages", label: t("admin.sm.tab.heroImages") },
     { key: "heroText", label: t("admin.sm.tab.heroText") },
     { key: "cardDims", label: t("admin.sm.tab.cardDims") },
-    { key: "moduleToggles", label: t("admin.sm.moduleToggles") },
-    { key: "relatedItems", label: t("admin.sm.tab.relatedItems") }, { key: "services", label: t("admin.sm.serviceIcons") },
-    { key: "nav", label: t("admin.sm.tab.nav") }, { key: "stats", label: t("admin.sm.statsCards") },
+  ]},
+  { key: "content", label: t("admin.sm.group.content"), icon: "🏠", items: [
     { key: "why", label: t("admin.sm.tab.why") },
-    { key: "cta", label: t("admin.sm.tab.cta") }, { key: "deals", label: t("admin.sm.tab.deals") }, { key: "contact", label: t("admin.sm.tab.contact") },
-    { key: "social", label: t("admin.sm.tab.social") }, { key: "socialFeed", label: t("admin.sm.tab.socialFeed") }, { key: "footer", label: t("admin.sm.tab.footer") },
-    { key: "meta", label: t("admin.sm.tab.meta") },
+    { key: "stats", label: t("admin.sm.statsCards") },
+    { key: "services", label: t("admin.sm.serviceIcons") },
+    { key: "cta", label: t("admin.sm.tab.cta") },
+    { key: "deals", label: t("admin.sm.tab.deals") },
+    { key: "relatedItems", label: t("admin.sm.tab.relatedItems") },
     { key: "testimonials", label: t("admin.sm.testimonials") },
     { key: "partners", label: t("admin.sm.partners") },
+  ]},
+  { key: "legal", label: t("admin.sm.group.legal"), icon: "📄", items: [
+    { key: "faq", label: t("admin.sm.section.faq") },
+    { key: "terms", label: t("admin.sm.section.terms") },
+    { key: "privacy", label: t("admin.sm.section.privacy") },
+  ]},
+  { key: "contact", label: t("admin.sm.group.contact"), icon: "📞", items: [
+    { key: "contact", label: t("admin.sm.tab.contact") },
+    { key: "social", label: t("admin.sm.tab.social") },
+    { key: "socialFeed", label: t("admin.sm.tab.socialFeed") },
+  ]},
+  { key: "seo", label: t("admin.sm.group.seo"), icon: "⚙️", items: [
+    { key: "meta", label: t("admin.sm.tab.meta") },
+    { key: "moduleToggles", label: t("admin.sm.moduleToggles") },
     { key: "detailTabs", label: t("admin.sm.tourTabs") },
-  ];
+  ]},
+];
 
-  const inputCls = "w-full px-3 py-2 rounded-lg border border-white/10 text-white text-sm";
+const inputCls = "w-full px-3 py-2 rounded-lg border border-white/10 text-white text-sm";
   const labelCls = "block text-sm font-medium text-white/70 mb-1";
 
   return (
@@ -376,17 +395,41 @@ const tabs: { key: Tab; label: string }[] = [
           </div>
         )}
 
-        {/* Tabs */}
-        <div className="flex flex-wrap gap-2 mb-6 bg-white/10 p-3 rounded-xl shadow-sm">
-          {tabs.map(t => (
-            <button
-              key={t.key}
-              onClick={() => setTab(t.key)}
-              className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${tab === t.key ? "bg-[#0A1628] text-white" : "text-white/50 hover:bg-white/10"}`}
-            >
-              {t.label}
-            </button>
-          ))}
+        {/* Section Navigator — search + grouped categories */}
+        <div className="mb-6 bg-white/10 rounded-xl shadow-sm p-4 space-y-4">
+          <input
+            type="text"
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+            placeholder={t("admin.sm.searchSections")}
+            className="w-full px-3 py-2 rounded-lg border border-white/10 bg-white/5 text-white text-sm placeholder-white/40 focus:outline-none focus:border-[#D4AF37]/50"
+          />
+          {sectionGroups.map(g => {
+            const q = search.trim().toLowerCase();
+            const items = g.items.filter(i => !q || i.label.toLowerCase().includes(q));
+            if (!items.length) return null;
+            return (
+              <div key={g.key}>
+                <div className="flex items-center gap-1.5 text-[11px] uppercase tracking-wider text-white/40 font-semibold mb-2">
+                  <span aria-hidden="true">{g.icon}</span>{g.label}
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  {items.map(i => (
+                    <button
+                      key={i.key}
+                      onClick={() => setTab(i.key)}
+                      className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${tab === i.key ? "bg-[#D4AF37] text-white" : "text-white/60 hover:bg-white/10 hover:text-white"}`}
+                    >
+                      {i.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            );
+          })}
+          {search.trim() && !sectionGroups.some(g => g.items.some(i => i.label.toLowerCase().includes(search.trim().toLowerCase()))) && (
+            <div className="text-white/50 text-sm">{t("admin.sm.noResults")}</div>
+          )}
         </div>
 
         {/* Tab Content */}
