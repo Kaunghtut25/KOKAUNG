@@ -163,6 +163,7 @@ export default function SiteManagerPage() {
   const [uploadErrors, setUploadErrors] = useState<Record<string, string>>({});
   const [imageUrlInput, setImageUrlInput] = useState("");
   const fileInputRefs = useRef<Record<string, HTMLInputElement | null>>({});
+  const contentRef = useRef<HTMLDivElement | null>(null);
 
   const showToast = (msg: string, type: "success" | "error" = "success") => { setToast({ msg, type }); setTimeout(() => setToast(null), 3500); };
 
@@ -419,7 +420,7 @@ const inputCls = "w-full px-3 py-2 rounded-lg border border-white/10 text-white 
                   {items.map(i => (
                     <button
                       key={i.key}
-                      onClick={() => setTab(i.key)}
+                      onClick={() => { setTab(i.key); contentRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }); }}
                       className={`w-full text-left truncate px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${tab === i.key ? "bg-[#D4AF37] text-white" : "text-white/60 hover:bg-white/10 hover:text-white"}`}
                     >
                       {i.label}
@@ -435,7 +436,7 @@ const inputCls = "w-full px-3 py-2 rounded-lg border border-white/10 text-white 
         </div>
 
         {/* Tab Content */}
-        <div className="bg-white/10 rounded-xl shadow-sm p-6">
+        <div ref={contentRef} className="bg-white/10 rounded-xl shadow-sm p-6">
           {tab === "hero" && (
             <div className="space-y-6">
               <h2 className="text-lg font-bold text-white">{t("admin.sm.heroSlides")}</h2>
