@@ -330,12 +330,6 @@ const rowSectionKeys: { key: string; label: string }[] = [
 ];
 
 const sectionGroups: { key: string; label: string; icon: string; items: { key: Tab; label: string }[] }[] = [
-  { key: "structure", label: t("admin.sm.group.structure"), icon: "🧱", items: [
-    { key: "layout", label: t("admin.sm.tab.layout") },
-    { key: "rows", label: t("admin.sm.tab.rows") },
-    { key: "nav", label: t("admin.sm.tab.nav") },
-    { key: "footer", label: t("admin.sm.tab.footer") },
-  ]},
   { key: "hero", label: t("admin.sm.group.hero"), icon: "🎠", items: [
     { key: "hero", label: t("admin.sm.heroSlides") },
     { key: "heroImages", label: t("admin.sm.tab.heroImages") },
@@ -345,23 +339,29 @@ const sectionGroups: { key: string; label: string; icon: string; items: { key: T
   { key: "content", label: t("admin.sm.group.content"), icon: "🏠", items: [
     { key: "aboutContent", label: t("admin.sm.tab.aboutContent") },
     { key: "why", label: t("admin.sm.tab.why") },
-    { key: "stats", label: t("admin.sm.statsCards") },
     { key: "services", label: t("admin.sm.serviceIcons") },
-    { key: "cta", label: t("admin.sm.tab.cta") },
+    { key: "stats", label: t("admin.sm.statsCards") },
     { key: "deals", label: t("admin.sm.tab.deals") },
-    { key: "relatedItems", label: t("admin.sm.tab.relatedItems") },
     { key: "testimonials", label: t("admin.sm.testimonials") },
     { key: "partners", label: t("admin.sm.partners") },
+    { key: "cta", label: t("admin.sm.tab.cta") },
+    { key: "relatedItems", label: t("admin.sm.tab.relatedItems") },
   ]},
-  { key: "legal", label: t("admin.sm.group.legal"), icon: "📄", items: [
-    { key: "faq", label: t("admin.sm.section.faq") },
-    { key: "terms", label: t("admin.sm.section.terms") },
-    { key: "privacy", label: t("admin.sm.section.privacy") },
+  { key: "structure", label: t("admin.sm.group.structure"), icon: "🧱", items: [
+    { key: "layout", label: t("admin.sm.tab.layout") },
+    { key: "rows", label: t("admin.sm.tab.rows") },
+    { key: "nav", label: t("admin.sm.tab.nav") },
+    { key: "footer", label: t("admin.sm.tab.footer") },
   ]},
   { key: "contact", label: t("admin.sm.group.contact"), icon: "📞", items: [
     { key: "contact", label: t("admin.sm.tab.contact") },
     { key: "social", label: t("admin.sm.tab.social") },
     { key: "socialFeed", label: t("admin.sm.tab.socialFeed") },
+  ]},
+  { key: "legal", label: t("admin.sm.group.legal"), icon: "📄", items: [
+    { key: "faq", label: t("admin.sm.section.faq") },
+    { key: "terms", label: t("admin.sm.section.terms") },
+    { key: "privacy", label: t("admin.sm.section.privacy") },
   ]},
   { key: "seo", label: t("admin.sm.group.seo"), icon: "⚙️", items: [
     { key: "meta", label: t("admin.sm.tab.meta") },
@@ -415,12 +415,12 @@ const inputCls = "w-full px-3 py-2 rounded-lg border border-white/10 text-white 
                 <div className="flex items-center gap-1.5 text-[11px] uppercase tracking-wider text-white/40 font-semibold mb-2">
                   <span aria-hidden="true">{g.icon}</span>{g.label}
                 </div>
-                <div className="flex flex-wrap gap-2">
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
                   {items.map(i => (
                     <button
                       key={i.key}
                       onClick={() => setTab(i.key)}
-                      className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${tab === i.key ? "bg-[#D4AF37] text-white" : "text-white/60 hover:bg-white/10 hover:text-white"}`}
+                      className={`w-full text-left truncate px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${tab === i.key ? "bg-[#D4AF37] text-white" : "text-white/60 hover:bg-white/10 hover:text-white"}`}
                     >
                       {i.label}
                     </button>
