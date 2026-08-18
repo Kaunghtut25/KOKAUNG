@@ -94,7 +94,7 @@ export default function AdminKnowledgePage() {
 
   return (
     <div className="text-white p-4 md:p-6">
-      <div className="max-w-4xl mx-auto">
+      <div className="">
         <div className="flex items-center justify-between mb-4">
           <div>
             <Link href="/admin/dashboard" className="text-sm text-white/50 hover:text-[#D4AF37]">{t("admin.common.dashboardBack")}</Link>
