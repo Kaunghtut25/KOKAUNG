@@ -21,7 +21,7 @@ const MM_FEATURES: Record<string, { title: string; desc: string }> = {
 // v79: fully configurable — title, tagline, card width, and card images come from site-config
 const DEFAULT_WHY = {
   title: 'Why Choose A9 Global Travel?',
-  tagline: 'Your trusted travel partner in Myanmar since 2015',
+  tagline: 'Your trusted travel partner in Myanmar since 2018',
   cardWidth: 280,
 };
 

@@ -145,7 +145,7 @@ const defaultConfig = {
 
   // Stats Cards (Why Us section)
   statsCards: [
-    { icon: "⭐", title: "IATA Accredited", description: "Internationally certified travel agency since 2015", imgSrc: "/images_v2/hero-home-v2.jpg" },
+    { icon: "⭐", title: "IATA Accredited", description: "Internationally certified travel agency since 2018", imgSrc: "/images_v2/hero-home-v2.jpg" },
     { icon: "👥", title: "5,000+ Happy Travelers", description: "Trusted by thousands of satisfied customers worldwide", imgSrc: "" },
     { icon: "🗺️", title: "50+ Destinations", description: "From Myanmar to Southeast Asia and beyond", imgSrc: "" },
     { icon: "🕐", title: "24/7 Support", description: "Round-the-clock assistance wherever you are", imgSrc: "" },
@@ -347,14 +347,14 @@ const defaultConfig = {
   ],
 
   aboutContent: {
-    title: "Your Trusted Travel Partner in Myanmar Since 2015",
+    title: "Your Trusted Travel Partner in Myanmar Since 2018",
     paragraphs: [
-      "A9 Global Travels & Tours is an IATA-accredited travel agency based in Yangon, Myanmar. Since 2015 we have helped travellers explore Myanmar and beyond with hand-crafted tours, comfortable hotels, private car hire with airport transfers, visa assistance and travel insurance — all under one roof.",
+      "A9 Global Travels & Tours is an IATA-accredited travel agency based in Yangon, Myanmar. Since 2018 we have helped travellers explore Myanmar and beyond with hand-crafted tours, comfortable hotels, private car hire with airport transfers, visa assistance and travel insurance — all under one roof.",
       "From the golden pagodas of Bagan and the colonial streets of Yangon to beach escapes and cross-border journeys, our team designs custom itineraries around the way you want to travel. Every booking is managed end-to-end by our Yangon office, with 24-hour support and clear, honest pricing.",
       "Beyond Myanmar, we arrange international flights, cruises and bus travel, and offer 9 insurance plans from basic single-trip cover to comprehensive annual policies. Contact us today for a personalised quote — your journey starts with a conversation."
     ],
     bullets: [
-      "IATA-accredited since 2015",
+      "IATA-accredited since 2018",
       "Custom itineraries designed by local experts",
       "Tours, hotels, cars, visas, insurance, cruises & buses",
       "Based in Yangon — real people, real support"

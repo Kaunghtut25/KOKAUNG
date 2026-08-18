@@ -5,7 +5,7 @@ export interface TimelineMilestone {
 }
 
 const DEFAULT_MILESTONES: TimelineMilestone[] = [
-  { year: '2015', title: 'Founded', desc: 'A9 Global Travel & Tours established in Yangon' },
+  { year: '2018', title: 'Founded', desc: 'A9 Global Travel & Tours established in Yangon' },
   { year: '2017', title: 'IATA Accreditation', desc: 'Official IATA certification received' },
   { year: '2019', title: 'Expansion', desc: 'Grew to 30+ tour packages across Myanmar' },
   { year: '2020', title: 'Digital Transformation', desc: 'Launched online booking platform' },

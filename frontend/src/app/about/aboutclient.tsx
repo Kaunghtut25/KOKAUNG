@@ -41,7 +41,7 @@ interface AboutConfig {
 }
 
 const DEFAULT_JOURNEY = [
-  { year: '2015', title: 'Founded', desc: 'A9 Global Travel & Tours established in Yangon' },
+  { year: '2018', title: 'Founded', desc: 'A9 Global Travel & Tours established in Yangon' },
   { year: '2017', title: 'IATA Accreditation', desc: 'Official IATA certification received' },
   { year: '2019', title: 'Expansion', desc: 'Grew to 30+ tour packages across Myanmar' },
   { year: '2020', title: 'Digital Transformation', desc: 'Launched online booking platform' },
@@ -162,7 +162,7 @@ const ABOUT_MM = {
   ],
   journeyTitle: "ကျွန်ုပ်တို့၏ ခရီးလမ်း",
   journey: [
-    { year: "2015", title: "စတင်တည်ထောင်ခြင်း", desc: "ရန်ကုန်တွင် A9 Global Travel & Tours စတင်တည်ထောင်ခဲ့သည်" },
+    { year: "2018", title: "စတင်တည်ထောင်ခြင်း", desc: "ရန်ကုန်တွင် A9 Global Travel & Tours စတင်တည်ထောင်ခဲ့သည်" },
     { year: "2017", title: "IATA အသိအမှတ်ပြု", desc: "တရားဝင် IATA အသိအမှတ်ပြုလက်မှတ် ရရှိခဲ့သည်" },
     { year: "2019", title: "တိုးချဲ့ခြင်း", desc: "မြန်မာနိုင်ငံတစ်ဝှမ်း ခရီးစဉ် ၃၀+ အထိ တိုးချဲ့ခဲ့သည်" },
     { year: "2020", title: "ဒစ်ဂျစ်တယ် အသွင်ကူးပြောင်းမှု", desc: "အွန်လိုင်း ကြိုတင်မှာယူမှုပလက်ဖောင်း စတင်ခဲ့သည်" },

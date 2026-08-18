@@ -74,7 +74,7 @@ const defaultAbout: AboutConfig = {
   ],
   journeyTitle: "Our Journey",
   journey: [
-    { year: "2015", title: "Founded", desc: "A9 Global Travel & Tours established in Yangon" },
+    { year: "2018", title: "Founded", desc: "A9 Global Travel & Tours established in Yangon" },
     { year: "2017", title: "IATA Accreditation", desc: "Official IATA certification received" },
     { year: "2019", title: "Expansion", desc: "Grew to 30+ tour packages across Myanmar" },
     { year: "2020", title: "Digital Transformation", desc: "Launched online booking platform" },
@@ -431,7 +431,7 @@ export default function AdminAboutPage() {
         <div className="space-y-3">
           {about.journey.map((m, i) => (
             <div key={i} className="flex flex-col md:flex-row items-stretch md:items-start gap-2 bg-white/[0.03] border border-white/10 rounded-xl p-3">
-              <input className={`${inputCls} md:w-24 flex-shrink-0`} placeholder="Year (e.g. 2015)" value={m.year} onChange={(e) => updateJourney(i, { year: e.target.value })} />
+              <input className={`${inputCls} md:w-24 flex-shrink-0`} placeholder="Year (e.g. 2018)" value={m.year} onChange={(e) => updateJourney(i, { year: e.target.value })} />
               <input className={inputCls} placeholder="Title (e.g. Founded)" value={m.title} onChange={(e) => updateJourney(i, { title: e.target.value })} />
               <input className={inputCls} placeholder="Description" value={m.desc} onChange={(e) => updateJourney(i, { desc: e.target.value })} />
               <button onClick={() => removeJourney(i)} className="px-3 py-2 rounded-lg bg-red-500/10 text-red-400 text-sm hover:bg-red-500/20 transition-colors flex-shrink-0">🗑️</button>

@@ -94,7 +94,7 @@ const defaultCfg: SiteConfig = {
   privacy: defaultPrivacy,
   heroSlides: [{ image: "", label: "", title: "", subtitle: "", titleFont: "'Playfair Display', Georgia, serif", titleSize: "4rem", subtitleSize: "1.2rem", labelFont: "inherit", labelSize: "0.75rem" }], heroHeightMobile: 500, heroHeightDesktop: 680,
   serviceIcons: [], navLinks: [], statsCards: [], whyChooseCards: [], popularDestinations: [],
-  whyChooseTitle: "Why Choose A9 Global Travel?", whyChooseTagline: "Your trusted travel partner in Myanmar since 2015", whyChooseCardWidth: 280,
+  whyChooseTitle: "Why Choose A9 Global Travel?", whyChooseTagline: "Your trusted travel partner in Myanmar since 2018", whyChooseCardWidth: 280,
   testimonials: [
     { name: "John Smith", country: "Australia", tour: "Bagan Explorer", text: "Amazing experience! The hot air balloon ride was breathtaking. Professional team from start to finish.", rating: 5 },
     { name: "Sarah Chen", country: "Singapore", tour: "Inle Lake Discovery", text: "Beautiful lake, friendly people. A9 made everything seamless. Highly recommend!", rating: 5 },
@@ -752,7 +752,7 @@ const inputCls = "w-full px-3 py-2 rounded-lg border border-white/10 text-white 
                 <h3 className="text-sm font-semibold text-[#D4AF37] mb-3">{t("admin.sm.sectionHeader")}</h3>
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-3">
                   <div><label className={labelCls}>{t("admin.sm.sectionTitle")}</label><input className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} placeholder="Why Choose A9 Global Travel?" value={cfg.whyChooseTitle || ""} onChange={e => set("whyChooseTitle", e.target.value)} /></div>
-                  <div className="col-span-2"><label className={labelCls}>{t("admin.sm.tagline")}</label><input className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} placeholder="Your trusted travel partner in Myanmar since 2015" value={cfg.whyChooseTagline || ""} onChange={e => set("whyChooseTagline", e.target.value)} /></div>
+                  <div className="col-span-2"><label className={labelCls}>{t("admin.sm.tagline")}</label><input className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} placeholder="Your trusted travel partner in Myanmar since 2018" value={cfg.whyChooseTagline || ""} onChange={e => set("whyChooseTagline", e.target.value)} /></div>
                 </div>
                 <div><label className={labelCls}>{t("admin.sm.cardWidth")}</label><input type="number" min={200} max={600} className={inputCls} style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "white" }} placeholder="280" value={cfg.whyChooseCardWidth || 280} onChange={e => set("whyChooseCardWidth", parseInt(e.target.value) || 280)} /></div>
               </div>
