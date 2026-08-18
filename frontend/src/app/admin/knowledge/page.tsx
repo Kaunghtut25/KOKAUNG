@@ -93,7 +93,7 @@ export default function AdminKnowledgePage() {
   const labelCls = "block text-sm font-medium text-white/70 mb-1";
 
   return (
-    <div className="min-h-screen bg-[#0A1628] text-white p-4 md:p-6">
+    <div className="text-white p-4 md:p-6">
       <div className="max-w-4xl mx-auto">
         <div className="flex items-center justify-between mb-4">
           <div>
