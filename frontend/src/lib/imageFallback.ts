@@ -22,8 +22,10 @@ const MAP: Record<string, string> = {
 const FB = "/images_v2/unsplash-2-v2.jpg";
 
 export function getImageFallback(id?: string, images?: string | string[]): string {
-  if (Array.isArray(images) && images.length > 0 && typeof images[0] === 'string' && images[0].startsWith('/')) return images[0];
-  if (typeof images === 'string' && images.startsWith('/')) return images;
+  // FIX: 2026-08-23 cars-blob-images - accept absolute http(s) URLs (Vercel Blob uploads), not just root-relative paths
+  const isUsableImage = (s: string): boolean => s.startsWith('/') || s.startsWith('http://') || s.startsWith('https://');
+  if (Array.isArray(images) && images.length > 0 && typeof images[0] === 'string' && isUsableImage(images[0])) return images[0];
+  if (typeof images === 'string' && isUsableImage(images)) return images;
   if (id && MAP[id]) return MAP[id];
   return FB;
 }

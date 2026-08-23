@@ -25,8 +25,9 @@ export default function HotelCard({ hotel, currency = "MMK", cardWidth, cardHeig
   const price = currency === "MMK" ? hotel.pricePerNightMMK : hotel.pricePerNightUSD;
   const currencySymbol = currency === "MMK" ? "Ks" : "$";
   const displayImage = (() => {
-    if (hotel.images && Array.isArray(hotel.images) && hotel.images.length > 0 && typeof hotel.images[0] === "string" && hotel.images[0].startsWith("/")) return hotel.images[0];
-    if (typeof hotel.images === "string" && hotel.images.startsWith("/")) return hotel.images;
+    const usableImg = (s: string): boolean => s.startsWith("/") || s.startsWith("http://") || s.startsWith("https://"); /* FIX: 2026-08-23 cars-blob-images */
+    if (hotel.images && Array.isArray(hotel.images) && hotel.images.length > 0 && typeof hotel.images[0] === "string" && usableImg(hotel.images[0])) return hotel.images[0];
+    if (typeof hotel.images === "string" && usableImg(hotel.images)) return hotel.images;
     const map: Record<string,string> = {h1:"/images_v2/hotel1-v2.jpg",h2:"/images_v2/hotel2-v2.jpg",h3:"/images_v2/hotel3-v2.jpg",h4:"/images_v2/hotel4-v2.jpg",h5:"/images_v2/hotel5-v2.jpg",h6:"/images_v2/hotel6-v2.jpg",h7:"/images_v2/hotel-luxury-v2.jpg",h8:"/images_v2/hotel-budget-v2.jpg",h9:"/images_v2/hotel-city-v2.jpg",h10:"/images_v2/hotel-resort-v2.jpg"};
     return map[hotel._id as string] || "/images_v2/hotel1-v2.jpg";
   })();
