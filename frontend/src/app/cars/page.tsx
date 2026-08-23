@@ -22,85 +22,12 @@ interface Car {
   status: string;
 }
 
-const FALLBACK_CARS: Car[] = [
-  {
-    _id: "fc1", slug: "toyota-alphard-suv", carType: "Toyota Alphard",
-    description: "Premium SUV with spacious interior, perfect for families and groups. Professional driver included.",
-    capacity: 7, seats: 7, transmission: "Automatic",
-    features: ["AC", "WiFi", "Leather Seats", "DVD Player", "Sunroof", "USB Charging"],
-    images: ["https://vydupdjfr38dxlzx.public.blob.vercel-storage.com/uploads/img_1784610058381_q4qegc-toyota-alphard-suv-cRNm9aeXGDnkkML37fJoWS3vwtpY5V.jpg"],
-    pricingWithDriver: [{ duration: "Full Day", priceMMK: 220000, priceUSD: 105 }],
-    status: "active",
-  },
-  {
-    _id: "fc2", slug: "toyota-probox-sedan", carType: "Toyota Probox",
-    description: "Reliable and fuel-efficient sedan, ideal for city travel and airport transfers.",
-    capacity: 4, seats: 4, transmission: "Automatic",
-    features: ["AC", "USB Charging", "Power Windows", "ABS"],
-    images: ["https://vydupdjfr38dxlzx.public.blob.vercel-storage.com/uploads/img_1784610059612_w5wesf-toyota-probox-sedan-gzyCPke6np9gsrqcQtBBaoXm8BsTvq.jpg"],
-    pricingWithDriver: [{ duration: "Full Day", priceMMK: 120000, priceUSD: 57 }],
-    status: "active",
-  },
-  {
-    _id: "fc3", slug: "toyota-hiace-minivan", carType: "Toyota HiAce",
-    description: "Spacious minivan for larger groups, tours, and airport shuttles. Comfortable seating for all.",
-    capacity: 12, seats: 12, transmission: "Manual",
-    features: ["AC", "Ample Luggage Space", "Reclining Seats", "USB Charging"],
-    images: ["https://vydupdjfr38dxlzx.public.blob.vercel-storage.com/uploads/img_1784610060976_ty1sm6-toyota-hiace-minivan-8RqUCv8sGoilCiCCQvmrT8zG9nB1ia.jpg"],
-    pricingWithDriver: [{ duration: "Full Day", priceMMK: 180000, priceUSD: 86 }],
-    status: "active",
-  },
-  {
-    _id: "fc4", slug: "mercedes-benz-luxury", carType: "Mercedes-Benz S-Class",
-    description: "Ultimate luxury sedan for VIP transfers, business meetings, and special occasions.",
-    capacity: 4, seats: 4, transmission: "Automatic",
-    features: ["AC", "Leather Seats", "WiFi", "Privacy Glass", "Premium Sound", "Butler Service"],
-    images: ["https://vydupdjfr38dxlzx.public.blob.vercel-storage.com/uploads/img_1784610062470_2pmyr1-mercedes-benz-luxury-jehbAaa2t2fneSXu8zlOPni1xJhfn6.jpg"],
-    pricingWithDriver: [{ duration: "Full Day", priceMMK: 450000, priceUSD: 214 }],
-    status: "active",
-  },
-  {
-    _id: "fc5", slug: "suzuki-swift-economy", carType: "Suzuki Swift",
-    description: "Compact and economical hatchback, perfect for city navigation and short trips.",
-    capacity: 4, seats: 4, transmission: "Automatic",
-    features: ["AC", "USB Charging", "Power Steering", "Fuel Efficient"],
-    images: ["https://vydupdjfr38dxlzx.public.blob.vercel-storage.com/uploads/img_1784610063411_d34llz-suzuki-swift-economy-LchgUcJukdw6avW2eW0M6n6PywkRlh.jpg"],
-    pricingWithDriver: [{ duration: "Full Day", priceMMK: 95000, priceUSD: 45 }],
-    status: "active",
-  },
-  {
-    _id: "fc6", slug: "toyota-land-cruiser-4x4", carType: "Toyota Land Cruiser",
-    description: "Powerful 4x4 SUV for off-road adventures, mountain trips, and rough terrain.",
-    capacity: 7, seats: 7, transmission: "Automatic",
-    features: ["4x4", "AC", "GPS", "WiFi", "Leather Seats", "Sunroof", "Tow Package"],
-    images: ["https://vydupdjfr38dxlzx.public.blob.vercel-storage.com/uploads/img_1784610064497_xj4uy4-toyota-land-cruiser-4x4-7MlHWpNQYXMdvRyLhblNoNsbXB0Ey8.jpg"],
-    pricingWithDriver: [{ duration: "Full Day", priceMMK: 280000, priceUSD: 133 }],
-    status: "active",
-  },
-  {
-    _id: "fc7", slug: "honda-crv-suv", carType: "Honda CR-V",
-    description: "Versatile compact SUV with excellent fuel economy and comfortable ride quality.",
-    capacity: 5, seats: 5, transmission: "Automatic",
-    features: ["AC", "WiFi", "Cruise Control", "Lane Assist", "USB Charging"],
-    images: ["https://vydupdjfr38dxlzx.public.blob.vercel-storage.com/uploads/img_1784610065721_qk76y7-honda-crv-suv-vjJiZlmfuIT4zVYu2N7jLC918JjHVq.jpg"],
-    pricingWithDriver: [{ duration: "Full Day", priceMMK: 200000, priceUSD: 95 }],
-    status: "active",
-  },
-  {
-    _id: "fc8", slug: "toyota-commuter-bus", carType: "Toyota Commuter",
-    description: "Large passenger van for group tours, corporate outings, and airport group transfers.",
-    capacity: 15, seats: 15, transmission: "Manual",
-    features: ["AC", "Reclining Seats", "Luggage Space", "USB Charging", "PA System"],
-    images: ["https://vydupdjfr38dxlzx.public.blob.vercel-storage.com/uploads/img_1784610066672_zlkvfy-toyota-commuter-bus-rUraDuGND80PfhYCfF1EZK1lUkiil5.jpg"],
-    pricingWithDriver: [{ duration: "Full Day", priceMMK: 250000, priceUSD: 119 }],
-    status: "active",
-  },
-];
+
 
 async function getInitialCars(): Promise<Car[]> {
   try {
     const rawCars = await getAll("cars") as any[];
-    if (!rawCars || rawCars.length === 0) return FALLBACK_CARS;
+    if (!rawCars || rawCars.length === 0) return []; // FIX 2026-08-23: no hidden demo data — empty store shows empty page
     return rawCars.map((c: any) => {
       let images: string[] = [];
       if (Array.isArray(c.images)) {
@@ -142,7 +69,7 @@ async function getInitialCars(): Promise<Car[]> {
       };
     });
   } catch {
-    return FALLBACK_CARS;
+    return []; // FIX 2026-08-23
   }
 }
 
