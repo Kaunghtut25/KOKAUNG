@@ -43,6 +43,16 @@ const nextConfig = {
       },
     ];
   },
+
+  // FIX: 2026-08-23 legacy URL redirects - /flights /login /register /booknow were 404s.
+  async redirects() {
+    return [
+      { source: "/flights", destination: "/", permanent: false },
+      { source: "/login", destination: "/auth/login", permanent: true },
+      { source: "/register", destination: "/auth/register", permanent: true },
+      { source: "/booknow", destination: "/book-now", permanent: true },
+    ];
+  },
 };
 
 module.exports = nextConfig;
