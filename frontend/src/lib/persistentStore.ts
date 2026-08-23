@@ -226,12 +226,22 @@ export const updateById = update;
 export const deleteById = delete_;
 
 // ── Audit logging (FIX 2026-08-17 Phase 22) ──────────────────
+// FIX 2026-08-23: capture actor from the incoming admin request (x-a9-actor forwarded by middleware)
+async function currentActor(): Promise<string> {
+  try {
+    const { headers } = await import("next/headers");
+    const h = await headers();
+    return String(h.get("x-a9-actor") || "").slice(0, 120);
+  } catch { return ""; }
+}
+
 async function appendAudit(collection: string, action: "create" | "update" | "delete", id: string): Promise<void> {
   try {
     await create("audit-log", {
       collection,
       action,
       targetId: id,
+      actor: await currentActor(),
       at: new Date().toISOString(),
     });
   } catch (err) {

@@ -1,5 +1,17 @@
 import { NextRequest, NextResponse } from "next/server";
-import { isAdminToken, verifyToken, roleRank, sectionsForPath, hasSectionAccess } from "@/lib/auth";
+import { isAdminToken, verifyToken, roleRank, sectionsForPath, hasSectionAccess, decodeTokenPayload } from "@/lib/auth";
+// FIX 2026-08-23: forward actor identity on admin API writes so audit entries record WHO acted
+function actorFromRequest(request: NextRequest): string {
+  const auth = request.cookies.get("a9_admin_token")?.value;
+  const header = request.headers.get("authorization");
+  const token = auth || (header?.startsWith("Bearer ") ? header.slice(7) : undefined);
+  if (!token) return "";
+  try {
+    const payload = decodeTokenPayload(token);
+    if (!payload?.exp || payload.exp * 1000 < Date.now()) return "";
+    return String(payload.email || payload.name || payload.id || "unknown").slice(0, 120);
+  } catch { return ""; }
+}
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
@@ -103,7 +115,17 @@ export async function middleware(request: NextRequest) {
     }
   }
 
-  return NextResponse.next();
+  // FIX 2026-08-23: stamp verified actor onto admin API requests for audit logging
+  let res = NextResponse.next();
+  if (pathname.startsWith("/api/admin/")) {
+    const actor = actorFromRequest(request);
+    if (actor) {
+      const fwdHeaders = new Headers(request.headers);
+      fwdHeaders.set("x-a9-actor", actor);
+      res = NextResponse.next({ request: { headers: fwdHeaders } });
+    }
+  }
+  return res;
 }
 
 export const config = {
