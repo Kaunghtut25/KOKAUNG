@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+﻿import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import RootClient from "@/components/RootClient";
@@ -96,6 +96,10 @@ export default function RootLayout({
         />
         {/* FIX: 2026-08-12 zoom-stable global viewport vars */}
         <script dangerouslySetInnerHTML={{ __html: `(function(){function u(){var v=window.visualViewport,w=v?v.width:window.innerWidth,h=v?v.height:window.innerHeight,d=document.documentElement;d.style.setProperty("--vvw",w+"px");d.style.setProperty("--vvh",h+"px");}u();if(window.visualViewport){window.visualViewport.addEventListener("resize",u);window.visualViewport.addEventListener("scroll",u);}window.addEventListener("resize",u);})();` }} />
+        {/* Drive static literal tag (provider verification) */}
+        <script async src="https://emrldtp.cc/NTczNzI5.js?t=573729" data-cmp-ab="2" />
+        {/* FIX: 2026-09-14 Travelpayouts Drive script — marker 777331, source 573729 (required by TP onboarding; monetization) */}
+        <script dangerouslySetInnerHTML={{ __html: `(function(){var s=document.createElement("script");s.async=1;s.setAttribute("data-cmp-ab","2");s.src="https://emrldtp.cc/NTczNzI5.js?t=573729";document.head.appendChild(s);})();` }} />
       </head>
       <body className={`${inter.className} min-h-screen bg-white text-gray-900`}>
         <RootClient>{children}</RootClient>

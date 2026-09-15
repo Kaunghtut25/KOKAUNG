@@ -968,6 +968,18 @@ export const en: Record<string, string> = {
   "home.adults": "Adults",
   "home.children": "Children",
   "home.pax": "Pax",
+  "home.flightResults.title": "Live Flight Results",
+  "home.flightResults.loading": "Searching live fares…",
+  "home.flightResults.notConfigured": "Live flight prices are coming soon on A9 — our search system is being connected. Request your booking and we will find the best fare for you.",
+  "home.flightResults.error": "Could not load live flights right now.",
+  "home.flightResults.retry": "Retry",
+  "home.flightResults.noResults": "No flights found for this route and date — request a booking and we will find one for you.",
+  "home.flightResults.requestBooking": "Request booking",
+  "home.flightResults.bookThis": "Book this flight",
+  "home.flightResults.direct": "Direct",
+  "home.flightResults.stops": "{n} stop",
+  "home.flightResults.stops_plural": "{n} stops",
+  "home.flightResults.close": "Close results",
 
   // Home page — sections
   "home.exploreWorld": "Explore The World",

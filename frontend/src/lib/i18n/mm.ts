@@ -970,6 +970,18 @@ export const mm: Record<string, string> = {
   "home.adults": "လူကြီး",
   "home.children": "ကလေး",
   "home.pax": "ဦး",
+  "home.flightResults.title": "လေယာဉ် တကယ့်ရှာဖွေရလဒ်များ",
+  "home.flightResults.loading": "လက်ရှိဈေးနှုန်းများ ရှာဖွေနေပါသည်…",
+  "home.flightResults.notConfigured": "A9 တွင် လက်ရှိလေယာဉ်ဈေးနှုန်းများ မကြာမီ ရရှိနိုင်မည် — စနစ်ချိတ်ဆက်နေဆဲ။ ကြိုတင်မှာယူမှု တင်ပြပါက အကောင်းဆုံးဈေးကို ကျွန်ုပ်တို့ ရှာပေးပါမည်။",
+  "home.flightResults.error": "လေယာဉ်အချက်အလက်များကို ယခုတိုင် ရယူလို့မရပါ။",
+  "home.flightResults.retry": "ထပ်မံကြိုးစားရန်",
+  "home.flightResults.noResults": "ဤလမ်းကြောင်းနှင့် ရက်စွဲအတွက် လေယာဉ်မတွေ့ပါ — ကြိုတင်မှာယူမှု တင်ပြပါက ရှာပေးပါမည်။",
+  "home.flightResults.requestBooking": "ကြိုတင်မှာယူမည်",
+  "home.flightResults.bookThis": "ဤလေယာဉ်ကို မှာယူမည်",
+  "home.flightResults.direct": "တိုက်ရိုက်",
+  "home.flightResults.stops": "တစ်ကြိမ်ကြား",
+  "home.flightResults.stops_plural": "{n} ခေါက်ကြား",
+  "home.flightResults.close": "ရလဒ်များ ပိတ်ရန်",
 
   // Home page — sections
   "home.exploreWorld": "ကမ္ဘာကို စူးစမ်းပါ",

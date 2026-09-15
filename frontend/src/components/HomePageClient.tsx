@@ -9,6 +9,7 @@ import FlagIcon from '@/components/FlagIcon';
 import { useRouter } from "next/navigation";
 
 import PopularDestinations from "@/components/PopularDestinations"
+import FlightResults, { FlightSearchParams } from "@/components/FlightResults"
 import { Airport, airports } from '@/data/airports';
 import { getBusCities } from '@/data/busCities';
 import Image from 'next/image';
@@ -323,6 +324,8 @@ export default function HomePageClient({ siteConfig: ssrConfig }: { siteConfig?:
   const [busPassengers, setBusPassengers] = useState({ adults: 1, children: 0 });
   const [busClientType, setBusClientType] = useState('local');
   const busCities = useMemo(() => getBusCities(), []);
+  // FIX: 2026-09-14 live flight results via /api/amadeus (fallback to /book-now inside results)
+  const [flightSearch, setFlightSearch] = useState<{ params: Omit<FlightSearchParams, "rawQuery">; rawQuery: string } | null>(null);
 
   // Fetch dynamic site config
   useEffect(() => {
@@ -401,7 +404,13 @@ export default function HomePageClient({ siteConfig: ssrConfig }: { siteConfig?:
     if (activeTab === "multicity") {
       params.set("legs", JSON.stringify(multiCityLegs));
     }
-    router.push("/book-now?" + params.toString());
+    // FIX: 2026-09-14 show live results instead of immediate redirect;
+    // the old /book-now flow stays available inside the results panel
+    setFlightSearch({
+      params: { origin: from, destination: to, departDate, returnDate: returnDate || undefined, adults: passengers.adults, travelClass },
+      rawQuery: params.toString(),
+    });
+    setTimeout(() => { document.getElementById('flight-results')?.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }, 150);
   };
 
   const heroHeight = siteConfig?.heroHeightDesktop || 460;
@@ -490,6 +499,9 @@ export default function HomePageClient({ siteConfig: ssrConfig }: { siteConfig?:
                   </div>
                 </>)}
               </form>
+              {flightSearch && (
+                <FlightResults params={{ ...flightSearch.params, rawQuery: flightSearch.rawQuery }} onClose={() => setFlightSearch(null)} />
+              )}
             </>)}
 
             {effectiveMode==='buses' && (()=>{const bp=busPassengers;const totalPax=bp.adults+bp.children;return (
