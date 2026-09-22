@@ -16,6 +16,10 @@ async function fetchTeam(): Promise<{
   members: TeamMember[];
   bgColor?: string;
   heroImage?: string;
+  heroTitleEn?: string;
+  heroTitleMm?: string;
+  heroSubtitleEn?: string;
+  heroSubtitleMm?: string;
 }> {
   try {
     const [departments, members, siteCfg] = await Promise.all([
@@ -29,13 +33,17 @@ async function fetchTeam(): Promise<{
       members: (members || []) as TeamMember[],
       bgColor: typeof cfg.teamBg === "string" ? cfg.teamBg : undefined,
       heroImage: typeof cfg.teamHeroImage === "string" && cfg.teamHeroImage ? cfg.teamHeroImage : "/images_v2/about-hero-v2.jpg",
+      heroTitleEn: typeof cfg.teamHeroTitleEn === "string" ? cfg.teamHeroTitleEn : "",
+      heroTitleMm: typeof cfg.teamHeroTitleMm === "string" ? cfg.teamHeroTitleMm : "",
+      heroSubtitleEn: typeof cfg.teamHeroSubtitleEn === "string" ? cfg.teamHeroSubtitleEn : "",
+      heroSubtitleMm: typeof cfg.teamHeroSubtitleMm === "string" ? cfg.teamHeroSubtitleMm : "",
     };
   } catch {
-    return { departments: [], members: [], heroImage: "/images_v2/about-hero-v2.jpg" };
+    return { departments: [], members: [], heroImage: "/images_v2/about-hero-v2.jpg", heroTitleEn: "", heroTitleMm: "", heroSubtitleEn: "", heroSubtitleMm: "" };
   }
 }
 
 export default async function TeamPage() {
-  const { departments, members, bgColor, heroImage } = await fetchTeam();
-  return <TeamClient departments={departments} members={members} bgColor={bgColor} heroImage={heroImage} />;
+  const { departments, members, bgColor, heroImage, heroTitleEn, heroTitleMm, heroSubtitleEn, heroSubtitleMm } = await fetchTeam();
+  return <TeamClient departments={departments} members={members} bgColor={bgColor} heroImage={heroImage} heroTitleEn={heroTitleEn} heroTitleMm={heroTitleMm} heroSubtitleEn={heroSubtitleEn} heroSubtitleMm={heroSubtitleMm} />;
 }

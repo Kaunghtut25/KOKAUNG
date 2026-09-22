@@ -35,6 +35,10 @@ interface Props {
   members: TeamMember[];
   bgColor?: string;
   heroImage?: string;
+  heroTitleEn?: string;
+  heroTitleMm?: string;
+  heroSubtitleEn?: string;
+  heroSubtitleMm?: string;
 }
 
 /* Pastel card tints (rotating) — low opacity so text stays readable on any bg */
@@ -78,7 +82,7 @@ const initials = (name: string) =>
     .join("")
     .toUpperCase();
 
-export default function TeamClient({ departments, members, bgColor, heroImage }: Props) {
+export default function TeamClient({ departments, members, bgColor, heroImage, heroTitleEn, heroTitleMm, heroSubtitleEn, heroSubtitleMm }: Props) {
   const { t, lang } = useI18n();
   const [activeId, setActiveId] = useState<string | null>(null);
   const sectionRefs = useRef<Record<string, HTMLElement | null>>({});
@@ -89,6 +93,9 @@ export default function TeamClient({ departments, members, bgColor, heroImage }:
   const fgSub = dark ? "rgba(248,250,252,0.75)" : "rgba(10,22,40,0.65)"; // secondary text
   const roleColor = dark ? "#D4AF37" : "#8a6d1f";    // role line
   const linkColor = dark ? "rgba(248,250,252,0.7)" : "rgba(10,22,40,0.6)";
+
+  const heroTitle = (lang === "mm" ? heroTitleMm || heroTitleEn : heroTitleEn || heroTitleMm) || t("team.title");
+  const heroSubtitle = (lang === "mm" ? heroSubtitleMm || heroSubtitleEn : heroSubtitleEn || heroSubtitleMm) || t("team.subtitle");
 
   const deptName = (d: TeamDepartment) =>
     (lang === "mm" ? d.nameMm || d.nameEn : d.nameEn || d.nameMm) || "";
@@ -137,10 +144,10 @@ export default function TeamClient({ departments, members, bgColor, heroImage }:
             className="text-white text-3xl md:text-4xl font-bold mb-4"
             style={{ fontFamily: "'Playfair Display', Georgia, serif" }}
           >
-            {t("team.title")}
+            {heroTitle}
           </h1>
           <p className="text-white/60 text-sm md:text-base max-w-2xl mx-auto leading-relaxed">
-            {t("team.subtitle")}
+            {heroSubtitle}
           </p>
           {activeMembers.length > 0 && (
             <p className="text-[#D4AF37] text-sm mt-5">

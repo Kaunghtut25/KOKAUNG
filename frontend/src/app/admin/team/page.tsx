@@ -45,6 +45,10 @@ export default function AdminTeamPage() {
   const [activeDeptTab, setActiveDeptTab] = useState<string | null>(null);
   const [bgColor, setBgColor] = useState("#FAF6EE");
   const [heroImage, setHeroImage] = useState("/images_v2/about-hero-v2.jpg");
+  const [heroTitleEn, setHeroTitleEn] = useState("");
+  const [heroTitleMm, setHeroTitleMm] = useState("");
+  const [heroSubtitleEn, setHeroSubtitleEn] = useState("");
+  const [heroSubtitleMm, setHeroSubtitleMm] = useState("");
   const [heroUploading, setHeroUploading] = useState(false);
   const [bgSaved, setBgSaved] = useState(false);
   const [bgSaving, setBgSaving] = useState(false);
@@ -73,6 +77,10 @@ export default function AdminTeamPage() {
       const cfg = await cfgRes.json();
       if (typeof cfg.teamBg === "string" && cfg.teamBg) setBgColor(cfg.teamBg);
       if (typeof cfg.teamHeroImage === "string" && cfg.teamHeroImage) setHeroImage(cfg.teamHeroImage);
+      if (typeof cfg.teamHeroTitleEn === "string") setHeroTitleEn(cfg.teamHeroTitleEn);
+      if (typeof cfg.teamHeroTitleMm === "string") setHeroTitleMm(cfg.teamHeroTitleMm);
+      if (typeof cfg.teamHeroSubtitleEn === "string") setHeroSubtitleEn(cfg.teamHeroSubtitleEn);
+      if (typeof cfg.teamHeroSubtitleMm === "string") setHeroSubtitleMm(cfg.teamHeroSubtitleMm);
     } catch (e) { console.error(e); }
     setLoading(false);
   };
@@ -82,7 +90,7 @@ export default function AdminTeamPage() {
     try {
       const cfgRes = await fetch("/api/admin/site-config", { headers: { Authorization: `Bearer ${token}` } });
       const cfg = await cfgRes.json();
-      const next = { ...cfg, teamBg: hex, teamHeroImage: heroImage };
+      const next = { ...cfg, teamBg: hex, teamHeroImage: heroImage, teamHeroTitleEn: heroTitleEn, teamHeroTitleMm: heroTitleMm, teamHeroSubtitleEn: heroSubtitleEn, teamHeroSubtitleMm: heroSubtitleMm };
       const res = await fetch("/api/admin/site-config", {
         method: "PUT",
         headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
@@ -226,6 +234,32 @@ export default function AdminTeamPage() {
           </a>
         </div>
         <p className="text-white/40 text-xs mt-3">{t("admin.team.bgHint")}</p>
+
+        {/* Hero heading + body text */};
+        <div className="mt-5 pt-5 border-t border-white/10">
+          <div className="flex items-center justify-between flex-wrap gap-3 mb-3">
+            <h3 className="text-white/80 font-semibold text-sm uppercase tracking-wider">{t("admin.team.heroTextTitle")}</h3>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div>
+              <label className="text-white/50 text-xs block mb-1">{t("admin.team.heroTextHeadingEn")}</label>
+              <input type="text" className="w-full bg-[#0A1628] border border-white/10 rounded-lg px-3 py-2 text-white text-sm focus:border-[#D4AF37] outline-none" value={heroTitleEn} onChange={(e) => setHeroTitleEn(e.target.value)} placeholder="Our Team" />
+            </div>
+            <div>
+              <label className="text-white/50 text-xs block mb-1">{t("admin.team.heroTextHeadingMm")}</label>
+              <input type="text" className="w-full bg-[#0A1628] border border-white/10 rounded-lg px-3 py-2 text-white text-sm focus:border-[#D4AF37] outline-none" value={heroTitleMm} onChange={(e) => setHeroTitleMm(e.target.value)} placeholder="ကျွန်ုပ်တို့၏ အဖွဲ့အစည်" />
+            </div>
+            <div>
+              <label className="text-white/50 text-xs block mb-1">{t("admin.team.heroTextBodyEn")}</label>
+              <textarea rows={3} className="w-full bg-[#0A1628] border border-white/10 rounded-lg px-3 py-2 text-white text-sm focus:border-[#D4AF37] outline-none resize-y" value={heroSubtitleEn} onChange={(e) => setHeroSubtitleEn(e.target.value)} />
+            </div>
+            <div>
+              <label className="text-white/50 text-xs block mb-1">{t("admin.team.heroTextBodyMm")}</label>
+              <textarea rows={3} className="w-full bg-[#0A1628] border border-white/10 rounded-lg px-3 py-2 text-white text-sm focus:border-[#D4AF37] outline-none resize-y" value={heroSubtitleMm} onChange={(e) => setHeroSubtitleMm(e.target.value)} />
+            </div>
+          </div>
+          <p className="text-white/40 text-xs mt-2">{t("admin.team.heroTextHint")}</p>
+        </div>
 
         {/* Hero background image */}
         <div className="mt-5 pt-5 border-t border-white/10">
