@@ -19,6 +19,7 @@ const quickLinks = [
   { labelKey: "nav.skyLounge", href: "/mingalar" },
   { labelKey: "nav.blog", href: "/blog" },
   { labelKey: "nav.about", href: "/about" },
+  { labelKey: "nav.team", href: "/team" },
   { labelKey: "nav.contact", href: "/contact" },
   { labelKey: "nav.bookNow", href: "/book-now" },
 ];

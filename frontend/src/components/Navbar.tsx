@@ -26,6 +26,7 @@ const DEFAULT_TAGLINE_KEY = "footer.tagline";
 const DEFAULT_NAV_LINKS: NavLink[] = [
   { label: "Home", href: "/" },
   { label: "About Us", href: "/about" },
+  { label: "Team", href: "/team" },
   { label: "Blog", href: "/blog" },
 ];
 
@@ -57,7 +58,13 @@ export default function Navbar() {
         if (cancelled) return;
         if (cfg.logoUrl) setLogoUrl(cfg.logoUrl);
         if (cfg.siteName) setSiteName(cfg.siteName);
-        if (cfg.navLinks && cfg.navLinks.length > 0) setNavLinks(cfg.navLinks);
+        if (cfg.navLinks && cfg.navLinks.length > 0) {
+          // Guarantee the Team section entry point even if the stored config predates it
+          const links: NavLink[] = cfg.navLinks.some((l: NavLink) => l.href === "/team")
+            ? cfg.navLinks
+            : [...cfg.navLinks, { label: "Team", href: "/team" }];
+          setNavLinks(links);
+        }
         setModuleToggles(cfg.moduleToggles || {});
       })
       .catch(() => { /* fall back to defaults */ });
@@ -72,7 +79,7 @@ export default function Navbar() {
   };
   const visibleNavLinks = navLinks.filter(l => { const k = MODULE_BY_HREF[l.href]; return !k || moduleToggles[k] !== false; });
   const NAV_LABEL_BY_HREF: Record<string, string> = {
-    "/": "nav.home", "/about": "nav.about", "/blog": "nav.blog", "/tours": "nav.tours",
+    "/": "nav.home", "/about": "nav.about", "/blog": "nav.blog", "/tours": "nav.tours", "/team": "nav.team",
     "/hotels": "nav.hotels", "/cars": "nav.cars", "/buses": "nav.buses", "/visas": "nav.visas",
     "/insurance": "nav.insurance", "/cruises": "nav.cruises", "/mingalar": "nav.skyLounge",
     "/destinations": "nav.destinations", "/search": "nav.search", "/faq": "nav.faq", "/contact": "nav.contact",
