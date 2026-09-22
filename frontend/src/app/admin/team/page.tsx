@@ -43,6 +43,17 @@ export default function AdminTeamPage() {
   const [uploading, setUploading] = useState(false);
   const [uploadMsg, setUploadMsg] = useState("");
   const [activeDeptTab, setActiveDeptTab] = useState<string | null>(null);
+  const [bgColor, setBgColor] = useState("#FAF6EE");
+  const [bgSaved, setBgSaved] = useState(false);
+  const [bgSaving, setBgSaving] = useState(false);
+  const BG_PRESETS: { hex: string; label: string }[] = [
+    { hex: "#FAF6EE", label: "Cream (sample)" },
+    { hex: "#FFFFFF", label: "White" },
+    { hex: "#F5F5F4", label: "Light Gray" },
+    { hex: "#EEF6FB", label: "Sky" },
+    { hex: "#0A1628", label: "Navy" },
+    { hex: "#1B2A4A", label: "Deep Blue" },
+  ];
 
   useEffect(() => { load(); }, []);
 
@@ -55,7 +66,28 @@ export default function AdminTeamPage() {
       setMembers(Array.isArray(data.members) ? data.members : []);
       if (!activeDeptTab && data.departments?.length) setActiveDeptTab(data.departments[0].id || data.departments[0]._id || "");
     } catch (e) { console.error(e); }
+    try {
+      const cfgRes = await fetch("/api/admin/site-config", { headers: { Authorization: `Bearer ${token}` } });
+      const cfg = await cfgRes.json();
+      if (typeof cfg.teamBg === "string" && cfg.teamBg) setBgColor(cfg.teamBg);
+    } catch (e) { console.error(e); }
     setLoading(false);
+  };
+
+  const saveBg = async (hex: string) => {
+    setBgSaving(true); setBgSaved(false);
+    try {
+      const cfgRes = await fetch("/api/admin/site-config", { headers: { Authorization: `Bearer ${token}` } });
+      const cfg = await cfgRes.json();
+      const next = { ...cfg, teamBg: hex };
+      const res = await fetch("/api/admin/site-config", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+        body: JSON.stringify(next),
+      });
+      if (res.ok) { setBgColor(hex); setBgSaved(true); setTimeout(() => setBgSaved(false), 2500); }
+    } catch (e) { console.error(e); }
+    setBgSaving(false);
   };
 
   const openNewDept = () => { setMode("dept"); setEditing({ ...emptyDept() }); setModal(true); };
@@ -129,6 +161,52 @@ export default function AdminTeamPage() {
             <span>👥</span> {t("admin.team.addDept")}
           </button>
         )}
+      </div>
+
+      {/* ─── Page Appearance (background color) ─── */}
+      <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-5 mb-8">
+        <div className="flex items-center justify-between flex-wrap gap-3 mb-4">
+          <h2 className="text-white font-semibold text-sm uppercase tracking-wider">{t("admin.team.appearance")}</h2>
+          {bgSaved && <span className="text-emerald-400 text-xs">{t("admin.team.bgSaved")}</span>}
+        </div>
+        <div className="flex flex-wrap items-center gap-3">
+          <label className="flex items-center gap-2 text-white/70 text-xs">
+            {t("admin.team.bgPick")}
+            <input
+              type="color"
+              value={/^#[0-9a-fA-F]{6}$/.test(bgColor) ? bgColor : "#FAF6EE"}
+              onChange={(e) => setBgColor(e.target.value)}
+              className="w-10 h-10 rounded-lg bg-transparent border border-white/20 cursor-pointer"
+              aria-label={t("admin.team.bgPick")}
+            />
+          </label>
+          <div className="flex flex-wrap items-center gap-2">
+            {BG_PRESETS.map((pr) => (
+              <button
+                key={pr.hex}
+                type="button"
+                onClick={() => setBgColor(pr.hex)}
+                title={pr.label}
+                className={"w-9 h-9 rounded-lg border transition-all " + (bgColor.toUpperCase() === pr.hex ? "ring-2 ring-[#D4AF37] border-transparent" : "border-white/20")}
+                style={{ backgroundColor: pr.hex }}
+                aria-label={pr.label}
+              />
+            ))}
+          </div>
+          {!isViewer && (
+            <button
+              onClick={() => saveBg(bgColor)}
+              disabled={bgSaving}
+              className="px-4 py-2 rounded-lg bg-gold text-deepblue-dark font-semibold text-sm hover:bg-gold/90 transition-all disabled:opacity-50"
+            >
+              {bgSaving ? t("admin.common.saving") : t("admin.team.bgApply")}
+            </button>
+          )}
+          <a href="/team" target="_blank" rel="noopener noreferrer" className="text-blue-400 text-xs hover:underline">
+            {t("admin.team.bgPreview")}
+          </a>
+        </div>
+        <p className="text-white/40 text-xs mt-3">{t("admin.team.bgHint")}</p>
       </div>
 
       {/* ─── Department Tabs + Content ─── */}

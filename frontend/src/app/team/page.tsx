@@ -11,15 +11,22 @@ export const metadata: Metadata = {
   alternates: { canonical: "/team" },
 };
 
-async function fetchTeam(): Promise<{ departments: TeamDepartment[]; members: TeamMember[] }> {
+async function fetchTeam(): Promise<{
+  departments: TeamDepartment[];
+  members: TeamMember[];
+  bgColor?: string;
+}> {
   try {
-    const [departments, members] = await Promise.all([
+    const [departments, members, siteCfg] = await Promise.all([
       getAll("team_departments" as never),
       getAll("team_members" as never),
+      getAll("site-config" as never),
     ]);
+    const cfg = (siteCfg?.[0] || {}) as Record<string, unknown>;
     return {
       departments: (departments || []) as TeamDepartment[],
       members: (members || []) as TeamMember[],
+      bgColor: typeof cfg.teamBg === "string" ? cfg.teamBg : undefined,
     };
   } catch {
     return { departments: [], members: [] };
@@ -27,6 +34,6 @@ async function fetchTeam(): Promise<{ departments: TeamDepartment[]; members: Te
 }
 
 export default async function TeamPage() {
-  const { departments, members } = await fetchTeam();
-  return <TeamClient departments={departments} members={members} />;
+  const { departments, members, bgColor } = await fetchTeam();
+  return <TeamClient departments={departments} members={members} bgColor={bgColor} />;
 }

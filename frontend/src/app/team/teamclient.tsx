@@ -7,8 +7,10 @@ import { useI18n } from "@/lib/i18n";
 /**
  * Team page client — departments as pill tabs + anchor sections,
  * member cards in a 2-column (phone) / 3-column (tablet) grid.
- * Wave pattern inspired by Flymya's team page, recolored to the A9 palette.
- * Zoom-stable: colour transitions only, no transform/scale effects.
+ * Card wave inspired by Flymya's team page, recolored to the A9 palette.
+ * Page background is admin-configurable (site-config.teamBg) with
+ * automatic text contrast. Zoom-stable: colour transitions only,
+ * no transform/scale effects.
  */
 
 export interface TeamDepartment {
@@ -31,14 +33,34 @@ export interface TeamMember {
 interface Props {
   departments: TeamDepartment[];
   members: TeamMember[];
+  bgColor?: string;
 }
 
-/* Pastel card tints (rotating) — A9-tinted, low opacity so text stays readable */
+/* Pastel card tints (rotating) — low opacity so text stays readable on any bg */
 const CARD_TINTS = [
   "rgba(212, 175, 55, 0.16)",
   "rgba(27, 42, 74, 0.08)",
   "rgba(0, 183, 240, 0.12)",
 ];
+
+const DEFAULT_BG = "#FAF6EE";
+
+function hexToRgb(hex: string): [number, number, number] {
+  const m = /^#?([0-9a-f]{3}|[0-9a-f]{6})$/i.exec((hex || "").trim());
+  if (!m) return [250, 246, 238];
+  let h = m[1];
+  if (h.length === 3) h = h.split("").map((c) => c + c).join("");
+  return [parseInt(h.slice(0, 2), 16), parseInt(h.slice(2, 4), 16), parseInt(h.slice(4, 6), 16)];
+}
+function rgba(hex: string, a: number): string {
+  const [r, g, b] = hexToRgb(hex);
+  return `rgba(${r}, ${g}, ${b}, ${a})`;
+}
+function isDarkBg(hex: string): boolean {
+  const [r, g, b] = hexToRgb(hex);
+  // relative luminance (approx) — 0 dark, 1 light
+  return (0.299 * r + 0.587 * g + 0.114 * b) / 255 < 0.55;
+}
 
 const slug = (s: string) =>
   (s || "")
@@ -55,10 +77,17 @@ const initials = (name: string) =>
     .join("")
     .toUpperCase();
 
-export default function TeamClient({ departments, members }: Props) {
+export default function TeamClient({ departments, members, bgColor }: Props) {
   const { t, lang } = useI18n();
   const [activeId, setActiveId] = useState<string | null>(null);
   const sectionRefs = useRef<Record<string, HTMLElement | null>>({});
+
+  const bg = bgColor && /^#?([0-9a-f]{3}|[0-9a-f]{6})$/i.test(bgColor) ? (bgColor.startsWith("#") ? bgColor : "#" + bgColor) : DEFAULT_BG;
+  const dark = isDarkBg(bg);
+  const fg = dark ? "#F8FAFC" : "#0A1628";           // primary text
+  const fgSub = dark ? "rgba(248,250,252,0.75)" : "rgba(10,22,40,0.65)"; // secondary text
+  const roleColor = dark ? "#D4AF37" : "#8a6d1f";    // role line
+  const linkColor = dark ? "rgba(248,250,252,0.7)" : "rgba(10,22,40,0.6)";
 
   const deptName = (d: TeamDepartment) =>
     (lang === "mm" ? d.nameMm || d.nameEn : d.nameEn || d.nameMm) || "";
@@ -83,7 +112,7 @@ export default function TeamClient({ departments, members }: Props) {
   const activeMembers = (members || []).filter((m) => m.active !== false);
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen" style={{ backgroundColor: bg, color: fg }}>
       {/* ─── Hero ─── */}
       <section className="bg-[#0A1628] pt-28 pb-14 md:pt-32 md:pb-16">
         <div className="max-w-[1100px] mx-auto px-5 text-center">
@@ -111,13 +140,13 @@ export default function TeamClient({ departments, members }: Props) {
         /* ─── Empty state ─── */
         <section className="max-w-[1100px] mx-auto px-5 py-20 text-center">
           <div className="text-5xl mb-4">👥</div>
-          <h2 className="text-[#0A1628] text-xl font-semibold mb-2">{t("team.emptyTitle")}</h2>
-          <p className="text-slate-500 text-sm">{t("team.emptyBody")}</p>
+          <h2 className="text-xl font-semibold mb-2" style={{ color: fg }}>{t("team.emptyTitle")}</h2>
+          <p className="text-sm" style={{ color: fgSub }}>{t("team.emptyBody")}</p>
         </section>
       ) : (
         <>
           {/* ─── Department tabs (sticky) ─── */}
-          <div className="sticky top-0 z-30 bg-white/95 backdrop-blur border-b border-slate-200">
+          <div className="sticky top-0 z-30 backdrop-blur border-b" style={{ backgroundColor: rgba(bg, 0.95), borderColor: rgba(fg, 0.12) }}>
             <div className="max-w-[1100px] mx-auto px-3 py-3 flex gap-2 overflow-x-auto">
               {sorted.map((d) => {
                 const id = d.id || d._id || "";
@@ -129,9 +158,12 @@ export default function TeamClient({ departments, members }: Props) {
                     onClick={() => goTo(d)}
                     className={
                       "shrink-0 px-4 py-2 rounded-full text-[13px] font-medium border transition-colors " +
-                      (isActive
-                        ? "bg-[#D4AF37] border-[#D4AF37] text-[#0A1628]"
-                        : "bg-white border-[#0A1628]/20 text-[#0A1628] hover:border-[#D4AF37]")
+                      (isActive ? "" : "hover:border-[#D4AF37]")
+                    }
+                    style={
+                      isActive
+                        ? { backgroundColor: "#D4AF37", borderColor: "#D4AF37", color: "#0A1628" }
+                        : { backgroundColor: rgba(fg, 0.04), borderColor: rgba(fg, 0.25), color: fg }
                     }
                   >
                     {deptName(d)}
@@ -161,7 +193,7 @@ export default function TeamClient({ departments, members }: Props) {
                   </div>
 
                   {list.length === 0 ? (
-                    <p className="text-center text-slate-400 text-sm">{t("team.deptEmpty")}</p>
+                    <p className="text-center text-sm" style={{ color: fgSub }}>{t("team.deptEmpty")}</p>
                   ) : (
                     <div className="grid grid-cols-2 md:grid-cols-3 gap-x-4 gap-y-14 md:gap-x-6">
                       {list.map((m, mi) => {
@@ -194,19 +226,20 @@ export default function TeamClient({ departments, members }: Props) {
                               </div>
                             </div>
 
-                            {/* Name + role below the card (same pattern as Flymya) */}
-                            <p className="text-[#0A1628] text-[13px] md:text-sm font-semibold uppercase leading-tight mt-3">
+                            {/* Name + role below the card */}
+                            <p className="text-[13px] md:text-sm font-semibold uppercase leading-tight mt-3" style={{ color: fg }}>
                               {name}
                             </p>
                             {role && (
-                              <p className="text-[#8a6d1f] text-[11px] md:text-xs mt-1 leading-snug">{role}</p>
+                              <p className="text-[11px] md:text-xs mt-1 leading-snug" style={{ color: roleColor }}>{role}</p>
                             )}
                             {m.linkedinUrl && (
                               <a
                                 href={m.linkedinUrl}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="inline-block mt-1.5 text-[11px] text-[#0A1628]/60 hover:text-[#D4AF37] underline"
+                                className="inline-block mt-1.5 text-[11px] underline hover:text-[#D4AF37]"
+                                style={{ color: linkColor }}
                               >
                                 {t("team.linkedin")}
                               </a>
