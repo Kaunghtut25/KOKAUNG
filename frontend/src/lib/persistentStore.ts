@@ -7,7 +7,7 @@
 import { supabase } from './supabase';
 import { Redis } from '@upstash/redis';
 
-type Collection = "tours" | "hotels" | "cars" | "cruises" | "visas" | "insurances" | "blog" | "bookings" | "mingalar" | "site-config" | "settings" | "knowledge" | "destinations" | "users" | "audit-log";
+type Collection = "tours" | "hotels" | "cars" | "cruises" | "visas" | "insurances" | "blog" | "bookings" | "mingalar" | "site-config" | "settings" | "knowledge" | "destinations" | "users" | "audit-log" | "team_departments" | "team_members";
 
 // ── Redis client (lazy) ────────────────────────────────────
 let _redis: any = null;
@@ -248,3 +248,4 @@ async function appendAudit(collection: string, action: "create" | "update" | "de
     console.warn("[Store] audit-log write failed:", (err as Error).message?.substring(0, 80));
   }
 }
+

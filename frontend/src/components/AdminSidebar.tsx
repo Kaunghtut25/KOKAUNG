@@ -27,6 +27,7 @@ const navItems: NavItem[] = [
   { labelKey: "admin.skyLounge", icon: "✨", path: "/admin/sky-lounge", section: "services" },
   { labelKey: "admin.manageBlog", icon: "📝", path: "/admin/blog", section: "content" },
   { labelKey: "admin.manageAbout", icon: "📄", path: "/admin/about", section: "content" },
+  { labelKey: "admin.manageTeam", icon: "👥", path: "/admin/team", section: "content" },
   { labelKey: "admin.knowledge", icon: "🧠", path: "/admin/knowledge", section: "content" },
   { labelKey: "admin.siteManager", icon: "🛠️", path: "/admin/site-manager", section: "system" },
   { labelKey: "admin.siteSettings", icon: "🔧", path: "/admin/settings", section: "system" },
