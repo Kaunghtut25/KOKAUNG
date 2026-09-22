@@ -202,24 +202,24 @@ export default function TeamClient({ departments, members, bgColor }: Props) {
                         const tint = CARD_TINTS[mi % CARD_TINTS.length];
                         return (
                           <div key={m.id || m._id || mi} className="text-center">
-                            {/* Tinted card with the portrait overlapping out of its top edge */}
+                            {/* Tinted card with the FULL photo (no crop) overlapping out of its top edge */}
                             <div
                               className="relative rounded-2xl h-[150px] md:h-[175px] mt-12"
                               style={{ backgroundColor: tint }}
                             >
-                              <div className="absolute left-0 right-0 -top-11 md:-top-12 mx-auto w-[120px] h-[120px] md:w-[140px] md:h-[140px] overflow-hidden rounded-xl bg-white ring-1 ring-black/5">
+                              <div className="absolute left-0 right-0 -top-11 md:-top-12 mx-auto w-[150px] h-[190px] md:w-[170px] md:h-[220px] overflow-hidden rounded-xl bg-white ring-1 ring-black/5">
                                 {m.photoUrl ? (
                                   <Image
                                     src={m.photoUrl}
                                     alt={name}
-                                    width={320}
-                                    height={320}
-                                    sizes="(max-width: 768px) 120px, 140px"
-                                    className="w-full h-full object-cover object-top"
+                                    width={480}
+                                    height={600}
+                                    sizes="(max-width: 768px) 150px, 170px"
+                                    className="w-full h-full object-contain"
                                     onError={(e) => { (e.target as HTMLImageElement).style.opacity = "0"; }}
                                   />
                                 ) : (
-                                  <div className="w-full h-full flex items-center justify-center bg-[#0A1628] text-[#D4AF37] text-2xl font-semibold">
+                                  <div className="w-full h-full flex items-center justify-center bg-[#0A1628] text-[#D4AF37] text-3xl font-semibold">
                                     {initials(name)}
                                   </div>
                                 )}
