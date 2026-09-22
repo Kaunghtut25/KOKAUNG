@@ -15,6 +15,7 @@ async function fetchTeam(): Promise<{
   departments: TeamDepartment[];
   members: TeamMember[];
   bgColor?: string;
+  heroImage?: string;
 }> {
   try {
     const [departments, members, siteCfg] = await Promise.all([
@@ -27,13 +28,14 @@ async function fetchTeam(): Promise<{
       departments: (departments || []) as TeamDepartment[],
       members: (members || []) as TeamMember[],
       bgColor: typeof cfg.teamBg === "string" ? cfg.teamBg : undefined,
+      heroImage: typeof cfg.teamHeroImage === "string" && cfg.teamHeroImage ? cfg.teamHeroImage : "/images_v2/about-hero-v2.jpg",
     };
   } catch {
-    return { departments: [], members: [] };
+    return { departments: [], members: [], heroImage: "/images_v2/about-hero-v2.jpg" };
   }
 }
 
 export default async function TeamPage() {
-  const { departments, members, bgColor } = await fetchTeam();
-  return <TeamClient departments={departments} members={members} bgColor={bgColor} />;
+  const { departments, members, bgColor, heroImage } = await fetchTeam();
+  return <TeamClient departments={departments} members={members} bgColor={bgColor} heroImage={heroImage} />;
 }

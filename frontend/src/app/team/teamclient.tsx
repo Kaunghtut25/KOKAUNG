@@ -34,6 +34,7 @@ interface Props {
   departments: TeamDepartment[];
   members: TeamMember[];
   bgColor?: string;
+  heroImage?: string;
 }
 
 /* Pastel card tints (rotating) — low opacity so text stays readable on any bg */
@@ -77,7 +78,7 @@ const initials = (name: string) =>
     .join("")
     .toUpperCase();
 
-export default function TeamClient({ departments, members, bgColor }: Props) {
+export default function TeamClient({ departments, members, bgColor, heroImage }: Props) {
   const { t, lang } = useI18n();
   const [activeId, setActiveId] = useState<string | null>(null);
   const sectionRefs = useRef<Record<string, HTMLElement | null>>({});
@@ -113,8 +114,21 @@ export default function TeamClient({ departments, members, bgColor }: Props) {
 
   return (
     <div className="min-h-screen" style={{ backgroundColor: bg, color: fg }}>
-      {/* ─── Hero ─── */}
-      <section className="bg-[#0A1628] pt-28 pb-14 md:pt-32 md:pb-16">
+      {/* ─── Hero (background image + navy overlay) ─── */}
+      <section className="relative overflow-hidden bg-[#0A1628] pt-28 pb-14 md:pt-32 md:pb-16">
+        {heroImage ? (
+          <>
+            <Image
+              src={heroImage}
+              alt=""
+              fill
+              priority
+              sizes="100vw"
+              className="object-cover object-center"
+            />
+            <div className="absolute inset-0" style={{ backgroundColor: "rgba(10, 22, 40, 0.78)" }} aria-hidden="true" />
+          </>
+        ) : null}
         <div className="max-w-[1100px] mx-auto px-5 text-center">
           <p className="text-[#D4AF37] text-xs md:text-sm font-semibold tracking-[0.25em] uppercase mb-3">
             {t("team.kicker")}
