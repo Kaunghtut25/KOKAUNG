@@ -49,6 +49,15 @@ const CARD_TINTS = [
 
 const DEFAULT_BG = "#FFFFFF";
 
+/* Sample staff photos (2026-09-29): shown until admin uploads a real photo per member.
+   Admin can edit/update each member's photo from Admin → Team (upload overrides the sample). */
+const SAMPLE_AVATARS = [
+  "/images_v2/team/sample-aung-kyaw.jpg",
+  "/images_v2/team/sample-su-myat.jpg",
+  "/images_v2/team/sample-zaw-htun.jpg",
+  "/images_v2/team/sample-hnin-si.jpg",
+];
+
 function hexToRgb(hex: string): [number, number, number] {
   const m = /^#?([0-9a-f]{3}|[0-9a-f]{6})$/i.exec((hex || "").trim());
   if (!m) return [255, 255, 255];
@@ -67,14 +76,6 @@ const slug = (s: string) =>
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-|-$/g, "");
 
-const initials = (name: string) =>
-  (name || "")
-    .split(/\s+/)
-    .filter(Boolean)
-    .slice(0, 2)
-    .map((w) => w[0])
-    .join("")
-    .toUpperCase();
 
 export default function TeamClient({ departments, members, bgColor }: Props) {
   const { t, lang } = useI18n();
@@ -153,23 +154,15 @@ export default function TeamClient({ departments, members, bgColor }: Props) {
                             className="h-[160px] md:h-[210px] mt-[40px] mr-[15px] md:mr-[30px] mb-[5px] ml-[10px] md:ml-[20px]"
                             style={{ backgroundColor: tint }}
                           >
-                            {m.photoUrl ? (
-                              /* Full photo, uncropped, overlapping 60px above the card */
-                              // eslint-disable-next-line @next/next/no-img-element
-                              <img
-                                src={m.photoUrl}
-                                alt="employee"
-                                className="inline-block max-w-[240px] h-auto max-h-[210px] object-contain mx-auto -mt-[60px]"
-                                onError={(e) => { (e.target as HTMLImageElement).style.opacity = "0"; }}
-                              />
-                            ) : (
-                              /* Initials avatar when no photo (stands on the card like a portrait) */
-                              <div className="inline-block w-[110px] h-[140px] md:w-[130px] md:h-[170px] bg-[#0A1628] -mt-[60px] relative top-0">
-                                <div className="w-full h-full flex items-center justify-center text-[#00afef] text-3xl font-semibold">
-                                  {initials(name)}
-                                </div>
-                              </div>
-                            )}
+                            {/* Full photo, uncropped, overlapping 60px above the card.
+                                Falls back to a sample photo when the member has no uploaded photo. */}
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
+                            <img
+                              src={m.photoUrl || SAMPLE_AVATARS[mi % SAMPLE_AVATARS.length]}
+                              alt="employee"
+                              className="inline-block max-w-[240px] h-auto max-h-[210px] object-contain mx-auto -mt-[60px]"
+                              onError={(e) => { (e.target as HTMLImageElement).style.opacity = "0"; }}
+                            />
                           </div>
                           {/* Name directly below the card (FlyMya: plain uppercase span) */}
                           <div className="mt-[6px] px-1">
