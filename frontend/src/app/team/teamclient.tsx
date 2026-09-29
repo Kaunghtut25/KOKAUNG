@@ -101,7 +101,7 @@ export default function TeamClient({ departments, members, bgColor }: Props) {
   const activeMembers = (members || []).filter((m) => m.active !== false);
 
   return (
-    <div className="min-h-screen" style={{ backgroundColor: bg, color: fg }}>
+    <div className="min-h-screen pt-[56px]" style={{ backgroundColor: bg, color: fg }}>
       {/* ─── Title bar (FlyMya: bg #00afef, h-60, 22px white bold) ─── */}
       <div className="bg-[#00afef] h-[60px] flex items-center justify-center px-4">
         <span className="text-white text-[20px] md:text-[22px] font-bold text-center leading-tight">

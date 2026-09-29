@@ -26,7 +26,6 @@ const DEFAULT_TAGLINE_KEY = "footer.tagline";
 const DEFAULT_NAV_LINKS: NavLink[] = [
   { label: "Home", href: "/" },
   { label: "About Us", href: "/about" },
-  { label: "Team", href: "/team" },
   { label: "Blog", href: "/blog" },
 ];
 
@@ -59,11 +58,8 @@ export default function Navbar() {
         if (cfg.logoUrl) setLogoUrl(cfg.logoUrl);
         if (cfg.siteName) setSiteName(cfg.siteName);
         if (cfg.navLinks && cfg.navLinks.length > 0) {
-          // Guarantee the Team section entry point even if the stored config predates it
-          const links: NavLink[] = cfg.navLinks.some((l: NavLink) => l.href === "/team")
-            ? cfg.navLinks
-            : [...cfg.navLinks, { label: "Team", href: "/team" }];
-          setNavLinks(links);
+          // Team link intentionally removed from header navbar (2026-09-29): stays in footer only
+          setNavLinks(cfg.navLinks.filter((l: NavLink) => l.href !== "/team"));
         }
         setModuleToggles(cfg.moduleToggles || {});
       })
