@@ -1,6 +1,6 @@
-"use client";
+﻿"use client";
 
-import React, { useMemo, useRef, useState } from "react";
+import React, { useMemo } from "react";
 import { useI18n } from "@/lib/i18n";
 
 /**
@@ -78,8 +78,6 @@ const initials = (name: string) =>
 
 export default function TeamClient({ departments, members, bgColor }: Props) {
   const { t, lang } = useI18n();
-  const [activeId, setActiveId] = useState<string | null>(null);
-  const sectionRefs = useRef<Record<string, HTMLElement | null>>({});
 
   const bg = bgColor && /^#?([0-9a-f]{3}|[0-9a-f]{6})$/i.test(bgColor) ? (bgColor.startsWith("#") ? bgColor : "#" + bgColor) : DEFAULT_BG;
   const dark = isDarkBg(bg);
@@ -99,12 +97,6 @@ export default function TeamClient({ departments, members, bgColor }: Props) {
       .filter((m) => m.departmentId === deptId && m.active !== false)
       .sort((a, b) => (a.sortOrder || 0) - (b.sortOrder || 0));
 
-  const goTo = (d: TeamDepartment) => {
-    const id = d.id || d._id || "";
-    setActiveId(id);
-    const el = sectionRefs.current[id];
-    if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
-  };
 
   const activeMembers = (members || []).filter((m) => m.active !== false);
 
@@ -117,27 +109,7 @@ export default function TeamClient({ departments, members, bgColor }: Props) {
         </span>
       </div>
 
-      {/* ─── Department pill tabs (FlyMya: rounded-[20px], border #00b7f0, active #b2e4f5) ─── */}
-      <div className="max-w-[1100px] mx-auto pt-[5px] px-2 flex flex-wrap justify-center">
-        {sorted.map((d) => {
-          const id = d.id || d._id || "";
-          const isActive = activeId === id;
-          return (
-            <button
-              key={id}
-              type="button"
-              onClick={() => goTo(d)}
-              className={
-                "rounded-[20px] m-[5px] border border-solid border-[#00b7f0] text-[#000000] px-4 py-[6px] text-[13px] md:text-sm font-medium transition-colors " +
-                (isActive ? "bg-[#b2e4f5]" : "hover:bg-[#b2e4f5]/40")
-              }
-              style={{ color: dark ? "#0A1628" : undefined }}
-            >
-              {deptName(d)}
-            </button>
-          );
-        })}
-      </div>
+      {/* Department pill tabs removed per user request (2026-09-29): header has no buttons */}
 
       {sorted.length === 0 ? (
         /* ─── Empty state ─── */
@@ -156,7 +128,6 @@ export default function TeamClient({ departments, members, bgColor }: Props) {
               <section
                 key={id}
                 id={slug(deptName(d)) || "dept-" + di}
-                ref={(el) => { sectionRefs.current[id] = el; }}
                 className={"scroll-mt-4 " + (di === 0 ? "pt-[40px] md:pt-[60px]" : "")}
               >
                 {/* Pill heading (FlyMya: bg #00b7f0, rounded-[20px], white 16px, pb-[60px]) */}
