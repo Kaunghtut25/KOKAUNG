@@ -149,18 +149,22 @@ export default function TeamClient({ departments, members, bgColor }: Props) {
                       const tint = CARD_TINTS[mi % CARD_TINTS.length];
                       return (
                         <div key={m.id || m._id || mi} className="text-center pb-[40px]">
-                          {/* Card (FlyMya: h-160/210, mt-[40px] mr-[30px] mb-[5px], pastel tint) */}
+                          {/* Pastel tint card (FlyMya: h-160/210, mt-[40px] mr-[30px] mb-[5px]) */}
                           <div
-                            className="h-[160px] md:h-[210px] mt-[40px] mr-[15px] md:mr-[30px] mb-[5px] ml-[10px] md:ml-[20px]"
+                            className="h-[160px] md:h-[210px] mt-[40px] mr-[15px] md:mr-[30px] mb-[5px] ml-[10px] md:ml-[20px] rounded-b-[16px]"
                             style={{ backgroundColor: tint }}
+                          />
+                          {/* Polished photo frame: rounded-arch, 3px white border, soft shadow.
+                              Zoom-stable: fixed sizes, no transform. Falls back to a sample photo. */}
+                          <div
+                            className="relative mx-auto -mt-[150px] md:-mt-[190px] w-[130px] md:w-[160px] rounded-t-full rounded-b-[14px] bg-white p-[3px]"
+                            style={{ boxShadow: "0 8px 20px rgba(10,22,40,0.14), 0 2px 6px rgba(10,22,40,0.10)" }}
                           >
-                            {/* Full photo, uncropped, overlapping 60px above the card.
-                                Falls back to a sample photo when the member has no uploaded photo. */}
                             {/* eslint-disable-next-line @next/next/no-img-element */}
                             <img
                               src={m.photoUrl || SAMPLE_AVATARS[mi % SAMPLE_AVATARS.length]}
                               alt="employee"
-                              className="inline-block max-w-[240px] h-auto max-h-[210px] object-contain mx-auto -mt-[60px]"
+                              className="block w-full h-[160px] md:h-[190px] object-cover object-top rounded-t-full rounded-b-[11px]"
                               onError={(e) => { (e.target as HTMLImageElement).style.opacity = "0"; }}
                             />
                           </div>
