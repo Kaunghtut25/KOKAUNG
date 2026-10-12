@@ -188,7 +188,7 @@ export async function GET(req: NextRequest) {
           transfers: typeof r.transfers === "number" ? r.transfers : 0,
           gate: r.gate || "",
           isExactDate: r._isExact === true,
-          date: r.departure_at.substring(0, 10),
+          date: (r.departure_at || "").substring(0, 10),
           deepLink,
           itineraries: [
             {
