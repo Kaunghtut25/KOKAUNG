@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 
-// FIX: 2026-09-14 — Amadeus self-service was decommissioned (2026-07-17), so live
-// flight prices now come from Travelpayouts / Aviasales Data API (cache-based).
+// FIX: 2026-10-12 — show ALL available schedules for the requested date plus
+// nearby dates (±7 days) instead of only the single cheapest cached price.
+// Data source: Travelpayouts / Aviasales Data API (cache-based).
 // Set TRAVELPAYOUTS_API_TOKEN (free signup) to enable; optional TRAVELPAYOUTS_MARKER
 // adds your affiliate marker to the booking deep links.
 const TP_BASE = process.env.TRAVELPAYOUTS_BASE_URL || "https://api.travelpayouts.com";
@@ -58,15 +59,40 @@ interface TpPriceRow {
   duration_to?: number;
   duration_back?: number;
   link?: string;
+  gate?: string;
 }
 
-/** seconds -> ISO-8601 duration ("PT3H25M") */
-function secondsToIso(seconds?: number): string {
-  const s = Number(seconds) || 0;
-  if (s <= 0) return "";
-  const h = Math.floor(s / 3600);
-  const m = Math.floor((s % 3600) / 60);
-  return `PT${h ? `${h}H` : ""}${m ? `${m}M` : ""}` || "PT0M";
+/** Travelpayouts duration is MINUTES -> ISO-8601 duration ("PT1H20M") */
+function minutesToIso(minutes?: number): string {
+  const m = Math.round(Number(minutes) || 0);
+  if (m <= 0) return "";
+  const h = Math.floor(m / 60);
+  const mm = m % 60;
+  return `PT${h ? `${h}H` : ""}${mm ? `${mm}M` : ""}` || "PT0M";
+}
+
+/** minimal sanitizer: strips BOM + whitespace (env values piped by shells may carry U+FEFF) */
+function cleanEnv(v?: string): string {
+  return (v || "").replace(/\uFEFF/g, "").trim();
+}
+
+function ymd(d: Date): string {
+  return d.toISOString().substring(0, 10);
+}
+
+async function fetchRows(
+  url: string,
+  token: string,
+  revalidate = 600
+): Promise<TpPriceRow[]> {
+  const res = await fetch(url, {
+    headers: { "X-Access-Token": token, Accept: "application/json" },
+    // cached prices — a short cache keeps the free quota healthy
+    next: { revalidate },
+  });
+  if (!res.ok) return [];
+  const json = await res.json().catch(() => null);
+  return Array.isArray(json?.data) ? json.data : [];
 }
 
 export async function GET(req: NextRequest) {
@@ -77,8 +103,8 @@ export async function GET(req: NextRequest) {
   const returnDate = searchParams.get("returnDate") || "";
   const adults = searchParams.get("adults") || "1";
 
-  const token = process.env.TRAVELPAYOUTS_API_TOKEN || "";
-  const marker = process.env.TRAVELPAYOUTS_MARKER || "";
+  const token = cleanEnv(process.env.TRAVELPAYOUTS_API_TOKEN);
+  const marker = cleanEnv(process.env.TRAVELPAYOUTS_MARKER);
 
   if (!origin || !destination || !departDate) {
     return NextResponse.json(
@@ -98,53 +124,75 @@ export async function GET(req: NextRequest) {
     );
   }
 
-  const upstream = new URL(`${TP_BASE}/aviasales/v3/prices_for_dates`);
-  // Travelpayouts accepts YYYY-MM or YYYY-MM-DD; we pass the exact departure date.
-  upstream.searchParams.set("origin", origin);
-  upstream.searchParams.set("destination", destination);
-  upstream.searchParams.set("departure_at", departDate);
-  if (returnDate) upstream.searchParams.set("return_at", returnDate);
-  upstream.searchParams.set("one_way", returnDate ? "false" : "true");
-  upstream.searchParams.set("sorting", "price");
-  upstream.searchParams.set("direct", "false");
-  upstream.searchParams.set("currency", "usd");
-  upstream.searchParams.set("limit", "30");
-  upstream.searchParams.set("page", "1");
-  upstream.searchParams.set("token", token);
-
   try {
-    const res = await fetch(upstream.toString(), {
-      headers: { "X-Access-Token": token, Accept: "application/json" },
-      // cached prices — a short cache keeps the free quota healthy
-      next: { revalidate: 600 },
-    });
+    const all: Array<TpPriceRow & { _isExact: boolean }> = [];
 
-    if (!res.ok) {
-      return NextResponse.json(
-        { error: `Flight data provider error: ${res.status}` },
-        { status: 502 }
-      );
+    // 1) Exact requested date (highest priority)
+    const exactUrl = new URL(`${TP_BASE}/aviasales/v3/prices_for_dates`);
+    exactUrl.searchParams.set("origin", origin);
+    exactUrl.searchParams.set("destination", destination);
+    exactUrl.searchParams.set("departure_at", departDate);
+    if (returnDate) exactUrl.searchParams.set("return_at", returnDate);
+    exactUrl.searchParams.set("one_way", returnDate ? "false" : "true");
+    exactUrl.searchParams.set("sorting", "price");
+    exactUrl.searchParams.set("direct", "false");
+    exactUrl.searchParams.set("currency", "usd");
+    exactUrl.searchParams.set("limit", "30");
+    exactUrl.searchParams.set("page", "1");
+    exactUrl.searchParams.set("token", token);
+
+    const exactRows = await fetchRows(exactUrl.toString(), token);
+    for (const r of exactRows) if (r && r.price && r.departure_at) all.push({ ...r, _isExact: true });
+
+    // 2) Nearby dates (±7 days) — the cached Data API often only returns the
+    //    cheapest option per date, so a month view gives users the full
+    //    schedule picture; we then keep only entries within ±7 days.
+    if (all.length === 0) {
+      const base = new Date(`${departDate}T00:00:00Z`);
+      if (!Number.isNaN(base.getTime())) {
+        const from = new Date(base.getTime() - 7 * 86400000);
+        const to = new Date(base.getTime() + 7 * 86400000);
+
+        const monthUrl = new URL(`${TP_BASE}/aviasales/v3/prices_for_dates`);
+        monthUrl.searchParams.set("origin", origin);
+        monthUrl.searchParams.set("destination", destination);
+        monthUrl.searchParams.set("departure_at", departDate.substring(0, 7)); // YYYY-MM
+        if (returnDate) monthUrl.searchParams.set("return_at", returnDate);
+        monthUrl.searchParams.set("one_way", returnDate ? "false" : "true");
+        monthUrl.searchParams.set("sorting", "price");
+        monthUrl.searchParams.set("direct", "false");
+        monthUrl.searchParams.set("currency", "usd");
+        monthUrl.searchParams.set("limit", "50");
+        monthUrl.searchParams.set("page", "1");
+        monthUrl.searchParams.set("token", token);
+
+        const monthRows = await fetchRows(monthUrl.toString(), token);
+        for (const r of monthRows) {
+          if (!r || !r.price || !r.departure_at) continue;
+          const day = r.departure_at.substring(0, 10);
+          if (day >= ymd(from) && day <= ymd(to)) all.push({ ...r, _isExact: false });
+        }
+      }
     }
 
-    const json = await res.json();
-    const rows: TpPriceRow[] = Array.isArray(json?.data) ? json.data : [];
-    const currency = String(json?.currency || "usd").toUpperCase();
-
-    const offers = rows
-      .filter((r) => r && r.price && r.departure_at)
+    const currency = "USD";
+    const offers = all
       .map((r, i) => {
         const carrier = r.airline || "";
         const fromCode = r.origin_airport || r.origin || origin;
         const toCode = r.destination_airport || r.destination || destination;
         const deepLink = r.link ? `https://www.aviasales.com${r.link}${marker ? `${r.link.includes("?") ? "&" : "?"}marker=${encodeURIComponent(marker)}` : ""}` : "";
         return {
-          id: `${fromCode}-${toCode}-${carrier}${r.flight_number || ""}-${r.departure_at}-${i}`,
+          id: `${fromCode}-${toCode}-${carrier}${r.flight_number || ""}-${r.departure_at}-${r.price}-${i}`,
           price: { grandTotal: String(r.price), currency },
           transfers: typeof r.transfers === "number" ? r.transfers : 0,
+          gate: r.gate || "",
+          isExactDate: r._isExact === true,
+          date: r.departure_at.substring(0, 10),
           deepLink,
           itineraries: [
             {
-              duration: secondsToIso(r.duration_to || r.duration),
+              duration: minutesToIso(r.duration_to || r.duration),
               segments: [
                 {
                   carrierCode: carrier,
@@ -156,13 +204,21 @@ export async function GET(req: NextRequest) {
             },
           ],
         };
-      });
+      })
+      // cheapest first, but keep exact-date entries on top
+      .sort((a, b) => {
+        if (a.isExactDate !== b.isExactDate) return a.isExactDate ? -1 : 1;
+        return (parseFloat(a.price.grandTotal) || 0) - (parseFloat(b.price.grandTotal) || 0);
+      })
+      .slice(0, 30);
 
     return NextResponse.json({
       offers,
       carriers: AIRLINE_NAMES,
       currency,
       adults: Number(adults) || 1,
+      requestedDate: departDate,
+      hasExactDate: offers.some((o) => o.isExactDate),
       source: "travelpayouts",
     });
   } catch (err: unknown) {

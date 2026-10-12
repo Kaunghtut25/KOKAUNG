@@ -30,6 +30,10 @@ interface FlightOffer {
   // Travelpayouts extras (optional — Amadeus shape has neither)
   transfers?: number;
   deepLink?: string;
+  // FIX: 2026-10-12 — nearby-dates schedule support
+  isExactDate?: boolean;
+  date?: string;
+  gate?: string;
 }
 
 type ResultsState =
@@ -37,7 +41,7 @@ type ResultsState =
   | { kind: "notConfigured" }
   | { kind: "error"; message?: string }
   | { kind: "empty" }
-  | { kind: "success"; offers: FlightOffer[]; carriers: Record<string, string> };
+  | { kind: "success"; offers: FlightOffer[]; carriers: Record<string, string>; hasExactDate?: boolean; requestedDate?: string };
 
 /** "PT2H30M" -> "2h 30m" */
 function formatDuration(iso?: string): string {
@@ -91,10 +95,13 @@ export default function FlightResults({ params, onClose }: { params: FlightSearc
         if (status === 503) { setState({ kind: "notConfigured" }); return; }
         if (status !== 200 || !data) { setState({ kind: "error" }); return; }
         const offers: FlightOffer[] = Array.isArray(data.offers) ? data.offers : [];
-        const carriers: Record<string, string> = data.dictionaries?.carriers || {};
+        // FIX: 2026-10-12 — API returns carriers map at top level (was: dictionaries.carriers → airline names showed as codes)
+        const carriers: Record<string, string> = data.carriers || data.dictionaries?.carriers || {};
+        const hasExactDate = data.hasExactDate === true;
+        const requestedDate = typeof data.requestedDate === "string" ? data.requestedDate : params.departDate;
         if (offers.length === 0) { setState({ kind: "empty" }); return; }
-        offers.sort((a, b) => (parseFloat(a.price?.grandTotal || "0") || 0) - (parseFloat(b.price?.grandTotal || "0") || 0));
-        setState({ kind: "success", offers: offers.slice(0, 10), carriers });
+        // API already sorts exact-date first then cheapest — keep server order
+        setState({ kind: "success", offers: offers.slice(0, 15), carriers, hasExactDate, requestedDate });
       })
       .catch(() => setState({ kind: "error" }));
   }, [params]);
@@ -154,6 +161,14 @@ export default function FlightResults({ params, onClose }: { params: FlightSearc
 
       {state.kind === "success" && (
         <ul className="space-y-3">
+          {!state.hasExactDate && (
+            <li className="rounded-xl bg-[#FFF8E1] border border-[#D4AF37]/30 px-4 py-3">
+              <p className="text-xs text-[#7A5C00]">
+                {/* No cached schedule for the exact date — showing all available schedules within ±7 days */}
+                {state.requestedDate ? `${state.requestedDate} — ` : ""}No schedule found for this exact date — showing nearby dates (±7 days):
+              </p>
+            </li>
+          )}
           {state.offers.map((offer) => {
             const itinerary = offer.itineraries?.[0];
             const segments = itinerary?.segments || [];
@@ -168,6 +183,8 @@ export default function FlightResults({ params, onClose }: { params: FlightSearc
             const arrivalTime = formatTime(last.arrival.at);
             const bookLink = offer.deepLink || bookHref(carrier, price);
             const isExternal = Boolean(offer.deepLink);
+            const offerDate = offer.date || first.departure.at.substring(0, 10);
+            const isExact = offer.isExactDate === true;
             return (
               <li key={offer.id} className="rounded-xl bg-white border border-[#D4AF37]/20 p-4">
                 <div className="flex flex-col sm:flex-row sm:items-center gap-3">
@@ -181,7 +198,11 @@ export default function FlightResults({ params, onClose }: { params: FlightSearc
                     </p>
                     <p className="text-xs text-gray-500 mt-0.5">
                       {formatDuration(itinerary?.duration)} · {stops === 0 ? t("home.flightResults.direct") : lang === "mm" ? t("home.flightResults.stops", { n: stops }) : stops === 1 ? t("home.flightResults.stops", { n: stops }) : t("home.flightResults.stops_plural", { n: stops })}
+                      {!isExact && offerDate ? ` · ${offerDate}` : ""}
                     </p>
+                    {!isExact && offerDate ? (
+                      <p className="text-[11px] font-semibold text-[#7A5C00] mt-0.5">{offerDate}</p>
+                    ) : null}
                   </div>
                   <div className="sm:text-right flex flex-row sm:flex-col items-center sm:items-end justify-between sm:justify-center gap-2 flex-shrink-0">
                     <p className="text-lg font-bold text-[#0A1628]">{currency} {price}</p>
